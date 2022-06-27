@@ -144,12 +144,6 @@ Core/HAL/monitor/monitor.c \
 Core/HAL/hal.c \
 Core/HAL/pub_sub.c \
 Core/APP/app.c \
-Core/APP/command/chassis_board_cmd.c \
-Core/APP/command/gimbal_board_cmd.c \
-Core/APP/chassis/chassis.c \
-Core/APP/shoot/shoot.c \
-Core/APP/gimbal/gimbal.c \
-Core/APP/ui/robot_ui.c \
 Core/BSP/bsp.c \
 Core/BSP/bsp_supervise.c \
 Core/BSP/lib/bsp_random.c \
@@ -255,10 +249,6 @@ C_INCLUDES += \
 -ICore/HAL \
 -ICore/APP \
 -ICore/APP/command \
--ICore/APP/shoot \
--ICore/APP/gimbal \
--ICore/APP/chassis \
--ICore/APP/ui \
 -ICore/BSP \
 -ICore/BSP/lib \
 -ICore/BSP/interface \
