@@ -110,12 +110,13 @@ uint8_t BMI088_init(BMI088_imu *obj) {
     obj->data.round = 0;
     return obj->init_error;
 }
+
 // BMI088更新函数
 void BMI088_Update(BMI088_imu *obj) {
     BMI088_read_raw(obj);
     BMI088_heat_control(obj);
     obj->monitor->reset(obj->monitor);
-    if (obj->temp < 52) {
+    if (obj->temp < obj->config.temp_target - 3) {
         obj->bias_init_success = 0;
         return;
     }
@@ -134,7 +135,6 @@ void BMI088_Update(BMI088_imu *obj) {
             obj->gyrobias[1] /= BMI088_BIAS_INIT_COUNT;
             obj->gyrobias[2] /= BMI088_BIAS_INIT_COUNT;
             obj->bias_init_success = 1;
-
         } else {
             init_count = 0;
         }
@@ -210,6 +210,7 @@ void BMI088_accel_init(BMI088_imu *obj) {
     }
     printf_log("BMI088 accel init success!\n");
 }
+
 // BMI088陀螺仪初始化
 void BMI088_gyro_init(BMI088_imu *obj) {
     uint8_t res = 0;
@@ -239,6 +240,7 @@ void BMI088_gyro_init(BMI088_imu *obj) {
     }
     printf_log("BMI088 gyro init success!\n");
 }
+
 // BMI088温控初始化
 void BMI088_heat_init(BMI088_imu *obj) {
     // HAL_TIM_PWM_Start(obj->HEAT_PWM_BASE, obj->HAET_PWM_CHANNEL);
@@ -290,7 +292,7 @@ void BMI088_read_raw(BMI088_imu *obj) {
     gyro_raw[2] = tmp * BMI088_GYRO_SEN;
 
     //坐标系转换
-    for(int i = 0;i < 3;++i){
+    for (int i = 0; i < 3; ++i) {
         obj->data.accel[i] = acc_raw[abs(obj->config.imu_axis_convert[i]) - 1] * sgn(obj->config.imu_axis_convert[i]);
         obj->data.gyro[i] = gyro_raw[abs(obj->config.imu_axis_convert[i]) - 1] * sgn(obj->config.imu_axis_convert[i]);
     }
