@@ -1,0 +1,375 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"cvector.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.cvector_create,"ax",%progbits
+  20              		.align	1
+  21              		.global	cvector_create
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	cvector_create:
+  27              	.LVL0:
+  28              	.LFB3:
+  29              		.file 1 "Core/HAL/lib/cvector.c"
+   1:Core/HAL/lib/cvector.c **** // C语言实现动态数组
+   2:Core/HAL/lib/cvector.c **** #include "cvector.h"
+   3:Core/HAL/lib/cvector.c **** 
+   4:Core/HAL/lib/cvector.c **** // size: 数组成员的大小
+   5:Core/HAL/lib/cvector.c **** cvector* cvector_create(const size_t size) {
+  30              		.loc 1 5 44 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 5 44 is_stmt 0 view .LVU1
+  35 0000 70B5     		push	{r4, r5, r6, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+  40              		.cfi_offset 6, -8
+  41              		.cfi_offset 14, -4
+  42 0002 0546     		mov	r5, r0
+   6:Core/HAL/lib/cvector.c ****     // if(size == 0){
+   7:Core/HAL/lib/cvector.c ****     //     return NULL;
+   8:Core/HAL/lib/cvector.c ****     // }
+   9:Core/HAL/lib/cvector.c **** 
+  10:Core/HAL/lib/cvector.c ****     cvector* cv = (cvector*)malloc(sizeof(struct _cvector));
+  43              		.loc 1 10 5 is_stmt 1 view .LVU2
+  44              		.loc 1 10 29 is_stmt 0 view .LVU3
+  45 0004 1020     		movs	r0, #16
+  46              	.LVL1:
+  47              		.loc 1 10 29 view .LVU4
+  48 0006 FFF7FEFF 		bl	malloc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s 			page 2
+
+
+  49              	.LVL2:
+  11:Core/HAL/lib/cvector.c **** 
+  12:Core/HAL/lib/cvector.c ****     if (!cv) return NULL;
+  50              		.loc 1 12 5 is_stmt 1 view .LVU5
+  51              		.loc 1 12 8 is_stmt 0 view .LVU6
+  52 000a 0446     		mov	r4, r0
+  53 000c 88B1     		cbz	r0, .L1
+  13:Core/HAL/lib/cvector.c **** 
+  14:Core/HAL/lib/cvector.c **** 
+  15:Core/HAL/lib/cvector.c ****     cv->cv_pdata = malloc(MIN_LEN * size);
+  54              		.loc 1 15 5 is_stmt 1 view .LVU7
+  55              		.loc 1 15 20 is_stmt 0 view .LVU8
+  56 000e 05EB8500 		add	r0, r5, r5, lsl #2
+  57              	.LVL3:
+  58              		.loc 1 15 20 view .LVU9
+  59 0012 FFF7FEFF 		bl	malloc
+  60              	.LVL4:
+  61 0016 0646     		mov	r6, r0
+  62              		.loc 1 15 18 view .LVU10
+  63 0018 2060     		str	r0, [r4]	@ unaligned
+  16:Core/HAL/lib/cvector.c **** 
+  17:Core/HAL/lib/cvector.c ****     if (!cv->cv_pdata) {
+  64              		.loc 1 17 5 is_stmt 1 view .LVU11
+  65              		.loc 1 17 8 is_stmt 0 view .LVU12
+  66 001a 60B1     		cbz	r0, .L5
+  18:Core/HAL/lib/cvector.c ****         free(cv);
+  19:Core/HAL/lib/cvector.c ****         return NULL;
+  20:Core/HAL/lib/cvector.c ****     }
+  21:Core/HAL/lib/cvector.c **** 
+  22:Core/HAL/lib/cvector.c ****     cv->cv_size = size;
+  67              		.loc 1 22 5 is_stmt 1 view .LVU13
+  68              		.loc 1 22 17 is_stmt 0 view .LVU14
+  69 001c E560     		str	r5, [r4, #12]	@ unaligned
+  23:Core/HAL/lib/cvector.c ****     cv->cv_tot_len = MIN_LEN;
+  70              		.loc 1 23 5 is_stmt 1 view .LVU15
+  71              		.loc 1 23 20 is_stmt 0 view .LVU16
+  72 001e 0023     		movs	r3, #0
+  73 0020 0522     		movs	r2, #5
+  74 0022 2272     		strb	r2, [r4, #8]
+  75 0024 6372     		strb	r3, [r4, #9]
+  76 0026 A372     		strb	r3, [r4, #10]
+  77 0028 E372     		strb	r3, [r4, #11]
+  24:Core/HAL/lib/cvector.c ****     cv->cv_len = 0;
+  78              		.loc 1 24 5 is_stmt 1 view .LVU17
+  79              		.loc 1 24 16 is_stmt 0 view .LVU18
+  80 002a 2371     		strb	r3, [r4, #4]
+  81 002c 6371     		strb	r3, [r4, #5]
+  82 002e A371     		strb	r3, [r4, #6]
+  83 0030 E371     		strb	r3, [r4, #7]
+  25:Core/HAL/lib/cvector.c **** 
+  26:Core/HAL/lib/cvector.c ****     return cv;
+  84              		.loc 1 26 5 is_stmt 1 view .LVU19
+  85              	.LVL5:
+  86              	.L1:
+  27:Core/HAL/lib/cvector.c **** }
+  87              		.loc 1 27 1 is_stmt 0 view .LVU20
+  88 0032 2046     		mov	r0, r4
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s 			page 3
+
+
+  89 0034 70BD     		pop	{r4, r5, r6, pc}
+  90              	.LVL6:
+  91              	.L5:
+  18:Core/HAL/lib/cvector.c ****         return NULL;
+  92              		.loc 1 18 9 is_stmt 1 view .LVU21
+  93 0036 2046     		mov	r0, r4
+  94 0038 FFF7FEFF 		bl	free
+  95              	.LVL7:
+  19:Core/HAL/lib/cvector.c ****     }
+  96              		.loc 1 19 9 view .LVU22
+  19:Core/HAL/lib/cvector.c ****     }
+  97              		.loc 1 19 16 is_stmt 0 view .LVU23
+  98 003c 3446     		mov	r4, r6
+  99              	.LVL8:
+  19:Core/HAL/lib/cvector.c ****     }
+ 100              		.loc 1 19 16 view .LVU24
+ 101 003e F8E7     		b	.L1
+ 102              		.cfi_endproc
+ 103              	.LFE3:
+ 105              		.section	.text.cvector_destroy,"ax",%progbits
+ 106              		.align	1
+ 107              		.global	cvector_destroy
+ 108              		.syntax unified
+ 109              		.thumb
+ 110              		.thumb_func
+ 112              	cvector_destroy:
+ 113              	.LVL9:
+ 114              	.LFB4:
+  28:Core/HAL/lib/cvector.c **** 
+  29:Core/HAL/lib/cvector.c **** void cvector_destroy(cvector* cv) {
+ 115              		.loc 1 29 35 is_stmt 1 view -0
+ 116              		.cfi_startproc
+ 117              		@ args = 0, pretend = 0, frame = 0
+ 118              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119              		.loc 1 29 35 is_stmt 0 view .LVU26
+ 120 0000 10B5     		push	{r4, lr}
+ 121              	.LCFI1:
+ 122              		.cfi_def_cfa_offset 8
+ 123              		.cfi_offset 4, -8
+ 124              		.cfi_offset 14, -4
+ 125 0002 0446     		mov	r4, r0
+  30:Core/HAL/lib/cvector.c ****     free(cv->cv_pdata);
+ 126              		.loc 1 30 5 is_stmt 1 view .LVU27
+ 127 0004 0068     		ldr	r0, [r0]	@ unaligned
+ 128              	.LVL10:
+ 129              		.loc 1 30 5 is_stmt 0 view .LVU28
+ 130 0006 FFF7FEFF 		bl	free
+ 131              	.LVL11:
+  31:Core/HAL/lib/cvector.c ****     free(cv);
+ 132              		.loc 1 31 5 is_stmt 1 view .LVU29
+ 133 000a 2046     		mov	r0, r4
+ 134 000c FFF7FEFF 		bl	free
+ 135              	.LVL12:
+  32:Core/HAL/lib/cvector.c ****     return;
+ 136              		.loc 1 32 5 view .LVU30
+  33:Core/HAL/lib/cvector.c **** }
+ 137              		.loc 1 33 1 is_stmt 0 view .LVU31
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s 			page 4
+
+
+ 138 0010 10BD     		pop	{r4, pc}
+ 139              		.loc 1 33 1 view .LVU32
+ 140              		.cfi_endproc
+ 141              	.LFE4:
+ 143              		.section	.text.cvector_length,"ax",%progbits
+ 144              		.align	1
+ 145              		.global	cvector_length
+ 146              		.syntax unified
+ 147              		.thumb
+ 148              		.thumb_func
+ 150              	cvector_length:
+ 151              	.LVL13:
+ 152              	.LFB5:
+  34:Core/HAL/lib/cvector.c **** 
+  35:Core/HAL/lib/cvector.c **** size_t cvector_length(cvector* cv) { return cv->cv_len; }
+ 153              		.loc 1 35 36 is_stmt 1 view -0
+ 154              		.cfi_startproc
+ 155              		@ args = 0, pretend = 0, frame = 0
+ 156              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157              		@ link register save eliminated.
+ 158              		.loc 1 35 38 view .LVU34
+ 159              		.loc 1 35 57 is_stmt 0 view .LVU35
+ 160 0000 4068     		ldr	r0, [r0, #4]	@ unaligned
+ 161              	.LVL14:
+ 162              		.loc 1 35 57 view .LVU36
+ 163 0002 7047     		bx	lr
+ 164              		.cfi_endproc
+ 165              	.LFE5:
+ 167              		.section	.text.cvector_pushback,"ax",%progbits
+ 168              		.align	1
+ 169              		.global	cvector_pushback
+ 170              		.syntax unified
+ 171              		.thumb
+ 172              		.thumb_func
+ 174              	cvector_pushback:
+ 175              	.LVL15:
+ 176              	.LFB6:
+  36:Core/HAL/lib/cvector.c **** 
+  37:Core/HAL/lib/cvector.c **** void* cvector_pushback(cvector* cv, void* memb) {
+ 177              		.loc 1 37 49 is_stmt 1 view -0
+ 178              		.cfi_startproc
+ 179              		@ args = 0, pretend = 0, frame = 0
+ 180              		@ frame_needed = 0, uses_anonymous_args = 0
+ 181              		.loc 1 37 49 is_stmt 0 view .LVU38
+ 182 0000 38B5     		push	{r3, r4, r5, lr}
+ 183              	.LCFI2:
+ 184              		.cfi_def_cfa_offset 16
+ 185              		.cfi_offset 3, -16
+ 186              		.cfi_offset 4, -12
+ 187              		.cfi_offset 5, -8
+ 188              		.cfi_offset 14, -4
+ 189 0002 0446     		mov	r4, r0
+ 190 0004 0D46     		mov	r5, r1
+  38:Core/HAL/lib/cvector.c ****     if (cv->cv_len >= cv->cv_tot_len) {
+ 191              		.loc 1 38 5 is_stmt 1 view .LVU39
+ 192              		.loc 1 38 11 is_stmt 0 view .LVU40
+ 193 0006 4368     		ldr	r3, [r0, #4]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s 			page 5
+
+
+ 194              		.loc 1 38 25 view .LVU41
+ 195 0008 8168     		ldr	r1, [r0, #8]	@ unaligned
+ 196              	.LVL16:
+ 197              		.loc 1 38 8 view .LVU42
+ 198 000a 8B42     		cmp	r3, r1
+ 199 000c 0FD2     		bcs	.L12
+ 200              	.LVL17:
+ 201              	.L10:
+  39:Core/HAL/lib/cvector.c ****         // void* pd_sav = cv->cv_pdata;
+  40:Core/HAL/lib/cvector.c ****         // 以cv_tot_len为最小单位进行扩张，避免反复realloc
+  41:Core/HAL/lib/cvector.c ****         cv->cv_tot_len <<= EXPANED_VAL;
+  42:Core/HAL/lib/cvector.c ****         cv->cv_pdata = realloc(cv->cv_pdata, cv->cv_tot_len * cv->cv_size);
+  43:Core/HAL/lib/cvector.c ****     }
+  44:Core/HAL/lib/cvector.c **** 
+  45:Core/HAL/lib/cvector.c ****     memcpy((char*)cv->cv_pdata + cv->cv_len * cv->cv_size, memb, cv->cv_size);
+ 202              		.loc 1 45 5 is_stmt 1 view .LVU43
+ 203              		.loc 1 45 21 is_stmt 0 view .LVU44
+ 204 000e 2368     		ldr	r3, [r4]	@ unaligned
+ 205              		.loc 1 45 36 view .LVU45
+ 206 0010 6068     		ldr	r0, [r4, #4]	@ unaligned
+ 207              		.loc 1 45 49 view .LVU46
+ 208 0012 E268     		ldr	r2, [r4, #12]	@ unaligned
+ 209              		.loc 1 45 5 view .LVU47
+ 210 0014 2946     		mov	r1, r5
+ 211 0016 02FB0030 		mla	r0, r2, r0, r3
+ 212 001a FFF7FEFF 		bl	memcpy
+ 213              	.LVL18:
+  46:Core/HAL/lib/cvector.c ****     cv->cv_len++;
+ 214              		.loc 1 46 5 is_stmt 1 view .LVU48
+ 215              		.loc 1 46 7 is_stmt 0 view .LVU49
+ 216 001e 6368     		ldr	r3, [r4, #4]	@ unaligned
+ 217              		.loc 1 46 15 view .LVU50
+ 218 0020 5A1C     		adds	r2, r3, #1
+ 219 0022 6260     		str	r2, [r4, #4]	@ unaligned
+  47:Core/HAL/lib/cvector.c **** 
+  48:Core/HAL/lib/cvector.c ****     return cv->cv_pdata + (cv->cv_len - 1) * cv->cv_size;
+ 220              		.loc 1 48 5 is_stmt 1 view .LVU51
+ 221              		.loc 1 48 14 is_stmt 0 view .LVU52
+ 222 0024 2268     		ldr	r2, [r4]	@ unaligned
+ 223              		.loc 1 48 48 view .LVU53
+ 224 0026 E068     		ldr	r0, [r4, #12]	@ unaligned
+  49:Core/HAL/lib/cvector.c **** }
+ 225              		.loc 1 49 1 view .LVU54
+ 226 0028 00FB0320 		mla	r0, r0, r3, r2
+ 227 002c 38BD     		pop	{r3, r4, r5, pc}
+ 228              	.LVL19:
+ 229              	.L12:
+  41:Core/HAL/lib/cvector.c ****         cv->cv_pdata = realloc(cv->cv_pdata, cv->cv_tot_len * cv->cv_size);
+ 230              		.loc 1 41 9 is_stmt 1 view .LVU55
+  41:Core/HAL/lib/cvector.c ****         cv->cv_pdata = realloc(cv->cv_pdata, cv->cv_tot_len * cv->cv_size);
+ 231              		.loc 1 41 24 is_stmt 0 view .LVU56
+ 232 002e 4900     		lsls	r1, r1, #1
+ 233 0030 8160     		str	r1, [r0, #8]	@ unaligned
+  42:Core/HAL/lib/cvector.c ****     }
+ 234              		.loc 1 42 9 is_stmt 1 view .LVU57
+  42:Core/HAL/lib/cvector.c ****     }
+ 235              		.loc 1 42 65 is_stmt 0 view .LVU58
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s 			page 6
+
+
+ 236 0032 C368     		ldr	r3, [r0, #12]	@ unaligned
+  42:Core/HAL/lib/cvector.c ****     }
+ 237              		.loc 1 42 24 view .LVU59
+ 238 0034 03FB01F1 		mul	r1, r3, r1
+ 239 0038 0068     		ldr	r0, [r0]	@ unaligned
+ 240              	.LVL20:
+  42:Core/HAL/lib/cvector.c ****     }
+ 241              		.loc 1 42 24 view .LVU60
+ 242 003a FFF7FEFF 		bl	realloc
+ 243              	.LVL21:
+  42:Core/HAL/lib/cvector.c ****     }
+ 244              		.loc 1 42 22 view .LVU61
+ 245 003e 2060     		str	r0, [r4]	@ unaligned
+ 246 0040 E5E7     		b	.L10
+ 247              		.cfi_endproc
+ 248              	.LFE6:
+ 250              		.section	.text.cvector_val_at,"ax",%progbits
+ 251              		.align	1
+ 252              		.global	cvector_val_at
+ 253              		.syntax unified
+ 254              		.thumb
+ 255              		.thumb_func
+ 257              	cvector_val_at:
+ 258              	.LVL22:
+ 259              	.LFB7:
+  50:Core/HAL/lib/cvector.c **** 
+  51:Core/HAL/lib/cvector.c **** void* cvector_val_at(cvector* cv, size_t index) {
+ 260              		.loc 1 51 49 is_stmt 1 view -0
+ 261              		.cfi_startproc
+ 262              		@ args = 0, pretend = 0, frame = 0
+ 263              		@ frame_needed = 0, uses_anonymous_args = 0
+ 264              		@ link register save eliminated.
+  52:Core/HAL/lib/cvector.c ****     return cv->cv_pdata + index * cv->cv_size;
+ 265              		.loc 1 52 5 view .LVU63
+ 266              		.loc 1 52 14 is_stmt 0 view .LVU64
+ 267 0000 0368     		ldr	r3, [r0]	@ unaligned
+ 268              		.loc 1 52 37 view .LVU65
+ 269 0002 C068     		ldr	r0, [r0, #12]	@ unaligned
+ 270              	.LVL23:
+  53:Core/HAL/lib/cvector.c **** }
+ 271              		.loc 1 53 1 view .LVU66
+ 272 0004 01FB0030 		mla	r0, r1, r0, r3
+ 273 0008 7047     		bx	lr
+ 274              		.cfi_endproc
+ 275              	.LFE7:
+ 277              		.text
+ 278              	.Letext0:
+ 279              		.file 2 "Core/HAL/lib/cvector.h"
+ 280              		.file 3 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 281              		.file 4 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 282              		.file 5 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 cvector.c
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:20     .text.cvector_create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:26     .text.cvector_create:00000000 cvector_create
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:106    .text.cvector_destroy:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:112    .text.cvector_destroy:00000000 cvector_destroy
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:144    .text.cvector_length:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:150    .text.cvector_length:00000000 cvector_length
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:168    .text.cvector_pushback:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:174    .text.cvector_pushback:00000000 cvector_pushback
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:251    .text.cvector_val_at:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccl3ksJr.s:257    .text.cvector_val_at:00000000 cvector_val_at
+
+UNDEFINED SYMBOLS
+malloc
+free
+memcpy
+realloc

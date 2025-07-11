@@ -14,7 +14,6 @@ typedef void (*uart_recv_notify)(uart_recv* obj);
 struct uart_recv_config_t{
     uint8_t bsp_uart_index;
     uint8_t data_len;
-    uint16_t uart_identifier;
     uart_recv_notify notify_func;
     lost_callback lost_callback;
 };

@@ -1,0 +1,1155 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"soft_i2c.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.IIC_SDA_Out,"ax",%progbits
+  20              		.align	1
+  21              		.global	IIC_SDA_Out
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	IIC_SDA_Out:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/lib/soft_i2c.c"
+   1:Core/HAL/lib/soft_i2c.c **** #include "soft_i2c.h"
+   2:Core/HAL/lib/soft_i2c.c **** 
+   3:Core/HAL/lib/soft_i2c.c **** #include <stdlib.h>
+   4:Core/HAL/lib/soft_i2c.c **** #include <string.h>
+   5:Core/HAL/lib/soft_i2c.c **** 
+   6:Core/HAL/lib/soft_i2c.c **** #include "bsp_delay.h"
+   7:Core/HAL/lib/soft_i2c.c **** #include "bsp_gpio.h"
+   8:Core/HAL/lib/soft_i2c.c **** 
+   9:Core/HAL/lib/soft_i2c.c **** #define IIC_SDA_H(obj) BSP_GPIO_Set(obj->config.bsp_gpio_sda_index, 1)
+  10:Core/HAL/lib/soft_i2c.c **** #define IIC_SDA_L(obj) BSP_GPIO_Set(obj->config.bsp_gpio_sda_index, 0)
+  11:Core/HAL/lib/soft_i2c.c **** #define IIC_SCL_H(obj) BSP_GPIO_Set(obj->config.bsp_gpio_scl_index, 1)
+  12:Core/HAL/lib/soft_i2c.c **** #define IIC_SCL_L(obj) BSP_GPIO_Set(obj->config.bsp_gpio_scl_index, 0)
+  13:Core/HAL/lib/soft_i2c.c **** #define IIC_SDA_Read(obj, data) BSP_GPIO_Read(obj->config.bsp_gpio_sda_index, &data)
+  14:Core/HAL/lib/soft_i2c.c **** 
+  15:Core/HAL/lib/soft_i2c.c **** void IIC_SDA_Out(Soft_I2c* obj) {
+  30              		.loc 1 15 33 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 15 33 is_stmt 0 view .LVU1
+  35 0000 08B5     		push	{r3, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 3, -8
+  39              		.cfi_offset 14, -4
+  16:Core/HAL/lib/soft_i2c.c ****     BSP_GPIO_Reinit(obj->config.bsp_gpio_sda_index,1);
+  40              		.loc 1 16 5 is_stmt 1 view .LVU2
+  41 0002 0121     		movs	r1, #1
+  42 0004 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 2
+
+
+  43              	.LVL1:
+  44              		.loc 1 16 5 is_stmt 0 view .LVU3
+  45 0006 FFF7FEFF 		bl	BSP_GPIO_Reinit
+  46              	.LVL2:
+  17:Core/HAL/lib/soft_i2c.c **** }
+  47              		.loc 1 17 1 view .LVU4
+  48 000a 08BD     		pop	{r3, pc}
+  49              		.cfi_endproc
+  50              	.LFE0:
+  52              		.section	.text.IIC_SDA_In,"ax",%progbits
+  53              		.align	1
+  54              		.global	IIC_SDA_In
+  55              		.syntax unified
+  56              		.thumb
+  57              		.thumb_func
+  59              	IIC_SDA_In:
+  60              	.LVL3:
+  61              	.LFB1:
+  18:Core/HAL/lib/soft_i2c.c **** 
+  19:Core/HAL/lib/soft_i2c.c **** void IIC_SDA_In(Soft_I2c* obj) {
+  62              		.loc 1 19 32 is_stmt 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              		.loc 1 19 32 is_stmt 0 view .LVU6
+  67 0000 08B5     		push	{r3, lr}
+  68              	.LCFI1:
+  69              		.cfi_def_cfa_offset 8
+  70              		.cfi_offset 3, -8
+  71              		.cfi_offset 14, -4
+  20:Core/HAL/lib/soft_i2c.c ****     BSP_GPIO_Reinit(obj->config.bsp_gpio_sda_index,0);
+  72              		.loc 1 20 5 is_stmt 1 view .LVU7
+  73 0002 0021     		movs	r1, #0
+  74 0004 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+  75              	.LVL4:
+  76              		.loc 1 20 5 is_stmt 0 view .LVU8
+  77 0006 FFF7FEFF 		bl	BSP_GPIO_Reinit
+  78              	.LVL5:
+  21:Core/HAL/lib/soft_i2c.c **** }
+  79              		.loc 1 21 1 view .LVU9
+  80 000a 08BD     		pop	{r3, pc}
+  81              		.cfi_endproc
+  82              	.LFE1:
+  84              		.section	.text.IIC_Start,"ax",%progbits
+  85              		.align	1
+  86              		.global	IIC_Start
+  87              		.syntax unified
+  88              		.thumb
+  89              		.thumb_func
+  91              	IIC_Start:
+  92              	.LVL6:
+  93              	.LFB2:
+  22:Core/HAL/lib/soft_i2c.c **** 
+  23:Core/HAL/lib/soft_i2c.c **** void IIC_Start(Soft_I2c* obj) {
+  94              		.loc 1 23 31 is_stmt 1 view -0
+  95              		.cfi_startproc
+  96              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 3
+
+
+  97              		@ frame_needed = 0, uses_anonymous_args = 0
+  98              		.loc 1 23 31 is_stmt 0 view .LVU11
+  99 0000 10B5     		push	{r4, lr}
+ 100              	.LCFI2:
+ 101              		.cfi_def_cfa_offset 8
+ 102              		.cfi_offset 4, -8
+ 103              		.cfi_offset 14, -4
+ 104 0002 0446     		mov	r4, r0
+  24:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_Out(obj);
+ 105              		.loc 1 24 5 is_stmt 1 view .LVU12
+ 106 0004 FFF7FEFF 		bl	IIC_SDA_Out
+ 107              	.LVL7:
+  25:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_H(obj);
+ 108              		.loc 1 25 5 view .LVU13
+ 109 0008 0121     		movs	r1, #1
+ 110 000a 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 111 000c FFF7FEFF 		bl	BSP_GPIO_Set
+ 112              	.LVL8:
+  26:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_H(obj);
+ 113              		.loc 1 26 5 view .LVU14
+ 114 0010 0121     		movs	r1, #1
+ 115 0012 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 116 0014 FFF7FEFF 		bl	BSP_GPIO_Set
+ 117              	.LVL9:
+  27:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 118              		.loc 1 27 5 view .LVU15
+ 119 0018 0520     		movs	r0, #5
+ 120 001a FFF7FEFF 		bl	bsp_delay_us
+ 121              	.LVL10:
+  28:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_L(obj);
+ 122              		.loc 1 28 5 view .LVU16
+ 123 001e 0021     		movs	r1, #0
+ 124 0020 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 125 0022 FFF7FEFF 		bl	BSP_GPIO_Set
+ 126              	.LVL11:
+  29:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 127              		.loc 1 29 5 view .LVU17
+ 128 0026 0520     		movs	r0, #5
+ 129 0028 FFF7FEFF 		bl	bsp_delay_us
+ 130              	.LVL12:
+  30:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_L(obj);
+ 131              		.loc 1 30 5 view .LVU18
+ 132 002c 0021     		movs	r1, #0
+ 133 002e 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 134 0030 FFF7FEFF 		bl	BSP_GPIO_Set
+ 135              	.LVL13:
+  31:Core/HAL/lib/soft_i2c.c **** }
+ 136              		.loc 1 31 1 is_stmt 0 view .LVU19
+ 137 0034 10BD     		pop	{r4, pc}
+ 138              		.loc 1 31 1 view .LVU20
+ 139              		.cfi_endproc
+ 140              	.LFE2:
+ 142              		.section	.text.IIC_Stop,"ax",%progbits
+ 143              		.align	1
+ 144              		.global	IIC_Stop
+ 145              		.syntax unified
+ 146              		.thumb
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 4
+
+
+ 147              		.thumb_func
+ 149              	IIC_Stop:
+ 150              	.LVL14:
+ 151              	.LFB3:
+  32:Core/HAL/lib/soft_i2c.c **** 
+  33:Core/HAL/lib/soft_i2c.c **** void IIC_Stop(Soft_I2c* obj) {
+ 152              		.loc 1 33 30 is_stmt 1 view -0
+ 153              		.cfi_startproc
+ 154              		@ args = 0, pretend = 0, frame = 0
+ 155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156              		.loc 1 33 30 is_stmt 0 view .LVU22
+ 157 0000 10B5     		push	{r4, lr}
+ 158              	.LCFI3:
+ 159              		.cfi_def_cfa_offset 8
+ 160              		.cfi_offset 4, -8
+ 161              		.cfi_offset 14, -4
+ 162 0002 0446     		mov	r4, r0
+  34:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_Out(obj);
+ 163              		.loc 1 34 5 is_stmt 1 view .LVU23
+ 164 0004 FFF7FEFF 		bl	IIC_SDA_Out
+ 165              	.LVL15:
+  35:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_L(obj);
+ 166              		.loc 1 35 5 view .LVU24
+ 167 0008 0021     		movs	r1, #0
+ 168 000a 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 169 000c FFF7FEFF 		bl	BSP_GPIO_Set
+ 170              	.LVL16:
+  36:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_L(obj);
+ 171              		.loc 1 36 5 view .LVU25
+ 172 0010 0021     		movs	r1, #0
+ 173 0012 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 174 0014 FFF7FEFF 		bl	BSP_GPIO_Set
+ 175              	.LVL17:
+  37:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 176              		.loc 1 37 5 view .LVU26
+ 177 0018 0520     		movs	r0, #5
+ 178 001a FFF7FEFF 		bl	bsp_delay_us
+ 179              	.LVL18:
+  38:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_H(obj);
+ 180              		.loc 1 38 5 view .LVU27
+ 181 001e 0121     		movs	r1, #1
+ 182 0020 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 183 0022 FFF7FEFF 		bl	BSP_GPIO_Set
+ 184              	.LVL19:
+  39:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 185              		.loc 1 39 5 view .LVU28
+ 186 0026 0520     		movs	r0, #5
+ 187 0028 FFF7FEFF 		bl	bsp_delay_us
+ 188              	.LVL20:
+  40:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_H(obj);
+ 189              		.loc 1 40 5 view .LVU29
+ 190 002c 0121     		movs	r1, #1
+ 191 002e 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 192 0030 FFF7FEFF 		bl	BSP_GPIO_Set
+ 193              	.LVL21:
+  41:Core/HAL/lib/soft_i2c.c **** }
+ 194              		.loc 1 41 1 is_stmt 0 view .LVU30
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 5
+
+
+ 195 0034 10BD     		pop	{r4, pc}
+ 196              		.loc 1 41 1 view .LVU31
+ 197              		.cfi_endproc
+ 198              	.LFE3:
+ 200              		.section	.text.IIC_Ack,"ax",%progbits
+ 201              		.align	1
+ 202              		.global	IIC_Ack
+ 203              		.syntax unified
+ 204              		.thumb
+ 205              		.thumb_func
+ 207              	IIC_Ack:
+ 208              	.LVL22:
+ 209              	.LFB4:
+  42:Core/HAL/lib/soft_i2c.c **** 
+  43:Core/HAL/lib/soft_i2c.c **** void IIC_Ack(Soft_I2c* obj, uint8_t re) {
+ 210              		.loc 1 43 41 is_stmt 1 view -0
+ 211              		.cfi_startproc
+ 212              		@ args = 0, pretend = 0, frame = 0
+ 213              		@ frame_needed = 0, uses_anonymous_args = 0
+ 214              		.loc 1 43 41 is_stmt 0 view .LVU33
+ 215 0000 38B5     		push	{r3, r4, r5, lr}
+ 216              	.LCFI4:
+ 217              		.cfi_def_cfa_offset 16
+ 218              		.cfi_offset 3, -16
+ 219              		.cfi_offset 4, -12
+ 220              		.cfi_offset 5, -8
+ 221              		.cfi_offset 14, -4
+ 222 0002 0446     		mov	r4, r0
+ 223 0004 0D46     		mov	r5, r1
+  44:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_Out(obj);
+ 224              		.loc 1 44 5 is_stmt 1 view .LVU34
+ 225 0006 FFF7FEFF 		bl	IIC_SDA_Out
+ 226              	.LVL23:
+  45:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_L(obj);
+ 227              		.loc 1 45 5 view .LVU35
+ 228 000a 0021     		movs	r1, #0
+ 229 000c 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 230 000e FFF7FEFF 		bl	BSP_GPIO_Set
+ 231              	.LVL24:
+  46:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 232              		.loc 1 46 5 view .LVU36
+ 233 0012 0520     		movs	r0, #5
+ 234 0014 FFF7FEFF 		bl	bsp_delay_us
+ 235              	.LVL25:
+  47:Core/HAL/lib/soft_i2c.c ****     if (re)
+ 236              		.loc 1 47 5 view .LVU37
+ 237              		.loc 1 47 8 is_stmt 0 view .LVU38
+ 238 0018 ADB1     		cbz	r5, .L10
+  48:Core/HAL/lib/soft_i2c.c ****         IIC_SDA_H(obj);
+ 239              		.loc 1 48 9 is_stmt 1 view .LVU39
+ 240 001a 0121     		movs	r1, #1
+ 241 001c 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 242 001e FFF7FEFF 		bl	BSP_GPIO_Set
+ 243              	.LVL26:
+ 244              	.L11:
+  49:Core/HAL/lib/soft_i2c.c ****     else
+  50:Core/HAL/lib/soft_i2c.c ****         IIC_SDA_L(obj);
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 6
+
+
+  51:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 245              		.loc 1 51 5 view .LVU40
+ 246 0022 0520     		movs	r0, #5
+ 247 0024 FFF7FEFF 		bl	bsp_delay_us
+ 248              	.LVL27:
+  52:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_H(obj);
+ 249              		.loc 1 52 5 view .LVU41
+ 250 0028 0121     		movs	r1, #1
+ 251 002a 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 252 002c FFF7FEFF 		bl	BSP_GPIO_Set
+ 253              	.LVL28:
+  53:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 254              		.loc 1 53 5 view .LVU42
+ 255 0030 0520     		movs	r0, #5
+ 256 0032 FFF7FEFF 		bl	bsp_delay_us
+ 257              	.LVL29:
+  54:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_L(obj);
+ 258              		.loc 1 54 5 view .LVU43
+ 259 0036 0021     		movs	r1, #0
+ 260 0038 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 261 003a FFF7FEFF 		bl	BSP_GPIO_Set
+ 262              	.LVL30:
+  55:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 263              		.loc 1 55 5 view .LVU44
+ 264 003e 0520     		movs	r0, #5
+ 265 0040 FFF7FEFF 		bl	bsp_delay_us
+ 266              	.LVL31:
+  56:Core/HAL/lib/soft_i2c.c **** }
+ 267              		.loc 1 56 1 is_stmt 0 view .LVU45
+ 268 0044 38BD     		pop	{r3, r4, r5, pc}
+ 269              	.LVL32:
+ 270              	.L10:
+  50:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 271              		.loc 1 50 9 is_stmt 1 view .LVU46
+ 272 0046 0021     		movs	r1, #0
+ 273 0048 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 274 004a FFF7FEFF 		bl	BSP_GPIO_Set
+ 275              	.LVL33:
+ 276 004e E8E7     		b	.L11
+ 277              		.cfi_endproc
+ 278              	.LFE4:
+ 280              		.section	.text.IIC_WaitAck,"ax",%progbits
+ 281              		.align	1
+ 282              		.global	IIC_WaitAck
+ 283              		.syntax unified
+ 284              		.thumb
+ 285              		.thumb_func
+ 287              	IIC_WaitAck:
+ 288              	.LVL34:
+ 289              	.LFB5:
+  57:Core/HAL/lib/soft_i2c.c **** 
+  58:Core/HAL/lib/soft_i2c.c **** uint8_t IIC_WaitAck(Soft_I2c* obj) {
+ 290              		.loc 1 58 36 view -0
+ 291              		.cfi_startproc
+ 292              		@ args = 0, pretend = 0, frame = 8
+ 293              		@ frame_needed = 0, uses_anonymous_args = 0
+ 294              		.loc 1 58 36 is_stmt 0 view .LVU48
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 7
+
+
+ 295 0000 70B5     		push	{r4, r5, r6, lr}
+ 296              	.LCFI5:
+ 297              		.cfi_def_cfa_offset 16
+ 298              		.cfi_offset 4, -16
+ 299              		.cfi_offset 5, -12
+ 300              		.cfi_offset 6, -8
+ 301              		.cfi_offset 14, -4
+ 302 0002 82B0     		sub	sp, sp, #8
+ 303              	.LCFI6:
+ 304              		.cfi_def_cfa_offset 24
+ 305 0004 0646     		mov	r6, r0
+  59:Core/HAL/lib/soft_i2c.c ****     uint16_t Out_Time = 0;
+ 306              		.loc 1 59 5 is_stmt 1 view .LVU49
+ 307              	.LVL35:
+  60:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_H(obj);
+ 308              		.loc 1 60 5 view .LVU50
+ 309 0006 0121     		movs	r1, #1
+ 310 0008 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 311              	.LVL36:
+ 312              		.loc 1 60 5 is_stmt 0 view .LVU51
+ 313 000a FFF7FEFF 		bl	BSP_GPIO_Set
+ 314              	.LVL37:
+  61:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_In(obj);
+ 315              		.loc 1 61 5 is_stmt 1 view .LVU52
+ 316 000e 3046     		mov	r0, r6
+ 317 0010 FFF7FEFF 		bl	IIC_SDA_In
+ 318              	.LVL38:
+  62:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 319              		.loc 1 62 5 view .LVU53
+ 320 0014 0520     		movs	r0, #5
+ 321 0016 FFF7FEFF 		bl	bsp_delay_us
+ 322              	.LVL39:
+  63:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_H(obj);
+ 323              		.loc 1 63 5 view .LVU54
+ 324 001a 0121     		movs	r1, #1
+ 325 001c 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 326 001e FFF7FEFF 		bl	BSP_GPIO_Set
+ 327              	.LVL40:
+  64:Core/HAL/lib/soft_i2c.c ****     bsp_delay_us(5);
+ 328              		.loc 1 64 5 view .LVU55
+ 329 0022 0520     		movs	r0, #5
+ 330 0024 FFF7FEFF 		bl	bsp_delay_us
+ 331              	.LVL41:
+  65:Core/HAL/lib/soft_i2c.c **** 
+  66:Core/HAL/lib/soft_i2c.c ****     uint8_t data;
+ 332              		.loc 1 66 5 view .LVU56
+  67:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_Read(obj, data);
+ 333              		.loc 1 67 5 view .LVU57
+ 334 0028 0DF10701 		add	r1, sp, #7
+ 335 002c 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 336 002e FFF7FEFF 		bl	BSP_GPIO_Read
+ 337              	.LVL42:
+  68:Core/HAL/lib/soft_i2c.c ****     while (data) {
+ 338              		.loc 1 68 5 view .LVU58
+  59:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_H(obj);
+ 339              		.loc 1 59 14 is_stmt 0 view .LVU59
+ 340 0032 0024     		movs	r4, #0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 8
+
+
+ 341              	.LVL43:
+ 342              	.L14:
+ 343              		.loc 1 68 11 is_stmt 1 view .LVU60
+ 344              		.loc 1 68 12 is_stmt 0 view .LVU61
+ 345 0034 9DF80750 		ldrb	r5, [sp, #7]	@ zero_extendqisi2
+ 346              		.loc 1 68 11 view .LVU62
+ 347 0038 75B1     		cbz	r5, .L19
+  69:Core/HAL/lib/soft_i2c.c ****         Out_Time++;
+ 348              		.loc 1 69 9 is_stmt 1 view .LVU63
+ 349              		.loc 1 69 17 is_stmt 0 view .LVU64
+ 350 003a 0134     		adds	r4, r4, #1
+ 351              	.LVL44:
+ 352              		.loc 1 69 17 view .LVU65
+ 353 003c A4B2     		uxth	r4, r4
+ 354              	.LVL45:
+  70:Core/HAL/lib/soft_i2c.c ****         if (Out_Time>100) {
+ 355              		.loc 1 70 9 is_stmt 1 view .LVU66
+ 356              		.loc 1 70 12 is_stmt 0 view .LVU67
+ 357 003e 642C     		cmp	r4, #100
+ 358 0040 05D8     		bhi	.L20
+  71:Core/HAL/lib/soft_i2c.c ****             IIC_Stop(obj);
+  72:Core/HAL/lib/soft_i2c.c ****             return 0xff;
+  73:Core/HAL/lib/soft_i2c.c ****         }
+  74:Core/HAL/lib/soft_i2c.c ****         IIC_SDA_Read(obj, data);
+ 359              		.loc 1 74 9 is_stmt 1 view .LVU68
+ 360 0042 0DF10701 		add	r1, sp, #7
+ 361 0046 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 362 0048 FFF7FEFF 		bl	BSP_GPIO_Read
+ 363              	.LVL46:
+ 364 004c F2E7     		b	.L14
+ 365              	.L20:
+  71:Core/HAL/lib/soft_i2c.c ****             IIC_Stop(obj);
+ 366              		.loc 1 71 13 view .LVU69
+ 367 004e 3046     		mov	r0, r6
+ 368 0050 FFF7FEFF 		bl	IIC_Stop
+ 369              	.LVL47:
+  72:Core/HAL/lib/soft_i2c.c ****         }
+ 370              		.loc 1 72 13 view .LVU70
+  72:Core/HAL/lib/soft_i2c.c ****         }
+ 371              		.loc 1 72 20 is_stmt 0 view .LVU71
+ 372 0054 FF25     		movs	r5, #255
+ 373 0056 03E0     		b	.L16
+ 374              	.L19:
+  75:Core/HAL/lib/soft_i2c.c ****     }
+  76:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_L(obj);
+ 375              		.loc 1 76 5 is_stmt 1 view .LVU72
+ 376 0058 0021     		movs	r1, #0
+ 377 005a 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 378 005c FFF7FEFF 		bl	BSP_GPIO_Set
+ 379              	.LVL48:
+  77:Core/HAL/lib/soft_i2c.c ****     return 0;
+ 380              		.loc 1 77 5 view .LVU73
+ 381              	.L16:
+  78:Core/HAL/lib/soft_i2c.c **** }
+ 382              		.loc 1 78 1 is_stmt 0 view .LVU74
+ 383 0060 2846     		mov	r0, r5
+ 384 0062 02B0     		add	sp, sp, #8
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 9
+
+
+ 385              	.LCFI7:
+ 386              		.cfi_def_cfa_offset 16
+ 387              		@ sp needed
+ 388 0064 70BD     		pop	{r4, r5, r6, pc}
+ 389              		.loc 1 78 1 view .LVU75
+ 390              		.cfi_endproc
+ 391              	.LFE5:
+ 393              		.section	.text.IIC_WriteBit,"ax",%progbits
+ 394              		.align	1
+ 395              		.global	IIC_WriteBit
+ 396              		.syntax unified
+ 397              		.thumb
+ 398              		.thumb_func
+ 400              	IIC_WriteBit:
+ 401              	.LVL49:
+ 402              	.LFB6:
+  79:Core/HAL/lib/soft_i2c.c **** 
+  80:Core/HAL/lib/soft_i2c.c **** void IIC_WriteBit(Soft_I2c* obj, uint8_t Temp) {
+ 403              		.loc 1 80 48 is_stmt 1 view -0
+ 404              		.cfi_startproc
+ 405              		@ args = 0, pretend = 0, frame = 0
+ 406              		@ frame_needed = 0, uses_anonymous_args = 0
+ 407              		.loc 1 80 48 is_stmt 0 view .LVU77
+ 408 0000 70B5     		push	{r4, r5, r6, lr}
+ 409              	.LCFI8:
+ 410              		.cfi_def_cfa_offset 16
+ 411              		.cfi_offset 4, -16
+ 412              		.cfi_offset 5, -12
+ 413              		.cfi_offset 6, -8
+ 414              		.cfi_offset 14, -4
+ 415 0002 0646     		mov	r6, r0
+ 416 0004 0C46     		mov	r4, r1
+  81:Core/HAL/lib/soft_i2c.c ****     uint8_t i;
+ 417              		.loc 1 81 5 is_stmt 1 view .LVU78
+  82:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_Out(obj);
+ 418              		.loc 1 82 5 view .LVU79
+ 419 0006 FFF7FEFF 		bl	IIC_SDA_Out
+ 420              	.LVL50:
+  83:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_L(obj);
+ 421              		.loc 1 83 5 view .LVU80
+ 422 000a 0021     		movs	r1, #0
+ 423 000c 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 424 000e FFF7FEFF 		bl	BSP_GPIO_Set
+ 425              	.LVL51:
+  84:Core/HAL/lib/soft_i2c.c ****     for (i = 0; i < 8; i++) {
+ 426              		.loc 1 84 5 view .LVU81
+ 427              		.loc 1 84 12 is_stmt 0 view .LVU82
+ 428 0012 0025     		movs	r5, #0
+ 429              		.loc 1 84 5 view .LVU83
+ 430 0014 18E0     		b	.L22
+ 431              	.LVL52:
+ 432              	.L23:
+  85:Core/HAL/lib/soft_i2c.c ****         if (Temp & 0x80)
+  86:Core/HAL/lib/soft_i2c.c ****             IIC_SDA_H(obj);
+  87:Core/HAL/lib/soft_i2c.c ****         else
+  88:Core/HAL/lib/soft_i2c.c ****             IIC_SDA_L(obj);
+ 433              		.loc 1 88 13 is_stmt 1 view .LVU84
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 10
+
+
+ 434 0016 0021     		movs	r1, #0
+ 435 0018 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 436 001a FFF7FEFF 		bl	BSP_GPIO_Set
+ 437              	.LVL53:
+ 438              	.L24:
+  89:Core/HAL/lib/soft_i2c.c ****         Temp <<= 1;
+ 439              		.loc 1 89 9 discriminator 2 view .LVU85
+ 440              		.loc 1 89 14 is_stmt 0 discriminator 2 view .LVU86
+ 441 001e 6400     		lsls	r4, r4, #1
+ 442              	.LVL54:
+ 443              		.loc 1 89 14 discriminator 2 view .LVU87
+ 444 0020 E4B2     		uxtb	r4, r4
+ 445              	.LVL55:
+  90:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 446              		.loc 1 90 9 is_stmt 1 discriminator 2 view .LVU88
+ 447 0022 0520     		movs	r0, #5
+ 448 0024 FFF7FEFF 		bl	bsp_delay_us
+ 449              	.LVL56:
+  91:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_H(obj);
+ 450              		.loc 1 91 9 discriminator 2 view .LVU89
+ 451 0028 0121     		movs	r1, #1
+ 452 002a 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 453 002c FFF7FEFF 		bl	BSP_GPIO_Set
+ 454              	.LVL57:
+  92:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 455              		.loc 1 92 9 discriminator 2 view .LVU90
+ 456 0030 0520     		movs	r0, #5
+ 457 0032 FFF7FEFF 		bl	bsp_delay_us
+ 458              	.LVL58:
+  93:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 459              		.loc 1 93 9 discriminator 2 view .LVU91
+ 460 0036 0021     		movs	r1, #0
+ 461 0038 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 462 003a FFF7FEFF 		bl	BSP_GPIO_Set
+ 463              	.LVL59:
+  94:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 464              		.loc 1 94 9 discriminator 2 view .LVU92
+ 465 003e 0520     		movs	r0, #5
+ 466 0040 FFF7FEFF 		bl	bsp_delay_us
+ 467              	.LVL60:
+  84:Core/HAL/lib/soft_i2c.c ****         if (Temp & 0x80)
+ 468              		.loc 1 84 24 discriminator 2 view .LVU93
+  84:Core/HAL/lib/soft_i2c.c ****         if (Temp & 0x80)
+ 469              		.loc 1 84 25 is_stmt 0 discriminator 2 view .LVU94
+ 470 0044 0135     		adds	r5, r5, #1
+ 471              	.LVL61:
+  84:Core/HAL/lib/soft_i2c.c ****         if (Temp & 0x80)
+ 472              		.loc 1 84 25 discriminator 2 view .LVU95
+ 473 0046 EDB2     		uxtb	r5, r5
+ 474              	.LVL62:
+ 475              	.L22:
+  84:Core/HAL/lib/soft_i2c.c ****         if (Temp & 0x80)
+ 476              		.loc 1 84 17 is_stmt 1 discriminator 1 view .LVU96
+  84:Core/HAL/lib/soft_i2c.c ****         if (Temp & 0x80)
+ 477              		.loc 1 84 5 is_stmt 0 discriminator 1 view .LVU97
+ 478 0048 072D     		cmp	r5, #7
+ 479 004a 07D8     		bhi	.L27
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 11
+
+
+  85:Core/HAL/lib/soft_i2c.c ****             IIC_SDA_H(obj);
+ 480              		.loc 1 85 9 is_stmt 1 view .LVU98
+  85:Core/HAL/lib/soft_i2c.c ****             IIC_SDA_H(obj);
+ 481              		.loc 1 85 12 is_stmt 0 view .LVU99
+ 482 004c 14F0800F 		tst	r4, #128
+ 483 0050 E1D0     		beq	.L23
+  86:Core/HAL/lib/soft_i2c.c ****         else
+ 484              		.loc 1 86 13 is_stmt 1 view .LVU100
+ 485 0052 0121     		movs	r1, #1
+ 486 0054 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 487 0056 FFF7FEFF 		bl	BSP_GPIO_Set
+ 488              	.LVL63:
+ 489 005a E0E7     		b	.L24
+ 490              	.L27:
+  95:Core/HAL/lib/soft_i2c.c ****     }
+  96:Core/HAL/lib/soft_i2c.c **** }
+ 491              		.loc 1 96 1 is_stmt 0 view .LVU101
+ 492 005c 70BD     		pop	{r4, r5, r6, pc}
+ 493              		.loc 1 96 1 view .LVU102
+ 494              		.cfi_endproc
+ 495              	.LFE6:
+ 497              		.section	.text.IIC_ReadBit,"ax",%progbits
+ 498              		.align	1
+ 499              		.global	IIC_ReadBit
+ 500              		.syntax unified
+ 501              		.thumb
+ 502              		.thumb_func
+ 504              	IIC_ReadBit:
+ 505              	.LVL64:
+ 506              	.LFB7:
+  97:Core/HAL/lib/soft_i2c.c **** 
+  98:Core/HAL/lib/soft_i2c.c **** uint8_t IIC_ReadBit(Soft_I2c* obj) {
+ 507              		.loc 1 98 36 is_stmt 1 view -0
+ 508              		.cfi_startproc
+ 509              		@ args = 0, pretend = 0, frame = 8
+ 510              		@ frame_needed = 0, uses_anonymous_args = 0
+ 511              		.loc 1 98 36 is_stmt 0 view .LVU104
+ 512 0000 70B5     		push	{r4, r5, r6, lr}
+ 513              	.LCFI9:
+ 514              		.cfi_def_cfa_offset 16
+ 515              		.cfi_offset 4, -16
+ 516              		.cfi_offset 5, -12
+ 517              		.cfi_offset 6, -8
+ 518              		.cfi_offset 14, -4
+ 519 0002 82B0     		sub	sp, sp, #8
+ 520              	.LCFI10:
+ 521              		.cfi_def_cfa_offset 24
+ 522 0004 0646     		mov	r6, r0
+  99:Core/HAL/lib/soft_i2c.c ****     uint8_t i, Temp = 0;
+ 523              		.loc 1 99 5 is_stmt 1 view .LVU105
+ 524              	.LVL65:
+ 100:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_In(obj);
+ 525              		.loc 1 100 5 view .LVU106
+ 526 0006 FFF7FEFF 		bl	IIC_SDA_In
+ 527              	.LVL66:
+ 101:Core/HAL/lib/soft_i2c.c ****     uint8_t data;
+ 528              		.loc 1 101 5 view .LVU107
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 12
+
+
+ 102:Core/HAL/lib/soft_i2c.c ****     for (i = 0; i < 8; i++) {
+ 529              		.loc 1 102 5 view .LVU108
+  99:Core/HAL/lib/soft_i2c.c ****     IIC_SDA_In(obj);
+ 530              		.loc 1 99 16 is_stmt 0 view .LVU109
+ 531 000a 0024     		movs	r4, #0
+ 532              		.loc 1 102 12 view .LVU110
+ 533 000c 2546     		mov	r5, r4
+ 534              		.loc 1 102 5 view .LVU111
+ 535 000e 04E0     		b	.L29
+ 536              	.LVL67:
+ 537              	.L30:
+ 103:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 104:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 105:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_H(obj);
+ 106:Core/HAL/lib/soft_i2c.c ****         Temp <<= 1;
+ 107:Core/HAL/lib/soft_i2c.c ****         IIC_SDA_Read(obj, data);
+ 108:Core/HAL/lib/soft_i2c.c ****         if (data)
+ 109:Core/HAL/lib/soft_i2c.c ****             Temp++;
+ 110:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 538              		.loc 1 110 9 is_stmt 1 discriminator 2 view .LVU112
+ 539 0010 0520     		movs	r0, #5
+ 540 0012 FFF7FEFF 		bl	bsp_delay_us
+ 541              	.LVL68:
+ 102:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 542              		.loc 1 102 24 discriminator 2 view .LVU113
+ 102:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 543              		.loc 1 102 25 is_stmt 0 discriminator 2 view .LVU114
+ 544 0016 0135     		adds	r5, r5, #1
+ 545              	.LVL69:
+ 102:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 546              		.loc 1 102 25 discriminator 2 view .LVU115
+ 547 0018 EDB2     		uxtb	r5, r5
+ 548              	.LVL70:
+ 549              	.L29:
+ 102:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 550              		.loc 1 102 17 is_stmt 1 discriminator 1 view .LVU116
+ 102:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 551              		.loc 1 102 5 is_stmt 0 discriminator 1 view .LVU117
+ 552 001a 072D     		cmp	r5, #7
+ 553 001c 18D8     		bhi	.L33
+ 103:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_L(obj);
+ 554              		.loc 1 103 9 is_stmt 1 view .LVU118
+ 555 001e 0021     		movs	r1, #0
+ 556 0020 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 557 0022 FFF7FEFF 		bl	BSP_GPIO_Set
+ 558              	.LVL71:
+ 104:Core/HAL/lib/soft_i2c.c ****         IIC_SCL_H(obj);
+ 559              		.loc 1 104 9 view .LVU119
+ 560 0026 0520     		movs	r0, #5
+ 561 0028 FFF7FEFF 		bl	bsp_delay_us
+ 562              	.LVL72:
+ 105:Core/HAL/lib/soft_i2c.c ****         Temp <<= 1;
+ 563              		.loc 1 105 9 view .LVU120
+ 564 002c 0121     		movs	r1, #1
+ 565 002e 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 566 0030 FFF7FEFF 		bl	BSP_GPIO_Set
+ 567              	.LVL73:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 13
+
+
+ 106:Core/HAL/lib/soft_i2c.c ****         IIC_SDA_Read(obj, data);
+ 568              		.loc 1 106 9 view .LVU121
+ 106:Core/HAL/lib/soft_i2c.c ****         IIC_SDA_Read(obj, data);
+ 569              		.loc 1 106 14 is_stmt 0 view .LVU122
+ 570 0034 6400     		lsls	r4, r4, #1
+ 571              	.LVL74:
+ 106:Core/HAL/lib/soft_i2c.c ****         IIC_SDA_Read(obj, data);
+ 572              		.loc 1 106 14 view .LVU123
+ 573 0036 E4B2     		uxtb	r4, r4
+ 574              	.LVL75:
+ 107:Core/HAL/lib/soft_i2c.c ****         if (data)
+ 575              		.loc 1 107 9 is_stmt 1 view .LVU124
+ 576 0038 0DF10701 		add	r1, sp, #7
+ 577 003c 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 578 003e FFF7FEFF 		bl	BSP_GPIO_Read
+ 579              	.LVL76:
+ 108:Core/HAL/lib/soft_i2c.c ****             Temp++;
+ 580              		.loc 1 108 9 view .LVU125
+ 108:Core/HAL/lib/soft_i2c.c ****             Temp++;
+ 581              		.loc 1 108 13 is_stmt 0 view .LVU126
+ 582 0042 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 108:Core/HAL/lib/soft_i2c.c ****             Temp++;
+ 583              		.loc 1 108 12 view .LVU127
+ 584 0046 002B     		cmp	r3, #0
+ 585 0048 E2D0     		beq	.L30
+ 109:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 586              		.loc 1 109 13 is_stmt 1 view .LVU128
+ 109:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 587              		.loc 1 109 17 is_stmt 0 view .LVU129
+ 588 004a 0134     		adds	r4, r4, #1
+ 589              	.LVL77:
+ 109:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 590              		.loc 1 109 17 view .LVU130
+ 591 004c E4B2     		uxtb	r4, r4
+ 592              	.LVL78:
+ 109:Core/HAL/lib/soft_i2c.c ****         bsp_delay_us(5);
+ 593              		.loc 1 109 17 view .LVU131
+ 594 004e DFE7     		b	.L30
+ 595              	.L33:
+ 111:Core/HAL/lib/soft_i2c.c ****     }
+ 112:Core/HAL/lib/soft_i2c.c ****     IIC_SCL_L(obj);
+ 596              		.loc 1 112 5 is_stmt 1 view .LVU132
+ 597 0050 0021     		movs	r1, #0
+ 598 0052 7078     		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 599 0054 FFF7FEFF 		bl	BSP_GPIO_Set
+ 600              	.LVL79:
+ 113:Core/HAL/lib/soft_i2c.c ****     return Temp;
+ 601              		.loc 1 113 5 view .LVU133
+ 114:Core/HAL/lib/soft_i2c.c **** }
+ 602              		.loc 1 114 1 is_stmt 0 view .LVU134
+ 603 0058 2046     		mov	r0, r4
+ 604 005a 02B0     		add	sp, sp, #8
+ 605              	.LCFI11:
+ 606              		.cfi_def_cfa_offset 16
+ 607              		@ sp needed
+ 608 005c 70BD     		pop	{r4, r5, r6, pc}
+ 609              		.loc 1 114 1 view .LVU135
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 14
+
+
+ 610              		.cfi_endproc
+ 611              	.LFE7:
+ 613              		.section	.text.Soft_I2c_WriteData,"ax",%progbits
+ 614              		.align	1
+ 615              		.global	Soft_I2c_WriteData
+ 616              		.syntax unified
+ 617              		.thumb
+ 618              		.thumb_func
+ 620              	Soft_I2c_WriteData:
+ 621              	.LVL80:
+ 622              	.LFB8:
+ 115:Core/HAL/lib/soft_i2c.c **** 
+ 116:Core/HAL/lib/soft_i2c.c **** //写入一个字节
+ 117:Core/HAL/lib/soft_i2c.c **** uint8_t Soft_I2c_WriteData(Soft_I2c* obj,uint8_t dev_addr, uint8_t reg_addr, uint8_t data) {
+ 623              		.loc 1 117 92 is_stmt 1 view -0
+ 624              		.cfi_startproc
+ 625              		@ args = 0, pretend = 0, frame = 0
+ 626              		@ frame_needed = 0, uses_anonymous_args = 0
+ 627              		.loc 1 117 92 is_stmt 0 view .LVU137
+ 628 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 629              	.LCFI12:
+ 630              		.cfi_def_cfa_offset 24
+ 631              		.cfi_offset 3, -24
+ 632              		.cfi_offset 4, -20
+ 633              		.cfi_offset 5, -16
+ 634              		.cfi_offset 6, -12
+ 635              		.cfi_offset 7, -8
+ 636              		.cfi_offset 14, -4
+ 637 0002 0446     		mov	r4, r0
+ 638 0004 0D46     		mov	r5, r1
+ 639 0006 1646     		mov	r6, r2
+ 640 0008 1F46     		mov	r7, r3
+ 118:Core/HAL/lib/soft_i2c.c ****     IIC_Start(obj);
+ 641              		.loc 1 118 5 is_stmt 1 view .LVU138
+ 642 000a FFF7FEFF 		bl	IIC_Start
+ 643              	.LVL81:
+ 119:Core/HAL/lib/soft_i2c.c ****     IIC_WriteBit(obj,dev_addr);
+ 644              		.loc 1 119 5 view .LVU139
+ 645 000e 2946     		mov	r1, r5
+ 646 0010 2046     		mov	r0, r4
+ 647 0012 FFF7FEFF 		bl	IIC_WriteBit
+ 648              	.LVL82:
+ 120:Core/HAL/lib/soft_i2c.c ****     if (IIC_WaitAck(obj) == 0xff)
+ 649              		.loc 1 120 5 view .LVU140
+ 650              		.loc 1 120 9 is_stmt 0 view .LVU141
+ 651 0016 2046     		mov	r0, r4
+ 652 0018 FFF7FEFF 		bl	IIC_WaitAck
+ 653              	.LVL83:
+ 654              		.loc 1 120 8 view .LVU142
+ 655 001c FF28     		cmp	r0, #255
+ 656 001e 15D0     		beq	.L35
+ 121:Core/HAL/lib/soft_i2c.c ****         return 0xff;
+ 122:Core/HAL/lib/soft_i2c.c ****     IIC_WriteBit(obj,reg_addr);
+ 657              		.loc 1 122 5 is_stmt 1 view .LVU143
+ 658 0020 3146     		mov	r1, r6
+ 659 0022 2046     		mov	r0, r4
+ 660 0024 FFF7FEFF 		bl	IIC_WriteBit
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 15
+
+
+ 661              	.LVL84:
+ 123:Core/HAL/lib/soft_i2c.c ****     if (IIC_WaitAck(obj) == 0xff)
+ 662              		.loc 1 123 5 view .LVU144
+ 663              		.loc 1 123 9 is_stmt 0 view .LVU145
+ 664 0028 2046     		mov	r0, r4
+ 665 002a FFF7FEFF 		bl	IIC_WaitAck
+ 666              	.LVL85:
+ 667              		.loc 1 123 8 view .LVU146
+ 668 002e FF28     		cmp	r0, #255
+ 669 0030 0CD0     		beq	.L35
+ 124:Core/HAL/lib/soft_i2c.c ****         return 0xff;
+ 125:Core/HAL/lib/soft_i2c.c ****     IIC_WriteBit(obj,data);
+ 670              		.loc 1 125 5 is_stmt 1 view .LVU147
+ 671 0032 3946     		mov	r1, r7
+ 672 0034 2046     		mov	r0, r4
+ 673 0036 FFF7FEFF 		bl	IIC_WriteBit
+ 674              	.LVL86:
+ 126:Core/HAL/lib/soft_i2c.c **** 
+ 127:Core/HAL/lib/soft_i2c.c ****     if (IIC_WaitAck(obj) == 0xff)
+ 675              		.loc 1 127 5 view .LVU148
+ 676              		.loc 1 127 9 is_stmt 0 view .LVU149
+ 677 003a 2046     		mov	r0, r4
+ 678 003c FFF7FEFF 		bl	IIC_WaitAck
+ 679              	.LVL87:
+ 680              		.loc 1 127 8 view .LVU150
+ 681 0040 FF28     		cmp	r0, #255
+ 682 0042 03D0     		beq	.L35
+ 128:Core/HAL/lib/soft_i2c.c ****         return 0xff;
+ 129:Core/HAL/lib/soft_i2c.c ****     IIC_Stop(obj);
+ 683              		.loc 1 129 5 is_stmt 1 view .LVU151
+ 684 0044 2046     		mov	r0, r4
+ 685 0046 FFF7FEFF 		bl	IIC_Stop
+ 686              	.LVL88:
+ 130:Core/HAL/lib/soft_i2c.c ****     return 0;
+ 687              		.loc 1 130 5 view .LVU152
+ 688              		.loc 1 130 12 is_stmt 0 view .LVU153
+ 689 004a 0020     		movs	r0, #0
+ 690              	.L35:
+ 131:Core/HAL/lib/soft_i2c.c **** }
+ 691              		.loc 1 131 1 view .LVU154
+ 692 004c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 693              		.loc 1 131 1 view .LVU155
+ 694              		.cfi_endproc
+ 695              	.LFE8:
+ 697              		.section	.text.Soft_I2c_ReadData,"ax",%progbits
+ 698              		.align	1
+ 699              		.global	Soft_I2c_ReadData
+ 700              		.syntax unified
+ 701              		.thumb
+ 702              		.thumb_func
+ 704              	Soft_I2c_ReadData:
+ 705              	.LVL89:
+ 706              	.LFB9:
+ 132:Core/HAL/lib/soft_i2c.c **** 
+ 133:Core/HAL/lib/soft_i2c.c **** uint8_t Soft_I2c_ReadData(Soft_I2c* obj,uint8_t dev_addr, uint8_t reg_addr, uint8_t* pdata, uint8_t
+ 707              		.loc 1 133 108 is_stmt 1 view -0
+ 708              		.cfi_startproc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 16
+
+
+ 709              		@ args = 4, pretend = 0, frame = 0
+ 710              		@ frame_needed = 0, uses_anonymous_args = 0
+ 711              		.loc 1 133 108 is_stmt 0 view .LVU157
+ 712 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 713              	.LCFI13:
+ 714              		.cfi_def_cfa_offset 24
+ 715              		.cfi_offset 4, -24
+ 716              		.cfi_offset 5, -20
+ 717              		.cfi_offset 6, -16
+ 718              		.cfi_offset 7, -12
+ 719              		.cfi_offset 8, -8
+ 720              		.cfi_offset 14, -4
+ 721 0004 0546     		mov	r5, r0
+ 722 0006 0C46     		mov	r4, r1
+ 723 0008 9046     		mov	r8, r2
+ 724 000a 1E46     		mov	r6, r3
+ 725 000c 9DF81870 		ldrb	r7, [sp, #24]	@ zero_extendqisi2
+ 134:Core/HAL/lib/soft_i2c.c ****     uint8_t i;
+ 726              		.loc 1 134 5 is_stmt 1 view .LVU158
+ 135:Core/HAL/lib/soft_i2c.c **** 
+ 136:Core/HAL/lib/soft_i2c.c ****     IIC_Start(obj);
+ 727              		.loc 1 136 5 view .LVU159
+ 728 0010 FFF7FEFF 		bl	IIC_Start
+ 729              	.LVL90:
+ 137:Core/HAL/lib/soft_i2c.c ****     IIC_WriteBit(obj,dev_addr);
+ 730              		.loc 1 137 5 view .LVU160
+ 731 0014 2146     		mov	r1, r4
+ 732 0016 2846     		mov	r0, r5
+ 733 0018 FFF7FEFF 		bl	IIC_WriteBit
+ 734              	.LVL91:
+ 138:Core/HAL/lib/soft_i2c.c ****     if (IIC_WaitAck(obj) == 0xff)
+ 735              		.loc 1 138 5 view .LVU161
+ 736              		.loc 1 138 9 is_stmt 0 view .LVU162
+ 737 001c 2846     		mov	r0, r5
+ 738 001e FFF7FEFF 		bl	IIC_WaitAck
+ 739              	.LVL92:
+ 740              		.loc 1 138 8 view .LVU163
+ 741 0022 FF28     		cmp	r0, #255
+ 742 0024 31D0     		beq	.L38
+ 139:Core/HAL/lib/soft_i2c.c ****         return 0xff;
+ 140:Core/HAL/lib/soft_i2c.c ****     IIC_WriteBit(obj,reg_addr);
+ 743              		.loc 1 140 5 is_stmt 1 view .LVU164
+ 744 0026 4146     		mov	r1, r8
+ 745 0028 2846     		mov	r0, r5
+ 746 002a FFF7FEFF 		bl	IIC_WriteBit
+ 747              	.LVL93:
+ 141:Core/HAL/lib/soft_i2c.c ****     if (IIC_WaitAck(obj) == 0xff)
+ 748              		.loc 1 141 5 view .LVU165
+ 749              		.loc 1 141 9 is_stmt 0 view .LVU166
+ 750 002e 2846     		mov	r0, r5
+ 751 0030 FFF7FEFF 		bl	IIC_WaitAck
+ 752              	.LVL94:
+ 753              		.loc 1 141 8 view .LVU167
+ 754 0034 FF28     		cmp	r0, #255
+ 755 0036 28D0     		beq	.L38
+ 142:Core/HAL/lib/soft_i2c.c ****         return 0xff;
+ 143:Core/HAL/lib/soft_i2c.c ****     IIC_Start(obj);
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 17
+
+
+ 756              		.loc 1 143 5 is_stmt 1 view .LVU168
+ 757 0038 2846     		mov	r0, r5
+ 758 003a FFF7FEFF 		bl	IIC_Start
+ 759              	.LVL95:
+ 144:Core/HAL/lib/soft_i2c.c ****     IIC_WriteBit(obj,dev_addr + 1);
+ 760              		.loc 1 144 5 view .LVU169
+ 761 003e 611C     		adds	r1, r4, #1
+ 762 0040 C9B2     		uxtb	r1, r1
+ 763 0042 2846     		mov	r0, r5
+ 764 0044 FFF7FEFF 		bl	IIC_WriteBit
+ 765              	.LVL96:
+ 145:Core/HAL/lib/soft_i2c.c ****     if (IIC_WaitAck(obj) == 0xff)
+ 766              		.loc 1 145 5 view .LVU170
+ 767              		.loc 1 145 9 is_stmt 0 view .LVU171
+ 768 0048 2846     		mov	r0, r5
+ 769 004a FFF7FEFF 		bl	IIC_WaitAck
+ 770              	.LVL97:
+ 771              		.loc 1 145 8 view .LVU172
+ 772 004e FF28     		cmp	r0, #255
+ 773 0050 1BD0     		beq	.L38
+ 146:Core/HAL/lib/soft_i2c.c ****         return 0xff;
+ 147:Core/HAL/lib/soft_i2c.c ****     for (i = 0; i < (count - 1); i++) {
+ 774              		.loc 1 147 12 view .LVU173
+ 775 0052 0024     		movs	r4, #0
+ 776 0054 0AE0     		b	.L39
+ 777              	.LVL98:
+ 778              	.L40:
+ 148:Core/HAL/lib/soft_i2c.c ****         *pdata = IIC_ReadBit(obj);
+ 779              		.loc 1 148 9 is_stmt 1 discriminator 3 view .LVU174
+ 780              		.loc 1 148 18 is_stmt 0 discriminator 3 view .LVU175
+ 781 0056 2846     		mov	r0, r5
+ 782 0058 FFF7FEFF 		bl	IIC_ReadBit
+ 783              	.LVL99:
+ 784              		.loc 1 148 16 discriminator 3 view .LVU176
+ 785 005c 06F8010B 		strb	r0, [r6], #1
+ 786              	.LVL100:
+ 149:Core/HAL/lib/soft_i2c.c ****         IIC_Ack(obj,0);
+ 787              		.loc 1 149 9 is_stmt 1 discriminator 3 view .LVU177
+ 788 0060 0021     		movs	r1, #0
+ 789 0062 2846     		mov	r0, r5
+ 790 0064 FFF7FEFF 		bl	IIC_Ack
+ 791              	.LVL101:
+ 150:Core/HAL/lib/soft_i2c.c ****         pdata++;
+ 792              		.loc 1 150 9 discriminator 3 view .LVU178
+ 147:Core/HAL/lib/soft_i2c.c ****         *pdata = IIC_ReadBit(obj);
+ 793              		.loc 1 147 34 discriminator 3 view .LVU179
+ 147:Core/HAL/lib/soft_i2c.c ****         *pdata = IIC_ReadBit(obj);
+ 794              		.loc 1 147 35 is_stmt 0 discriminator 3 view .LVU180
+ 795 0068 0134     		adds	r4, r4, #1
+ 796              	.LVL102:
+ 147:Core/HAL/lib/soft_i2c.c ****         *pdata = IIC_ReadBit(obj);
+ 797              		.loc 1 147 35 discriminator 3 view .LVU181
+ 798 006a E4B2     		uxtb	r4, r4
+ 799              	.LVL103:
+ 800              	.L39:
+ 147:Core/HAL/lib/soft_i2c.c ****         *pdata = IIC_ReadBit(obj);
+ 801              		.loc 1 147 17 is_stmt 1 discriminator 1 view .LVU182
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 18
+
+
+ 147:Core/HAL/lib/soft_i2c.c ****         *pdata = IIC_ReadBit(obj);
+ 802              		.loc 1 147 28 is_stmt 0 discriminator 1 view .LVU183
+ 803 006c 7B1E     		subs	r3, r7, #1
+ 147:Core/HAL/lib/soft_i2c.c ****         *pdata = IIC_ReadBit(obj);
+ 804              		.loc 1 147 5 discriminator 1 view .LVU184
+ 805 006e 9C42     		cmp	r4, r3
+ 806 0070 F1DB     		blt	.L40
+ 151:Core/HAL/lib/soft_i2c.c ****     }
+ 152:Core/HAL/lib/soft_i2c.c ****     *pdata = IIC_ReadBit(obj);
+ 807              		.loc 1 152 5 is_stmt 1 view .LVU185
+ 808              		.loc 1 152 14 is_stmt 0 view .LVU186
+ 809 0072 2846     		mov	r0, r5
+ 810 0074 FFF7FEFF 		bl	IIC_ReadBit
+ 811              	.LVL104:
+ 812              		.loc 1 152 12 view .LVU187
+ 813 0078 3070     		strb	r0, [r6]
+ 153:Core/HAL/lib/soft_i2c.c ****     IIC_Ack(obj,1);
+ 814              		.loc 1 153 5 is_stmt 1 view .LVU188
+ 815 007a 0121     		movs	r1, #1
+ 816 007c 2846     		mov	r0, r5
+ 817 007e FFF7FEFF 		bl	IIC_Ack
+ 818              	.LVL105:
+ 154:Core/HAL/lib/soft_i2c.c ****     IIC_Stop(obj);
+ 819              		.loc 1 154 5 view .LVU189
+ 820 0082 2846     		mov	r0, r5
+ 821 0084 FFF7FEFF 		bl	IIC_Stop
+ 822              	.LVL106:
+ 155:Core/HAL/lib/soft_i2c.c ****     return 0;
+ 823              		.loc 1 155 5 view .LVU190
+ 824              		.loc 1 155 12 is_stmt 0 view .LVU191
+ 825 0088 0020     		movs	r0, #0
+ 826              	.LVL107:
+ 827              	.L38:
+ 156:Core/HAL/lib/soft_i2c.c **** }
+ 828              		.loc 1 156 1 view .LVU192
+ 829 008a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 830              		.loc 1 156 1 view .LVU193
+ 831              		.cfi_endproc
+ 832              	.LFE9:
+ 834              		.section	.text.Soft_I2c_Create,"ax",%progbits
+ 835              		.align	1
+ 836              		.global	Soft_I2c_Create
+ 837              		.syntax unified
+ 838              		.thumb
+ 839              		.thumb_func
+ 841              	Soft_I2c_Create:
+ 842              	.LVL108:
+ 843              	.LFB10:
+ 157:Core/HAL/lib/soft_i2c.c **** 
+ 158:Core/HAL/lib/soft_i2c.c **** Soft_I2c* Soft_I2c_Create(Soft_I2c_config* config) {
+ 844              		.loc 1 158 52 is_stmt 1 view -0
+ 845              		.cfi_startproc
+ 846              		@ args = 0, pretend = 0, frame = 0
+ 847              		@ frame_needed = 0, uses_anonymous_args = 0
+ 848              		.loc 1 158 52 is_stmt 0 view .LVU195
+ 849 0000 10B5     		push	{r4, lr}
+ 850              	.LCFI14:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 19
+
+
+ 851              		.cfi_def_cfa_offset 8
+ 852              		.cfi_offset 4, -8
+ 853              		.cfi_offset 14, -4
+ 854 0002 0446     		mov	r4, r0
+ 159:Core/HAL/lib/soft_i2c.c ****     Soft_I2c* obj = (Soft_I2c*)malloc(sizeof(Soft_I2c));
+ 855              		.loc 1 159 5 is_stmt 1 view .LVU196
+ 856              		.loc 1 159 32 is_stmt 0 view .LVU197
+ 857 0004 0320     		movs	r0, #3
+ 858              	.LVL109:
+ 859              		.loc 1 159 32 view .LVU198
+ 860 0006 FFF7FEFF 		bl	malloc
+ 861              	.LVL110:
+ 160:Core/HAL/lib/soft_i2c.c ****     memset(obj, 0, sizeof(Soft_I2c));
+ 862              		.loc 1 160 5 is_stmt 1 view .LVU199
+ 863 000a 0022     		movs	r2, #0
+ 864 000c 0280     		strh	r2, [r0]	@ unaligned
+ 865 000e 8270     		strb	r2, [r0, #2]
+ 161:Core/HAL/lib/soft_i2c.c ****     obj->config = *config;
+ 866              		.loc 1 161 5 view .LVU200
+ 867              		.loc 1 161 17 is_stmt 0 view .LVU201
+ 868 0010 2288     		ldrh	r2, [r4]	@ unaligned
+ 869 0012 0280     		strh	r2, [r0]	@ unaligned
+ 162:Core/HAL/lib/soft_i2c.c ****     return obj;
+ 870              		.loc 1 162 5 is_stmt 1 view .LVU202
+ 163:Core/HAL/lib/soft_i2c.c **** }
+ 871              		.loc 1 163 1 is_stmt 0 view .LVU203
+ 872 0014 10BD     		pop	{r4, pc}
+ 873              		.loc 1 163 1 view .LVU204
+ 874              		.cfi_endproc
+ 875              	.LFE10:
+ 877              		.text
+ 878              	.Letext0:
+ 879              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 880              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 881              		.file 4 "Core/HAL/lib/soft_i2c.h"
+ 882              		.file 5 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 883              		.file 6 "Core/BSP/lib/bsp_delay.h"
+ 884              		.file 7 "Core/BSP/interface/bsp_gpio.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 soft_i2c.c
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:20     .text.IIC_SDA_Out:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:26     .text.IIC_SDA_Out:00000000 IIC_SDA_Out
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:53     .text.IIC_SDA_In:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:59     .text.IIC_SDA_In:00000000 IIC_SDA_In
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:85     .text.IIC_Start:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:91     .text.IIC_Start:00000000 IIC_Start
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:143    .text.IIC_Stop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:149    .text.IIC_Stop:00000000 IIC_Stop
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:201    .text.IIC_Ack:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:207    .text.IIC_Ack:00000000 IIC_Ack
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:281    .text.IIC_WaitAck:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:287    .text.IIC_WaitAck:00000000 IIC_WaitAck
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:394    .text.IIC_WriteBit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:400    .text.IIC_WriteBit:00000000 IIC_WriteBit
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:498    .text.IIC_ReadBit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:504    .text.IIC_ReadBit:00000000 IIC_ReadBit
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:614    .text.Soft_I2c_WriteData:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:620    .text.Soft_I2c_WriteData:00000000 Soft_I2c_WriteData
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:698    .text.Soft_I2c_ReadData:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:704    .text.Soft_I2c_ReadData:00000000 Soft_I2c_ReadData
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:835    .text.Soft_I2c_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccC2KRJW.s:841    .text.Soft_I2c_Create:00000000 Soft_I2c_Create
+
+UNDEFINED SYMBOLS
+BSP_GPIO_Reinit
+BSP_GPIO_Set
+bsp_delay_us
+BSP_GPIO_Read
+malloc

@@ -1,0 +1,535 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bsp_gpio.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.BSP_GPIO_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	BSP_GPIO_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	BSP_GPIO_Init:
+  27              	.LFB130:
+  28              		.file 1 "Core/BSP/interface/bsp_gpio.c"
+   1:Core/BSP/interface/bsp_gpio.c **** #include "bsp_gpio.h"
+   2:Core/BSP/interface/bsp_gpio.c **** 
+   3:Core/BSP/interface/bsp_gpio.c **** #include "bsp_def.h"
+   4:Core/BSP/interface/bsp_gpio.c **** #include "gpio.h"
+   5:Core/BSP/interface/bsp_gpio.c **** 
+   6:Core/BSP/interface/bsp_gpio.c **** typedef struct BSP_GPIO_Typedef_t {
+   7:Core/BSP/interface/bsp_gpio.c ****     GPIO_TypeDef* base;
+   8:Core/BSP/interface/bsp_gpio.c ****     uint16_t pin;
+   9:Core/BSP/interface/bsp_gpio.c ****     uint8_t mode;
+  10:Core/BSP/interface/bsp_gpio.c ****     GPIO_InitTypeDef GPIO_InitStruct;
+  11:Core/BSP/interface/bsp_gpio.c **** } BSP_GPIO_Typedef;
+  12:Core/BSP/interface/bsp_gpio.c **** 
+  13:Core/BSP/interface/bsp_gpio.c **** BSP_GPIO_Typedef gpio_ports[DEVICE_GPIO_CNT];
+  14:Core/BSP/interface/bsp_gpio.c **** 
+  15:Core/BSP/interface/bsp_gpio.c **** void BSP_GPIO_Init() {
+  29              		.loc 1 15 22 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  16:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[0].base = GPIO_0_BASE;
+  34              		.loc 1 16 5 view .LVU1
+  35              		.loc 1 16 24 is_stmt 0 view .LVU2
+  36 0000 1D4B     		ldr	r3, .L2
+  37 0002 1E4A     		ldr	r2, .L2+4
+  38 0004 1A60     		str	r2, [r3]
+  17:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[0].pin = GPIO_0_PIN;
+  39              		.loc 1 17 5 is_stmt 1 view .LVU3
+  40              		.loc 1 17 23 is_stmt 0 view .LVU4
+  41 0006 1022     		movs	r2, #16
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 2
+
+
+  42 0008 9A80     		strh	r2, [r3, #4]	@ movhi
+  18:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[0].mode = GPIO_0_MODE;
+  43              		.loc 1 18 5 is_stmt 1 view .LVU5
+  44              		.loc 1 18 24 is_stmt 0 view .LVU6
+  45 000a 0122     		movs	r2, #1
+  46 000c 9A71     		strb	r2, [r3, #6]
+  19:Core/BSP/interface/bsp_gpio.c **** 
+  20:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[1].base = GPIO_1_BASE;
+  47              		.loc 1 20 5 is_stmt 1 view .LVU7
+  48              		.loc 1 20 24 is_stmt 0 view .LVU8
+  49 000e 1C49     		ldr	r1, .L2+8
+  50 0010 D961     		str	r1, [r3, #28]
+  21:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[1].pin = GPIO_1_PIN;
+  51              		.loc 1 21 5 is_stmt 1 view .LVU9
+  52              		.loc 1 21 23 is_stmt 0 view .LVU10
+  53 0012 1A84     		strh	r2, [r3, #32]	@ movhi
+  22:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[1].mode = GPIO_1_MODE;
+  54              		.loc 1 22 5 is_stmt 1 view .LVU11
+  55              		.loc 1 22 24 is_stmt 0 view .LVU12
+  56 0014 83F82220 		strb	r2, [r3, #34]
+  23:Core/BSP/interface/bsp_gpio.c **** 
+  24:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[2].base = GPIO_2_BASE;
+  57              		.loc 1 24 5 is_stmt 1 view .LVU13
+  58              		.loc 1 24 24 is_stmt 0 view .LVU14
+  59 0018 01F58061 		add	r1, r1, #1024
+  60 001c 9963     		str	r1, [r3, #56]
+  25:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[2].pin = GPIO_2_PIN;
+  61              		.loc 1 25 5 is_stmt 1 view .LVU15
+  62              		.loc 1 25 23 is_stmt 0 view .LVU16
+  63 001e 4FF48071 		mov	r1, #256
+  64 0022 9987     		strh	r1, [r3, #60]	@ movhi
+  26:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[2].mode = GPIO_2_MODE;
+  65              		.loc 1 26 5 is_stmt 1 view .LVU17
+  66              		.loc 1 26 24 is_stmt 0 view .LVU18
+  67 0024 83F83E20 		strb	r2, [r3, #62]
+  27:Core/BSP/interface/bsp_gpio.c **** 
+  28:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[3].base = GPIO_3_BASE;
+  68              		.loc 1 28 5 is_stmt 1 view .LVU19
+  69              		.loc 1 28 24 is_stmt 0 view .LVU20
+  70 0028 1649     		ldr	r1, .L2+12
+  71 002a 5965     		str	r1, [r3, #84]
+  29:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[3].pin = GPIO_3_PIN;
+  72              		.loc 1 29 5 is_stmt 1 view .LVU21
+  73              		.loc 1 29 23 is_stmt 0 view .LVU22
+  74 002c 4FF48060 		mov	r0, #1024
+  75 0030 A3F85800 		strh	r0, [r3, #88]	@ movhi
+  30:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[3].mode = GPIO_3_MODE;
+  76              		.loc 1 30 5 is_stmt 1 view .LVU23
+  77              		.loc 1 30 24 is_stmt 0 view .LVU24
+  78 0034 83F85A20 		strb	r2, [r3, #90]
+  31:Core/BSP/interface/bsp_gpio.c **** 
+  32:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[4].base = GPIO_4_BASE;
+  79              		.loc 1 32 5 is_stmt 1 view .LVU25
+  80              		.loc 1 32 24 is_stmt 0 view .LVU26
+  81 0038 1967     		str	r1, [r3, #112]
+  33:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[4].pin = GPIO_4_PIN;
+  82              		.loc 1 33 5 is_stmt 1 view .LVU27
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 3
+
+
+  83              		.loc 1 33 23 is_stmt 0 view .LVU28
+  84 003a 4FF40060 		mov	r0, #2048
+  85 003e A3F87400 		strh	r0, [r3, #116]	@ movhi
+  34:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[4].mode = GPIO_4_MODE;
+  86              		.loc 1 34 5 is_stmt 1 view .LVU29
+  87              		.loc 1 34 24 is_stmt 0 view .LVU30
+  88 0042 83F87620 		strb	r2, [r3, #118]
+  35:Core/BSP/interface/bsp_gpio.c **** 
+  36:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[5].base = GPIO_5_BASE;
+  89              		.loc 1 36 5 is_stmt 1 view .LVU31
+  90              		.loc 1 36 24 is_stmt 0 view .LVU32
+  91 0046 C3F88C10 		str	r1, [r3, #140]
+  37:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[5].pin = GPIO_5_PIN;
+  92              		.loc 1 37 5 is_stmt 1 view .LVU33
+  93              		.loc 1 37 23 is_stmt 0 view .LVU34
+  94 004a 4FF48051 		mov	r1, #4096
+  95 004e A3F89010 		strh	r1, [r3, #144]	@ movhi
+  38:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[5].mode = GPIO_5_MODE;
+  96              		.loc 1 38 5 is_stmt 1 view .LVU35
+  97              		.loc 1 38 24 is_stmt 0 view .LVU36
+  98 0052 83F89220 		strb	r2, [r3, #146]
+  39:Core/BSP/interface/bsp_gpio.c **** 
+  40:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[6].base = GPIO_6_BASE;
+  99              		.loc 1 40 5 is_stmt 1 view .LVU37
+ 100              		.loc 1 40 24 is_stmt 0 view .LVU38
+ 101 0056 0C49     		ldr	r1, .L2+16
+ 102 0058 C3F8A810 		str	r1, [r3, #168]
+  41:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[6].pin = GPIO_6_PIN;
+ 103              		.loc 1 41 5 is_stmt 1 view .LVU39
+ 104              		.loc 1 41 23 is_stmt 0 view .LVU40
+ 105 005c 4020     		movs	r0, #64
+ 106 005e A3F8AC00 		strh	r0, [r3, #172]	@ movhi
+  42:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[6].mode = GPIO_6_MODE;
+ 107              		.loc 1 42 5 is_stmt 1 view .LVU41
+ 108              		.loc 1 42 24 is_stmt 0 view .LVU42
+ 109 0062 83F8AE20 		strb	r2, [r3, #174]
+  43:Core/BSP/interface/bsp_gpio.c **** 
+  44:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[7].base = GPIO_7_BASE;
+ 110              		.loc 1 44 5 is_stmt 1 view .LVU43
+ 111              		.loc 1 44 24 is_stmt 0 view .LVU44
+ 112 0066 C3F8C410 		str	r1, [r3, #196]
+  45:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[7].pin = GPIO_7_PIN;
+ 113              		.loc 1 45 5 is_stmt 1 view .LVU45
+ 114              		.loc 1 45 23 is_stmt 0 view .LVU46
+ 115 006a 8021     		movs	r1, #128
+ 116 006c A3F8C810 		strh	r1, [r3, #200]	@ movhi
+  46:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[7].mode = GPIO_7_MODE;
+ 117              		.loc 1 46 5 is_stmt 1 view .LVU47
+ 118              		.loc 1 46 24 is_stmt 0 view .LVU48
+ 119 0070 83F8CA20 		strb	r2, [r3, #202]
+  47:Core/BSP/interface/bsp_gpio.c **** }
+ 120              		.loc 1 47 1 view .LVU49
+ 121 0074 7047     		bx	lr
+ 122              	.L3:
+ 123 0076 00BF     		.align	2
+ 124              	.L2:
+ 125 0078 00000000 		.word	.LANCHOR0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 4
+
+
+ 126 007c 00000240 		.word	1073872896
+ 127 0080 00040240 		.word	1073873920
+ 128 0084 001C0240 		.word	1073880064
+ 129 0088 00200240 		.word	1073881088
+ 130              		.cfi_endproc
+ 131              	.LFE130:
+ 133              		.section	.text.BSP_GPIO_Set,"ax",%progbits
+ 134              		.align	1
+ 135              		.global	BSP_GPIO_Set
+ 136              		.syntax unified
+ 137              		.thumb
+ 138              		.thumb_func
+ 140              	BSP_GPIO_Set:
+ 141              	.LVL0:
+ 142              	.LFB131:
+  48:Core/BSP/interface/bsp_gpio.c **** 
+  49:Core/BSP/interface/bsp_gpio.c **** void BSP_GPIO_Set(uint8_t gpio_index, uint8_t status) {
+ 143              		.loc 1 49 55 is_stmt 1 view -0
+ 144              		.cfi_startproc
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+  50:Core/BSP/interface/bsp_gpio.c ****     if (gpio_ports[gpio_index].mode == GPIO_OUTPUT_MODE) {
+ 147              		.loc 1 50 5 view .LVU51
+ 148              		.loc 1 50 31 is_stmt 0 view .LVU52
+ 149 0000 C0EBC002 		rsb	r2, r0, r0, lsl #3
+ 150 0004 094B     		ldr	r3, .L11
+ 151 0006 03EB8203 		add	r3, r3, r2, lsl #2
+ 152 000a 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 153              		.loc 1 50 8 view .LVU53
+ 154 000c 012B     		cmp	r3, #1
+ 155 000e 00D0     		beq	.L10
+ 156 0010 7047     		bx	lr
+ 157              	.L10:
+  49:Core/BSP/interface/bsp_gpio.c ****     if (gpio_ports[gpio_index].mode == GPIO_OUTPUT_MODE) {
+ 158              		.loc 1 49 55 view .LVU54
+ 159 0012 10B5     		push	{r4, lr}
+ 160              	.LCFI0:
+ 161              		.cfi_def_cfa_offset 8
+ 162              		.cfi_offset 4, -8
+ 163              		.cfi_offset 14, -4
+  51:Core/BSP/interface/bsp_gpio.c ****         HAL_GPIO_WritePin(gpio_ports[gpio_index].base, gpio_ports[gpio_index].pin, status);
+ 164              		.loc 1 51 9 is_stmt 1 view .LVU55
+ 165 0014 054C     		ldr	r4, .L11
+ 166 0016 04EB8203 		add	r3, r4, r2, lsl #2
+ 167 001a 1046     		mov	r0, r2
+ 168              	.LVL1:
+ 169              		.loc 1 51 9 is_stmt 0 view .LVU56
+ 170 001c 0A46     		mov	r2, r1
+ 171 001e 9988     		ldrh	r1, [r3, #4]
+ 172              	.LVL2:
+ 173              		.loc 1 51 9 view .LVU57
+ 174 0020 54F82000 		ldr	r0, [r4, r0, lsl #2]
+ 175 0024 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 176              	.LVL3:
+  52:Core/BSP/interface/bsp_gpio.c ****     }
+  53:Core/BSP/interface/bsp_gpio.c **** }
+ 177              		.loc 1 53 1 view .LVU58
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 5
+
+
+ 178 0028 10BD     		pop	{r4, pc}
+ 179              	.L12:
+ 180 002a 00BF     		.align	2
+ 181              	.L11:
+ 182 002c 00000000 		.word	.LANCHOR0
+ 183              		.cfi_endproc
+ 184              	.LFE131:
+ 186              		.section	.text.BSP_GPIO_Reinit,"ax",%progbits
+ 187              		.align	1
+ 188              		.global	BSP_GPIO_Reinit
+ 189              		.syntax unified
+ 190              		.thumb
+ 191              		.thumb_func
+ 193              	BSP_GPIO_Reinit:
+ 194              	.LVL4:
+ 195              	.LFB132:
+  54:Core/BSP/interface/bsp_gpio.c **** 
+  55:Core/BSP/interface/bsp_gpio.c **** void BSP_GPIO_Reinit(uint8_t gpio_index, uint8_t mode) {
+ 196              		.loc 1 55 56 is_stmt 1 view -0
+ 197              		.cfi_startproc
+ 198              		@ args = 0, pretend = 0, frame = 0
+ 199              		@ frame_needed = 0, uses_anonymous_args = 0
+ 200              		.loc 1 55 56 is_stmt 0 view .LVU60
+ 201 0000 08B5     		push	{r3, lr}
+ 202              	.LCFI1:
+ 203              		.cfi_def_cfa_offset 8
+ 204              		.cfi_offset 3, -8
+ 205              		.cfi_offset 14, -4
+  56:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[gpio_index].GPIO_InitStruct.Pin = gpio_ports[gpio_index].pin;
+ 206              		.loc 1 56 5 is_stmt 1 view .LVU61
+ 207              		.loc 1 56 72 is_stmt 0 view .LVU62
+ 208 0002 C0EBC002 		rsb	r2, r0, r0, lsl #3
+ 209 0006 164B     		ldr	r3, .L17
+ 210 0008 03EB8203 		add	r3, r3, r2, lsl #2
+ 211 000c 9A88     		ldrh	r2, [r3, #4]
+ 212              		.loc 1 56 48 view .LVU63
+ 213 000e 9A60     		str	r2, [r3, #8]
+  57:Core/BSP/interface/bsp_gpio.c ****     if(mode){
+ 214              		.loc 1 57 5 is_stmt 1 view .LVU64
+ 215              		.loc 1 57 7 is_stmt 0 view .LVU65
+ 216 0010 E1B1     		cbz	r1, .L14
+  58:Core/BSP/interface/bsp_gpio.c ****         gpio_ports[gpio_index].GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 217              		.loc 1 58 9 is_stmt 1 view .LVU66
+ 218              		.loc 1 58 53 is_stmt 0 view .LVU67
+ 219 0012 C0EBC003 		rsb	r3, r0, r0, lsl #3
+ 220 0016 124A     		ldr	r2, .L17
+ 221 0018 02EB8303 		add	r3, r2, r3, lsl #2
+ 222 001c 0122     		movs	r2, #1
+ 223 001e DA60     		str	r2, [r3, #12]
+  59:Core/BSP/interface/bsp_gpio.c ****         gpio_ports[gpio_index].mode = GPIO_OUTPUT_MODE;
+ 224              		.loc 1 59 9 is_stmt 1 view .LVU68
+ 225              		.loc 1 59 37 is_stmt 0 view .LVU69
+ 226 0020 9A71     		strb	r2, [r3, #6]
+ 227              	.L15:
+  60:Core/BSP/interface/bsp_gpio.c ****     }
+  61:Core/BSP/interface/bsp_gpio.c ****     else{
+  62:Core/BSP/interface/bsp_gpio.c ****         gpio_ports[gpio_index].GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 6
+
+
+  63:Core/BSP/interface/bsp_gpio.c ****         gpio_ports[gpio_index].mode = GPIO_INPUT_MODE;
+  64:Core/BSP/interface/bsp_gpio.c ****     }
+  65:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[gpio_index].GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 228              		.loc 1 65 5 is_stmt 1 view .LVU70
+ 229              		.loc 1 65 49 is_stmt 0 view .LVU71
+ 230 0022 0F4A     		ldr	r2, .L17
+ 231 0024 C0EBC003 		rsb	r3, r0, r0, lsl #3
+ 232 0028 02EB8303 		add	r3, r2, r3, lsl #2
+ 233 002c 0021     		movs	r1, #0
+ 234              	.LVL5:
+ 235              		.loc 1 65 49 view .LVU72
+ 236 002e 1961     		str	r1, [r3, #16]
+  66:Core/BSP/interface/bsp_gpio.c ****     gpio_ports[gpio_index].GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 237              		.loc 1 66 5 is_stmt 1 view .LVU73
+ 238              		.loc 1 66 50 is_stmt 0 view .LVU74
+ 239 0030 0321     		movs	r1, #3
+ 240 0032 5961     		str	r1, [r3, #20]
+  67:Core/BSP/interface/bsp_gpio.c ****     HAL_GPIO_Init(gpio_ports[gpio_index].base,&gpio_ports[gpio_index].GPIO_InitStruct);
+ 241              		.loc 1 67 5 is_stmt 1 view .LVU75
+ 242 0034 C0EBC001 		rsb	r1, r0, r0, lsl #3
+ 243 0038 8900     		lsls	r1, r1, #2
+ 244 003a 0831     		adds	r1, r1, #8
+ 245 003c C0EBC000 		rsb	r0, r0, r0, lsl #3
+ 246              	.LVL6:
+ 247              		.loc 1 67 5 is_stmt 0 view .LVU76
+ 248 0040 1144     		add	r1, r1, r2
+ 249 0042 52F82000 		ldr	r0, [r2, r0, lsl #2]
+ 250 0046 FFF7FEFF 		bl	HAL_GPIO_Init
+ 251              	.LVL7:
+  68:Core/BSP/interface/bsp_gpio.c **** }
+ 252              		.loc 1 68 1 view .LVU77
+ 253 004a 08BD     		pop	{r3, pc}
+ 254              	.LVL8:
+ 255              	.L14:
+  62:Core/BSP/interface/bsp_gpio.c ****         gpio_ports[gpio_index].mode = GPIO_INPUT_MODE;
+ 256              		.loc 1 62 9 is_stmt 1 view .LVU78
+  62:Core/BSP/interface/bsp_gpio.c ****         gpio_ports[gpio_index].mode = GPIO_INPUT_MODE;
+ 257              		.loc 1 62 53 is_stmt 0 view .LVU79
+ 258 004c C0EBC003 		rsb	r3, r0, r0, lsl #3
+ 259 0050 034A     		ldr	r2, .L17
+ 260 0052 02EB8303 		add	r3, r2, r3, lsl #2
+ 261 0056 0022     		movs	r2, #0
+ 262 0058 DA60     		str	r2, [r3, #12]
+  63:Core/BSP/interface/bsp_gpio.c ****     }
+ 263              		.loc 1 63 9 is_stmt 1 view .LVU80
+  63:Core/BSP/interface/bsp_gpio.c ****     }
+ 264              		.loc 1 63 37 is_stmt 0 view .LVU81
+ 265 005a 9A71     		strb	r2, [r3, #6]
+ 266 005c E1E7     		b	.L15
+ 267              	.L18:
+ 268 005e 00BF     		.align	2
+ 269              	.L17:
+ 270 0060 00000000 		.word	.LANCHOR0
+ 271              		.cfi_endproc
+ 272              	.LFE132:
+ 274              		.section	.text.BSP_GPIO_Toggle,"ax",%progbits
+ 275              		.align	1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 7
+
+
+ 276              		.global	BSP_GPIO_Toggle
+ 277              		.syntax unified
+ 278              		.thumb
+ 279              		.thumb_func
+ 281              	BSP_GPIO_Toggle:
+ 282              	.LVL9:
+ 283              	.LFB133:
+  69:Core/BSP/interface/bsp_gpio.c **** 
+  70:Core/BSP/interface/bsp_gpio.c **** void BSP_GPIO_Toggle(uint8_t gpio_index) {
+ 284              		.loc 1 70 42 is_stmt 1 view -0
+ 285              		.cfi_startproc
+ 286              		@ args = 0, pretend = 0, frame = 0
+ 287              		@ frame_needed = 0, uses_anonymous_args = 0
+ 288              		.loc 1 70 42 is_stmt 0 view .LVU83
+ 289 0000 08B5     		push	{r3, lr}
+ 290              	.LCFI2:
+ 291              		.cfi_def_cfa_offset 8
+ 292              		.cfi_offset 3, -8
+ 293              		.cfi_offset 14, -4
+  71:Core/BSP/interface/bsp_gpio.c ****     if (gpio_ports[gpio_index].mode == GPIO_OUTPUT_MODE) {
+ 294              		.loc 1 71 5 is_stmt 1 view .LVU84
+ 295              		.loc 1 71 31 is_stmt 0 view .LVU85
+ 296 0002 C0EBC002 		rsb	r2, r0, r0, lsl #3
+ 297 0006 0A4B     		ldr	r3, .L23
+ 298 0008 03EB8203 		add	r3, r3, r2, lsl #2
+ 299 000c 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 300              		.loc 1 71 8 view .LVU86
+ 301 000e 012B     		cmp	r3, #1
+ 302 0010 00D0     		beq	.L22
+ 303              	.LVL10:
+ 304              	.L19:
+  72:Core/BSP/interface/bsp_gpio.c ****         HAL_GPIO_TogglePin(gpio_ports[gpio_index].base, gpio_ports[gpio_index].pin);
+  73:Core/BSP/interface/bsp_gpio.c ****     }
+  74:Core/BSP/interface/bsp_gpio.c **** }
+ 305              		.loc 1 74 1 view .LVU87
+ 306 0012 08BD     		pop	{r3, pc}
+ 307              	.LVL11:
+ 308              	.L22:
+  72:Core/BSP/interface/bsp_gpio.c ****         HAL_GPIO_TogglePin(gpio_ports[gpio_index].base, gpio_ports[gpio_index].pin);
+ 309              		.loc 1 72 9 is_stmt 1 view .LVU88
+ 310 0014 064A     		ldr	r2, .L23
+ 311 0016 C0EBC003 		rsb	r3, r0, r0, lsl #3
+ 312 001a 02EB8303 		add	r3, r2, r3, lsl #2
+ 313 001e C0EBC000 		rsb	r0, r0, r0, lsl #3
+ 314              	.LVL12:
+  72:Core/BSP/interface/bsp_gpio.c ****         HAL_GPIO_TogglePin(gpio_ports[gpio_index].base, gpio_ports[gpio_index].pin);
+ 315              		.loc 1 72 9 is_stmt 0 view .LVU89
+ 316 0022 9988     		ldrh	r1, [r3, #4]
+ 317 0024 52F82000 		ldr	r0, [r2, r0, lsl #2]
+ 318 0028 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 319              	.LVL13:
+ 320              		.loc 1 74 1 view .LVU90
+ 321 002c F1E7     		b	.L19
+ 322              	.L24:
+ 323 002e 00BF     		.align	2
+ 324              	.L23:
+ 325 0030 00000000 		.word	.LANCHOR0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 8
+
+
+ 326              		.cfi_endproc
+ 327              	.LFE133:
+ 329              		.section	.text.BSP_GPIO_Read,"ax",%progbits
+ 330              		.align	1
+ 331              		.global	BSP_GPIO_Read
+ 332              		.syntax unified
+ 333              		.thumb
+ 334              		.thumb_func
+ 336              	BSP_GPIO_Read:
+ 337              	.LVL14:
+ 338              	.LFB134:
+  75:Core/BSP/interface/bsp_gpio.c **** 
+  76:Core/BSP/interface/bsp_gpio.c **** void BSP_GPIO_Read(uint8_t gpio_index, uint8_t* data) {
+ 339              		.loc 1 76 55 is_stmt 1 view -0
+ 340              		.cfi_startproc
+ 341              		@ args = 0, pretend = 0, frame = 0
+ 342              		@ frame_needed = 0, uses_anonymous_args = 0
+  77:Core/BSP/interface/bsp_gpio.c ****     if (gpio_ports[gpio_index].mode == GPIO_INPUT_MODE) {
+ 343              		.loc 1 77 5 view .LVU92
+ 344              		.loc 1 77 31 is_stmt 0 view .LVU93
+ 345 0000 C0EBC002 		rsb	r2, r0, r0, lsl #3
+ 346 0004 0A4B     		ldr	r3, .L32
+ 347 0006 03EB8203 		add	r3, r3, r2, lsl #2
+ 348 000a 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 349              		.loc 1 77 8 view .LVU94
+ 350 000c 03B1     		cbz	r3, .L31
+ 351 000e 7047     		bx	lr
+ 352              	.L31:
+  76:Core/BSP/interface/bsp_gpio.c ****     if (gpio_ports[gpio_index].mode == GPIO_INPUT_MODE) {
+ 353              		.loc 1 76 55 view .LVU95
+ 354 0010 10B5     		push	{r4, lr}
+ 355              	.LCFI3:
+ 356              		.cfi_def_cfa_offset 8
+ 357              		.cfi_offset 4, -8
+ 358              		.cfi_offset 14, -4
+ 359 0012 0C46     		mov	r4, r1
+  78:Core/BSP/interface/bsp_gpio.c ****         (*data) = HAL_GPIO_ReadPin(gpio_ports[gpio_index].base, gpio_ports[gpio_index].pin);
+ 360              		.loc 1 78 9 is_stmt 1 view .LVU96
+ 361              		.loc 1 78 19 is_stmt 0 view .LVU97
+ 362 0014 064A     		ldr	r2, .L32
+ 363 0016 C0EBC003 		rsb	r3, r0, r0, lsl #3
+ 364 001a 02EB8303 		add	r3, r2, r3, lsl #2
+ 365 001e C0EBC000 		rsb	r0, r0, r0, lsl #3
+ 366              	.LVL15:
+ 367              		.loc 1 78 19 view .LVU98
+ 368 0022 9988     		ldrh	r1, [r3, #4]
+ 369              	.LVL16:
+ 370              		.loc 1 78 19 view .LVU99
+ 371 0024 52F82000 		ldr	r0, [r2, r0, lsl #2]
+ 372 0028 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 373              	.LVL17:
+ 374              		.loc 1 78 17 view .LVU100
+ 375 002c 2070     		strb	r0, [r4]
+  79:Core/BSP/interface/bsp_gpio.c ****     }
+  80:Core/BSP/interface/bsp_gpio.c **** }...
+ 376              		.loc 1 80 1 view .LVU101
+ 377 002e 10BD     		pop	{r4, pc}
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 9
+
+
+ 378              	.LVL18:
+ 379              	.L33:
+ 380              		.loc 1 80 1 view .LVU102
+ 381              		.align	2
+ 382              	.L32:
+ 383 0030 00000000 		.word	.LANCHOR0
+ 384              		.cfi_endproc
+ 385              	.LFE134:
+ 387              		.global	gpio_ports
+ 388              		.section	.bss.gpio_ports,"aw",%nobits
+ 389              		.align	2
+ 390              		.set	.LANCHOR0,. + 0
+ 393              	gpio_ports:
+ 394 0000 00000000 		.space	224
+ 394      00000000 
+ 394      00000000 
+ 394      00000000 
+ 394      00000000 
+ 395              		.text
+ 396              	.Letext0:
+ 397              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 398              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 399              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 400              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp_gpio.c
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:20     .text.BSP_GPIO_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:26     .text.BSP_GPIO_Init:00000000 BSP_GPIO_Init
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:125    .text.BSP_GPIO_Init:00000078 $d
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:134    .text.BSP_GPIO_Set:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:140    .text.BSP_GPIO_Set:00000000 BSP_GPIO_Set
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:182    .text.BSP_GPIO_Set:0000002c $d
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:187    .text.BSP_GPIO_Reinit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:193    .text.BSP_GPIO_Reinit:00000000 BSP_GPIO_Reinit
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:270    .text.BSP_GPIO_Reinit:00000060 $d
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:275    .text.BSP_GPIO_Toggle:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:281    .text.BSP_GPIO_Toggle:00000000 BSP_GPIO_Toggle
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:325    .text.BSP_GPIO_Toggle:00000030 $d
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:330    .text.BSP_GPIO_Read:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:336    .text.BSP_GPIO_Read:00000000 BSP_GPIO_Read
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:383    .text.BSP_GPIO_Read:00000030 $d
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:393    .bss.gpio_ports:00000000 gpio_ports
+C:\Users\lenovo\AppData\Local\Temp\cczCsozl.s:389    .bss.gpio_ports:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_GPIO_Init
+HAL_GPIO_TogglePin
+HAL_GPIO_ReadPin

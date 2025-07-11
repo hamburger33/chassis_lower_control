@@ -2,6 +2,13 @@
 #define _APP_H
 
 #include "bsp_log.h"
+#include "BMI088.h"
+#include "bsp_log.h"
+#include "can_motor.h"
+#include "pub_sub.h"
+#include "robot_def.h"
+#include "stdint.h"
+#include "super_cap_wuli.h"
 
 void APP_Layer_Init();
 void APP_Layer_default_loop();

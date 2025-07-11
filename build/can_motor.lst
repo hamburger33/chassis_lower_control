@@ -1,0 +1,1673 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"can_motor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Can_Motor_Driver_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	Can_Motor_Driver_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Can_Motor_Driver_Init:
+  27              	.LFB0:
+  28              		.file 1 "Core/HAL/driver/motor/can_motor.c"
+   1:Core/HAL/driver/motor/can_motor.c **** //此文件为CAN电机的驱动文件，其执行逻辑如下：
+   2:Core/HAL/driver/motor/can_motor.c **** //在主控注册了一个电机后，freertos中can_motor线程会周期执行发送电机控制�
+   3:Core/HAL/driver/motor/can_motor.c **** //电机的创建与注册:注册驱动 Can_Motor_Driver_Init   --->   Can_Motor_Create
+   4:Core/HAL/driver/motor/can_motor.c **** //数据更新：CanMotor_RxCallBack  -->  Can_Motor_FeedbackData_Update
+   5:Core/HAL/driver/motor/can_motor.c **** //控制数据发送: Can_Motor_Calc_Send  -->  Can_Motor_Send
+   6:Core/HAL/driver/motor/can_motor.c **** 
+   7:Core/HAL/driver/motor/can_motor.c **** #include "can_motor.h"
+   8:Core/HAL/driver/motor/can_motor.c **** 
+   9:Core/HAL/driver/motor/can_motor.c **** #include "bsp_can.h"
+  10:Core/HAL/driver/motor/can_motor.c **** #include "bsp_log.h"
+  11:Core/HAL/driver/motor/can_motor.c **** #include "stdlib.h"
+  12:Core/HAL/driver/motor/can_motor.c **** #include "string.h"
+  13:Core/HAL/driver/motor/can_motor.c **** 
+  14:Core/HAL/driver/motor/can_motor.c **** #define VELOCITY_WINDOW 5
+  15:Core/HAL/driver/motor/can_motor.c **** #define FDB_INIT_VALUE (-10000)
+  16:Core/HAL/driver/motor/can_motor.c **** 
+  17:Core/HAL/driver/motor/can_motor.c **** can_motor *motor_instances[2][3][4];  // motor_instances用于存放can_motor*类型的指向电机
+  18:Core/HAL/driver/motor/can_motor.c **** uint8_t motors_id[2][3][8];           // motors_id
+  19:Core/HAL/driver/motor/can_motor.c ****                                       // 被填充为1表示此处有电机被注册，为0表示�
+  20:Core/HAL/driver/motor/can_motor.c **** const uint32_t identifiers[3] = {0x200, 0x1FF, 0x2FF};
+  21:Core/HAL/driver/motor/can_motor.c **** void CanMotor_RxCallBack(uint8_t can_id, uint32_t identifier, uint8_t *data, uint32_t len);
+  22:Core/HAL/driver/motor/can_motor.c **** void Can_Motor_FeedbackData_Update(can_motor *obj, uint8_t *data);
+  23:Core/HAL/driver/motor/can_motor.c **** void Can_Motor_Send(uint8_t can_id, uint16_t identifier, short motor_data_id1, short motor_data_id2
+  24:Core/HAL/driver/motor/can_motor.c **** 
+  25:Core/HAL/driver/motor/can_motor.c **** void Can_Motor_Driver_Init() {
+  29              		.loc 1 25 30 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 10B5     		push	{r4, lr}
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 2
+
+
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  26:Core/HAL/driver/motor/can_motor.c ****     memset(&motor_instances, 0, sizeof(motor_instances));
+  38              		.loc 1 26 5 view .LVU1
+  39 0002 6022     		movs	r2, #96
+  40 0004 0021     		movs	r1, #0
+  41 0006 0948     		ldr	r0, .L3
+  42 0008 FFF7FEFF 		bl	memset
+  43              	.LVL0:
+  27:Core/HAL/driver/motor/can_motor.c ****     memset(&motors_id, 0, sizeof(motors_id));  //全部初始化
+  44              		.loc 1 27 5 view .LVU2
+  45 000c 3022     		movs	r2, #48
+  46 000e 0021     		movs	r1, #0
+  47 0010 0748     		ldr	r0, .L3+4
+  48 0012 FFF7FEFF 		bl	memset
+  49              	.LVL1:
+  28:Core/HAL/driver/motor/can_motor.c ****     BSP_CAN_RegisterRxCallback(0, CanMotor_RxCallBack);
+  50              		.loc 1 28 5 view .LVU3
+  51 0016 074C     		ldr	r4, .L3+8
+  52 0018 2146     		mov	r1, r4
+  53 001a 0020     		movs	r0, #0
+  54 001c FFF7FEFF 		bl	BSP_CAN_RegisterRxCallback
+  55              	.LVL2:
+  29:Core/HAL/driver/motor/can_motor.c ****     BSP_CAN_RegisterRxCallback(1, CanMotor_RxCallBack);  //驱动注册，注册中断回调函数-
+  56              		.loc 1 29 5 view .LVU4
+  57 0020 2146     		mov	r1, r4
+  58 0022 0120     		movs	r0, #1
+  59 0024 FFF7FEFF 		bl	BSP_CAN_RegisterRxCallback
+  60              	.LVL3:
+  30:Core/HAL/driver/motor/can_motor.c **** }
+  61              		.loc 1 30 1 is_stmt 0 view .LVU5
+  62 0028 10BD     		pop	{r4, pc}
+  63              	.L4:
+  64 002a 00BF     		.align	2
+  65              	.L3:
+  66 002c 00000000 		.word	.LANCHOR0
+  67 0030 00000000 		.word	.LANCHOR1
+  68 0034 00000000 		.word	CanMotor_RxCallBack
+  69              		.cfi_endproc
+  70              	.LFE0:
+  72              		.section	.text.Can_Motor_Create,"ax",%progbits
+  73              		.align	1
+  74              		.global	Can_Motor_Create
+  75              		.syntax unified
+  76              		.thumb
+  77              		.thumb_func
+  79              	Can_Motor_Create:
+  80              	.LVL4:
+  81              	.LFB1:
+  31:Core/HAL/driver/motor/can_motor.c **** 
+  32:Core/HAL/driver/motor/can_motor.c **** can_motor *Can_Motor_Create(can_motor_config *config) {  //创建电机函数
+  82              		.loc 1 32 55 is_stmt 1 view -0
+  83              		.cfi_startproc
+  84              		@ args = 0, pretend = 0, frame = 0
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 3
+
+
+  86              		.loc 1 32 55 is_stmt 0 view .LVU7
+  87 0000 38B5     		push	{r3, r4, r5, lr}
+  88              	.LCFI1:
+  89              		.cfi_def_cfa_offset 16
+  90              		.cfi_offset 3, -16
+  91              		.cfi_offset 4, -12
+  92              		.cfi_offset 5, -8
+  93              		.cfi_offset 14, -4
+  94 0002 0546     		mov	r5, r0
+  33:Core/HAL/driver/motor/can_motor.c ****     can_motor *obj = (can_motor *)malloc(sizeof(can_motor));
+  95              		.loc 1 33 5 is_stmt 1 view .LVU8
+  96              		.loc 1 33 35 is_stmt 0 view .LVU9
+  97 0004 FC20     		movs	r0, #252
+  98              	.LVL5:
+  99              		.loc 1 33 35 view .LVU10
+ 100 0006 FFF7FEFF 		bl	malloc
+ 101              	.LVL6:
+ 102 000a 0446     		mov	r4, r0
+ 103              	.LVL7:
+  34:Core/HAL/driver/motor/can_motor.c ****     memset(obj, 0, sizeof(can_motor));
+ 104              		.loc 1 34 5 is_stmt 1 view .LVU11
+ 105 000c FC22     		movs	r2, #252
+ 106 000e 0021     		movs	r1, #0
+ 107 0010 FFF7FEFF 		bl	memset
+ 108              	.LVL8:
+  35:Core/HAL/driver/motor/can_motor.c ****     obj->position_queue = create_circular_queue(sizeof(float), VELOCITY_WINDOW);  //循环队列，
+ 109              		.loc 1 35 5 view .LVU12
+ 110              		.loc 1 35 27 is_stmt 0 view .LVU13
+ 111 0014 0521     		movs	r1, #5
+ 112 0016 0420     		movs	r0, #4
+ 113 0018 FFF7FEFF 		bl	create_circular_queue
+ 114              	.LVL9:
+ 115              		.loc 1 35 25 view .LVU14
+ 116 001c C4F8EC00 		str	r0, [r4, #236]
+  36:Core/HAL/driver/motor/can_motor.c ****     obj->config = *config;                                                        //写入电机注
+ 117              		.loc 1 36 5 is_stmt 1 view .LVU15
+ 118              		.loc 1 36 17 is_stmt 0 view .LVU16
+ 119 0020 C822     		movs	r2, #200
+ 120 0022 2946     		mov	r1, r5
+ 121 0024 2046     		mov	r0, r4
+ 122 0026 FFF7FEFF 		bl	memcpy
+ 123              	.LVL10:
+  37:Core/HAL/driver/motor/can_motor.c ****     obj->position_sum = 0;                                                        //循环队列数
+ 124              		.loc 1 37 5 is_stmt 1 view .LVU17
+ 125              		.loc 1 37 23 is_stmt 0 view .LVU18
+ 126 002a 0023     		movs	r3, #0
+ 127 002c C4F8F030 		str	r3, [r4, #240]	@ float
+  38:Core/HAL/driver/motor/can_motor.c ****     obj->fdbPosition = FDB_INIT_VALUE;                                            //编码器反馈
+ 128              		.loc 1 38 5 is_stmt 1 view .LVU19
+ 129              		.loc 1 38 22 is_stmt 0 view .LVU20
+ 130 0030 4DF6F003 		movw	r3, #55536
+ 131 0034 A4F8CA30 		strh	r3, [r4, #202]	@ movhi
+  39:Core/HAL/driver/motor/can_motor.c ****     if (obj->config.speed_fdb == NULL) {
+ 132              		.loc 1 39 5 is_stmt 1 view .LVU21
+ 133              		.loc 1 39 20 is_stmt 0 view .LVU22
+ 134 0038 D4F8BC30 		ldr	r3, [r4, #188]
+ 135              		.loc 1 39 8 view .LVU23
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 4
+
+
+ 136 003c 63B3     		cbz	r3, .L20
+ 137              	.L6:
+  40:Core/HAL/driver/motor/can_motor.c ****         obj->config.speed_fdb = &obj->velocity;  //若速度环不需要其他反馈，则使用自
+  41:Core/HAL/driver/motor/can_motor.c ****     }
+  42:Core/HAL/driver/motor/can_motor.c ****     if (obj->config.position_fdb == NULL) {  //若位置环不需要其他反馈，则使用自身�
+ 138              		.loc 1 42 5 is_stmt 1 view .LVU24
+ 139              		.loc 1 42 20 is_stmt 0 view .LVU25
+ 140 003e D4F8C030 		ldr	r3, [r4, #192]
+ 141              		.loc 1 42 8 view .LVU26
+ 142 0042 73B3     		cbz	r3, .L21
+ 143              	.L7:
+  43:Core/HAL/driver/motor/can_motor.c ****         obj->config.position_fdb = &obj->real_position;
+  44:Core/HAL/driver/motor/can_motor.c ****     }
+  45:Core/HAL/driver/motor/can_motor.c ****     obj->motor_controller =  create_controller(&(obj->config.motor_controller_config));
+ 144              		.loc 1 45 5 is_stmt 1 view .LVU27
+ 145              		.loc 1 45 30 is_stmt 0 view .LVU28
+ 146 0044 E01C     		adds	r0, r4, #3
+ 147 0046 FFF7FEFF 		bl	create_controller
+ 148              	.LVL11:
+ 149              		.loc 1 45 27 view .LVU29
+ 150 004a C4F8E400 		str	r0, [r4, #228]
+  46:Core/HAL/driver/motor/can_motor.c ****     obj->monitor = Monitor_Register(obj->config.lost_callback, 5, obj);
+ 151              		.loc 1 46 5 is_stmt 1 view .LVU30
+ 152              		.loc 1 46 20 is_stmt 0 view .LVU31
+ 153 004e 2246     		mov	r2, r4
+ 154 0050 0521     		movs	r1, #5
+ 155 0052 D4F8C400 		ldr	r0, [r4, #196]
+ 156 0056 FFF7FEFF 		bl	Monitor_Register
+ 157              	.LVL12:
+ 158              		.loc 1 46 18 view .LVU32
+ 159 005a C4F8F800 		str	r0, [r4, #248]
+  47:Core/HAL/driver/motor/can_motor.c ****     if (obj->motor_controller->leso.config.SWITCH == MYENABLE) {
+ 160              		.loc 1 47 5 is_stmt 1 view .LVU33
+ 161              		.loc 1 47 12 is_stmt 0 view .LVU34
+ 162 005e D4F8E430 		ldr	r3, [r4, #228]
+ 163              		.loc 1 47 43 view .LVU35
+ 164 0062 93F82C21 		ldrb	r2, [r3, #300]	@ zero_extendqisi2
+ 165              		.loc 1 47 8 view .LVU36
+ 166 0066 012A     		cmp	r2, #1
+ 167 0068 20D0     		beq	.L22
+ 168              	.L8:
+  48:Core/HAL/driver/motor/can_motor.c ****         obj->motor_controller->leso.config.p_input = &(obj->electric_current);
+  49:Core/HAL/driver/motor/can_motor.c ****     }
+  50:Core/HAL/driver/motor/can_motor.c **** 
+  51:Core/HAL/driver/motor/can_motor.c ****     obj->enable = MOTOR_STOP;
+ 169              		.loc 1 51 5 is_stmt 1 view .LVU37
+ 170              		.loc 1 51 17 is_stmt 0 view .LVU38
+ 171 006a 0023     		movs	r3, #0
+ 172 006c 84F8C830 		strb	r3, [r4, #200]
+  52:Core/HAL/driver/motor/can_motor.c ****     motors_id[obj->config.bsp_can_index][obj->config.motor_model][obj->config.motor_set_id - 1] = 1
+ 173              		.loc 1 52 5 is_stmt 1 view .LVU39
+ 174              		.loc 1 52 26 is_stmt 0 view .LVU40
+ 175 0070 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 176              		.loc 1 52 53 view .LVU41
+ 177 0072 A178     		ldrb	r1, [r4, #2]	@ zero_extendqisi2
+ 178              		.loc 1 52 78 view .LVU42
+ 179 0074 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 5
+
+
+ 180              		.loc 1 52 92 view .LVU43
+ 181 0076 013A     		subs	r2, r2, #1
+ 182              		.loc 1 52 97 view .LVU44
+ 183 0078 03EB4303 		add	r3, r3, r3, lsl #1
+ 184 007c 0B44     		add	r3, r3, r1
+ 185 007e 3B49     		ldr	r1, .L24
+ 186 0080 01EBC303 		add	r3, r1, r3, lsl #3
+ 187 0084 0121     		movs	r1, #1
+ 188 0086 9954     		strb	r1, [r3, r2]
+  53:Core/HAL/driver/motor/can_motor.c ****     switch (config->motor_model) {
+ 189              		.loc 1 53 5 is_stmt 1 view .LVU45
+ 190              		.loc 1 53 19 is_stmt 0 view .LVU46
+ 191 0088 AB78     		ldrb	r3, [r5, #2]	@ zero_extendqisi2
+ 192              		.loc 1 53 5 view .LVU47
+ 193 008a 8B42     		cmp	r3, r1
+ 194 008c 13D0     		beq	.L9
+ 195 008e 022B     		cmp	r3, #2
+ 196 0090 4DD0     		beq	.L10
+ 197 0092 73B3     		cbz	r3, .L23
+ 198              	.L5:
+  54:Core/HAL/driver/motor/can_motor.c ****         case MODEL_2006:
+  55:Core/HAL/driver/motor/can_motor.c ****             if (config->motor_set_id < 5) {
+  56:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+  57:Core/HAL/driver/motor/can_motor.c ****             } else {
+  58:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][1][config->motor_set_id - 5] = obj;  //若�
+  59:Core/HAL/driver/motor/can_motor.c ****             }
+  60:Core/HAL/driver/motor/can_motor.c ****             BSP_CAN_AddFilter(obj->config.bsp_can_index, 0x200 + config->motor_set_id);  //写入ca
+  61:Core/HAL/driver/motor/can_motor.c ****             break;
+  62:Core/HAL/driver/motor/can_motor.c ****         case MODEL_3508:
+  63:Core/HAL/driver/motor/can_motor.c ****             if (config->motor_set_id < 5) {
+  64:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+  65:Core/HAL/driver/motor/can_motor.c ****             } else {
+  66:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][1][config->motor_set_id - 5] = obj;  //若�
+  67:Core/HAL/driver/motor/can_motor.c ****             }
+  68:Core/HAL/driver/motor/can_motor.c ****             BSP_CAN_AddFilter(obj->config.bsp_can_index, 0x200 + config->motor_set_id);
+  69:Core/HAL/driver/motor/can_motor.c ****             break;
+  70:Core/HAL/driver/motor/can_motor.c ****         case MODEL_6020:
+  71:Core/HAL/driver/motor/can_motor.c ****             if (config->motor_set_id < 5) {
+  72:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][1][config->motor_set_id - 1] = obj;  //若�
+  73:Core/HAL/driver/motor/can_motor.c ****             } else {
+  74:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][2][config->motor_set_id - 5] = obj;  //若�
+  75:Core/HAL/driver/motor/can_motor.c ****             }
+  76:Core/HAL/driver/motor/can_motor.c ****             BSP_CAN_AddFilter(obj->config.bsp_can_index, 0x204 + config->motor_set_id);
+  77:Core/HAL/driver/motor/can_motor.c ****             break;
+  78:Core/HAL/driver/motor/can_motor.c ****         default:
+  79:Core/HAL/driver/motor/can_motor.c ****             break;
+  80:Core/HAL/driver/motor/can_motor.c ****     }
+  81:Core/HAL/driver/motor/can_motor.c **** 
+  82:Core/HAL/driver/motor/can_motor.c ****     return obj;
+  83:Core/HAL/driver/motor/can_motor.c **** }
+ 199              		.loc 1 83 1 view .LVU48
+ 200 0094 2046     		mov	r0, r4
+ 201 0096 38BD     		pop	{r3, r4, r5, pc}
+ 202              	.LVL13:
+ 203              	.L20:
+  40:Core/HAL/driver/motor/can_motor.c ****     }
+ 204              		.loc 1 40 9 is_stmt 1 view .LVU49
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 6
+
+
+  40:Core/HAL/driver/motor/can_motor.c ****     }
+ 205              		.loc 1 40 33 is_stmt 0 view .LVU50
+ 206 0098 04F1F403 		add	r3, r4, #244
+  40:Core/HAL/driver/motor/can_motor.c ****     }
+ 207              		.loc 1 40 31 view .LVU51
+ 208 009c C4F8BC30 		str	r3, [r4, #188]
+ 209 00a0 CDE7     		b	.L6
+ 210              	.L21:
+  43:Core/HAL/driver/motor/can_motor.c ****     }
+ 211              		.loc 1 43 9 is_stmt 1 view .LVU52
+  43:Core/HAL/driver/motor/can_motor.c ****     }
+ 212              		.loc 1 43 36 is_stmt 0 view .LVU53
+ 213 00a2 04F1D803 		add	r3, r4, #216
+  43:Core/HAL/driver/motor/can_motor.c ****     }
+ 214              		.loc 1 43 34 view .LVU54
+ 215 00a6 C4F8C030 		str	r3, [r4, #192]
+ 216 00aa CBE7     		b	.L7
+ 217              	.L22:
+  48:Core/HAL/driver/motor/can_motor.c ****     }
+ 218              		.loc 1 48 9 is_stmt 1 view .LVU55
+  48:Core/HAL/driver/motor/can_motor.c ****     }
+ 219              		.loc 1 48 54 is_stmt 0 view .LVU56
+ 220 00ac 04F1D002 		add	r2, r4, #208
+  48:Core/HAL/driver/motor/can_motor.c ****     }
+ 221              		.loc 1 48 52 view .LVU57
+ 222 00b0 C3F84121 		str	r2, [r3, #321]	@ unaligned
+ 223 00b4 D9E7     		b	.L8
+ 224              	.L9:
+  55:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+ 225              		.loc 1 55 13 is_stmt 1 view .LVU58
+  55:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+ 226              		.loc 1 55 23 is_stmt 0 view .LVU59
+ 227 00b6 6B78     		ldrb	r3, [r5, #1]	@ zero_extendqisi2
+  55:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+ 228              		.loc 1 55 16 view .LVU60
+ 229 00b8 042B     		cmp	r3, #4
+ 230 00ba 0FD8     		bhi	.L13
+  56:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 231              		.loc 1 56 17 is_stmt 1 view .LVU61
+  56:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 232              		.loc 1 56 39 is_stmt 0 view .LVU62
+ 233 00bc 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  56:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 234              		.loc 1 56 80 view .LVU63
+ 235 00be 013B     		subs	r3, r3, #1
+  56:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 236              		.loc 1 56 85 view .LVU64
+ 237 00c0 02EB4202 		add	r2, r2, r2, lsl #1
+ 238 00c4 03EB8203 		add	r3, r3, r2, lsl #2
+ 239 00c8 294A     		ldr	r2, .L24+4
+ 240 00ca 42F82340 		str	r4, [r2, r3, lsl #2]
+ 241              	.L14:
+  60:Core/HAL/driver/motor/can_motor.c ****             break;
+ 242              		.loc 1 60 13 is_stmt 1 view .LVU65
+  60:Core/HAL/driver/motor/can_motor.c ****             break;
+ 243              		.loc 1 60 72 is_stmt 0 view .LVU66
+ 244 00ce 6978     		ldrb	r1, [r5, #1]	@ zero_extendqisi2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 7
+
+
+  60:Core/HAL/driver/motor/can_motor.c ****             break;
+ 245              		.loc 1 60 13 view .LVU67
+ 246 00d0 01F50071 		add	r1, r1, #512
+ 247 00d4 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 248 00d6 FFF7FEFF 		bl	BSP_CAN_AddFilter
+ 249              	.LVL14:
+  61:Core/HAL/driver/motor/can_motor.c ****         case MODEL_3508:
+ 250              		.loc 1 61 13 is_stmt 1 view .LVU68
+ 251 00da DBE7     		b	.L5
+ 252              	.L13:
+  58:Core/HAL/driver/motor/can_motor.c ****             }
+ 253              		.loc 1 58 17 view .LVU69
+  58:Core/HAL/driver/motor/can_motor.c ****             }
+ 254              		.loc 1 58 39 is_stmt 0 view .LVU70
+ 255 00dc 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  58:Core/HAL/driver/motor/can_motor.c ****             }
+ 256              		.loc 1 58 80 view .LVU71
+ 257 00de 053B     		subs	r3, r3, #5
+  58:Core/HAL/driver/motor/can_motor.c ****             }
+ 258              		.loc 1 58 85 view .LVU72
+ 259 00e0 02EB4202 		add	r2, r2, r2, lsl #1
+ 260 00e4 03EB8203 		add	r3, r3, r2, lsl #2
+ 261 00e8 0433     		adds	r3, r3, #4
+ 262 00ea 214A     		ldr	r2, .L24+4
+ 263 00ec 42F82340 		str	r4, [r2, r3, lsl #2]
+ 264 00f0 EDE7     		b	.L14
+ 265              	.L23:
+  63:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+ 266              		.loc 1 63 13 is_stmt 1 view .LVU73
+  63:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+ 267              		.loc 1 63 23 is_stmt 0 view .LVU74
+ 268 00f2 6B78     		ldrb	r3, [r5, #1]	@ zero_extendqisi2
+  63:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][0][config->motor_set_id - 1] = obj;  //若�
+ 269              		.loc 1 63 16 view .LVU75
+ 270 00f4 042B     		cmp	r3, #4
+ 271 00f6 0FD8     		bhi	.L15
+  64:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 272              		.loc 1 64 17 is_stmt 1 view .LVU76
+  64:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 273              		.loc 1 64 39 is_stmt 0 view .LVU77
+ 274 00f8 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  64:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 275              		.loc 1 64 80 view .LVU78
+ 276 00fa 013B     		subs	r3, r3, #1
+  64:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 277              		.loc 1 64 85 view .LVU79
+ 278 00fc 02EB4202 		add	r2, r2, r2, lsl #1
+ 279 0100 03EB8203 		add	r3, r3, r2, lsl #2
+ 280 0104 1A4A     		ldr	r2, .L24+4
+ 281 0106 42F82340 		str	r4, [r2, r3, lsl #2]
+ 282              	.L16:
+  68:Core/HAL/driver/motor/can_motor.c ****             break;
+ 283              		.loc 1 68 13 is_stmt 1 view .LVU80
+  68:Core/HAL/driver/motor/can_motor.c ****             break;
+ 284              		.loc 1 68 72 is_stmt 0 view .LVU81
+ 285 010a 6978     		ldrb	r1, [r5, #1]	@ zero_extendqisi2
+  68:Core/HAL/driver/motor/can_motor.c ****             break;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 8
+
+
+ 286              		.loc 1 68 13 view .LVU82
+ 287 010c 01F50071 		add	r1, r1, #512
+ 288 0110 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 289 0112 FFF7FEFF 		bl	BSP_CAN_AddFilter
+ 290              	.LVL15:
+  69:Core/HAL/driver/motor/can_motor.c ****         case MODEL_6020:
+ 291              		.loc 1 69 13 is_stmt 1 view .LVU83
+ 292 0116 BDE7     		b	.L5
+ 293              	.L15:
+  66:Core/HAL/driver/motor/can_motor.c ****             }
+ 294              		.loc 1 66 17 view .LVU84
+  66:Core/HAL/driver/motor/can_motor.c ****             }
+ 295              		.loc 1 66 39 is_stmt 0 view .LVU85
+ 296 0118 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  66:Core/HAL/driver/motor/can_motor.c ****             }
+ 297              		.loc 1 66 80 view .LVU86
+ 298 011a 053B     		subs	r3, r3, #5
+  66:Core/HAL/driver/motor/can_motor.c ****             }
+ 299              		.loc 1 66 85 view .LVU87
+ 300 011c 02EB4202 		add	r2, r2, r2, lsl #1
+ 301 0120 03EB8203 		add	r3, r3, r2, lsl #2
+ 302 0124 0433     		adds	r3, r3, #4
+ 303 0126 124A     		ldr	r2, .L24+4
+ 304 0128 42F82340 		str	r4, [r2, r3, lsl #2]
+ 305 012c EDE7     		b	.L16
+ 306              	.L10:
+  71:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][1][config->motor_set_id - 1] = obj;  //若�
+ 307              		.loc 1 71 13 is_stmt 1 view .LVU88
+  71:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][1][config->motor_set_id - 1] = obj;  //若�
+ 308              		.loc 1 71 23 is_stmt 0 view .LVU89
+ 309 012e 6B78     		ldrb	r3, [r5, #1]	@ zero_extendqisi2
+  71:Core/HAL/driver/motor/can_motor.c ****                 motor_instances[config->bsp_can_index][1][config->motor_set_id - 1] = obj;  //若�
+ 310              		.loc 1 71 16 view .LVU90
+ 311 0130 042B     		cmp	r3, #4
+ 312 0132 10D8     		bhi	.L17
+  72:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 313              		.loc 1 72 17 is_stmt 1 view .LVU91
+  72:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 314              		.loc 1 72 39 is_stmt 0 view .LVU92
+ 315 0134 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  72:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 316              		.loc 1 72 80 view .LVU93
+ 317 0136 013B     		subs	r3, r3, #1
+  72:Core/HAL/driver/motor/can_motor.c ****             } else {
+ 318              		.loc 1 72 85 view .LVU94
+ 319 0138 02EB4202 		add	r2, r2, r2, lsl #1
+ 320 013c 03EB8203 		add	r3, r3, r2, lsl #2
+ 321 0140 0433     		adds	r3, r3, #4
+ 322 0142 0B4A     		ldr	r2, .L24+4
+ 323 0144 42F82340 		str	r4, [r2, r3, lsl #2]
+ 324              	.L18:
+  76:Core/HAL/driver/motor/can_motor.c ****             break;
+ 325              		.loc 1 76 13 is_stmt 1 view .LVU95
+  76:Core/HAL/driver/motor/can_motor.c ****             break;
+ 326              		.loc 1 76 72 is_stmt 0 view .LVU96
+ 327 0148 6978     		ldrb	r1, [r5, #1]	@ zero_extendqisi2
+  76:Core/HAL/driver/motor/can_motor.c ****             break;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 9
+
+
+ 328              		.loc 1 76 13 view .LVU97
+ 329 014a 01F50171 		add	r1, r1, #516
+ 330 014e 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 331 0150 FFF7FEFF 		bl	BSP_CAN_AddFilter
+ 332              	.LVL16:
+  77:Core/HAL/driver/motor/can_motor.c ****         default:
+ 333              		.loc 1 77 13 is_stmt 1 view .LVU98
+  82:Core/HAL/driver/motor/can_motor.c **** }
+ 334              		.loc 1 82 5 view .LVU99
+  82:Core/HAL/driver/motor/can_motor.c **** }
+ 335              		.loc 1 82 12 is_stmt 0 view .LVU100
+ 336 0154 9EE7     		b	.L5
+ 337              	.L17:
+  74:Core/HAL/driver/motor/can_motor.c ****             }
+ 338              		.loc 1 74 17 is_stmt 1 view .LVU101
+  74:Core/HAL/driver/motor/can_motor.c ****             }
+ 339              		.loc 1 74 39 is_stmt 0 view .LVU102
+ 340 0156 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  74:Core/HAL/driver/motor/can_motor.c ****             }
+ 341              		.loc 1 74 80 view .LVU103
+ 342 0158 053B     		subs	r3, r3, #5
+  74:Core/HAL/driver/motor/can_motor.c ****             }
+ 343              		.loc 1 74 85 view .LVU104
+ 344 015a 02EB4202 		add	r2, r2, r2, lsl #1
+ 345 015e 03EB8203 		add	r3, r3, r2, lsl #2
+ 346 0162 0833     		adds	r3, r3, #8
+ 347 0164 024A     		ldr	r2, .L24+4
+ 348 0166 42F82340 		str	r4, [r2, r3, lsl #2]
+ 349 016a EDE7     		b	.L18
+ 350              	.L25:
+ 351              		.align	2
+ 352              	.L24:
+ 353 016c 00000000 		.word	.LANCHOR1
+ 354 0170 00000000 		.word	.LANCHOR0
+ 355              		.cfi_endproc
+ 356              	.LFE1:
+ 358              		.global	__aeabi_f2d
+ 359              		.global	__aeabi_dmul
+ 360              		.global	__aeabi_d2f
+ 361              		.section	.text.Can_Motor_FeedbackData_Update,"ax",%progbits
+ 362              		.align	1
+ 363              		.global	Can_Motor_FeedbackData_Update
+ 364              		.syntax unified
+ 365              		.thumb
+ 366              		.thumb_func
+ 368              	Can_Motor_FeedbackData_Update:
+ 369              	.LVL17:
+ 370              	.LFB3:
+  84:Core/HAL/driver/motor/can_motor.c **** 
+  85:Core/HAL/driver/motor/can_motor.c **** void CanMotor_RxCallBack(uint8_t can_id, uint32_t identifier, uint8_t *data, uint32_t len) {  //注
+  86:Core/HAL/driver/motor/can_motor.c ****     uint32_t model_3508_2006_id = identifier - 0x200;
+  87:Core/HAL/driver/motor/can_motor.c ****     uint32_t model_6020_id = identifier - 0x204;
+  88:Core/HAL/driver/motor/can_motor.c ****     // if (model_3508_2006_id > 8) return;
+  89:Core/HAL/driver/motor/can_motor.c ****     if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_2006][model_3508_2006_id - 1]) {
+  90:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+  91:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+  92:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 10
+
+
+  93:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+  94:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_6020_id < 5 ? 1 : 2][model_6020
+  95:Core/HAL/driver/motor/can_motor.c ****     }
+  96:Core/HAL/driver/motor/can_motor.c **** }
+  97:Core/HAL/driver/motor/can_motor.c **** 
+  98:Core/HAL/driver/motor/can_motor.c **** void Can_Motor_FeedbackData_Update(can_motor *obj, uint8_t *data) {  //电机数值更新函数,写
+ 371              		.loc 1 98 67 is_stmt 1 view -0
+ 372              		.cfi_startproc
+ 373              		@ args = 0, pretend = 0, frame = 8
+ 374              		@ frame_needed = 0, uses_anonymous_args = 0
+ 375              		.loc 1 98 67 is_stmt 0 view .LVU106
+ 376 0000 10B5     		push	{r4, lr}
+ 377              	.LCFI2:
+ 378              		.cfi_def_cfa_offset 8
+ 379              		.cfi_offset 4, -8
+ 380              		.cfi_offset 14, -4
+ 381 0002 2DED028B 		vpush.64	{d8}
+ 382              	.LCFI3:
+ 383              		.cfi_def_cfa_offset 16
+ 384              		.cfi_offset 80, -16
+ 385              		.cfi_offset 81, -12
+ 386 0006 82B0     		sub	sp, sp, #8
+ 387              	.LCFI4:
+ 388              		.cfi_def_cfa_offset 24
+ 389 0008 0446     		mov	r4, r0
+  99:Core/HAL/driver/motor/can_motor.c ****     obj->last_fdbPosition = obj->fdbPosition;
+ 390              		.loc 1 99 5 is_stmt 1 view .LVU107
+ 391              		.loc 1 99 32 is_stmt 0 view .LVU108
+ 392 000a B0F9CA20 		ldrsh	r2, [r0, #202]
+ 393              		.loc 1 99 27 view .LVU109
+ 394 000e A0F8CC20 		strh	r2, [r0, #204]	@ movhi
+ 100:Core/HAL/driver/motor/can_motor.c ****     obj->fdbPosition = ((short)data[0]) << 8 | data[1];                                     //将�
+ 395              		.loc 1 100 5 is_stmt 1 view .LVU110
+ 396              		.loc 1 100 36 is_stmt 0 view .LVU111
+ 397 0012 0878     		ldrb	r0, [r1]	@ zero_extendqisi2
+ 398              	.LVL18:
+ 399              		.loc 1 100 52 view .LVU112
+ 400 0014 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 401              		.loc 1 100 46 view .LVU113
+ 402 0016 43EA0023 		orr	r3, r3, r0, lsl #8
+ 403 001a 1BB2     		sxth	r3, r3
+ 404              		.loc 1 100 22 view .LVU114
+ 405 001c A4F8CA30 		strh	r3, [r4, #202]	@ movhi
+ 101:Core/HAL/driver/motor/can_motor.c ****     if (obj->last_fdbPosition == FDB_INIT_VALUE) obj->last_fdbPosition = obj->fdbPosition;  //若�
+ 406              		.loc 1 101 5 is_stmt 1 view .LVU115
+ 407              		.loc 1 101 8 is_stmt 0 view .LVU116
+ 408 0020 4048     		ldr	r0, .L37
+ 409 0022 8242     		cmp	r2, r0
+ 410 0024 63D0     		beq	.L34
+ 411              	.L27:
+ 102:Core/HAL/driver/motor/can_motor.c ****     obj->fdbSpeed = ((short)data[2]) << 8 | data[3];                                        //更�
+ 412              		.loc 1 102 5 is_stmt 1 view .LVU117
+ 413              		.loc 1 102 33 is_stmt 0 view .LVU118
+ 414 0026 8878     		ldrb	r0, [r1, #2]	@ zero_extendqisi2
+ 415              		.loc 1 102 49 view .LVU119
+ 416 0028 CA78     		ldrb	r2, [r1, #3]	@ zero_extendqisi2
+ 417              		.loc 1 102 43 view .LVU120
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 11
+
+
+ 418 002a 42EA0022 		orr	r2, r2, r0, lsl #8
+ 419              		.loc 1 102 19 view .LVU121
+ 420 002e A4F8CE20 		strh	r2, [r4, #206]	@ movhi
+ 103:Core/HAL/driver/motor/can_motor.c ****     obj->electric_current = ((short)data[4]) << 8 | data[5];                                //更�
+ 421              		.loc 1 103 5 is_stmt 1 view .LVU122
+ 422              		.loc 1 103 41 is_stmt 0 view .LVU123
+ 423 0032 0879     		ldrb	r0, [r1, #4]	@ zero_extendqisi2
+ 424              		.loc 1 103 57 view .LVU124
+ 425 0034 4A79     		ldrb	r2, [r1, #5]	@ zero_extendqisi2
+ 426              		.loc 1 103 51 view .LVU125
+ 427 0036 42EA0022 		orr	r2, r2, r0, lsl #8
+ 428              		.loc 1 103 27 view .LVU126
+ 429 003a A4F8D020 		strh	r2, [r4, #208]	@ movhi
+ 104:Core/HAL/driver/motor/can_motor.c ****     if (obj->config.motor_model == MODEL_2006) {                                            //不�
+ 430              		.loc 1 104 5 is_stmt 1 view .LVU127
+ 431              		.loc 1 104 20 is_stmt 0 view .LVU128
+ 432 003e A278     		ldrb	r2, [r4, #2]	@ zero_extendqisi2
+ 433              		.loc 1 104 8 view .LVU129
+ 434 0040 012A     		cmp	r2, #1
+ 435 0042 57D0     		beq	.L35
+ 105:Core/HAL/driver/motor/can_motor.c ****         obj->temperature = 0;
+ 106:Core/HAL/driver/motor/can_motor.c ****     } else {
+ 107:Core/HAL/driver/motor/can_motor.c ****         obj->temperature = data[6];
+ 436              		.loc 1 107 9 is_stmt 1 view .LVU130
+ 437              		.loc 1 107 26 is_stmt 0 view .LVU131
+ 438 0044 8A79     		ldrb	r2, [r1, #6]	@ zero_extendqisi2
+ 439 0046 84F8D420 		strb	r2, [r4, #212]
+ 440              	.L29:
+ 108:Core/HAL/driver/motor/can_motor.c ****     }
+ 109:Core/HAL/driver/motor/can_motor.c ****     if (obj->fdbPosition - obj->last_fdbPosition > 4096)  //通过编码器计算圈数
+ 441              		.loc 1 109 5 is_stmt 1 view .LVU132
+ 442              		.loc 1 109 31 is_stmt 0 view .LVU133
+ 443 004a B4F9CC20 		ldrsh	r2, [r4, #204]
+ 444              		.loc 1 109 26 view .LVU134
+ 445 004e 9A1A     		subs	r2, r3, r2
+ 446              		.loc 1 109 8 view .LVU135
+ 447 0050 B2F5805F 		cmp	r2, #4096
+ 448 0054 52DD     		ble	.L30
+ 110:Core/HAL/driver/motor/can_motor.c ****         obj->round--;
+ 449              		.loc 1 110 9 is_stmt 1 view .LVU136
+ 450              		.loc 1 110 12 is_stmt 0 view .LVU137
+ 451 0056 B4F9D220 		ldrsh	r2, [r4, #210]
+ 452              		.loc 1 110 19 view .LVU138
+ 453 005a 013A     		subs	r2, r2, #1
+ 454 005c A4F8D220 		strh	r2, [r4, #210]	@ movhi
+ 455              	.L31:
+ 111:Core/HAL/driver/motor/can_motor.c ****     else if (obj->fdbPosition - obj->last_fdbPosition < -4096)
+ 112:Core/HAL/driver/motor/can_motor.c ****         obj->round++;
+ 113:Core/HAL/driver/motor/can_motor.c ****     obj->last_real_position_8192 = obj->real_position_8192;  //更新过零处理后的数据
+ 456              		.loc 1 113 5 is_stmt 1 view .LVU139
+ 457              		.loc 1 113 39 is_stmt 0 view .LVU140
+ 458 0060 D4ED378A 		vldr.32	s17, [r4, #220]
+ 459              		.loc 1 113 34 view .LVU141
+ 460 0064 C4ED388A 		vstr.32	s17, [r4, #224]
+ 114:Core/HAL/driver/motor/can_motor.c ****     obj->real_position_8192 = obj->fdbPosition + obj->round * 8192;
+ 461              		.loc 1 114 5 is_stmt 1 view .LVU142
+ 462              		.loc 1 114 53 is_stmt 0 view .LVU143
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 12
+
+
+ 463 0068 B4F9D220 		ldrsh	r2, [r4, #210]
+ 464              		.loc 1 114 48 view .LVU144
+ 465 006c 03EB4233 		add	r3, r3, r2, lsl #13
+ 466              		.loc 1 114 29 view .LVU145
+ 467 0070 07EE903A 		vmov	s15, r3	@ int
+ 468 0074 B8EEE78A 		vcvt.f32.s32	s16, s15
+ 469 0078 84ED378A 		vstr.32	s16, [r4, #220]
+ 115:Core/HAL/driver/motor/can_motor.c ****     obj->real_position = obj->real_position_8192 * 360.0 / 8192.0;
+ 470              		.loc 1 115 5 is_stmt 1 view .LVU146
+ 471              		.loc 1 115 29 is_stmt 0 view .LVU147
+ 472 007c 18EE100A 		vmov	r0, s16
+ 473 0080 FFF7FEFF 		bl	__aeabi_f2d
+ 474              	.LVL19:
+ 475              		.loc 1 115 50 view .LVU148
+ 476 0084 0022     		movs	r2, #0
+ 477 0086 284B     		ldr	r3, .L37+4
+ 478 0088 FFF7FEFF 		bl	__aeabi_dmul
+ 479              	.LVL20:
+ 480              		.loc 1 115 58 view .LVU149
+ 481 008c 0022     		movs	r2, #0
+ 482 008e 274B     		ldr	r3, .L37+8
+ 483 0090 FFF7FEFF 		bl	__aeabi_dmul
+ 484              	.LVL21:
+ 485 0094 FFF7FEFF 		bl	__aeabi_d2f
+ 486              	.LVL22:
+ 487              		.loc 1 115 24 view .LVU150
+ 488 0098 C4F8D800 		str	r0, [r4, #216]	@ float
+ 116:Core/HAL/driver/motor/can_motor.c **** 
+ 117:Core/HAL/driver/motor/can_motor.c ****     float position_delta = obj->real_position_8192 - obj->last_real_position_8192;  //计算位置�
+ 489              		.loc 1 117 5 is_stmt 1 view .LVU151
+ 490              		.loc 1 117 52 is_stmt 0 view .LVU152
+ 491 009c 38EE688A 		vsub.f32	s16, s16, s17
+ 492              		.loc 1 117 11 view .LVU153
+ 493 00a0 8DED018A 		vstr.32	s16, [sp, #4]
+ 118:Core/HAL/driver/motor/can_motor.c ****     if (obj->position_queue->cq_len == VELOCITY_WINDOW) {
+ 494              		.loc 1 118 5 is_stmt 1 view .LVU154
+ 495              		.loc 1 118 12 is_stmt 0 view .LVU155
+ 496 00a4 D4F8EC00 		ldr	r0, [r4, #236]
+ 497              		.loc 1 118 28 view .LVU156
+ 498 00a8 8368     		ldr	r3, [r0, #8]	@ unaligned
+ 499              		.loc 1 118 8 view .LVU157
+ 500 00aa 052B     		cmp	r3, #5
+ 501 00ac 2FD0     		beq	.L36
+ 502              	.L32:
+ 119:Core/HAL/driver/motor/can_motor.c ****         float *now = circular_queue_pop(obj->position_queue);  //循环队列信息更新
+ 120:Core/HAL/driver/motor/can_motor.c ****         obj->position_sum -= *now;
+ 121:Core/HAL/driver/motor/can_motor.c ****     }
+ 122:Core/HAL/driver/motor/can_motor.c ****     circular_queue_push(obj->position_queue, &position_delta);
+ 503              		.loc 1 122 5 is_stmt 1 view .LVU158
+ 504 00ae 01A9     		add	r1, sp, #4
+ 505 00b0 D4F8EC00 		ldr	r0, [r4, #236]
+ 506 00b4 FFF7FEFF 		bl	circular_queue_push
+ 507              	.LVL23:
+ 123:Core/HAL/driver/motor/can_motor.c ****     obj->position_sum += position_delta;
+ 508              		.loc 1 123 5 view .LVU159
+ 509              		.loc 1 123 23 is_stmt 0 view .LVU160
+ 510 00b8 D4ED3C7A 		vldr.32	s15, [r4, #240]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 13
+
+
+ 511 00bc 9DED017A 		vldr.32	s14, [sp, #4]
+ 512 00c0 77EE877A 		vadd.f32	s15, s15, s14
+ 513 00c4 C4ED3C7A 		vstr.32	s15, [r4, #240]
+ 124:Core/HAL/driver/motor/can_motor.c ****     float vnow = obj->position_sum * 43.9453125 / obj->position_queue->cq_len;  //计算真实速�
+ 514              		.loc 1 124 5 is_stmt 1 view .LVU161
+ 515              	.LVL24:
+ 125:Core/HAL/driver/motor/can_motor.c ****     //obj->velocity = 0.2f * obj->velocity + 0.8f * vnow;
+ 126:Core/HAL/driver/motor/can_motor.c ****     obj->velocity =  obj->fdbSpeed*6;
+ 516              		.loc 1 126 5 view .LVU162
+ 517              		.loc 1 126 25 is_stmt 0 view .LVU163
+ 518 00c8 B4F9CE30 		ldrsh	r3, [r4, #206]
+ 519              		.loc 1 126 35 view .LVU164
+ 520 00cc 03EB4303 		add	r3, r3, r3, lsl #1
+ 521 00d0 5B00     		lsls	r3, r3, #1
+ 522              		.loc 1 126 19 view .LVU165
+ 523 00d2 07EE903A 		vmov	s15, r3	@ int
+ 524              	.LVL25:
+ 525              		.loc 1 126 19 view .LVU166
+ 526 00d6 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 527 00da C4ED3D7A 		vstr.32	s15, [r4, #244]
+ 528              	.LVL26:
+ 127:Core/HAL/driver/motor/can_motor.c ****     obj->monitor->reset(obj->monitor);  //重置监视器
+ 529              		.loc 1 127 5 is_stmt 1 view .LVU167
+ 530              		.loc 1 127 8 is_stmt 0 view .LVU168
+ 531 00de D4F8F800 		ldr	r0, [r4, #248]
+ 532              		.loc 1 127 17 view .LVU169
+ 533 00e2 C368     		ldr	r3, [r0, #12]	@ unaligned
+ 534              		.loc 1 127 5 view .LVU170
+ 535 00e4 9847     		blx	r3
+ 536              	.LVL27:
+ 128:Core/HAL/driver/motor/can_motor.c **** }
+ 537              		.loc 1 128 1 view .LVU171
+ 538 00e6 02B0     		add	sp, sp, #8
+ 539              	.LCFI5:
+ 540              		.cfi_remember_state
+ 541              		.cfi_def_cfa_offset 16
+ 542              		@ sp needed
+ 543 00e8 BDEC028B 		vldm	sp!, {d8}
+ 544              	.LCFI6:
+ 545              		.cfi_restore 80
+ 546              		.cfi_restore 81
+ 547              		.cfi_def_cfa_offset 8
+ 548 00ec 10BD     		pop	{r4, pc}
+ 549              	.LVL28:
+ 550              	.L34:
+ 551              	.LCFI7:
+ 552              		.cfi_restore_state
+ 101:Core/HAL/driver/motor/can_motor.c ****     obj->fdbSpeed = ((short)data[2]) << 8 | data[3];                                        //更�
+ 553              		.loc 1 101 50 is_stmt 1 discriminator 1 view .LVU172
+ 101:Core/HAL/driver/motor/can_motor.c ****     obj->fdbSpeed = ((short)data[2]) << 8 | data[3];                                        //更�
+ 554              		.loc 1 101 72 is_stmt 0 discriminator 1 view .LVU173
+ 555 00ee A4F8CC30 		strh	r3, [r4, #204]	@ movhi
+ 556 00f2 98E7     		b	.L27
+ 557              	.L35:
+ 105:Core/HAL/driver/motor/can_motor.c ****     } else {
+ 558              		.loc 1 105 9 is_stmt 1 view .LVU174
+ 105:Core/HAL/driver/motor/can_motor.c ****     } else {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 14
+
+
+ 559              		.loc 1 105 26 is_stmt 0 view .LVU175
+ 560 00f4 0022     		movs	r2, #0
+ 561 00f6 84F8D420 		strb	r2, [r4, #212]
+ 562 00fa A6E7     		b	.L29
+ 563              	.L30:
+ 111:Core/HAL/driver/motor/can_motor.c ****         obj->round++;
+ 564              		.loc 1 111 10 is_stmt 1 view .LVU176
+ 111:Core/HAL/driver/motor/can_motor.c ****         obj->round++;
+ 565              		.loc 1 111 13 is_stmt 0 view .LVU177
+ 566 00fc 12F5805F 		cmn	r2, #4096
+ 567 0100 AEDA     		bge	.L31
+ 112:Core/HAL/driver/motor/can_motor.c ****     obj->last_real_position_8192 = obj->real_position_8192;  //更新过零处理后的数据
+ 568              		.loc 1 112 9 is_stmt 1 view .LVU178
+ 112:Core/HAL/driver/motor/can_motor.c ****     obj->last_real_position_8192 = obj->real_position_8192;  //更新过零处理后的数据
+ 569              		.loc 1 112 12 is_stmt 0 view .LVU179
+ 570 0102 B4F9D220 		ldrsh	r2, [r4, #210]
+ 112:Core/HAL/driver/motor/can_motor.c ****     obj->last_real_position_8192 = obj->real_position_8192;  //更新过零处理后的数据
+ 571              		.loc 1 112 19 view .LVU180
+ 572 0106 0132     		adds	r2, r2, #1
+ 573 0108 A4F8D220 		strh	r2, [r4, #210]	@ movhi
+ 574 010c A8E7     		b	.L31
+ 575              	.LVL29:
+ 576              	.L36:
+ 577              	.LBB2:
+ 119:Core/HAL/driver/motor/can_motor.c ****         obj->position_sum -= *now;
+ 578              		.loc 1 119 9 is_stmt 1 view .LVU181
+ 119:Core/HAL/driver/motor/can_motor.c ****         obj->position_sum -= *now;
+ 579              		.loc 1 119 22 is_stmt 0 view .LVU182
+ 580 010e FFF7FEFF 		bl	circular_queue_pop
+ 581              	.LVL30:
+ 120:Core/HAL/driver/motor/can_motor.c ****     }
+ 582              		.loc 1 120 9 is_stmt 1 view .LVU183
+ 120:Core/HAL/driver/motor/can_motor.c ****     }
+ 583              		.loc 1 120 30 is_stmt 0 view .LVU184
+ 584 0112 90ED007A 		vldr.32	s14, [r0]
+ 120:Core/HAL/driver/motor/can_motor.c ****     }
+ 585              		.loc 1 120 27 view .LVU185
+ 586 0116 D4ED3C7A 		vldr.32	s15, [r4, #240]
+ 587 011a 77EEC77A 		vsub.f32	s15, s15, s14
+ 588 011e C4ED3C7A 		vstr.32	s15, [r4, #240]
+ 589 0122 C4E7     		b	.L32
+ 590              	.L38:
+ 591              		.align	2
+ 592              	.L37:
+ 593 0124 F0D8FFFF 		.word	-10000
+ 594 0128 00807640 		.word	1081507840
+ 595 012c 0000203F 		.word	1059061760
+ 596              	.LBE2:
+ 597              		.cfi_endproc
+ 598              	.LFE3:
+ 600              		.section	.text.CanMotor_RxCallBack,"ax",%progbits
+ 601              		.align	1
+ 602              		.global	CanMotor_RxCallBack
+ 603              		.syntax unified
+ 604              		.thumb
+ 605              		.thumb_func
+ 607              	CanMotor_RxCallBack:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 15
+
+
+ 608              	.LVL31:
+ 609              	.LFB2:
+  85:Core/HAL/driver/motor/can_motor.c ****     uint32_t model_3508_2006_id = identifier - 0x200;
+ 610              		.loc 1 85 92 is_stmt 1 view -0
+ 611              		.cfi_startproc
+ 612              		@ args = 0, pretend = 0, frame = 0
+ 613              		@ frame_needed = 0, uses_anonymous_args = 0
+  85:Core/HAL/driver/motor/can_motor.c ****     uint32_t model_3508_2006_id = identifier - 0x200;
+ 614              		.loc 1 85 92 is_stmt 0 view .LVU187
+ 615 0000 38B5     		push	{r3, r4, r5, lr}
+ 616              	.LCFI8:
+ 617              		.cfi_def_cfa_offset 16
+ 618              		.cfi_offset 3, -16
+ 619              		.cfi_offset 4, -12
+ 620              		.cfi_offset 5, -8
+ 621              		.cfi_offset 14, -4
+ 622 0002 0B46     		mov	r3, r1
+ 623              	.LVL32:
+  85:Core/HAL/driver/motor/can_motor.c ****     uint32_t model_3508_2006_id = identifier - 0x200;
+ 624              		.loc 1 85 92 view .LVU188
+ 625 0004 1146     		mov	r1, r2
+ 626              	.LVL33:
+  86:Core/HAL/driver/motor/can_motor.c ****     uint32_t model_6020_id = identifier - 0x204;
+ 627              		.loc 1 86 5 is_stmt 1 view .LVU189
+  86:Core/HAL/driver/motor/can_motor.c ****     uint32_t model_6020_id = identifier - 0x204;
+ 628              		.loc 1 86 14 is_stmt 0 view .LVU190
+ 629 0006 A3F5007C 		sub	ip, r3, #512
+ 630              	.LVL34:
+  87:Core/HAL/driver/motor/can_motor.c ****     // if (model_3508_2006_id > 8) return;
+ 631              		.loc 1 87 5 is_stmt 1 view .LVU191
+  87:Core/HAL/driver/motor/can_motor.c ****     // if (model_3508_2006_id > 8) return;
+ 632              		.loc 1 87 14 is_stmt 0 view .LVU192
+ 633 000a A3F50175 		sub	r5, r3, #516
+ 634              	.LVL35:
+  89:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 635              		.loc 1 89 5 is_stmt 1 view .LVU193
+  89:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 636              		.loc 1 89 8 is_stmt 0 view .LVU194
+ 637 000e BCF1080F 		cmp	ip, #8
+ 638 0012 1DD8     		bhi	.L40
+  89:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 639              		.loc 1 89 84 discriminator 1 view .LVU195
+ 640 0014 A3F20122 		subw	r2, r3, #513
+ 641              	.LVL36:
+  89:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 642              		.loc 1 89 64 discriminator 1 view .LVU196
+ 643 0018 00EB400E 		add	lr, r0, r0, lsl #1
+ 644 001c 2D4C     		ldr	r4, .L49
+ 645 001e 04EBCE0E 		add	lr, r4, lr, lsl #3
+ 646 0022 9644     		add	lr, lr, r2
+ 647 0024 9EF80840 		ldrb	r4, [lr, #8]	@ zero_extendqisi2
+  89:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 648              		.loc 1 89 32 discriminator 1 view .LVU197
+ 649 0028 94B1     		cbz	r4, .L40
+  90:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+ 650              		.loc 1 90 9 is_stmt 1 view .LVU198
+  90:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 16
+
+
+ 651              		.loc 1 90 90 is_stmt 0 view .LVU199
+ 652 002a BCF1040F 		cmp	ip, #4
+ 653 002e 8CBF     		ite	hi
+ 654 0030 0124     		movhi	r4, #1
+ 655 0032 0024     		movls	r4, #0
+  90:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+ 656              		.loc 1 90 143 view .LVU200
+ 657 0034 01D9     		bls	.L41
+  90:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+ 658              		.loc 1 90 143 discriminator 2 view .LVU201
+ 659 0036 A3F20522 		subw	r2, r3, #517
+ 660              	.L41:
+  90:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+ 661              		.loc 1 90 9 discriminator 4 view .LVU202
+ 662 003a 00EB4000 		add	r0, r0, r0, lsl #1
+ 663              	.LVL37:
+  90:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+ 664              		.loc 1 90 9 discriminator 4 view .LVU203
+ 665 003e 2044     		add	r0, r0, r4
+ 666 0040 02EB8002 		add	r2, r2, r0, lsl #2
+ 667 0044 244B     		ldr	r3, .L49+4
+ 668              	.LVL38:
+  90:Core/HAL/driver/motor/can_motor.c ****     } else if (model_3508_2006_id < 9 && motors_id[can_id][MODEL_3508][model_3508_2006_id - 1]) {
+ 669              		.loc 1 90 9 discriminator 4 view .LVU204
+ 670 0046 53F82200 		ldr	r0, [r3, r2, lsl #2]
+ 671 004a FFF7FEFF 		bl	Can_Motor_FeedbackData_Update
+ 672              	.LVL39:
+ 673              	.L39:
+  96:Core/HAL/driver/motor/can_motor.c **** 
+ 674              		.loc 1 96 1 view .LVU205
+ 675 004e 38BD     		pop	{r3, r4, r5, pc}
+ 676              	.LVL40:
+ 677              	.L40:
+  91:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 678              		.loc 1 91 12 is_stmt 1 view .LVU206
+  91:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 679              		.loc 1 91 15 is_stmt 0 view .LVU207
+ 680 0050 BCF1080F 		cmp	ip, #8
+ 681 0054 1CD8     		bhi	.L43
+  91:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 682              		.loc 1 91 91 discriminator 1 view .LVU208
+ 683 0056 A3F2012E 		subw	lr, r3, #513
+  91:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 684              		.loc 1 91 71 discriminator 1 view .LVU209
+ 685 005a 00EB4002 		add	r2, r0, r0, lsl #1
+ 686 005e 1D4C     		ldr	r4, .L49
+ 687 0060 04EBC202 		add	r2, r4, r2, lsl #3
+ 688 0064 12F80E20 		ldrb	r2, [r2, lr]	@ zero_extendqisi2
+  91:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_3508_2006_id < 5 ? 0 : 1][model
+ 689              		.loc 1 91 39 discriminator 1 view .LVU210
+ 690 0068 92B1     		cbz	r2, .L43
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 691              		.loc 1 92 9 is_stmt 1 view .LVU211
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 692              		.loc 1 92 90 is_stmt 0 view .LVU212
+ 693 006a BCF1040F 		cmp	ip, #4
+ 694 006e 8CBF     		ite	hi
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 17
+
+
+ 695 0070 0122     		movhi	r2, #1
+ 696 0072 0022     		movls	r2, #0
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 697              		.loc 1 92 143 view .LVU213
+ 698 0074 01D9     		bls	.L44
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 699              		.loc 1 92 143 discriminator 2 view .LVU214
+ 700 0076 A3F2052E 		subw	lr, r3, #517
+ 701              	.L44:
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 702              		.loc 1 92 9 discriminator 4 view .LVU215
+ 703 007a 00EB4000 		add	r0, r0, r0, lsl #1
+ 704              	.LVL41:
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 705              		.loc 1 92 9 discriminator 4 view .LVU216
+ 706 007e 1044     		add	r0, r0, r2
+ 707 0080 0EEB800E 		add	lr, lr, r0, lsl #2
+ 708 0084 144B     		ldr	r3, .L49+4
+ 709              	.LVL42:
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 710              		.loc 1 92 9 discriminator 4 view .LVU217
+ 711 0086 53F82E00 		ldr	r0, [r3, lr, lsl #2]
+ 712 008a FFF7FEFF 		bl	Can_Motor_FeedbackData_Update
+ 713              	.LVL43:
+  92:Core/HAL/driver/motor/can_motor.c ****     } else if (model_6020_id < 9 && motors_id[can_id][MODEL_6020][model_6020_id - 1]) {
+ 714              		.loc 1 92 9 discriminator 4 view .LVU218
+ 715 008e DEE7     		b	.L39
+ 716              	.LVL44:
+ 717              	.L43:
+  93:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_6020_id < 5 ? 1 : 2][model_6020
+ 718              		.loc 1 93 12 is_stmt 1 view .LVU219
+  93:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_6020_id < 5 ? 1 : 2][model_6020
+ 719              		.loc 1 93 15 is_stmt 0 view .LVU220
+ 720 0090 082D     		cmp	r5, #8
+ 721 0092 DCD8     		bhi	.L39
+  93:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_6020_id < 5 ? 1 : 2][model_6020
+ 722              		.loc 1 93 81 discriminator 1 view .LVU221
+ 723 0094 A3F2052C 		subw	ip, r3, #517
+ 724              	.LVL45:
+  93:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_6020_id < 5 ? 1 : 2][model_6020
+ 725              		.loc 1 93 66 discriminator 1 view .LVU222
+ 726 0098 00EB4002 		add	r2, r0, r0, lsl #1
+ 727 009c 0D4C     		ldr	r4, .L49
+ 728 009e 04EBC202 		add	r2, r4, r2, lsl #3
+ 729 00a2 6244     		add	r2, r2, ip
+ 730 00a4 127C     		ldrb	r2, [r2, #16]	@ zero_extendqisi2
+  93:Core/HAL/driver/motor/can_motor.c ****         Can_Motor_FeedbackData_Update(motor_instances[can_id][model_6020_id < 5 ? 1 : 2][model_6020
+ 731              		.loc 1 93 34 discriminator 1 view .LVU223
+ 732 00a6 002A     		cmp	r2, #0
+ 733 00a8 D1D0     		beq	.L39
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 734              		.loc 1 94 9 is_stmt 1 view .LVU224
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 735              		.loc 1 94 85 is_stmt 0 view .LVU225
+ 736 00aa 042D     		cmp	r5, #4
+ 737 00ac 0FD8     		bhi	.L47
+ 738 00ae 0122     		movs	r2, #1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 18
+
+
+ 739              	.L45:
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 740              		.loc 1 94 128 discriminator 4 view .LVU226
+ 741 00b0 042D     		cmp	r5, #4
+ 742 00b2 01D9     		bls	.L46
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 743              		.loc 1 94 128 discriminator 6 view .LVU227
+ 744 00b4 A3F2092C 		subw	ip, r3, #521
+ 745              	.L46:
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 746              		.loc 1 94 9 discriminator 8 view .LVU228
+ 747 00b8 00EB4000 		add	r0, r0, r0, lsl #1
+ 748              	.LVL46:
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 749              		.loc 1 94 9 discriminator 8 view .LVU229
+ 750 00bc 1044     		add	r0, r0, r2
+ 751 00be 0CEB8000 		add	r0, ip, r0, lsl #2
+ 752 00c2 054B     		ldr	r3, .L49+4
+ 753              	.LVL47:
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 754              		.loc 1 94 9 discriminator 8 view .LVU230
+ 755 00c4 53F82000 		ldr	r0, [r3, r0, lsl #2]
+ 756 00c8 FFF7FEFF 		bl	Can_Motor_FeedbackData_Update
+ 757              	.LVL48:
+  96:Core/HAL/driver/motor/can_motor.c **** 
+ 758              		.loc 1 96 1 discriminator 8 view .LVU231
+ 759 00cc BFE7     		b	.L39
+ 760              	.LVL49:
+ 761              	.L47:
+  94:Core/HAL/driver/motor/can_motor.c ****     }
+ 762              		.loc 1 94 85 view .LVU232
+ 763 00ce 0222     		movs	r2, #2
+ 764 00d0 EEE7     		b	.L45
+ 765              	.L50:
+ 766 00d2 00BF     		.align	2
+ 767              	.L49:
+ 768 00d4 00000000 		.word	.LANCHOR1
+ 769 00d8 00000000 		.word	.LANCHOR0
+ 770              		.cfi_endproc
+ 771              	.LFE2:
+ 773              		.section	.text.Can_Motor_Send,"ax",%progbits
+ 774              		.align	1
+ 775              		.global	Can_Motor_Send
+ 776              		.syntax unified
+ 777              		.thumb
+ 778              		.thumb_func
+ 780              	Can_Motor_Send:
+ 781              	.LVL50:
+ 782              	.LFB5:
+ 129:Core/HAL/driver/motor/can_motor.c **** 
+ 130:Core/HAL/driver/motor/can_motor.c **** void Can_Motor_Calc_Send() {  //主控发布控制信息函数
+ 131:Core/HAL/driver/motor/can_motor.c ****     for (int can_index = 0; can_index < 2; can_index++) {
+ 132:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 133:Core/HAL/driver/motor/can_motor.c ****             uint8_t identifier_send = 0;
+ 134:Core/HAL/driver/motor/can_motor.c ****             short buf[4] = {0};
+ 135:Core/HAL/driver/motor/can_motor.c ****             for (int id = 0; id < 4; id++) {
+ 136:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 19
+
+
+ 137:Core/HAL/driver/motor/can_motor.c ****                 if (obj == NULL) continue;
+ 138:Core/HAL/driver/motor/can_motor.c ****                 //电机掉线判断，如果同一个包内的所有的电机都掉线，那么这
+ 139:Core/HAL/driver/motor/can_motor.c ****                 if (is_Offline(obj->monitor)) continue;
+ 140:Core/HAL/driver/motor/can_motor.c ****                 identifier_send = 1;
+ 141:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.position_fdb_model == OTHER_FDB) {  //根据电机选取的不同�
+ 142:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_position = *obj->config.position_fdb;
+ 143:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 144:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_position = obj->real_position;
+ 145:Core/HAL/driver/motor/can_motor.c ****                 }
+ 146:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.speed_fdb_model == OTHER_FDB) {
+ 147:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_speed = *obj->config.speed_fdb;
+ 148:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 149:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_speed = obj->velocity;
+ 150:Core/HAL/driver/motor/can_motor.c ****                 }
+ 151:Core/HAL/driver/motor/can_motor.c ****                 UNIVERSAL_Calc(obj->motor_controller);           //调用电机的pid配置文件�
+ 152:Core/HAL/driver/motor/can_motor.c ****                 buf[id] = (short)obj->motor_controller->output;  //将输出存入数组供后续�
+ 153:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.output_model == MOTOR_OUTPUT_REVERSE) buf[id] *= -1;
+ 154:Core/HAL/driver/motor/can_motor.c ****                 if (obj->enable == MOTOR_STOP) {  //软件停转
+ 155:Core/HAL/driver/motor/can_motor.c ****                     buf[id] = 0;
+ 156:Core/HAL/driver/motor/can_motor.c ****                 }
+ 157:Core/HAL/driver/motor/can_motor.c ****             }
+ 158:Core/HAL/driver/motor/can_motor.c ****             // 如果此标识符(identifier)对应的四个电机里至少有一个被注册，就
+ 159:Core/HAL/driver/motor/can_motor.c ****             if (identifier_send) {
+ 160:Core/HAL/driver/motor/can_motor.c ****                 Can_Motor_Send(can_index, identifiers[identifier], buf[0], buf[1], buf[2], buf[3]);
+ 161:Core/HAL/driver/motor/can_motor.c ****             }
+ 162:Core/HAL/driver/motor/can_motor.c ****         }
+ 163:Core/HAL/driver/motor/can_motor.c ****     }
+ 164:Core/HAL/driver/motor/can_motor.c **** }
+ 165:Core/HAL/driver/motor/can_motor.c **** 
+ 166:Core/HAL/driver/motor/can_motor.c **** void Can_Motor_Send(uint8_t can_id, uint16_t identifier, short motor_data_id1, short motor_data_id2
+ 783              		.loc 1 166 146 is_stmt 1 view -0
+ 784              		.cfi_startproc
+ 785              		@ args = 8, pretend = 0, frame = 0
+ 786              		@ frame_needed = 0, uses_anonymous_args = 0
+ 787              		.loc 1 166 146 is_stmt 0 view .LVU234
+ 788 0000 38B5     		push	{r3, r4, r5, lr}
+ 789              	.LCFI9:
+ 790              		.cfi_def_cfa_offset 16
+ 791              		.cfi_offset 3, -16
+ 792              		.cfi_offset 4, -12
+ 793              		.cfi_offset 5, -8
+ 794              		.cfi_offset 14, -4
+ 795 0002 BDF910C0 		ldrsh	ip, [sp, #16]
+ 796 0006 BDF91450 		ldrsh	r5, [sp, #20]
+ 167:Core/HAL/driver/motor/can_motor.c ****     static uint8_t data[8];
+ 797              		.loc 1 167 5 is_stmt 1 view .LVU235
+ 168:Core/HAL/driver/motor/can_motor.c ****     data[0] = (uint8_t)(motor_data_id1 >> 8);
+ 798              		.loc 1 168 5 view .LVU236
+ 799              		.loc 1 168 15 is_stmt 0 view .LVU237
+ 800 000a C2F3072E 		ubfx	lr, r2, #8, #8
+ 801              		.loc 1 168 13 view .LVU238
+ 802 000e 0E4C     		ldr	r4, .L55
+ 803 0010 84F800E0 		strb	lr, [r4]
+ 169:Core/HAL/driver/motor/can_motor.c ****     data[1] = (uint8_t)(motor_data_id1 & 0x00FF);
+ 804              		.loc 1 169 5 is_stmt 1 view .LVU239
+ 805              		.loc 1 169 13 is_stmt 0 view .LVU240
+ 806 0014 6270     		strb	r2, [r4, #1]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 20
+
+
+ 170:Core/HAL/driver/motor/can_motor.c ****     data[2] = (uint8_t)(motor_data_id2 >> 8);
+ 807              		.loc 1 170 5 is_stmt 1 view .LVU241
+ 808              		.loc 1 170 15 is_stmt 0 view .LVU242
+ 809 0016 C3F30722 		ubfx	r2, r3, #8, #8
+ 810              	.LVL51:
+ 811              		.loc 1 170 13 view .LVU243
+ 812 001a A270     		strb	r2, [r4, #2]
+ 171:Core/HAL/driver/motor/can_motor.c ****     data[3] = (uint8_t)(motor_data_id2 & 0x00FF);
+ 813              		.loc 1 171 5 is_stmt 1 view .LVU244
+ 814              		.loc 1 171 13 is_stmt 0 view .LVU245
+ 815 001c E370     		strb	r3, [r4, #3]
+ 172:Core/HAL/driver/motor/can_motor.c ****     data[4] = (uint8_t)(motor_data_id3 >> 8);
+ 816              		.loc 1 172 5 is_stmt 1 view .LVU246
+ 817              		.loc 1 172 15 is_stmt 0 view .LVU247
+ 818 001e 9DF91130 		ldrsb	r3, [sp, #17]
+ 819              	.LVL52:
+ 820              		.loc 1 172 13 view .LVU248
+ 821 0022 2371     		strb	r3, [r4, #4]
+ 173:Core/HAL/driver/motor/can_motor.c ****     data[5] = (uint8_t)(motor_data_id3 & 0x00FF);
+ 822              		.loc 1 173 5 is_stmt 1 view .LVU249
+ 823              		.loc 1 173 13 is_stmt 0 view .LVU250
+ 824 0024 84F805C0 		strb	ip, [r4, #5]
+ 174:Core/HAL/driver/motor/can_motor.c ****     //对于标识符为0x2FF的情况，则data[6]和data[7]为NULL
+ 175:Core/HAL/driver/motor/can_motor.c ****     if (identifier == 0x200 || identifier == 0x1FF) {
+ 825              		.loc 1 175 5 is_stmt 1 view .LVU251
+ 826              		.loc 1 175 29 is_stmt 0 view .LVU252
+ 827 0028 A1F2FF13 		subw	r3, r1, #511
+ 828 002c 9BB2     		uxth	r3, r3
+ 829              		.loc 1 175 8 view .LVU253
+ 830 002e 012B     		cmp	r3, #1
+ 831 0030 04D9     		bls	.L54
+ 832              	.L52:
+ 176:Core/HAL/driver/motor/can_motor.c ****         data[6] = (uint8_t)((motor_data_id4 & 0xFF00) >> 8);
+ 177:Core/HAL/driver/motor/can_motor.c ****         data[7] = (uint8_t)(motor_data_id4 & 0x00FF);
+ 178:Core/HAL/driver/motor/can_motor.c ****     }
+ 179:Core/HAL/driver/motor/can_motor.c ****     BSP_CAN_Send(can_id, identifier, data, 8);
+ 833              		.loc 1 179 5 is_stmt 1 view .LVU254
+ 834 0032 0823     		movs	r3, #8
+ 835 0034 044A     		ldr	r2, .L55
+ 836 0036 FFF7FEFF 		bl	BSP_CAN_Send
+ 837              	.LVL53:
+ 180:Core/HAL/driver/motor/can_motor.c **** }
+ 838              		.loc 1 180 1 is_stmt 0 view .LVU255
+ 839 003a 38BD     		pop	{r3, r4, r5, pc}
+ 840              	.LVL54:
+ 841              	.L54:
+ 176:Core/HAL/driver/motor/can_motor.c ****         data[6] = (uint8_t)((motor_data_id4 & 0xFF00) >> 8);
+ 842              		.loc 1 176 9 is_stmt 1 view .LVU256
+ 176:Core/HAL/driver/motor/can_motor.c ****         data[6] = (uint8_t)((motor_data_id4 & 0xFF00) >> 8);
+ 843              		.loc 1 176 19 is_stmt 0 view .LVU257
+ 844 003c C5F30722 		ubfx	r2, r5, #8, #8
+ 176:Core/HAL/driver/motor/can_motor.c ****         data[6] = (uint8_t)((motor_data_id4 & 0xFF00) >> 8);
+ 845              		.loc 1 176 17 view .LVU258
+ 846 0040 A271     		strb	r2, [r4, #6]
+ 177:Core/HAL/driver/motor/can_motor.c ****     }
+ 847              		.loc 1 177 9 is_stmt 1 view .LVU259
+ 177:Core/HAL/driver/motor/can_motor.c ****     }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 21
+
+
+ 848              		.loc 1 177 17 is_stmt 0 view .LVU260
+ 849 0042 E571     		strb	r5, [r4, #7]
+ 850 0044 F5E7     		b	.L52
+ 851              	.L56:
+ 852 0046 00BF     		.align	2
+ 853              	.L55:
+ 854 0048 00000000 		.word	.LANCHOR2
+ 855              		.cfi_endproc
+ 856              	.LFE5:
+ 858              		.section	.text.Can_Motor_Calc_Send,"ax",%progbits
+ 859              		.align	1
+ 860              		.global	Can_Motor_Calc_Send
+ 861              		.syntax unified
+ 862              		.thumb
+ 863              		.thumb_func
+ 865              	Can_Motor_Calc_Send:
+ 866              	.LFB4:
+ 130:Core/HAL/driver/motor/can_motor.c ****     for (int can_index = 0; can_index < 2; can_index++) {
+ 867              		.loc 1 130 28 is_stmt 1 view -0
+ 868              		.cfi_startproc
+ 869              		@ args = 0, pretend = 0, frame = 8
+ 870              		@ frame_needed = 0, uses_anonymous_args = 0
+ 871 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 872              	.LCFI10:
+ 873              		.cfi_def_cfa_offset 24
+ 874              		.cfi_offset 4, -24
+ 875              		.cfi_offset 5, -20
+ 876              		.cfi_offset 6, -16
+ 877              		.cfi_offset 7, -12
+ 878              		.cfi_offset 8, -8
+ 879              		.cfi_offset 14, -4
+ 880 0004 84B0     		sub	sp, sp, #16
+ 881              	.LCFI11:
+ 882              		.cfi_def_cfa_offset 40
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 883              		.loc 1 131 5 view .LVU262
+ 884              	.LBB3:
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 885              		.loc 1 131 10 view .LVU263
+ 886              	.LVL55:
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 887              		.loc 1 131 14 is_stmt 0 view .LVU264
+ 888 0006 0026     		movs	r6, #0
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 889              		.loc 1 131 5 view .LVU265
+ 890 0008 82E0     		b	.L58
+ 891              	.LVL56:
+ 892              	.L74:
+ 893              	.LBB4:
+ 894              	.LBB5:
+ 895              	.LBB6:
+ 896              	.LBB7:
+ 142:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 897              		.loc 1 142 21 is_stmt 1 view .LVU266
+ 142:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 898              		.loc 1 142 71 is_stmt 0 view .LVU267
+ 899 000a D4F8C020 		ldr	r2, [r4, #192]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 22
+
+
+ 142:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 900              		.loc 1 142 24 view .LVU268
+ 901 000e D4F8E430 		ldr	r3, [r4, #228]
+ 142:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 902              		.loc 1 142 57 view .LVU269
+ 903 0012 1268     		ldr	r2, [r2]	@ float
+ 904 0014 C3F86521 		str	r2, [r3, #357]	@ unaligned
+ 905 0018 2DE0     		b	.L62
+ 906              	.L75:
+ 147:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 907              		.loc 1 147 21 is_stmt 1 view .LVU270
+ 147:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 908              		.loc 1 147 68 is_stmt 0 view .LVU271
+ 909 001a D4F8BC20 		ldr	r2, [r4, #188]
+ 147:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 910              		.loc 1 147 24 view .LVU272
+ 911 001e D4F8E430 		ldr	r3, [r4, #228]
+ 147:Core/HAL/driver/motor/can_motor.c ****                 } else {
+ 912              		.loc 1 147 54 view .LVU273
+ 913 0022 1268     		ldr	r2, [r2]	@ float
+ 914 0024 C3F86121 		str	r2, [r3, #353]	@ unaligned
+ 915 0028 2FE0     		b	.L64
+ 916              	.L76:
+ 153:Core/HAL/driver/motor/can_motor.c ****                 if (obj->enable == MOTOR_STOP) {  //软件停转
+ 917              		.loc 1 153 71 is_stmt 1 discriminator 1 view .LVU274
+ 153:Core/HAL/driver/motor/can_motor.c ****                 if (obj->enable == MOTOR_STOP) {  //软件停转
+ 918              		.loc 1 153 79 is_stmt 0 discriminator 1 view .LVU275
+ 919 002a 5B42     		rsbs	r3, r3, #0
+ 920 002c 04AA     		add	r2, sp, #16
+ 921 002e 02EB4502 		add	r2, r2, r5, lsl #1
+ 922 0032 22F8083C 		strh	r3, [r2, #-8]	@ movhi
+ 923 0036 40E0     		b	.L65
+ 924              	.L70:
+ 140:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.position_fdb_model == OTHER_FDB) {  //根据电机选取的不同�
+ 925              		.loc 1 140 33 view .LVU276
+ 926 0038 4FF00108 		mov	r8, #1
+ 927              	.LVL57:
+ 928              	.L60:
+ 140:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.position_fdb_model == OTHER_FDB) {  //根据电机选取的不同�
+ 929              		.loc 1 140 33 view .LVU277
+ 930              	.LBE7:
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 931              		.loc 1 135 38 is_stmt 1 discriminator 2 view .LVU278
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 932              		.loc 1 135 40 is_stmt 0 discriminator 2 view .LVU279
+ 933 003c 0135     		adds	r5, r5, #1
+ 934              	.LVL58:
+ 935              	.L59:
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 936              		.loc 1 135 30 is_stmt 1 discriminator 1 view .LVU280
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 937              		.loc 1 135 13 is_stmt 0 discriminator 1 view .LVU281
+ 938 003e 032D     		cmp	r5, #3
+ 939 0040 48DC     		bgt	.L73
+ 940              	.LBB8:
+ 136:Core/HAL/driver/motor/can_motor.c ****                 if (obj == NULL) continue;
+ 941              		.loc 1 136 17 is_stmt 1 view .LVU282
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 23
+
+
+ 136:Core/HAL/driver/motor/can_motor.c ****                 if (obj == NULL) continue;
+ 942              		.loc 1 136 28 is_stmt 0 view .LVU283
+ 943 0042 06EB4603 		add	r3, r6, r6, lsl #1
+ 944 0046 3B44     		add	r3, r3, r7
+ 945 0048 05EB8303 		add	r3, r5, r3, lsl #2
+ 946 004c 344A     		ldr	r2, .L80
+ 947 004e 52F82340 		ldr	r4, [r2, r3, lsl #2]
+ 948              	.LVL59:
+ 137:Core/HAL/driver/motor/can_motor.c ****                 //电机掉线判断，如果同一个包内的所有的电机都掉线，那么这
+ 949              		.loc 1 137 17 is_stmt 1 view .LVU284
+ 137:Core/HAL/driver/motor/can_motor.c ****                 //电机掉线判断，如果同一个包内的所有的电机都掉线，那么这
+ 950              		.loc 1 137 20 is_stmt 0 view .LVU285
+ 951 0052 002C     		cmp	r4, #0
+ 952 0054 F2D0     		beq	.L60
+ 139:Core/HAL/driver/motor/can_motor.c ****                 identifier_send = 1;
+ 953              		.loc 1 139 17 is_stmt 1 view .LVU286
+ 139:Core/HAL/driver/motor/can_motor.c ****                 identifier_send = 1;
+ 954              		.loc 1 139 21 is_stmt 0 view .LVU287
+ 955 0056 D4F8F800 		ldr	r0, [r4, #248]
+ 956 005a FFF7FEFF 		bl	is_Offline
+ 957              	.LVL60:
+ 139:Core/HAL/driver/motor/can_motor.c ****                 identifier_send = 1;
+ 958              		.loc 1 139 20 view .LVU288
+ 959 005e 0028     		cmp	r0, #0
+ 960 0060 ECD1     		bne	.L60
+ 140:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.position_fdb_model == OTHER_FDB) {  //根据电机选取的不同�
+ 961              		.loc 1 140 17 is_stmt 1 view .LVU289
+ 962              	.LVL61:
+ 141:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_position = *obj->config.position_fdb;
+ 963              		.loc 1 141 17 view .LVU290
+ 141:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_position = *obj->config.position_fdb;
+ 964              		.loc 1 141 32 is_stmt 0 view .LVU291
+ 965 0062 94F8B830 		ldrb	r3, [r4, #184]	@ zero_extendqisi2
+ 141:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_position = *obj->config.position_fdb;
+ 966              		.loc 1 141 20 view .LVU292
+ 967 0066 012B     		cmp	r3, #1
+ 968 0068 CFD0     		beq	.L74
+ 144:Core/HAL/driver/motor/can_motor.c ****                 }
+ 969              		.loc 1 144 21 is_stmt 1 view .LVU293
+ 144:Core/HAL/driver/motor/can_motor.c ****                 }
+ 970              		.loc 1 144 24 is_stmt 0 view .LVU294
+ 971 006a D4F8E430 		ldr	r3, [r4, #228]
+ 144:Core/HAL/driver/motor/can_motor.c ****                 }
+ 972              		.loc 1 144 57 view .LVU295
+ 973 006e D4F8D820 		ldr	r2, [r4, #216]	@ float
+ 974 0072 C3F86521 		str	r2, [r3, #357]	@ unaligned
+ 975              	.L62:
+ 146:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_speed = *obj->config.speed_fdb;
+ 976              		.loc 1 146 17 is_stmt 1 view .LVU296
+ 146:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_speed = *obj->config.speed_fdb;
+ 977              		.loc 1 146 32 is_stmt 0 view .LVU297
+ 978 0076 94F8B930 		ldrb	r3, [r4, #185]	@ zero_extendqisi2
+ 146:Core/HAL/driver/motor/can_motor.c ****                     obj->motor_controller->fdb_speed = *obj->config.speed_fdb;
+ 979              		.loc 1 146 20 view .LVU298
+ 980 007a 012B     		cmp	r3, #1
+ 981 007c CDD0     		beq	.L75
+ 149:Core/HAL/driver/motor/can_motor.c ****                 }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 24
+
+
+ 982              		.loc 1 149 21 is_stmt 1 view .LVU299
+ 149:Core/HAL/driver/motor/can_motor.c ****                 }
+ 983              		.loc 1 149 24 is_stmt 0 view .LVU300
+ 984 007e D4F8E430 		ldr	r3, [r4, #228]
+ 149:Core/HAL/driver/motor/can_motor.c ****                 }
+ 985              		.loc 1 149 54 view .LVU301
+ 986 0082 D4F8F420 		ldr	r2, [r4, #244]	@ float
+ 987 0086 C3F86121 		str	r2, [r3, #353]	@ unaligned
+ 988              	.L64:
+ 151:Core/HAL/driver/motor/can_motor.c ****                 buf[id] = (short)obj->motor_controller->output;  //将输出存入数组供后续�
+ 989              		.loc 1 151 17 is_stmt 1 view .LVU302
+ 990 008a D4F8E400 		ldr	r0, [r4, #228]
+ 991 008e FFF7FEFF 		bl	UNIVERSAL_Calc
+ 992              	.LVL62:
+ 152:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.output_model == MOTOR_OUTPUT_REVERSE) buf[id] *= -1;
+ 993              		.loc 1 152 17 view .LVU303
+ 152:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.output_model == MOTOR_OUTPUT_REVERSE) buf[id] *= -1;
+ 994              		.loc 1 152 37 is_stmt 0 view .LVU304
+ 995 0092 D4F8E430 		ldr	r3, [r4, #228]
+ 152:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.output_model == MOTOR_OUTPUT_REVERSE) buf[id] *= -1;
+ 996              		.loc 1 152 55 view .LVU305
+ 997 0096 D3F85531 		ldr	r3, [r3, #341]	@ unaligned
+ 998 009a 07EE903A 		vmov	s15, r3	@ int
+ 152:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.output_model == MOTOR_OUTPUT_REVERSE) buf[id] *= -1;
+ 999              		.loc 1 152 27 view .LVU306
+ 1000 009e FDEEE77A 		vcvt.s32.f32	s15, s15
+ 1001 00a2 17EE903A 		vmov	r3, s15	@ int
+ 1002 00a6 1BB2     		sxth	r3, r3
+ 152:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.output_model == MOTOR_OUTPUT_REVERSE) buf[id] *= -1;
+ 1003              		.loc 1 152 25 view .LVU307
+ 1004 00a8 04AA     		add	r2, sp, #16
+ 1005 00aa 02EB4502 		add	r2, r2, r5, lsl #1
+ 1006 00ae 22F8083C 		strh	r3, [r2, #-8]	@ movhi
+ 153:Core/HAL/driver/motor/can_motor.c ****                 if (obj->enable == MOTOR_STOP) {  //软件停转
+ 1007              		.loc 1 153 17 is_stmt 1 view .LVU308
+ 153:Core/HAL/driver/motor/can_motor.c ****                 if (obj->enable == MOTOR_STOP) {  //软件停转
+ 1008              		.loc 1 153 32 is_stmt 0 view .LVU309
+ 1009 00b2 94F8BA20 		ldrb	r2, [r4, #186]	@ zero_extendqisi2
+ 153:Core/HAL/driver/motor/can_motor.c ****                 if (obj->enable == MOTOR_STOP) {  //软件停转
+ 1010              		.loc 1 153 20 view .LVU310
+ 1011 00b6 012A     		cmp	r2, #1
+ 1012 00b8 B7D0     		beq	.L76
+ 1013              	.L65:
+ 154:Core/HAL/driver/motor/can_motor.c ****                     buf[id] = 0;
+ 1014              		.loc 1 154 17 is_stmt 1 view .LVU311
+ 154:Core/HAL/driver/motor/can_motor.c ****                     buf[id] = 0;
+ 1015              		.loc 1 154 24 is_stmt 0 view .LVU312
+ 1016 00ba 94F8C830 		ldrb	r3, [r4, #200]	@ zero_extendqisi2
+ 154:Core/HAL/driver/motor/can_motor.c ****                     buf[id] = 0;
+ 1017              		.loc 1 154 20 view .LVU313
+ 1018 00be 002B     		cmp	r3, #0
+ 1019 00c0 BAD1     		bne	.L70
+ 155:Core/HAL/driver/motor/can_motor.c ****                 }
+ 1020              		.loc 1 155 21 is_stmt 1 view .LVU314
+ 155:Core/HAL/driver/motor/can_motor.c ****                 }
+ 1021              		.loc 1 155 29 is_stmt 0 view .LVU315
+ 1022 00c2 0022     		movs	r2, #0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 25
+
+
+ 1023 00c4 04AB     		add	r3, sp, #16
+ 1024 00c6 03EB4503 		add	r3, r3, r5, lsl #1
+ 1025 00ca 23F8082C 		strh	r2, [r3, #-8]	@ movhi
+ 140:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.position_fdb_model == OTHER_FDB) {  //根据电机选取的不同�
+ 1026              		.loc 1 140 33 view .LVU316
+ 1027 00ce 4FF00108 		mov	r8, #1
+ 1028 00d2 B3E7     		b	.L60
+ 1029              	.LVL63:
+ 1030              	.L73:
+ 140:Core/HAL/driver/motor/can_motor.c ****                 if (obj->config.position_fdb_model == OTHER_FDB) {  //根据电机选取的不同�
+ 1031              		.loc 1 140 33 view .LVU317
+ 1032              	.LBE8:
+ 1033              	.LBE6:
+ 159:Core/HAL/driver/motor/can_motor.c ****                 Can_Motor_Send(can_index, identifiers[identifier], buf[0], buf[1], buf[2], buf[3]);
+ 1034              		.loc 1 159 13 is_stmt 1 view .LVU318
+ 159:Core/HAL/driver/motor/can_motor.c ****                 Can_Motor_Send(can_index, identifiers[identifier], buf[0], buf[1], buf[2], buf[3]);
+ 1035              		.loc 1 159 16 is_stmt 0 view .LVU319
+ 1036 00d4 B8F1000F 		cmp	r8, #0
+ 1037 00d8 08D1     		bne	.L77
+ 1038              	.L67:
+ 1039              	.LBE5:
+ 132:Core/HAL/driver/motor/can_motor.c ****             uint8_t identifier_send = 0;
+ 1040              		.loc 1 132 50 is_stmt 1 discriminator 2 view .LVU320
+ 132:Core/HAL/driver/motor/can_motor.c ****             uint8_t identifier_send = 0;
+ 1041              		.loc 1 132 60 is_stmt 0 discriminator 2 view .LVU321
+ 1042 00da 0137     		adds	r7, r7, #1
+ 1043              	.LVL64:
+ 1044              	.L69:
+ 132:Core/HAL/driver/motor/can_motor.c ****             uint8_t identifier_send = 0;
+ 1045              		.loc 1 132 34 is_stmt 1 discriminator 1 view .LVU322
+ 132:Core/HAL/driver/motor/can_motor.c ****             uint8_t identifier_send = 0;
+ 1046              		.loc 1 132 9 is_stmt 0 discriminator 1 view .LVU323
+ 1047 00dc 022F     		cmp	r7, #2
+ 1048 00de 16DC     		bgt	.L78
+ 1049              	.LBB11:
+ 133:Core/HAL/driver/motor/can_motor.c ****             short buf[4] = {0};
+ 1050              		.loc 1 133 13 is_stmt 1 view .LVU324
+ 1051              	.LVL65:
+ 134:Core/HAL/driver/motor/can_motor.c ****             for (int id = 0; id < 4; id++) {
+ 1052              		.loc 1 134 13 view .LVU325
+ 134:Core/HAL/driver/motor/can_motor.c ****             for (int id = 0; id < 4; id++) {
+ 1053              		.loc 1 134 19 is_stmt 0 view .LVU326
+ 1054 00e0 0023     		movs	r3, #0
+ 1055 00e2 0293     		str	r3, [sp, #8]
+ 1056 00e4 0393     		str	r3, [sp, #12]
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 1057              		.loc 1 135 13 is_stmt 1 view .LVU327
+ 1058              	.LBB9:
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 1059              		.loc 1 135 18 view .LVU328
+ 1060              	.LVL66:
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 1061              		.loc 1 135 22 is_stmt 0 view .LVU329
+ 1062 00e6 1D46     		mov	r5, r3
+ 1063              	.LBE9:
+ 133:Core/HAL/driver/motor/can_motor.c ****             short buf[4] = {0};
+ 1064              		.loc 1 133 21 view .LVU330
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 26
+
+
+ 1065 00e8 9846     		mov	r8, r3
+ 1066              	.LBB10:
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 1067              		.loc 1 135 13 view .LVU331
+ 1068 00ea A8E7     		b	.L59
+ 1069              	.LVL67:
+ 1070              	.L77:
+ 135:Core/HAL/driver/motor/can_motor.c ****                 can_motor *obj = motor_instances[can_index][identifier][id];
+ 1071              		.loc 1 135 13 view .LVU332
+ 1072              	.LBE10:
+ 160:Core/HAL/driver/motor/can_motor.c ****             }
+ 1073              		.loc 1 160 17 is_stmt 1 view .LVU333
+ 1074 00ec BDF90E30 		ldrsh	r3, [sp, #14]
+ 1075 00f0 0193     		str	r3, [sp, #4]
+ 1076 00f2 BDF90C30 		ldrsh	r3, [sp, #12]
+ 1077 00f6 0093     		str	r3, [sp]
+ 1078 00f8 BDF90A30 		ldrsh	r3, [sp, #10]
+ 1079 00fc BDF90820 		ldrsh	r2, [sp, #8]
+ 1080 0100 0849     		ldr	r1, .L80+4
+ 1081 0102 31F82710 		ldrh	r1, [r1, r7, lsl #2]
+ 1082 0106 F0B2     		uxtb	r0, r6
+ 1083 0108 FFF7FEFF 		bl	Can_Motor_Send
+ 1084              	.LVL68:
+ 1085 010c E5E7     		b	.L67
+ 1086              	.LVL69:
+ 1087              	.L78:
+ 160:Core/HAL/driver/motor/can_motor.c ****             }
+ 1088              		.loc 1 160 17 is_stmt 0 view .LVU334
+ 1089              	.LBE11:
+ 1090              	.LBE4:
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 1091              		.loc 1 131 44 is_stmt 1 discriminator 2 view .LVU335
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 1092              		.loc 1 131 53 is_stmt 0 discriminator 2 view .LVU336
+ 1093 010e 0136     		adds	r6, r6, #1
+ 1094              	.LVL70:
+ 1095              	.L58:
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 1096              		.loc 1 131 29 is_stmt 1 discriminator 1 view .LVU337
+ 131:Core/HAL/driver/motor/can_motor.c ****         for (int identifier = 0; identifier < 3; identifier++) {  //循环不断寻找对应控制�
+ 1097              		.loc 1 131 5 is_stmt 0 discriminator 1 view .LVU338
+ 1098 0110 012E     		cmp	r6, #1
+ 1099 0112 01DC     		bgt	.L79
+ 1100              	.LBB12:
+ 132:Core/HAL/driver/motor/can_motor.c ****             uint8_t identifier_send = 0;
+ 1101              		.loc 1 132 18 view .LVU339
+ 1102 0114 0027     		movs	r7, #0
+ 1103 0116 E1E7     		b	.L69
+ 1104              	.L79:
+ 1105              	.LBE12:
+ 1106              	.LBE3:
+ 164:Core/HAL/driver/motor/can_motor.c **** 
+ 1107              		.loc 1 164 1 view .LVU340
+ 1108 0118 04B0     		add	sp, sp, #16
+ 1109              	.LCFI12:
+ 1110              		.cfi_def_cfa_offset 24
+ 1111              		@ sp needed
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 27
+
+
+ 1112 011a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1113              	.LVL71:
+ 1114              	.L81:
+ 164:Core/HAL/driver/motor/can_motor.c **** 
+ 1115              		.loc 1 164 1 view .LVU341
+ 1116 011e 00BF     		.align	2
+ 1117              	.L80:
+ 1118 0120 00000000 		.word	.LANCHOR0
+ 1119 0124 00000000 		.word	.LANCHOR3
+ 1120              		.cfi_endproc
+ 1121              	.LFE4:
+ 1123              		.global	identifiers
+ 1124              		.global	motors_id
+ 1125              		.global	motor_instances
+ 1126              		.section	.bss.data.0,"aw",%nobits
+ 1127              		.align	2
+ 1128              		.set	.LANCHOR2,. + 0
+ 1131              	data.0:
+ 1132 0000 00000000 		.space	8
+ 1132      00000000 
+ 1133              		.section	.bss.motor_instances,"aw",%nobits
+ 1134              		.align	2
+ 1135              		.set	.LANCHOR0,. + 0
+ 1138              	motor_instances:
+ 1139 0000 00000000 		.space	96
+ 1139      00000000 
+ 1139      00000000 
+ 1139      00000000 
+ 1139      00000000 
+ 1140              		.section	.bss.motors_id,"aw",%nobits
+ 1141              		.align	2
+ 1142              		.set	.LANCHOR1,. + 0
+ 1145              	motors_id:
+ 1146 0000 00000000 		.space	48
+ 1146      00000000 
+ 1146      00000000 
+ 1146      00000000 
+ 1146      00000000 
+ 1147              		.section	.rodata.identifiers,"a"
+ 1148              		.align	2
+ 1149              		.set	.LANCHOR3,. + 0
+ 1152              	identifiers:
+ 1153 0000 00020000 		.word	512
+ 1154 0004 FF010000 		.word	511
+ 1155 0008 FF020000 		.word	767
+ 1156              		.text
+ 1157              	.Letext0:
+ 1158              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1159              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1160              		.file 4 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 1161              		.file 5 "Core/HAL/lib/controller/pid.h"
+ 1162              		.file 6 "Core/HAL/lib/controller/controller.h"
+ 1163              		.file 7 "Core/HAL/lib/circular_queue.h"
+ 1164              		.file 8 "Core/HAL/monitor/monitor.h"
+ 1165              		.file 9 "Core/HAL/driver/motor/can_motor.h"
+ 1166              		.file 10 "Core/BSP/interface/bsp_can.h"
+ 1167              		.file 11 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 28
+
+
+ 1168              		.file 12 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s 			page 29
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 can_motor.c
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:20     .text.Can_Motor_Driver_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:26     .text.Can_Motor_Driver_Init:00000000 Can_Motor_Driver_Init
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:66     .text.Can_Motor_Driver_Init:0000002c $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:607    .text.CanMotor_RxCallBack:00000000 CanMotor_RxCallBack
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:73     .text.Can_Motor_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:79     .text.Can_Motor_Create:00000000 Can_Motor_Create
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:353    .text.Can_Motor_Create:0000016c $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:362    .text.Can_Motor_FeedbackData_Update:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:368    .text.Can_Motor_FeedbackData_Update:00000000 Can_Motor_FeedbackData_Update
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:593    .text.Can_Motor_FeedbackData_Update:00000124 $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:601    .text.CanMotor_RxCallBack:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:768    .text.CanMotor_RxCallBack:000000d4 $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:774    .text.Can_Motor_Send:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:780    .text.Can_Motor_Send:00000000 Can_Motor_Send
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:854    .text.Can_Motor_Send:00000048 $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:859    .text.Can_Motor_Calc_Send:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:865    .text.Can_Motor_Calc_Send:00000000 Can_Motor_Calc_Send
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1118   .text.Can_Motor_Calc_Send:00000120 $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1152   .rodata.identifiers:00000000 identifiers
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1145   .bss.motors_id:00000000 motors_id
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1138   .bss.motor_instances:00000000 motor_instances
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1127   .bss.data.0:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1131   .bss.data.0:00000000 data.0
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1134   .bss.motor_instances:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1141   .bss.motors_id:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccwKnW7u.s:1148   .rodata.identifiers:00000000 $d
+
+UNDEFINED SYMBOLS
+memset
+BSP_CAN_RegisterRxCallback
+malloc
+create_circular_queue
+memcpy
+create_controller
+Monitor_Register
+BSP_CAN_AddFilter
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2f
+circular_queue_push
+circular_queue_pop
+BSP_CAN_Send
+is_Offline
+UNIVERSAL_Calc

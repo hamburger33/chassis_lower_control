@@ -1,0 +1,225 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"uart_pc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.UartPC_Create,"ax",%progbits
+  20              		.align	1
+  21              		.global	UartPC_Create
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	UartPC_Create:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/driver/com/uart_pc.c"
+   1:Core/HAL/driver/com/uart_pc.c **** #include <stdlib.h>
+   2:Core/HAL/driver/com/uart_pc.c **** #include <string.h>
+   3:Core/HAL/driver/com/uart_pc.c **** #include <uart_pc.h>
+   4:Core/HAL/driver/com/uart_pc.c **** uartpc* UartPC_Create(uartpc_config* config) {
+  30              		.loc 1 4 46 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 16
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 4 46 is_stmt 0 view .LVU1
+  35 0000 30B5     		push	{r4, r5, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 12
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  41 0002 85B0     		sub	sp, sp, #20
+  42              	.LCFI1:
+  43              		.cfi_def_cfa_offset 32
+  44 0004 0546     		mov	r5, r0
+   5:Core/HAL/driver/com/uart_pc.c ****     uartpc* obj = (uartpc*)malloc(sizeof(uartpc));
+  45              		.loc 1 5 5 is_stmt 1 view .LVU2
+  46              		.loc 1 5 28 is_stmt 0 view .LVU3
+  47 0006 1520     		movs	r0, #21
+  48              	.LVL1:
+  49              		.loc 1 5 28 view .LVU4
+  50 0008 FFF7FEFF 		bl	malloc
+  51              	.LVL2:
+  52 000c 0446     		mov	r4, r0
+  53              	.LVL3:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s 			page 2
+
+
+   6:Core/HAL/driver/com/uart_pc.c ****     memset(obj, 0, sizeof(uartpc));
+  54              		.loc 1 6 5 is_stmt 1 view .LVU5
+  55 000e 0023     		movs	r3, #0
+  56 0010 0360     		str	r3, [r0]	@ unaligned
+  57 0012 4360     		str	r3, [r0, #4]	@ unaligned
+  58 0014 8360     		str	r3, [r0, #8]	@ unaligned
+  59 0016 C360     		str	r3, [r0, #12]	@ unaligned
+  60 0018 0361     		str	r3, [r0, #16]	@ unaligned
+  61 001a 0375     		strb	r3, [r0, #20]
+   7:Core/HAL/driver/com/uart_pc.c ****     obj->config = *config;
+  62              		.loc 1 7 5 view .LVU6
+  63              		.loc 1 7 17 is_stmt 0 view .LVU7
+  64 001c 2A68     		ldr	r2, [r5]	@ unaligned
+  65 001e 0260     		str	r2, [r0]	@ unaligned
+  66 0020 2A79     		ldrb	r2, [r5, #4]	@ zero_extendqisi2
+  67 0022 0271     		strb	r2, [r0, #4]
+   8:Core/HAL/driver/com/uart_pc.c ****     uart_recv_config recv_config;
+  68              		.loc 1 8 5 is_stmt 1 view .LVU8
+   9:Core/HAL/driver/com/uart_pc.c ****     uart_send_config send_config;
+  69              		.loc 1 9 5 view .LVU9
+  10:Core/HAL/driver/com/uart_pc.c ****     recv_config.bsp_uart_index = config->bsp_uart_index;
+  70              		.loc 1 10 5 view .LVU10
+  71              		.loc 1 10 40 is_stmt 0 view .LVU11
+  72 0024 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  73              		.loc 1 10 32 view .LVU12
+  74 0026 8DF80420 		strb	r2, [sp, #4]
+  11:Core/HAL/driver/com/uart_pc.c ****     recv_config.data_len = sizeof(pc_recv);
+  75              		.loc 1 11 5 is_stmt 1 view .LVU13
+  76              		.loc 1 11 26 is_stmt 0 view .LVU14
+  77 002a 0D21     		movs	r1, #13
+  78 002c 8DF80510 		strb	r1, [sp, #5]
+  12:Core/HAL/driver/com/uart_pc.c ****     recv_config.notify_func = NULL;
+  79              		.loc 1 12 5 is_stmt 1 view .LVU15
+  80              		.loc 1 12 29 is_stmt 0 view .LVU16
+  81 0030 ADF80630 		strh	r3, [sp, #6]	@ movhi
+  82 0034 ADF80830 		strh	r3, [sp, #8]	@ movhi
+  13:Core/HAL/driver/com/uart_pc.c ****     recv_config.lost_callback = config->lost_callback;
+  83              		.loc 1 13 5 is_stmt 1 view .LVU17
+  84              		.loc 1 13 39 is_stmt 0 view .LVU18
+  85 0038 D5F80130 		ldr	r3, [r5, #1]	@ unaligned
+  86              		.loc 1 13 31 view .LVU19
+  87 003c CDF80A30 		str	r3, [sp, #10]	@ unaligned
+  14:Core/HAL/driver/com/uart_pc.c ****     //
+  15:Core/HAL/driver/com/uart_pc.c ****     send_config.bsp_uart_index = config->bsp_uart_index;
+  88              		.loc 1 15 5 is_stmt 1 view .LVU20
+  89              		.loc 1 15 32 is_stmt 0 view .LVU21
+  90 0040 8DF80020 		strb	r2, [sp]
+  16:Core/HAL/driver/com/uart_pc.c ****     send_config.data_len = sizeof(pc_send);
+  91              		.loc 1 16 5 is_stmt 1 view .LVU22
+  92              		.loc 1 16 26 is_stmt 0 view .LVU23
+  93 0044 1223     		movs	r3, #18
+  94 0046 8DF80130 		strb	r3, [sp, #1]
+  17:Core/HAL/driver/com/uart_pc.c ****     obj->recv = UartRecv_Create(&recv_config);
+  95              		.loc 1 17 5 is_stmt 1 view .LVU24
+  96              		.loc 1 17 17 is_stmt 0 view .LVU25
+  97 004a 01A8     		add	r0, sp, #4
+  98              	.LVL4:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s 			page 3
+
+
+  99              		.loc 1 17 17 view .LVU26
+ 100 004c FFF7FEFF 		bl	UartRecv_Create
+ 101              	.LVL5:
+ 102              		.loc 1 17 15 view .LVU27
+ 103 0050 C4F80900 		str	r0, [r4, #9]	@ unaligned
+  18:Core/HAL/driver/com/uart_pc.c ****     obj->send = UartSend_Create(&send_config);
+ 104              		.loc 1 18 5 is_stmt 1 view .LVU28
+ 105              		.loc 1 18 17 is_stmt 0 view .LVU29
+ 106 0054 6846     		mov	r0, sp
+ 107 0056 FFF7FEFF 		bl	UartSend_Create
+ 108              	.LVL6:
+ 109              		.loc 1 18 15 view .LVU30
+ 110 005a C4F80500 		str	r0, [r4, #5]	@ unaligned
+  19:Core/HAL/driver/com/uart_pc.c ****     obj->pc_recv_data = (pc_recv*)obj->recv->data_rx.data;
+ 111              		.loc 1 19 5 is_stmt 1 view .LVU31
+ 112              		.loc 1 19 38 is_stmt 0 view .LVU32
+ 113 005e D4F80930 		ldr	r3, [r4, #9]	@ unaligned
+ 114              		.loc 1 19 53 view .LVU33
+ 115 0062 D3F80B20 		ldr	r2, [r3, #11]	@ unaligned
+ 116              		.loc 1 19 23 view .LVU34
+ 117 0066 C4F80D20 		str	r2, [r4, #13]	@ unaligned
+  20:Core/HAL/driver/com/uart_pc.c ****     obj->data_updated = &obj->recv->data_updated;
+ 118              		.loc 1 20 5 is_stmt 1 view .LVU35
+ 119              		.loc 1 20 25 is_stmt 0 view .LVU36
+ 120 006a 1433     		adds	r3, r3, #20
+ 121              		.loc 1 20 23 view .LVU37
+ 122 006c C4F81130 		str	r3, [r4, #17]	@ unaligned
+  21:Core/HAL/driver/com/uart_pc.c ****     return obj;
+ 123              		.loc 1 21 5 is_stmt 1 view .LVU38
+  22:Core/HAL/driver/com/uart_pc.c **** }
+ 124              		.loc 1 22 1 is_stmt 0 view .LVU39
+ 125 0070 2046     		mov	r0, r4
+ 126 0072 05B0     		add	sp, sp, #20
+ 127              	.LCFI2:
+ 128              		.cfi_def_cfa_offset 12
+ 129              		@ sp needed
+ 130 0074 30BD     		pop	{r4, r5, pc}
+ 131              		.loc 1 22 1 view .LVU40
+ 132              		.cfi_endproc
+ 133              	.LFE0:
+ 135              		.section	.text.UartPC_Send,"ax",%progbits
+ 136              		.align	1
+ 137              		.global	UartPC_Send
+ 138              		.syntax unified
+ 139              		.thumb
+ 140              		.thumb_func
+ 142              	UartPC_Send:
+ 143              	.LVL7:
+ 144              	.LFB1:
+  23:Core/HAL/driver/com/uart_pc.c **** 
+  24:Core/HAL/driver/com/uart_pc.c **** void UartPC_Send(uartpc* obj, pc_send* data) {
+ 145              		.loc 1 24 46 is_stmt 1 view -0
+ 146              		.cfi_startproc
+ 147              		@ args = 0, pretend = 0, frame = 0
+ 148              		@ frame_needed = 0, uses_anonymous_args = 0
+ 149              		.loc 1 24 46 is_stmt 0 view .LVU42
+ 150 0000 08B5     		push	{r3, lr}
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s 			page 4
+
+
+ 151              	.LCFI3:
+ 152              		.cfi_def_cfa_offset 8
+ 153              		.cfi_offset 3, -8
+ 154              		.cfi_offset 14, -4
+  25:Core/HAL/driver/com/uart_pc.c ****     UartSend_Send(obj->send, (uint8_t*)data);
+ 155              		.loc 1 25 5 is_stmt 1 view .LVU43
+ 156 0002 D0F80500 		ldr	r0, [r0, #5]	@ unaligned
+ 157              	.LVL8:
+ 158              		.loc 1 25 5 is_stmt 0 view .LVU44
+ 159 0006 FFF7FEFF 		bl	UartSend_Send
+ 160              	.LVL9:
+  26:Core/HAL/driver/com/uart_pc.c **** }...
+ 161              		.loc 1 26 1 view .LVU45
+ 162 000a 08BD     		pop	{r3, pc}
+ 163              		.cfi_endproc
+ 164              	.LFE1:
+ 166              		.text
+ 167              	.Letext0:
+ 168              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 169              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 170              		.file 4 "Core/HAL/monitor/monitor.h"
+ 171              		.file 5 "Core/HAL/driver/com/pc_data.h"
+ 172              		.file 6 "Core/HAL/lib/datatypes.h"
+ 173              		.file 7 "Core/HAL/driver/com/uart_recv.h"
+ 174              		.file 8 "Core/HAL/driver/com/uart_send.h"
+ 175              		.file 9 "Core/HAL/driver/com/uart_pc.h"
+ 176              		.file 10 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart_pc.c
+C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s:20     .text.UartPC_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s:26     .text.UartPC_Create:00000000 UartPC_Create
+C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s:136    .text.UartPC_Send:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccLs1H6r.s:142    .text.UartPC_Send:00000000 UartPC_Send
+
+UNDEFINED SYMBOLS
+malloc
+UartRecv_Create
+UartSend_Create
+UartSend_Send

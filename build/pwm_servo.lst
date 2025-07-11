@@ -1,0 +1,519 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"pwm_servo.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Servo_Driver_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	Servo_Driver_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Servo_Driver_Init:
+  27              	.LFB3:
+  28              		.file 1 "Core/HAL/driver/servo/pwm_servo.c"
+   1:Core/HAL/driver/servo/pwm_servo.c **** #include "pwm_servo.h"
+   2:Core/HAL/driver/servo/pwm_servo.c **** 
+   3:Core/HAL/driver/servo/pwm_servo.c **** #include "cvector.h"
+   4:Core/HAL/driver/servo/pwm_servo.c **** 
+   5:Core/HAL/driver/servo/pwm_servo.c **** #define CCR_START 500
+   6:Core/HAL/driver/servo/pwm_servo.c **** #define CCR_END 2500
+   7:Core/HAL/driver/servo/pwm_servo.c **** 
+   8:Core/HAL/driver/servo/pwm_servo.c **** cvector *servo_instances;
+   9:Core/HAL/driver/servo/pwm_servo.c **** 
+  10:Core/HAL/driver/servo/pwm_servo.c **** void Servo_Update(Servo *obj);
+  11:Core/HAL/driver/servo/pwm_servo.c **** uint32_t servo_ccr_calc(Servo *obj);
+  12:Core/HAL/driver/servo/pwm_servo.c **** 
+  13:Core/HAL/driver/servo/pwm_servo.c **** void Servo_Driver_Init(void) { servo_instances = cvector_create(sizeof(Servo *)); }
+  29              		.loc 1 13 30 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  38              		.loc 1 13 32 view .LVU1
+  39              		.loc 1 13 50 is_stmt 0 view .LVU2
+  40 0002 0420     		movs	r0, #4
+  41 0004 FFF7FEFF 		bl	cvector_create
+  42              	.LVL0:
+  43              		.loc 1 13 48 view .LVU3
+  44 0008 014B     		ldr	r3, .L3
+  45 000a 1860     		str	r0, [r3]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 2
+
+
+  46              		.loc 1 13 83 view .LVU4
+  47 000c 08BD     		pop	{r3, pc}
+  48              	.L4:
+  49 000e 00BF     		.align	2
+  50              	.L3:
+  51 0010 00000000 		.word	.LANCHOR0
+  52              		.cfi_endproc
+  53              	.LFE3:
+  55              		.section	.text.Servo_Create,"ax",%progbits
+  56              		.align	1
+  57              		.global	Servo_Create
+  58              		.syntax unified
+  59              		.thumb
+  60              		.thumb_func
+  62              	Servo_Create:
+  63              	.LVL1:
+  64              	.LFB4:
+  14:Core/HAL/driver/servo/pwm_servo.c **** 
+  15:Core/HAL/driver/servo/pwm_servo.c **** Servo *Servo_Create(Servo_config *config) {
+  65              		.loc 1 15 43 is_stmt 1 view -0
+  66              		.cfi_startproc
+  67              		@ args = 0, pretend = 0, frame = 8
+  68              		@ frame_needed = 0, uses_anonymous_args = 0
+  69              		.loc 1 15 43 is_stmt 0 view .LVU6
+  70 0000 10B5     		push	{r4, lr}
+  71              	.LCFI1:
+  72              		.cfi_def_cfa_offset 8
+  73              		.cfi_offset 4, -8
+  74              		.cfi_offset 14, -4
+  75 0002 82B0     		sub	sp, sp, #8
+  76              	.LCFI2:
+  77              		.cfi_def_cfa_offset 16
+  78 0004 0446     		mov	r4, r0
+  16:Core/HAL/driver/servo/pwm_servo.c ****     Servo *obj = (Servo *)malloc(sizeof(Servo));
+  79              		.loc 1 16 5 is_stmt 1 view .LVU7
+  80              		.loc 1 16 27 is_stmt 0 view .LVU8
+  81 0006 0A20     		movs	r0, #10
+  82              	.LVL2:
+  83              		.loc 1 16 27 view .LVU9
+  84 0008 FFF7FEFF 		bl	malloc
+  85              	.LVL3:
+  86              		.loc 1 16 12 view .LVU10
+  87 000c 0190     		str	r0, [sp, #4]
+  17:Core/HAL/driver/servo/pwm_servo.c ****     memset(obj, 0, sizeof(Servo));
+  88              		.loc 1 17 5 is_stmt 1 view .LVU11
+  89 000e 0023     		movs	r3, #0
+  90 0010 0360     		str	r3, [r0]	@ unaligned
+  91 0012 4360     		str	r3, [r0, #4]	@ unaligned
+  92 0014 0381     		strh	r3, [r0, #8]	@ unaligned
+  18:Core/HAL/driver/servo/pwm_servo.c ****     obj->config = *config;
+  93              		.loc 1 18 5 view .LVU12
+  94              		.loc 1 18 17 is_stmt 0 view .LVU13
+  95 0016 2368     		ldr	r3, [r4]	@ unaligned
+  96 0018 0360     		str	r3, [r0]	@ unaligned
+  97 001a A388     		ldrh	r3, [r4, #4]	@ unaligned
+  98 001c 8380     		strh	r3, [r0, #4]	@ unaligned
+  19:Core/HAL/driver/servo/pwm_servo.c ****     cvector_pushback(servo_instances, &obj);
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 3
+
+
+  99              		.loc 1 19 5 is_stmt 1 view .LVU14
+ 100 001e 01A9     		add	r1, sp, #4
+ 101 0020 064B     		ldr	r3, .L7
+ 102 0022 1868     		ldr	r0, [r3]
+ 103 0024 FFF7FEFF 		bl	cvector_pushback
+ 104              	.LVL4:
+  20:Core/HAL/driver/servo/pwm_servo.c ****     BSP_PWM_Start(obj->config.bsp_pwm_index);
+ 105              		.loc 1 20 5 view .LVU15
+ 106 0028 019B     		ldr	r3, [sp, #4]
+ 107 002a 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 108 002c FFF7FEFF 		bl	BSP_PWM_Start
+ 109              	.LVL5:
+  21:Core/HAL/driver/servo/pwm_servo.c ****     obj->pos_servo_control = obj->config.initial_angle;
+ 110              		.loc 1 21 5 view .LVU16
+ 111              		.loc 1 21 33 is_stmt 0 view .LVU17
+ 112 0030 0198     		ldr	r0, [sp, #4]
+ 113              		.loc 1 21 41 view .LVU18
+ 114 0032 4388     		ldrh	r3, [r0, #2]	@ unaligned
+ 115              		.loc 1 21 28 view .LVU19
+ 116 0034 C380     		strh	r3, [r0, #6]	@ unaligned
+  22:Core/HAL/driver/servo/pwm_servo.c ****     return obj;
+ 117              		.loc 1 22 5 is_stmt 1 view .LVU20
+  23:Core/HAL/driver/servo/pwm_servo.c **** }
+ 118              		.loc 1 23 1 is_stmt 0 view .LVU21
+ 119 0036 02B0     		add	sp, sp, #8
+ 120              	.LCFI3:
+ 121              		.cfi_def_cfa_offset 8
+ 122              		@ sp needed
+ 123 0038 10BD     		pop	{r4, pc}
+ 124              	.LVL6:
+ 125              	.L8:
+ 126              		.loc 1 23 1 view .LVU22
+ 127 003a 00BF     		.align	2
+ 128              	.L7:
+ 129 003c 00000000 		.word	.LANCHOR0
+ 130              		.cfi_endproc
+ 131              	.LFE4:
+ 133              		.section	.text.servo_ccr_calc,"ax",%progbits
+ 134              		.align	1
+ 135              		.global	servo_ccr_calc
+ 136              		.syntax unified
+ 137              		.thumb
+ 138              		.thumb_func
+ 140              	servo_ccr_calc:
+ 141              	.LVL7:
+ 142              	.LFB5:
+  24:Core/HAL/driver/servo/pwm_servo.c **** 
+  25:Core/HAL/driver/servo/pwm_servo.c **** /**
+  26:Core/HAL/driver/servo/pwm_servo.c ****  * @brief 舵机角度解算
+  27:Core/HAL/driver/servo/pwm_servo.c ****         以舵机为参考系设置角度，根据实际需要测出所需要的舵机参考系下�
+  28:Core/HAL/driver/servo/pwm_servo.c ****  * @param 绝对角度 obj->set_angle
+  29:Core/HAL/driver/servo/pwm_servo.c ****  * @retval None
+  30:Core/HAL/driver/servo/pwm_servo.c ****  */
+  31:Core/HAL/driver/servo/pwm_servo.c **** uint32_t servo_ccr_calc(Servo *obj) {
+ 143              		.loc 1 31 37 is_stmt 1 view -0
+ 144              		.cfi_startproc
+ 145              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 4
+
+
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147              		@ link register save eliminated.
+  32:Core/HAL/driver/servo/pwm_servo.c ****     uint32_t ccr = 0;
+ 148              		.loc 1 32 5 view .LVU24
+  33:Core/HAL/driver/servo/pwm_servo.c ****     switch (obj->config.model) {
+ 149              		.loc 1 33 5 view .LVU25
+ 150              		.loc 1 33 24 is_stmt 0 view .LVU26
+ 151 0000 4378     		ldrb	r3, [r0, #1]	@ zero_extendqisi2
+ 152              		.loc 1 33 5 view .LVU27
+ 153 0002 1BB1     		cbz	r3, .L10
+ 154 0004 012B     		cmp	r3, #1
+ 155 0006 20D0     		beq	.L11
+ 156 0008 0020     		movs	r0, #0
+ 157              	.LVL8:
+ 158              		.loc 1 33 5 view .LVU28
+ 159 000a 7047     		bx	lr
+ 160              	.LVL9:
+ 161              	.L10:
+  34:Core/HAL/driver/servo/pwm_servo.c ****         case MODEL_SPEED:
+  35:Core/HAL/driver/servo/pwm_servo.c ****             if (obj->speed_servo_control.speed > 100) obj->speed_servo_control.speed = 100;
+ 162              		.loc 1 35 13 is_stmt 1 view .LVU29
+ 163              		.loc 1 35 41 is_stmt 0 view .LVU30
+ 164 000c 437A     		ldrb	r3, [r0, #9]	@ zero_extendqisi2
+ 165              		.loc 1 35 16 view .LVU31
+ 166 000e 642B     		cmp	r3, #100
+ 167 0010 01D9     		bls	.L13
+ 168              		.loc 1 35 55 is_stmt 1 discriminator 1 view .LVU32
+ 169              		.loc 1 35 86 is_stmt 0 discriminator 1 view .LVU33
+ 170 0012 6423     		movs	r3, #100
+ 171 0014 4372     		strb	r3, [r0, #9]
+ 172              	.L13:
+  36:Core/HAL/driver/servo/pwm_servo.c ****             switch (obj->speed_servo_control.direc) {
+ 173              		.loc 1 36 13 is_stmt 1 view .LVU34
+ 174              		.loc 1 36 45 is_stmt 0 view .LVU35
+ 175 0016 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 176 0018 012B     		cmp	r3, #1
+ 177 001a 07D0     		beq	.L14
+ 178 001c 022B     		cmp	r3, #2
+ 179 001e 0CD0     		beq	.L15
+ 180 0020 0BB1     		cbz	r3, .L18
+ 181 0022 0020     		movs	r0, #0
+ 182              	.LVL10:
+  37:Core/HAL/driver/servo/pwm_servo.c ****                 case servo_hold:
+  38:Core/HAL/driver/servo/pwm_servo.c ****                     ccr = 1500;
+  39:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+  40:Core/HAL/driver/servo/pwm_servo.c ****                 case servo_forward:
+  41:Core/HAL/driver/servo/pwm_servo.c ****                     ccr = 1500 + 10 * obj->speed_servo_control.speed;
+  42:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+  43:Core/HAL/driver/servo/pwm_servo.c ****                 case servo_reverse:
+  44:Core/HAL/driver/servo/pwm_servo.c ****                     ccr = 1500 - 10 * obj->speed_servo_control.speed;
+  45:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+  46:Core/HAL/driver/servo/pwm_servo.c ****                 default:
+  47:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+  48:Core/HAL/driver/servo/pwm_servo.c ****             }
+  49:Core/HAL/driver/servo/pwm_servo.c ****             break;
+  50:Core/HAL/driver/servo/pwm_servo.c ****         case MODEL_POS:
+  51:Core/HAL/driver/servo/pwm_servo.c ****             if (obj->pos_servo_control > obj->config.max_angle) obj->pos_servo_control = obj->confi
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 5
+
+
+  52:Core/HAL/driver/servo/pwm_servo.c ****             ccr = CCR_START + ((CCR_END - CCR_START) * obj->pos_servo_control / obj->config.max_ang
+  53:Core/HAL/driver/servo/pwm_servo.c ****             break;
+  54:Core/HAL/driver/servo/pwm_servo.c ****         default:
+  55:Core/HAL/driver/servo/pwm_servo.c ****             break;
+  56:Core/HAL/driver/servo/pwm_servo.c ****     }
+  57:Core/HAL/driver/servo/pwm_servo.c **** 
+  58:Core/HAL/driver/servo/pwm_servo.c ****     return ccr;
+ 183              		.loc 1 58 5 is_stmt 1 view .LVU36
+  59:Core/HAL/driver/servo/pwm_servo.c **** }
+ 184              		.loc 1 59 1 is_stmt 0 view .LVU37
+ 185 0024 7047     		bx	lr
+ 186              	.LVL11:
+ 187              	.L18:
+  38:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 188              		.loc 1 38 25 view .LVU38
+ 189 0026 40F2DC50 		movw	r0, #1500
+ 190              	.LVL12:
+  38:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 191              		.loc 1 38 25 view .LVU39
+ 192 002a 7047     		bx	lr
+ 193              	.LVL13:
+ 194              	.L14:
+  41:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 195              		.loc 1 41 21 is_stmt 1 view .LVU40
+  41:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 196              		.loc 1 41 63 is_stmt 0 view .LVU41
+ 197 002c 407A     		ldrb	r0, [r0, #9]	@ zero_extendqisi2
+ 198              	.LVL14:
+  41:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 199              		.loc 1 41 37 view .LVU42
+ 200 002e 00EB8000 		add	r0, r0, r0, lsl #2
+ 201 0032 4000     		lsls	r0, r0, #1
+  41:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 202              		.loc 1 41 32 view .LVU43
+ 203 0034 00F2DC50 		addw	r0, r0, #1500
+ 204              	.LVL15:
+  42:Core/HAL/driver/servo/pwm_servo.c ****                 case servo_reverse:
+ 205              		.loc 1 42 21 is_stmt 1 view .LVU44
+ 206 0038 7047     		bx	lr
+ 207              	.LVL16:
+ 208              	.L15:
+  44:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 209              		.loc 1 44 21 view .LVU45
+  44:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 210              		.loc 1 44 63 is_stmt 0 view .LVU46
+ 211 003a 407A     		ldrb	r0, [r0, #9]	@ zero_extendqisi2
+ 212              	.LVL17:
+  44:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 213              		.loc 1 44 37 view .LVU47
+ 214 003c 6FF00903 		mvn	r3, #9
+ 215 0040 03FB00F0 		mul	r0, r3, r0
+  44:Core/HAL/driver/servo/pwm_servo.c ****                     break;
+ 216              		.loc 1 44 32 view .LVU48
+ 217 0044 00F2DC50 		addw	r0, r0, #1500
+ 218              	.LVL18:
+  45:Core/HAL/driver/servo/pwm_servo.c ****                 default:
+ 219              		.loc 1 45 21 is_stmt 1 view .LVU49
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 6
+
+
+ 220 0048 7047     		bx	lr
+ 221              	.LVL19:
+ 222              	.L11:
+  51:Core/HAL/driver/servo/pwm_servo.c ****             ccr = CCR_START + ((CCR_END - CCR_START) * obj->pos_servo_control / obj->config.max_ang
+ 223              		.loc 1 51 13 view .LVU50
+  51:Core/HAL/driver/servo/pwm_servo.c ****             ccr = CCR_START + ((CCR_END - CCR_START) * obj->pos_servo_control / obj->config.max_ang
+ 224              		.loc 1 51 20 is_stmt 0 view .LVU51
+ 225 004a C188     		ldrh	r1, [r0, #6]	@ unaligned
+  51:Core/HAL/driver/servo/pwm_servo.c ****             ccr = CCR_START + ((CCR_END - CCR_START) * obj->pos_servo_control / obj->config.max_ang
+ 226              		.loc 1 51 53 view .LVU52
+ 227 004c 8288     		ldrh	r2, [r0, #4]	@ unaligned
+ 228 004e 93B2     		uxth	r3, r2
+  51:Core/HAL/driver/servo/pwm_servo.c ****             ccr = CCR_START + ((CCR_END - CCR_START) * obj->pos_servo_control / obj->config.max_ang
+ 229              		.loc 1 51 16 view .LVU53
+ 230 0050 9942     		cmp	r1, r3
+ 231 0052 00D9     		bls	.L16
+  51:Core/HAL/driver/servo/pwm_servo.c ****             ccr = CCR_START + ((CCR_END - CCR_START) * obj->pos_servo_control / obj->config.max_ang
+ 232              		.loc 1 51 65 is_stmt 1 discriminator 1 view .LVU54
+  51:Core/HAL/driver/servo/pwm_servo.c ****             ccr = CCR_START + ((CCR_END - CCR_START) * obj->pos_servo_control / obj->config.max_ang
+ 233              		.loc 1 51 88 is_stmt 0 discriminator 1 view .LVU55
+ 234 0054 C280     		strh	r2, [r0, #6]	@ unaligned
+ 235              	.L16:
+  52:Core/HAL/driver/servo/pwm_servo.c ****             break;
+ 236              		.loc 1 52 13 is_stmt 1 view .LVU56
+  52:Core/HAL/driver/servo/pwm_servo.c ****             break;
+ 237              		.loc 1 52 59 is_stmt 0 view .LVU57
+ 238 0056 C088     		ldrh	r0, [r0, #6]	@ unaligned
+ 239              	.LVL20:
+  52:Core/HAL/driver/servo/pwm_servo.c ****             break;
+ 240              		.loc 1 52 54 view .LVU58
+ 241 0058 4FF4FA62 		mov	r2, #2000
+ 242 005c 02FB00F0 		mul	r0, r2, r0
+  52:Core/HAL/driver/servo/pwm_servo.c ****             break;
+ 243              		.loc 1 52 79 view .LVU59
+ 244 0060 90FBF3F0 		sdiv	r0, r0, r3
+  52:Core/HAL/driver/servo/pwm_servo.c ****             break;
+ 245              		.loc 1 52 29 view .LVU60
+ 246 0064 00F5FA70 		add	r0, r0, #500
+ 247              	.LVL21:
+  53:Core/HAL/driver/servo/pwm_servo.c ****         default:
+ 248              		.loc 1 53 13 is_stmt 1 view .LVU61
+ 249 0068 7047     		bx	lr
+ 250              		.cfi_endproc
+ 251              	.LFE5:
+ 253              		.section	.text.Servo_Update,"ax",%progbits
+ 254              		.align	1
+ 255              		.global	Servo_Update
+ 256              		.syntax unified
+ 257              		.thumb
+ 258              		.thumb_func
+ 260              	Servo_Update:
+ 261              	.LVL22:
+ 262              	.LFB6:
+  60:Core/HAL/driver/servo/pwm_servo.c **** 
+  61:Core/HAL/driver/servo/pwm_servo.c **** void Servo_Update(Servo *obj) {
+ 263              		.loc 1 61 31 view -0
+ 264              		.cfi_startproc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 7
+
+
+ 265              		@ args = 0, pretend = 0, frame = 0
+ 266              		@ frame_needed = 0, uses_anonymous_args = 0
+ 267              		.loc 1 61 31 is_stmt 0 view .LVU63
+ 268 0000 10B5     		push	{r4, lr}
+ 269              	.LCFI4:
+ 270              		.cfi_def_cfa_offset 8
+ 271              		.cfi_offset 4, -8
+ 272              		.cfi_offset 14, -4
+  62:Core/HAL/driver/servo/pwm_servo.c ****     // 即时控制
+  63:Core/HAL/driver/servo/pwm_servo.c ****     BSP_PWM_SetCCR(obj->config.bsp_pwm_index, servo_ccr_calc(obj));
+ 273              		.loc 1 63 5 is_stmt 1 view .LVU64
+ 274 0002 0478     		ldrb	r4, [r0]	@ zero_extendqisi2
+ 275 0004 FFF7FEFF 		bl	servo_ccr_calc
+ 276              	.LVL23:
+ 277              		.loc 1 63 5 is_stmt 0 view .LVU65
+ 278 0008 0146     		mov	r1, r0
+ 279 000a 2046     		mov	r0, r4
+ 280 000c FFF7FEFF 		bl	BSP_PWM_SetCCR
+ 281              	.LVL24:
+  64:Core/HAL/driver/servo/pwm_servo.c ****     // 限速控制
+  65:Core/HAL/driver/servo/pwm_servo.c ****     // 为满足需要 可以在这里添加降速到达目标位置的代码 示例如下
+  66:Core/HAL/driver/servo/pwm_servo.c ****     // uint32_t ccr_now = obj->ccr = BSP_PWM_ReadCCR(obj->config.bsp_pwm_index);
+  67:Core/HAL/driver/servo/pwm_servo.c ****     // uint32_t crc_target = servo_ccr_calc(obj);
+  68:Core/HAL/driver/servo/pwm_servo.c ****     // if (crc_target > ccr_now)
+  69:Core/HAL/driver/servo/pwm_servo.c ****     //     BSP_PWM_SetCCR(obj->config.bsp_pwm_index, ccr_now + x);
+  70:Core/HAL/driver/servo/pwm_servo.c ****     // else
+  71:Core/HAL/driver/servo/pwm_servo.c ****     //     BSP_PWM_SetCCR(obj->config.bsp_pwm_index, ccr_now - x);
+  72:Core/HAL/driver/servo/pwm_servo.c **** }
+ 282              		.loc 1 72 1 view .LVU66
+ 283 0010 10BD     		pop	{r4, pc}
+ 284              		.cfi_endproc
+ 285              	.LFE6:
+ 287              		.section	.text.Servo_Update_ALL,"ax",%progbits
+ 288              		.align	1
+ 289              		.global	Servo_Update_ALL
+ 290              		.syntax unified
+ 291              		.thumb
+ 292              		.thumb_func
+ 294              	Servo_Update_ALL:
+ 295              	.LFB7:
+  73:Core/HAL/driver/servo/pwm_servo.c **** 
+  74:Core/HAL/driver/servo/pwm_servo.c **** void Servo_Update_ALL(void) {
+ 296              		.loc 1 74 29 is_stmt 1 view -0
+ 297              		.cfi_startproc
+ 298              		@ args = 0, pretend = 0, frame = 0
+ 299              		@ frame_needed = 0, uses_anonymous_args = 0
+ 300 0000 10B5     		push	{r4, lr}
+ 301              	.LCFI5:
+ 302              		.cfi_def_cfa_offset 8
+ 303              		.cfi_offset 4, -8
+ 304              		.cfi_offset 14, -4
+  75:Core/HAL/driver/servo/pwm_servo.c ****     for (size_t i = 0; i < servo_instances->cv_len; ++i) {
+ 305              		.loc 1 75 5 view .LVU68
+ 306              	.LBB2:
+ 307              		.loc 1 75 10 view .LVU69
+ 308              	.LVL25:
+ 309              		.loc 1 75 17 is_stmt 0 view .LVU70
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 8
+
+
+ 310 0002 0024     		movs	r4, #0
+ 311              		.loc 1 75 5 view .LVU71
+ 312 0004 06E0     		b	.L22
+ 313              	.LVL26:
+ 314              	.L23:
+ 315              	.LBB3:
+  76:Core/HAL/driver/servo/pwm_servo.c ****         Servo *servo_now = *((Servo **)cvector_val_at(servo_instances, i));
+ 316              		.loc 1 76 9 is_stmt 1 discriminator 3 view .LVU72
+ 317              		.loc 1 76 40 is_stmt 0 discriminator 3 view .LVU73
+ 318 0006 2146     		mov	r1, r4
+ 319 0008 FFF7FEFF 		bl	cvector_val_at
+ 320              	.LVL27:
+  77:Core/HAL/driver/servo/pwm_servo.c ****         Servo_Update(servo_now);
+ 321              		.loc 1 77 9 is_stmt 1 discriminator 3 view .LVU74
+ 322 000c 0068     		ldr	r0, [r0]
+ 323              	.LVL28:
+ 324              		.loc 1 77 9 is_stmt 0 discriminator 3 view .LVU75
+ 325 000e FFF7FEFF 		bl	Servo_Update
+ 326              	.LVL29:
+ 327              		.loc 1 77 9 discriminator 3 view .LVU76
+ 328              	.LBE3:
+  75:Core/HAL/driver/servo/pwm_servo.c ****     for (size_t i = 0; i < servo_instances->cv_len; ++i) {
+ 329              		.loc 1 75 53 is_stmt 1 discriminator 3 view .LVU77
+ 330 0012 0134     		adds	r4, r4, #1
+ 331              	.LVL30:
+ 332              	.L22:
+  75:Core/HAL/driver/servo/pwm_servo.c ****     for (size_t i = 0; i < servo_instances->cv_len; ++i) {
+ 333              		.loc 1 75 24 discriminator 1 view .LVU78
+  75:Core/HAL/driver/servo/pwm_servo.c ****     for (size_t i = 0; i < servo_instances->cv_len; ++i) {
+ 334              		.loc 1 75 43 is_stmt 0 discriminator 1 view .LVU79
+ 335 0014 024B     		ldr	r3, .L25
+ 336 0016 1868     		ldr	r0, [r3]
+ 337 0018 4368     		ldr	r3, [r0, #4]	@ unaligned
+  75:Core/HAL/driver/servo/pwm_servo.c ****     for (size_t i = 0; i < servo_instances->cv_len; ++i) {
+ 338              		.loc 1 75 5 discriminator 1 view .LVU80
+ 339 001a A342     		cmp	r3, r4
+ 340 001c F3D8     		bhi	.L23
+ 341              	.LBE2:
+  78:Core/HAL/driver/servo/pwm_servo.c ****     }
+  79:Core/HAL/driver/servo/pwm_servo.c **** }...
+ 342              		.loc 1 79 1 view .LVU81
+ 343 001e 10BD     		pop	{r4, pc}
+ 344              	.LVL31:
+ 345              	.L26:
+ 346              		.loc 1 79 1 view .LVU82
+ 347              		.align	2
+ 348              	.L25:
+ 349 0020 00000000 		.word	.LANCHOR0
+ 350              		.cfi_endproc
+ 351              	.LFE7:
+ 353              		.global	servo_instances
+ 354              		.section	.bss.servo_instances,"aw",%nobits
+ 355              		.align	2
+ 356              		.set	.LANCHOR0,. + 0
+ 359              	servo_instances:
+ 360 0000 00000000 		.space	4
+ 361              		.text
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 9
+
+
+ 362              	.Letext0:
+ 363              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 364              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 365              		.file 4 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 366              		.file 5 "Core/HAL/driver/servo/pwm_servo.h"
+ 367              		.file 6 "Core/HAL/lib/cvector.h"
+ 368              		.file 7 "Core/BSP/interface/bsp_pwm.h"
+ 369              		.file 8 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pwm_servo.c
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:20     .text.Servo_Driver_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:26     .text.Servo_Driver_Init:00000000 Servo_Driver_Init
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:51     .text.Servo_Driver_Init:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:56     .text.Servo_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:62     .text.Servo_Create:00000000 Servo_Create
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:129    .text.Servo_Create:0000003c $d
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:134    .text.servo_ccr_calc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:140    .text.servo_ccr_calc:00000000 servo_ccr_calc
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:254    .text.Servo_Update:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:260    .text.Servo_Update:00000000 Servo_Update
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:288    .text.Servo_Update_ALL:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:294    .text.Servo_Update_ALL:00000000 Servo_Update_ALL
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:349    .text.Servo_Update_ALL:00000020 $d
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:359    .bss.servo_instances:00000000 servo_instances
+C:\Users\lenovo\AppData\Local\Temp\ccztUmPf.s:355    .bss.servo_instances:00000000 $d
+
+UNDEFINED SYMBOLS
+cvector_create
+malloc
+cvector_pushback
+BSP_PWM_Start
+BSP_PWM_SetCCR
+cvector_val_at

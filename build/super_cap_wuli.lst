@@ -1,0 +1,770 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"super_cap_wuli.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Super_cap_wuli_Driver_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	Super_cap_wuli_Driver_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Super_cap_wuli_Driver_Init:
+  27              	.LFB3:
+  28              		.file 1 "Core/HAL/driver/super_cap/super_cap_wuli.c"
+   1:Core/HAL/driver/super_cap/super_cap_wuli.c **** #include "super_cap_wuli.h"
+   2:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+   3:Core/HAL/driver/super_cap/super_cap_wuli.c **** #include "bsp_can.h"
+   4:Core/HAL/driver/super_cap/super_cap_wuli.c **** #include "bsp_log.h"
+   5:Core/HAL/driver/super_cap/super_cap_wuli.c **** #include "cvector.h"
+   6:Core/HAL/driver/super_cap/super_cap_wuli.c **** #include "stdlib.h"
+   7:Core/HAL/driver/super_cap/super_cap_wuli.c **** #include "string.h"
+   8:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+   9:Core/HAL/driver/super_cap/super_cap_wuli.c **** cvector *super_cap_wuli_instances;  //用动态数组，参照裁判系统
+  10:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  11:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_RxCallBack(uint8_t can_id, uint32_t identifier, uint8_t *data, uint32_t len);
+  12:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  13:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_FeedbackData_Update(Super_cap_wuli *obj, uint8_t *data);
+  14:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_Send();
+  15:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  16:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_Driver_Init() {
+  29              		.loc 1 16 35 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  17:Core/HAL/driver/super_cap/super_cap_wuli.c ****     super_cap_wuli_instances = cvector_create(sizeof(Super_cap_wuli *));
+  38              		.loc 1 17 5 view .LVU1
+  39              		.loc 1 17 32 is_stmt 0 view .LVU2
+  40 0002 0420     		movs	r0, #4
+  41 0004 FFF7FEFF 		bl	cvector_create
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 2
+
+
+  42              	.LVL0:
+  43              		.loc 1 17 30 view .LVU3
+  44 0008 054B     		ldr	r3, .L3
+  45 000a 1860     		str	r0, [r3]
+  18:Core/HAL/driver/super_cap/super_cap_wuli.c ****     BSP_CAN_RegisterRxCallback(0, Super_cap_wuli_RxCallBack);
+  46              		.loc 1 18 5 is_stmt 1 view .LVU4
+  47 000c 054C     		ldr	r4, .L3+4
+  48 000e 2146     		mov	r1, r4
+  49 0010 0020     		movs	r0, #0
+  50 0012 FFF7FEFF 		bl	BSP_CAN_RegisterRxCallback
+  51              	.LVL1:
+  19:Core/HAL/driver/super_cap/super_cap_wuli.c ****     BSP_CAN_RegisterRxCallback(1, Super_cap_wuli_RxCallBack);
+  52              		.loc 1 19 5 view .LVU5
+  53 0016 2146     		mov	r1, r4
+  54 0018 0120     		movs	r0, #1
+  55 001a FFF7FEFF 		bl	BSP_CAN_RegisterRxCallback
+  56              	.LVL2:
+  20:Core/HAL/driver/super_cap/super_cap_wuli.c **** }
+  57              		.loc 1 20 1 is_stmt 0 view .LVU6
+  58 001e 10BD     		pop	{r4, pc}
+  59              	.L4:
+  60              		.align	2
+  61              	.L3:
+  62 0020 00000000 		.word	.LANCHOR0
+  63 0024 00000000 		.word	Super_cap_wuli_RxCallBack
+  64              		.cfi_endproc
+  65              	.LFE3:
+  67              		.section	.text.Super_cap_wuli_Create,"ax",%progbits
+  68              		.align	1
+  69              		.global	Super_cap_wuli_Create
+  70              		.syntax unified
+  71              		.thumb
+  72              		.thumb_func
+  74              	Super_cap_wuli_Create:
+  75              	.LVL3:
+  76              	.LFB4:
+  21:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  22:Core/HAL/driver/super_cap/super_cap_wuli.c **** Super_cap_wuli *Super_cap_wuli_Create(super_cap_wuli_config *config) {
+  77              		.loc 1 22 70 is_stmt 1 view -0
+  78              		.cfi_startproc
+  79              		@ args = 0, pretend = 0, frame = 8
+  80              		@ frame_needed = 0, uses_anonymous_args = 0
+  81              		.loc 1 22 70 is_stmt 0 view .LVU8
+  82 0000 10B5     		push	{r4, lr}
+  83              	.LCFI1:
+  84              		.cfi_def_cfa_offset 8
+  85              		.cfi_offset 4, -8
+  86              		.cfi_offset 14, -4
+  87 0002 82B0     		sub	sp, sp, #8
+  88              	.LCFI2:
+  89              		.cfi_def_cfa_offset 16
+  90 0004 0446     		mov	r4, r0
+  23:Core/HAL/driver/super_cap/super_cap_wuli.c ****     Super_cap_wuli *obj = (Super_cap_wuli *)malloc(sizeof(Super_cap_wuli));
+  91              		.loc 1 23 5 is_stmt 1 view .LVU9
+  92              		.loc 1 23 45 is_stmt 0 view .LVU10
+  93 0006 2A20     		movs	r0, #42
+  94              	.LVL4:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 3
+
+
+  95              		.loc 1 23 45 view .LVU11
+  96 0008 FFF7FEFF 		bl	malloc
+  97              	.LVL5:
+  98              		.loc 1 23 21 view .LVU12
+  99 000c 0190     		str	r0, [sp, #4]
+  24:Core/HAL/driver/super_cap/super_cap_wuli.c ****     memset(obj, 0, sizeof(Super_cap_wuli));
+ 100              		.loc 1 24 5 is_stmt 1 view .LVU13
+ 101 000e 2A22     		movs	r2, #42
+ 102 0010 0021     		movs	r1, #0
+ 103 0012 FFF7FEFF 		bl	memset
+ 104              	.LVL6:
+  25:Core/HAL/driver/super_cap/super_cap_wuli.c ****     obj->config = *config;
+ 105              		.loc 1 25 5 view .LVU14
+ 106              		.loc 1 25 8 is_stmt 0 view .LVU15
+ 107 0016 019B     		ldr	r3, [sp, #4]
+ 108              		.loc 1 25 17 view .LVU16
+ 109 0018 2168     		ldr	r1, [r4]	@ unaligned
+ 110 001a 6268     		ldr	r2, [r4, #4]	@ unaligned
+ 111 001c 1960     		str	r1, [r3]	@ unaligned
+ 112 001e 5A60     		str	r2, [r3, #4]	@ unaligned
+ 113 0020 227A     		ldrb	r2, [r4, #8]	@ zero_extendqisi2
+ 114 0022 1A72     		strb	r2, [r3, #8]
+  26:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  27:Core/HAL/driver/super_cap/super_cap_wuli.c ****     cvector_pushback(super_cap_wuli_instances, &obj);
+ 115              		.loc 1 27 5 is_stmt 1 view .LVU17
+ 116 0024 01A9     		add	r1, sp, #4
+ 117 0026 0B4B     		ldr	r3, .L7
+ 118 0028 1868     		ldr	r0, [r3]
+ 119 002a FFF7FEFF 		bl	cvector_pushback
+ 120              	.LVL7:
+  28:Core/HAL/driver/super_cap/super_cap_wuli.c ****     BSP_CAN_AddFilter(obj->config.bsp_can_index, obj->config.super_cap_wuli_rx_id);
+ 121              		.loc 1 28 5 view .LVU18
+ 122              		.loc 1 28 26 is_stmt 0 view .LVU19
+ 123 002e 019B     		ldr	r3, [sp, #4]
+ 124              		.loc 1 28 5 view .LVU20
+ 125 0030 B3F80310 		ldrh	r1, [r3, #3]	@ unaligned
+ 126 0034 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 127 0036 FFF7FEFF 		bl	BSP_CAN_AddFilter
+ 128              	.LVL8:
+  29:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  30:Core/HAL/driver/super_cap/super_cap_wuli.c ****     obj->monitor = Monitor_Register(obj->config.lost_callback, 20, obj);
+ 129              		.loc 1 30 5 is_stmt 1 view .LVU21
+ 130              		.loc 1 30 40 is_stmt 0 view .LVU22
+ 131 003a 019C     		ldr	r4, [sp, #4]
+ 132              	.LVL9:
+ 133              		.loc 1 30 20 view .LVU23
+ 134 003c 2246     		mov	r2, r4
+ 135 003e 1421     		movs	r1, #20
+ 136 0040 D4F80500 		ldr	r0, [r4, #5]	@ unaligned
+ 137 0044 FFF7FEFF 		bl	Monitor_Register
+ 138              	.LVL10:
+ 139              		.loc 1 30 18 view .LVU24
+ 140 0048 C4F82600 		str	r0, [r4, #38]	@ unaligned
+  31:Core/HAL/driver/super_cap/super_cap_wuli.c ****     return obj;
+ 141              		.loc 1 31 5 is_stmt 1 view .LVU25
+  32:Core/HAL/driver/super_cap/super_cap_wuli.c **** }
+ 142              		.loc 1 32 1 is_stmt 0 view .LVU26
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 4
+
+
+ 143 004c 0198     		ldr	r0, [sp, #4]
+ 144 004e 02B0     		add	sp, sp, #8
+ 145              	.LCFI3:
+ 146              		.cfi_def_cfa_offset 8
+ 147              		@ sp needed
+ 148 0050 10BD     		pop	{r4, pc}
+ 149              	.L8:
+ 150 0052 00BF     		.align	2
+ 151              	.L7:
+ 152 0054 00000000 		.word	.LANCHOR0
+ 153              		.cfi_endproc
+ 154              	.LFE4:
+ 156              		.global	__aeabi_f2d
+ 157              		.global	__aeabi_dsub
+ 158              		.global	__aeabi_ddiv
+ 159              		.global	__aeabi_dmul
+ 160              		.global	__aeabi_d2f
+ 161              		.section	.text.Super_cap_wuli_Getpercent,"ax",%progbits
+ 162              		.align	1
+ 163              		.global	Super_cap_wuli_Getpercent
+ 164              		.syntax unified
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	Super_cap_wuli_Getpercent:
+ 169              	.LVL11:
+ 170              	.LFB5:
+  33:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  34:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_Getpercent(Super_cap_wuli *obj) {
+ 171              		.loc 1 34 53 is_stmt 1 view -0
+ 172              		.cfi_startproc
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+ 175              		.loc 1 34 53 is_stmt 0 view .LVU28
+ 176 0000 D0B5     		push	{r4, r6, r7, lr}
+ 177              	.LCFI4:
+ 178              		.cfi_def_cfa_offset 16
+ 179              		.cfi_offset 4, -16
+ 180              		.cfi_offset 6, -12
+ 181              		.cfi_offset 7, -8
+ 182              		.cfi_offset 14, -4
+ 183 0002 0446     		mov	r4, r0
+  35:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //最好用函数拟合
+  36:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //或者多描几个点省算力（bushi
+  37:Core/HAL/driver/super_cap/super_cap_wuli.c ****     // if (obj->voltage_cap_fdb < 15)
+  38:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //     obj->cap_percent = 20;
+  39:Core/HAL/driver/super_cap/super_cap_wuli.c ****     // else if (obj->voltage_cap_fdb >= 15 && obj->voltage_cap_fdb < 17)
+  40:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //     obj->cap_percent = 35;
+  41:Core/HAL/driver/super_cap/super_cap_wuli.c ****     // else if (obj->voltage_cap_fdb >= 17 && obj->voltage_cap_fdb < 19)
+  42:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //     obj->cap_percent = 50;
+  43:Core/HAL/driver/super_cap/super_cap_wuli.c ****     // else if (obj->voltage_cap_fdb >= 19 && obj->voltage_cap_fdb < 21)
+  44:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //     obj->cap_percent = 65;
+  45:Core/HAL/driver/super_cap/super_cap_wuli.c ****     // else if (obj->voltage_cap_fdb >= 21 && obj->voltage_cap_fdb < 23)
+  46:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //     obj->cap_percent = 80;
+  47:Core/HAL/driver/super_cap/super_cap_wuli.c ****     // else if (obj->voltage_cap_fdb >= 23 && obj->voltage_cap_fdb < 24.5)
+  48:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //     obj->cap_percent = 95;
+  49:Core/HAL/driver/super_cap/super_cap_wuli.c ****     // else if (obj->voltage_cap_fdb >= 24.5 && obj->voltage_cap_fdb < 25)
+  50:Core/HAL/driver/super_cap/super_cap_wuli.c ****     //     obj->cap_percent = 100;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 5
+
+
+  51:Core/HAL/driver/super_cap/super_cap_wuli.c ****     obj->cap_percent = (obj->voltage_cap_fdb - 14.0) / (obj->voltage_input_fdb - 2 - 14.0) * 100;
+ 184              		.loc 1 51 5 is_stmt 1 view .LVU29
+ 185              		.loc 1 51 28 is_stmt 0 view .LVU30
+ 186 0004 D0F80D00 		ldr	r0, [r0, #13]	@ unaligned
+ 187              	.LVL12:
+ 188              		.loc 1 51 28 view .LVU31
+ 189 0008 FFF7FEFF 		bl	__aeabi_f2d
+ 190              	.LVL13:
+ 191              		.loc 1 51 46 view .LVU32
+ 192 000c 0022     		movs	r2, #0
+ 193 000e 184B     		ldr	r3, .L14
+ 194 0010 FFF7FEFF 		bl	__aeabi_dsub
+ 195              	.LVL14:
+ 196 0014 0646     		mov	r6, r0
+ 197 0016 0F46     		mov	r7, r1
+ 198              		.loc 1 51 60 view .LVU33
+ 199 0018 D4F80900 		ldr	r0, [r4, #9]	@ unaligned
+ 200              		.loc 1 51 80 view .LVU34
+ 201 001c F0EE007A 		vmov.f32	s15, #2.0e+0
+ 202 0020 07EE100A 		vmov	s14, r0
+ 203 0024 77EE677A 		vsub.f32	s15, s14, s15
+ 204 0028 17EE900A 		vmov	r0, s15
+ 205 002c FFF7FEFF 		bl	__aeabi_f2d
+ 206              	.LVL15:
+ 207              		.loc 1 51 84 view .LVU35
+ 208 0030 0022     		movs	r2, #0
+ 209 0032 0F4B     		ldr	r3, .L14
+ 210 0034 FFF7FEFF 		bl	__aeabi_dsub
+ 211              	.LVL16:
+ 212 0038 0246     		mov	r2, r0
+ 213 003a 0B46     		mov	r3, r1
+ 214              		.loc 1 51 54 view .LVU36
+ 215 003c 3046     		mov	r0, r6
+ 216 003e 3946     		mov	r1, r7
+ 217 0040 FFF7FEFF 		bl	__aeabi_ddiv
+ 218              	.LVL17:
+ 219              		.loc 1 51 92 view .LVU37
+ 220 0044 0022     		movs	r2, #0
+ 221 0046 0B4B     		ldr	r3, .L14+4
+ 222 0048 FFF7FEFF 		bl	__aeabi_dmul
+ 223              	.LVL18:
+ 224 004c FFF7FEFF 		bl	__aeabi_d2f
+ 225              	.LVL19:
+ 226 0050 07EE900A 		vmov	s15, r0
+ 227              		.loc 1 51 22 view .LVU38
+ 228 0054 C4F82200 		str	r0, [r4, #34]	@ unaligned
+  52:Core/HAL/driver/super_cap/super_cap_wuli.c ****     if(obj->cap_percent > 100) obj->cap_percent = 100;
+ 229              		.loc 1 52 5 is_stmt 1 view .LVU39
+ 230              		.loc 1 52 7 is_stmt 0 view .LVU40
+ 231 0058 9FED077A 		vldr.32	s14, .L14+8
+ 232 005c F4EEC77A 		vcmpe.f32	s15, s14
+ 233 0060 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 234 0064 03DD     		ble	.L9
+ 235              		.loc 1 52 32 is_stmt 1 discriminator 1 view .LVU41
+ 236              		.loc 1 52 49 is_stmt 0 discriminator 1 view .LVU42
+ 237 0066 17EE103A 		vmov	r3, s14
+ 238 006a C4F82230 		str	r3, [r4, #34]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 6
+
+
+ 239              	.L9:
+  53:Core/HAL/driver/super_cap/super_cap_wuli.c **** }
+ 240              		.loc 1 53 1 view .LVU43
+ 241 006e D0BD     		pop	{r4, r6, r7, pc}
+ 242              	.LVL20:
+ 243              	.L15:
+ 244              		.loc 1 53 1 view .LVU44
+ 245              		.align	2
+ 246              	.L14:
+ 247 0070 00002C40 		.word	1076625408
+ 248 0074 00005940 		.word	1079574528
+ 249 0078 0000C842 		.word	1120403456
+ 250              		.cfi_endproc
+ 251              	.LFE5:
+ 253              		.section	.text.Super_cap_wuli_FeedbackData_Update,"ax",%progbits
+ 254              		.align	1
+ 255              		.global	Super_cap_wuli_FeedbackData_Update
+ 256              		.syntax unified
+ 257              		.thumb
+ 258              		.thumb_func
+ 260              	Super_cap_wuli_FeedbackData_Update:
+ 261              	.LVL21:
+ 262              	.LFB7:
+  54:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  55:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_RxCallBack(uint8_t can_id, uint32_t identifier, uint8_t *data, uint32_t len) {
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****     for (size_t i = 0; i < super_cap_wuli_instances->cv_len; i++) {
+  57:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+  58:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (can_id == now->config.bsp_can_index && now->config.super_cap_wuli_rx_id == identifier) 
+  59:Core/HAL/driver/super_cap/super_cap_wuli.c ****             now->monitor->reset(now->monitor);
+  60:Core/HAL/driver/super_cap/super_cap_wuli.c ****             Super_cap_wuli_FeedbackData_Update(now, data);
+  61:Core/HAL/driver/super_cap/super_cap_wuli.c ****             Super_cap_wuli_Getpercent(now);
+  62:Core/HAL/driver/super_cap/super_cap_wuli.c ****         }
+  63:Core/HAL/driver/super_cap/super_cap_wuli.c ****     }
+  64:Core/HAL/driver/super_cap/super_cap_wuli.c **** }
+  65:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  66:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_FeedbackData_Update(Super_cap_wuli *obj, uint8_t *data) {
+ 263              		.loc 1 66 77 is_stmt 1 view -0
+ 264              		.cfi_startproc
+ 265              		@ args = 0, pretend = 0, frame = 8
+ 266              		@ frame_needed = 0, uses_anonymous_args = 0
+ 267              		@ link register save eliminated.
+ 268              		.loc 1 66 77 is_stmt 0 view .LVU46
+ 269 0000 82B0     		sub	sp, sp, #8
+ 270              	.LCFI5:
+ 271              		.cfi_def_cfa_offset 8
+ 272 0002 0346     		mov	r3, r0
+  67:Core/HAL/driver/super_cap/super_cap_wuli.c ****     uint16_t super_cap_wuli_raw[4];
+ 273              		.loc 1 67 5 is_stmt 1 view .LVU47
+  68:Core/HAL/driver/super_cap/super_cap_wuli.c ****     memcpy(super_cap_wuli_raw, data, sizeof(super_cap_wuli_raw));
+ 274              		.loc 1 68 5 view .LVU48
+ 275 0004 6A46     		mov	r2, sp
+ 276 0006 0868     		ldr	r0, [r1]	@ unaligned
+ 277              	.LVL22:
+ 278              		.loc 1 68 5 is_stmt 0 view .LVU49
+ 279 0008 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 280              	.LVL23:
+ 281              		.loc 1 68 5 view .LVU50
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 7
+
+
+ 282 000a 03C2     		stmia	r2!, {r0, r1}
+  69:Core/HAL/driver/super_cap/super_cap_wuli.c ****     obj->voltage_input_fdb = (float)super_cap_wuli_raw[0] / 100.f;
+ 283              		.loc 1 69 5 is_stmt 1 view .LVU51
+ 284              		.loc 1 69 55 is_stmt 0 view .LVU52
+ 285 000c BDF80020 		ldrh	r2, [sp]
+ 286 0010 07EE102A 		vmov	s14, r2	@ int
+ 287              		.loc 1 69 30 view .LVU53
+ 288 0014 B8EE477A 		vcvt.f32.u32	s14, s14
+ 289              		.loc 1 69 59 view .LVU54
+ 290 0018 DFED167A 		vldr.32	s15, .L18
+ 291              		.loc 1 69 28 view .LVU55
+ 292 001c 87EE277A 		vdiv.f32	s14, s14, s15
+ 293 0020 17EE102A 		vmov	r2, s14
+ 294 0024 C3F80920 		str	r2, [r3, #9]	@ unaligned
+  70:Core/HAL/driver/super_cap/super_cap_wuli.c ****     obj->voltage_cap_fdb = (float)super_cap_wuli_raw[1] / 100.f;
+ 295              		.loc 1 70 5 is_stmt 1 view .LVU56
+ 296              		.loc 1 70 53 is_stmt 0 view .LVU57
+ 297 0028 BDF80220 		ldrh	r2, [sp, #2]
+ 298 002c 07EE102A 		vmov	s14, r2	@ int
+ 299              		.loc 1 70 28 view .LVU58
+ 300 0030 B8EE477A 		vcvt.f32.u32	s14, s14
+ 301              		.loc 1 70 26 view .LVU59
+ 302 0034 87EE277A 		vdiv.f32	s14, s14, s15
+ 303 0038 17EE102A 		vmov	r2, s14
+ 304 003c C3F80D20 		str	r2, [r3, #13]	@ unaligned
+  71:Core/HAL/driver/super_cap/super_cap_wuli.c ****     obj->current_input_fdb = (float)super_cap_wuli_raw[2] / 100.f;
+ 305              		.loc 1 71 5 is_stmt 1 view .LVU60
+ 306              		.loc 1 71 55 is_stmt 0 view .LVU61
+ 307 0040 BDF80420 		ldrh	r2, [sp, #4]
+ 308 0044 07EE102A 		vmov	s14, r2	@ int
+ 309              		.loc 1 71 30 view .LVU62
+ 310 0048 B8EE477A 		vcvt.f32.u32	s14, s14
+ 311              		.loc 1 71 28 view .LVU63
+ 312 004c 87EE277A 		vdiv.f32	s14, s14, s15
+ 313 0050 17EE102A 		vmov	r2, s14
+ 314 0054 C3F81120 		str	r2, [r3, #17]	@ unaligned
+  72:Core/HAL/driver/super_cap/super_cap_wuli.c ****     obj->power_set_fdb = (float)super_cap_wuli_raw[3] / 100.f;
+ 315              		.loc 1 72 5 is_stmt 1 view .LVU64
+ 316              		.loc 1 72 51 is_stmt 0 view .LVU65
+ 317 0058 BDF80620 		ldrh	r2, [sp, #6]
+ 318 005c 07EE102A 		vmov	s14, r2	@ int
+ 319              		.loc 1 72 26 view .LVU66
+ 320 0060 B8EE477A 		vcvt.f32.u32	s14, s14
+ 321              		.loc 1 72 24 view .LVU67
+ 322 0064 C7EE277A 		vdiv.f32	s15, s14, s15
+ 323 0068 17EE902A 		vmov	r2, s15
+ 324 006c C3F81520 		str	r2, [r3, #21]	@ unaligned
+  73:Core/HAL/driver/super_cap/super_cap_wuli.c **** }
+ 325              		.loc 1 73 1 view .LVU68
+ 326 0070 02B0     		add	sp, sp, #8
+ 327              	.LCFI6:
+ 328              		.cfi_def_cfa_offset 0
+ 329              		@ sp needed
+ 330 0072 7047     		bx	lr
+ 331              	.L19:
+ 332              		.align	2
+ 333              	.L18:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 8
+
+
+ 334 0074 0000C842 		.word	1120403456
+ 335              		.cfi_endproc
+ 336              	.LFE7:
+ 338              		.section	.text.Super_cap_wuli_RxCallBack,"ax",%progbits
+ 339              		.align	1
+ 340              		.global	Super_cap_wuli_RxCallBack
+ 341              		.syntax unified
+ 342              		.thumb
+ 343              		.thumb_func
+ 345              	Super_cap_wuli_RxCallBack:
+ 346              	.LVL24:
+ 347              	.LFB6:
+  55:Core/HAL/driver/super_cap/super_cap_wuli.c ****     for (size_t i = 0; i < super_cap_wuli_instances->cv_len; i++) {
+ 348              		.loc 1 55 98 is_stmt 1 view -0
+ 349              		.cfi_startproc
+ 350              		@ args = 0, pretend = 0, frame = 0
+ 351              		@ frame_needed = 0, uses_anonymous_args = 0
+  55:Core/HAL/driver/super_cap/super_cap_wuli.c ****     for (size_t i = 0; i < super_cap_wuli_instances->cv_len; i++) {
+ 352              		.loc 1 55 98 is_stmt 0 view .LVU70
+ 353 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 354              	.LCFI7:
+ 355              		.cfi_def_cfa_offset 24
+ 356              		.cfi_offset 4, -24
+ 357              		.cfi_offset 5, -20
+ 358              		.cfi_offset 6, -16
+ 359              		.cfi_offset 7, -12
+ 360              		.cfi_offset 8, -8
+ 361              		.cfi_offset 14, -4
+ 362 0004 0646     		mov	r6, r0
+ 363 0006 0F46     		mov	r7, r1
+ 364 0008 9046     		mov	r8, r2
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 365              		.loc 1 56 5 is_stmt 1 view .LVU71
+ 366              	.LBB2:
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 367              		.loc 1 56 10 view .LVU72
+ 368              	.LVL25:
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 369              		.loc 1 56 17 is_stmt 0 view .LVU73
+ 370 000a 0024     		movs	r4, #0
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 371              		.loc 1 56 5 view .LVU74
+ 372 000c 00E0     		b	.L21
+ 373              	.LVL26:
+ 374              	.L22:
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 375              		.loc 1 56 62 is_stmt 1 discriminator 2 view .LVU75
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 376              		.loc 1 56 63 is_stmt 0 discriminator 2 view .LVU76
+ 377 000e 0134     		adds	r4, r4, #1
+ 378              	.LVL27:
+ 379              	.L21:
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 380              		.loc 1 56 24 is_stmt 1 discriminator 1 view .LVU77
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 381              		.loc 1 56 52 is_stmt 0 discriminator 1 view .LVU78
+ 382 0010 0E4B     		ldr	r3, .L26
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 9
+
+
+ 383 0012 1868     		ldr	r0, [r3]
+ 384 0014 4368     		ldr	r3, [r0, #4]	@ unaligned
+  56:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *now = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 385              		.loc 1 56 5 discriminator 1 view .LVU79
+ 386 0016 A342     		cmp	r3, r4
+ 387 0018 16D9     		bls	.L25
+ 388              	.LBB3:
+  57:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (can_id == now->config.bsp_can_index && now->config.super_cap_wuli_rx_id == identifier) 
+ 389              		.loc 1 57 9 is_stmt 1 view .LVU80
+  57:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (can_id == now->config.bsp_can_index && now->config.super_cap_wuli_rx_id == identifier) 
+ 390              		.loc 1 57 51 is_stmt 0 view .LVU81
+ 391 001a 2146     		mov	r1, r4
+ 392 001c FFF7FEFF 		bl	cvector_val_at
+ 393              	.LVL28:
+  57:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (can_id == now->config.bsp_can_index && now->config.super_cap_wuli_rx_id == identifier) 
+ 394              		.loc 1 57 25 view .LVU82
+ 395 0020 0568     		ldr	r5, [r0]
+ 396              	.LVL29:
+  58:Core/HAL/driver/super_cap/super_cap_wuli.c ****             now->monitor->reset(now->monitor);
+ 397              		.loc 1 58 9 is_stmt 1 view .LVU83
+  58:Core/HAL/driver/super_cap/super_cap_wuli.c ****             now->monitor->reset(now->monitor);
+ 398              		.loc 1 58 34 is_stmt 0 view .LVU84
+ 399 0022 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+  58:Core/HAL/driver/super_cap/super_cap_wuli.c ****             now->monitor->reset(now->monitor);
+ 400              		.loc 1 58 12 view .LVU85
+ 401 0024 B342     		cmp	r3, r6
+ 402 0026 F2D1     		bne	.L22
+  58:Core/HAL/driver/super_cap/super_cap_wuli.c ****             now->monitor->reset(now->monitor);
+ 403              		.loc 1 58 63 discriminator 1 view .LVU86
+ 404 0028 B5F80330 		ldrh	r3, [r5, #3]	@ unaligned
+  58:Core/HAL/driver/super_cap/super_cap_wuli.c ****             now->monitor->reset(now->monitor);
+ 405              		.loc 1 58 49 discriminator 1 view .LVU87
+ 406 002c BB42     		cmp	r3, r7
+ 407 002e EED1     		bne	.L22
+  59:Core/HAL/driver/super_cap/super_cap_wuli.c ****             Super_cap_wuli_FeedbackData_Update(now, data);
+ 408              		.loc 1 59 13 is_stmt 1 view .LVU88
+  59:Core/HAL/driver/super_cap/super_cap_wuli.c ****             Super_cap_wuli_FeedbackData_Update(now, data);
+ 409              		.loc 1 59 16 is_stmt 0 view .LVU89
+ 410 0030 D5F82600 		ldr	r0, [r5, #38]	@ unaligned
+  59:Core/HAL/driver/super_cap/super_cap_wuli.c ****             Super_cap_wuli_FeedbackData_Update(now, data);
+ 411              		.loc 1 59 25 view .LVU90
+ 412 0034 C368     		ldr	r3, [r0, #12]	@ unaligned
+  59:Core/HAL/driver/super_cap/super_cap_wuli.c ****             Super_cap_wuli_FeedbackData_Update(now, data);
+ 413              		.loc 1 59 13 view .LVU91
+ 414 0036 9847     		blx	r3
+ 415              	.LVL30:
+  60:Core/HAL/driver/super_cap/super_cap_wuli.c ****             Super_cap_wuli_Getpercent(now);
+ 416              		.loc 1 60 13 is_stmt 1 view .LVU92
+ 417 0038 4146     		mov	r1, r8
+ 418 003a 2846     		mov	r0, r5
+ 419 003c FFF7FEFF 		bl	Super_cap_wuli_FeedbackData_Update
+ 420              	.LVL31:
+  61:Core/HAL/driver/super_cap/super_cap_wuli.c ****         }
+ 421              		.loc 1 61 13 view .LVU93
+ 422 0040 2846     		mov	r0, r5
+ 423 0042 FFF7FEFF 		bl	Super_cap_wuli_Getpercent
+ 424              	.LVL32:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 10
+
+
+ 425 0046 E2E7     		b	.L22
+ 426              	.LVL33:
+ 427              	.L25:
+  61:Core/HAL/driver/super_cap/super_cap_wuli.c ****         }
+ 428              		.loc 1 61 13 is_stmt 0 view .LVU94
+ 429              	.LBE3:
+ 430              	.LBE2:
+  64:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+ 431              		.loc 1 64 1 view .LVU95
+ 432 0048 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 433              	.LVL34:
+ 434              	.L27:
+  64:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+ 435              		.loc 1 64 1 view .LVU96
+ 436              		.align	2
+ 437              	.L26:
+ 438 004c 00000000 		.word	.LANCHOR0
+ 439              		.cfi_endproc
+ 440              	.LFE6:
+ 442              		.section	.text.Super_cap_wuli_Send,"ax",%progbits
+ 443              		.align	1
+ 444              		.global	Super_cap_wuli_Send
+ 445              		.syntax unified
+ 446              		.thumb
+ 447              		.thumb_func
+ 449              	Super_cap_wuli_Send:
+ 450              	.LFB8:
+  74:Core/HAL/driver/super_cap/super_cap_wuli.c **** 
+  75:Core/HAL/driver/super_cap/super_cap_wuli.c **** // 调用时，修改结构体中power_set的值
+  76:Core/HAL/driver/super_cap/super_cap_wuli.c **** void Super_cap_wuli_Send() {
+ 451              		.loc 1 76 28 is_stmt 1 view -0
+ 452              		.cfi_startproc
+ 453              		@ args = 0, pretend = 0, frame = 0
+ 454              		@ frame_needed = 0, uses_anonymous_args = 0
+ 455 0000 10B5     		push	{r4, lr}
+ 456              	.LCFI8:
+ 457              		.cfi_def_cfa_offset 8
+ 458              		.cfi_offset 4, -8
+ 459              		.cfi_offset 14, -4
+  77:Core/HAL/driver/super_cap/super_cap_wuli.c ****     static uint8_t data[8] = {0};
+ 460              		.loc 1 77 5 view .LVU98
+  78:Core/HAL/driver/super_cap/super_cap_wuli.c ****     for (size_t i = 0; i < super_cap_wuli_instances->cv_len; i++) {
+ 461              		.loc 1 78 5 view .LVU99
+ 462              	.LBB4:
+ 463              		.loc 1 78 10 view .LVU100
+ 464              	.LVL35:
+ 465              		.loc 1 78 17 is_stmt 0 view .LVU101
+ 466 0002 0024     		movs	r4, #0
+ 467              		.loc 1 78 5 view .LVU102
+ 468 0004 17E0     		b	.L29
+ 469              	.LVL36:
+ 470              	.L33:
+ 471              	.LBB5:
+ 472              	.LBB6:
+  79:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *obj = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+  80:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (obj == NULL)
+  81:Core/HAL/driver/super_cap/super_cap_wuli.c ****             return;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 11
+
+
+  82:Core/HAL/driver/super_cap/super_cap_wuli.c ****         else {
+  83:Core/HAL/driver/super_cap/super_cap_wuli.c ****             uint16_t power_temp = obj->power_set * 100;
+ 473              		.loc 1 83 13 is_stmt 1 discriminator 2 view .LVU103
+ 474              		.loc 1 83 38 is_stmt 0 discriminator 2 view .LVU104
+ 475 0006 D0F81930 		ldr	r3, [r0, #25]	@ unaligned
+ 476 000a 07EE903A 		vmov	s15, r3	@ int
+ 477              		.loc 1 83 50 discriminator 2 view .LVU105
+ 478 000e 9FED107A 		vldr.32	s14, .L34
+ 479 0012 67EE877A 		vmul.f32	s15, s15, s14
+ 480              		.loc 1 83 22 discriminator 2 view .LVU106
+ 481 0016 FCEEE77A 		vcvt.u32.f32	s15, s15
+ 482 001a 17EE903A 		vmov	r3, s15	@ int
+ 483              	.LVL37:
+  84:Core/HAL/driver/super_cap/super_cap_wuli.c ****             data[0] = (uint8_t)(power_temp >> 8);
+ 484              		.loc 1 84 13 is_stmt 1 discriminator 2 view .LVU107
+ 485              		.loc 1 84 23 is_stmt 0 discriminator 2 view .LVU108
+ 486 001e C3F30721 		ubfx	r1, r3, #8, #8
+ 487              		.loc 1 84 21 discriminator 2 view .LVU109
+ 488 0022 0C4A     		ldr	r2, .L34+4
+ 489 0024 1170     		strb	r1, [r2]
+  85:Core/HAL/driver/super_cap/super_cap_wuli.c ****             data[1] = (uint8_t)(power_temp);
+ 490              		.loc 1 85 13 is_stmt 1 discriminator 2 view .LVU110
+ 491              		.loc 1 85 21 is_stmt 0 discriminator 2 view .LVU111
+ 492 0026 5370     		strb	r3, [r2, #1]
+ 493              	.LBE6:
+  86:Core/HAL/driver/super_cap/super_cap_wuli.c ****         }
+  87:Core/HAL/driver/super_cap/super_cap_wuli.c ****         BSP_CAN_Send(obj->config.bsp_can_index, obj->config.super_cap_wuli_tx_id, data, 8);
+ 494              		.loc 1 87 9 is_stmt 1 discriminator 2 view .LVU112
+ 495 0028 0823     		movs	r3, #8
+ 496              	.LVL38:
+ 497              		.loc 1 87 9 is_stmt 0 discriminator 2 view .LVU113
+ 498 002a B0F80110 		ldrh	r1, [r0, #1]	@ unaligned
+ 499 002e 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 500              	.LVL39:
+ 501              		.loc 1 87 9 discriminator 2 view .LVU114
+ 502 0030 FFF7FEFF 		bl	BSP_CAN_Send
+ 503              	.LVL40:
+ 504              		.loc 1 87 9 discriminator 2 view .LVU115
+ 505              	.LBE5:
+  78:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *obj = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 506              		.loc 1 78 62 is_stmt 1 discriminator 2 view .LVU116
+  78:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *obj = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 507              		.loc 1 78 63 is_stmt 0 discriminator 2 view .LVU117
+ 508 0034 0134     		adds	r4, r4, #1
+ 509              	.LVL41:
+ 510              	.L29:
+  78:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *obj = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 511              		.loc 1 78 24 is_stmt 1 discriminator 1 view .LVU118
+  78:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *obj = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 512              		.loc 1 78 52 is_stmt 0 discriminator 1 view .LVU119
+ 513 0036 084B     		ldr	r3, .L34+8
+ 514 0038 1868     		ldr	r0, [r3]
+ 515 003a 4368     		ldr	r3, [r0, #4]	@ unaligned
+  78:Core/HAL/driver/super_cap/super_cap_wuli.c ****         Super_cap_wuli *obj = *(Super_cap_wuli **)cvector_val_at(super_cap_wuli_instances, i);
+ 516              		.loc 1 78 5 discriminator 1 view .LVU120
+ 517 003c A342     		cmp	r3, r4
+ 518 003e 05D9     		bls	.L28
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 12
+
+
+ 519              	.LBB7:
+  79:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (obj == NULL)
+ 520              		.loc 1 79 9 is_stmt 1 view .LVU121
+  79:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (obj == NULL)
+ 521              		.loc 1 79 51 is_stmt 0 view .LVU122
+ 522 0040 2146     		mov	r1, r4
+ 523 0042 FFF7FEFF 		bl	cvector_val_at
+ 524              	.LVL42:
+  79:Core/HAL/driver/super_cap/super_cap_wuli.c ****         if (obj == NULL)
+ 525              		.loc 1 79 25 view .LVU123
+ 526 0046 0068     		ldr	r0, [r0]
+ 527              	.LVL43:
+  80:Core/HAL/driver/super_cap/super_cap_wuli.c ****             return;
+ 528              		.loc 1 80 9 is_stmt 1 view .LVU124
+  80:Core/HAL/driver/super_cap/super_cap_wuli.c ****             return;
+ 529              		.loc 1 80 12 is_stmt 0 view .LVU125
+ 530 0048 0028     		cmp	r0, #0
+ 531 004a DCD1     		bne	.L33
+ 532              	.LVL44:
+ 533              	.L28:
+  80:Core/HAL/driver/super_cap/super_cap_wuli.c ****             return;
+ 534              		.loc 1 80 12 view .LVU126
+ 535              	.LBE7:
+ 536              	.LBE4:
+  88:Core/HAL/driver/super_cap/super_cap_wuli.c ****     }
+  89:Core/HAL/driver/super_cap/super_cap_wuli.c **** }...
+ 537              		.loc 1 89 1 view .LVU127
+ 538 004c 10BD     		pop	{r4, pc}
+ 539              	.LVL45:
+ 540              	.L35:
+ 541              		.loc 1 89 1 view .LVU128
+ 542 004e 00BF     		.align	2
+ 543              	.L34:
+ 544 0050 0000C842 		.word	1120403456
+ 545 0054 00000000 		.word	.LANCHOR1
+ 546 0058 00000000 		.word	.LANCHOR0
+ 547              		.cfi_endproc
+ 548              	.LFE8:
+ 550              		.global	super_cap_wuli_instances
+ 551              		.section	.bss.data.0,"aw",%nobits
+ 552              		.align	2
+ 553              		.set	.LANCHOR1,. + 0
+ 556              	data.0:
+ 557 0000 00000000 		.space	8
+ 557      00000000 
+ 558              		.section	.bss.super_cap_wuli_instances,"aw",%nobits
+ 559              		.align	2
+ 560              		.set	.LANCHOR0,. + 0
+ 563              	super_cap_wuli_instances:
+ 564 0000 00000000 		.space	4
+ 565              		.text
+ 566              	.Letext0:
+ 567              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 568              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 569              		.file 4 "Core/HAL/monitor/monitor.h"
+ 570              		.file 5 "Core/HAL/driver/super_cap/super_cap_wuli.h"
+ 571              		.file 6 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 13
+
+
+ 572              		.file 7 "Core/HAL/lib/cvector.h"
+ 573              		.file 8 "Core/BSP/interface/bsp_can.h"
+ 574              		.file 9 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 575              		.file 10 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 super_cap_wuli.c
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:20     .text.Super_cap_wuli_Driver_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:26     .text.Super_cap_wuli_Driver_Init:00000000 Super_cap_wuli_Driver_Init
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:62     .text.Super_cap_wuli_Driver_Init:00000020 $d
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:345    .text.Super_cap_wuli_RxCallBack:00000000 Super_cap_wuli_RxCallBack
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:68     .text.Super_cap_wuli_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:74     .text.Super_cap_wuli_Create:00000000 Super_cap_wuli_Create
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:152    .text.Super_cap_wuli_Create:00000054 $d
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:162    .text.Super_cap_wuli_Getpercent:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:168    .text.Super_cap_wuli_Getpercent:00000000 Super_cap_wuli_Getpercent
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:247    .text.Super_cap_wuli_Getpercent:00000070 $d
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:254    .text.Super_cap_wuli_FeedbackData_Update:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:260    .text.Super_cap_wuli_FeedbackData_Update:00000000 Super_cap_wuli_FeedbackData_Update
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:334    .text.Super_cap_wuli_FeedbackData_Update:00000074 $d
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:339    .text.Super_cap_wuli_RxCallBack:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:438    .text.Super_cap_wuli_RxCallBack:0000004c $d
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:443    .text.Super_cap_wuli_Send:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:449    .text.Super_cap_wuli_Send:00000000 Super_cap_wuli_Send
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:544    .text.Super_cap_wuli_Send:00000050 $d
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:563    .bss.super_cap_wuli_instances:00000000 super_cap_wuli_instances
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:552    .bss.data.0:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:556    .bss.data.0:00000000 data.0
+C:\Users\lenovo\AppData\Local\Temp\cc1tr2yL.s:559    .bss.super_cap_wuli_instances:00000000 $d
+
+UNDEFINED SYMBOLS
+cvector_create
+BSP_CAN_RegisterRxCallback
+malloc
+memset
+cvector_pushback
+BSP_CAN_AddFilter
+Monitor_Register
+__aeabi_f2d
+__aeabi_dsub
+__aeabi_ddiv
+__aeabi_dmul
+__aeabi_d2f
+cvector_val_at
+BSP_CAN_Send

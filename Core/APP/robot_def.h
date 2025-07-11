@@ -25,15 +25,28 @@
 typedef enum Robot_mode_e { robot_stop = 0, robot_run } Robot_mode;
 
 /** 机器人模块控制量定义 **/
+typedef enum Chassis_mode_e {
+    chassis_stop = 0,
+    chassis_run,
+    // chassis_vision_control_run
+} Chassis_mode;
+typedef struct Cmd_chassis_t {
+    Chassis_mode mode;
+    // 写需要的控制量
+    float vx;
+    float wz;
+} Cmd_chassis;
 // 对模块的控制量
 typedef struct Cmd_module_t {
     Robot_mode mode;
     // others
 } Cmd_module;
 // 模块回传cmd的数据
-typedef struct Upload_module_t {
-    // ...
-} Upload_module;
+typedef struct Upload_chassis_t {
+    // 写需要的控制量
+    float vx;
+    float wz;
+} Upload_chassis;
 
 #pragma pack()
 #endif

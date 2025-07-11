@@ -22,7 +22,7 @@ TARGET = STM32F407_2022_framework
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Ofast
+OPT = -Og
 
 
 #######################################
@@ -163,7 +163,9 @@ Core/BSP/interface/bsp_pwm.c \
 Core/BSP/interface/bsp_reset.c \
 Core/BSP/interface/bsp_time.c \
 Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_printf.c \
-Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT.c
+Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT.c \
+Core/APP/Chassis/chassis.c
+
 # ASM sources
 ASM_SOURCES =  \
 startup_stm32f407xx.s
@@ -254,6 +256,7 @@ C_INCLUDES += \
 -ICore/HAL \
 -ICore/APP \
 -ICore/APP/command \
+-ICore/APP/Chassis \
 -ICore/BSP \
 -ICore/BSP/lib \
 -ICore/BSP/interface \

@@ -1,0 +1,639 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"ws2812b.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.rgb_2_raw,"ax",%progbits
+  20              		.align	1
+  21              		.global	rgb_2_raw
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	rgb_2_raw:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/driver/ws2812b/ws2812b.c"
+   1:Core/HAL/driver/ws2812b/ws2812b.c **** #include <stdlib.h>
+   2:Core/HAL/driver/ws2812b/ws2812b.c **** #include <ws2812b.h>
+   3:Core/HAL/driver/ws2812b/ws2812b.c **** 
+   4:Core/HAL/driver/ws2812b/ws2812b.c **** #include "bsp_pwm.h"
+   5:Core/HAL/driver/ws2812b/ws2812b.c **** #include "string.h"
+   6:Core/HAL/driver/ws2812b/ws2812b.c **** // frame_buf_ST frame;
+   7:Core/HAL/driver/ws2812b/ws2812b.c **** // color_rgb lights[PIXEL_MAX];
+   8:Core/HAL/driver/ws2812b/ws2812b.c **** 
+   9:Core/HAL/driver/ws2812b/ws2812b.c **** // 定义数据0和数据1的CCR占空比
+  10:Core/HAL/driver/ws2812b/ws2812b.c **** 
+  11:Core/HAL/driver/ws2812b/ws2812b.c **** #define BIT_1 140u
+  12:Core/HAL/driver/ws2812b/ws2812b.c **** #define BIT_0 70u
+  13:Core/HAL/driver/ws2812b/ws2812b.c **** //预定义颜色
+  14:Core/HAL/driver/ws2812b/ws2812b.c **** color_rgb red = {20, 0, 0};
+  15:Core/HAL/driver/ws2812b/ws2812b.c **** color_rgb green = {0, 10, 0};
+  16:Core/HAL/driver/ws2812b/ws2812b.c **** color_rgb purple = {14, 4, 23};
+  17:Core/HAL/driver/ws2812b/ws2812b.c **** color_rgb blue = {0, 0, 20};
+  18:Core/HAL/driver/ws2812b/ws2812b.c **** color_rgb off = {0, 0, 0};
+  19:Core/HAL/driver/ws2812b/ws2812b.c **** 
+  20:Core/HAL/driver/ws2812b/ws2812b.c **** //工具函数，转换rgb值到一个长度24的uint16数组（TIMER的CCR寄存器为16位）
+  21:Core/HAL/driver/ws2812b/ws2812b.c **** void rgb_2_raw(uint16_t* buff, color_rgb color) {
+  30              		.loc 1 21 49 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 8
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 21 49 is_stmt 0 view .LVU1
+  35 0000 00B5     		push	{lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 4
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 2
+
+
+  38              		.cfi_offset 14, -4
+  39 0002 83B0     		sub	sp, sp, #12
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 16
+  42 0004 0191     		str	r1, [sp, #4]
+  22:Core/HAL/driver/ws2812b/ws2812b.c ****     for (uint16_t i = 0; i < 8; ++i) {
+  43              		.loc 1 22 5 is_stmt 1 view .LVU2
+  44              	.LBB2:
+  45              		.loc 1 22 10 view .LVU3
+  46              	.LVL1:
+  47              		.loc 1 22 19 is_stmt 0 view .LVU4
+  48 0006 0023     		movs	r3, #0
+  49              		.loc 1 22 5 view .LVU5
+  50 0008 0AE0     		b	.L2
+  51              	.LVL2:
+  52              	.L7:
+  23:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i] = ((color.g << i) & (0x80)) ? BIT_1 : BIT_0;
+  53              		.loc 1 23 17 view .LVU6
+  54 000a 4621     		movs	r1, #70
+  55 000c 12E0     		b	.L3
+  56              	.L8:
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 8] = ((color.r << i) & (0x80)) ? BIT_1 : BIT_0;
+  57              		.loc 1 24 21 view .LVU7
+  58 000e 4FF0460C 		mov	ip, #70
+  59 0012 1BE0     		b	.L4
+  60              	.L9:
+  25:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+  61              		.loc 1 25 22 view .LVU8
+  62 0014 4621     		movs	r1, #70
+  63              	.L5:
+  64              		.loc 1 25 13 discriminator 4 view .LVU9
+  65 0016 1032     		adds	r2, r2, #16
+  66              		.loc 1 25 22 discriminator 4 view .LVU10
+  67 0018 20F81210 		strh	r1, [r0, r2, lsl #1]	@ movhi
+  22:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i] = ((color.g << i) & (0x80)) ? BIT_1 : BIT_0;
+  68              		.loc 1 22 33 is_stmt 1 discriminator 4 view .LVU11
+  69 001c 0133     		adds	r3, r3, #1
+  70              	.LVL3:
+  22:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i] = ((color.g << i) & (0x80)) ? BIT_1 : BIT_0;
+  71              		.loc 1 22 33 is_stmt 0 discriminator 4 view .LVU12
+  72 001e 9BB2     		uxth	r3, r3
+  73              	.LVL4:
+  74              	.L2:
+  22:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i] = ((color.g << i) & (0x80)) ? BIT_1 : BIT_0;
+  75              		.loc 1 22 26 is_stmt 1 discriminator 2 view .LVU13
+  22:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i] = ((color.g << i) & (0x80)) ? BIT_1 : BIT_0;
+  76              		.loc 1 22 5 is_stmt 0 discriminator 2 view .LVU14
+  77 0020 072B     		cmp	r3, #7
+  78 0022 20D8     		bhi	.L11
+  23:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 8] = ((color.r << i) & (0x80)) ? BIT_1 : BIT_0;
+  79              		.loc 1 23 9 is_stmt 1 view .LVU15
+  23:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 8] = ((color.r << i) & (0x80)) ? BIT_1 : BIT_0;
+  80              		.loc 1 23 26 is_stmt 0 view .LVU16
+  81 0024 9DF80520 		ldrb	r2, [sp, #5]	@ zero_extendqisi2
+  23:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 8] = ((color.r << i) & (0x80)) ? BIT_1 : BIT_0;
+  82              		.loc 1 23 29 view .LVU17
+  83 0028 9E46     		mov	lr, r3
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 3
+
+
+  84 002a 9A40     		lsls	r2, r2, r3
+  23:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 8] = ((color.r << i) & (0x80)) ? BIT_1 : BIT_0;
+  85              		.loc 1 23 17 view .LVU18
+  86 002c 12F0800F 		tst	r2, #128
+  87 0030 EBD0     		beq	.L7
+  88 0032 8C21     		movs	r1, #140
+  89              	.L3:
+  23:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 8] = ((color.r << i) & (0x80)) ? BIT_1 : BIT_0;
+  90              		.loc 1 23 13 discriminator 4 view .LVU19
+  91 0034 1A46     		mov	r2, r3
+  23:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 8] = ((color.r << i) & (0x80)) ? BIT_1 : BIT_0;
+  92              		.loc 1 23 17 discriminator 4 view .LVU20
+  93 0036 20F81310 		strh	r1, [r0, r3, lsl #1]	@ movhi
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+  94              		.loc 1 24 9 is_stmt 1 discriminator 4 view .LVU21
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+  95              		.loc 1 24 30 is_stmt 0 discriminator 4 view .LVU22
+  96 003a 9DF804C0 		ldrb	ip, [sp, #4]	@ zero_extendqisi2
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+  97              		.loc 1 24 33 discriminator 4 view .LVU23
+  98 003e 0CFA0EFC 		lsl	ip, ip, lr
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+  99              		.loc 1 24 21 discriminator 4 view .LVU24
+ 100 0042 1CF0800F 		tst	ip, #128
+ 101 0046 E2D0     		beq	.L8
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+ 102              		.loc 1 24 21 view .LVU25
+ 103 0048 4FF08C0C 		mov	ip, #140
+ 104              	.L4:
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+ 105              		.loc 1 24 13 discriminator 4 view .LVU26
+ 106 004c 02F10801 		add	r1, r2, #8
+  24:Core/HAL/driver/ws2812b/ws2812b.c ****         buff[i + 16] = ((color.b << i) & (0x80)) ? BIT_1 : BIT_0;
+ 107              		.loc 1 24 21 discriminator 4 view .LVU27
+ 108 0050 20F811C0 		strh	ip, [r0, r1, lsl #1]	@ movhi
+ 109              		.loc 1 25 9 is_stmt 1 discriminator 4 view .LVU28
+ 110              		.loc 1 25 31 is_stmt 0 discriminator 4 view .LVU29
+ 111 0054 9DF80610 		ldrb	r1, [sp, #6]	@ zero_extendqisi2
+ 112              		.loc 1 25 34 discriminator 4 view .LVU30
+ 113 0058 01FA0EF1 		lsl	r1, r1, lr
+ 114              		.loc 1 25 22 discriminator 4 view .LVU31
+ 115 005c 11F0800F 		tst	r1, #128
+ 116 0060 D8D0     		beq	.L9
+ 117              		.loc 1 25 22 view .LVU32
+ 118 0062 8C21     		movs	r1, #140
+ 119 0064 D7E7     		b	.L5
+ 120              	.L11:
+ 121              		.loc 1 25 22 view .LVU33
+ 122              	.LBE2:
+  26:Core/HAL/driver/ws2812b/ws2812b.c ****     }
+  27:Core/HAL/driver/ws2812b/ws2812b.c **** }
+ 123              		.loc 1 27 1 view .LVU34
+ 124 0066 03B0     		add	sp, sp, #12
+ 125              	.LCFI2:
+ 126              		.cfi_def_cfa_offset 4
+ 127              		@ sp needed
+ 128 0068 5DF804FB 		ldr	pc, [sp], #4
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 4
+
+
+ 129              		.cfi_endproc
+ 130              	.LFE0:
+ 132              		.section	.text.array_2_raw,"ax",%progbits
+ 133              		.align	1
+ 134              		.global	array_2_raw
+ 135              		.syntax unified
+ 136              		.thumb
+ 137              		.thumb_func
+ 139              	array_2_raw:
+ 140              	.LVL5:
+ 141              	.LFB1:
+  28:Core/HAL/driver/ws2812b/ws2812b.c **** //转换一个数列
+  29:Core/HAL/driver/ws2812b/ws2812b.c **** void array_2_raw(uint16_t* buff, color_rgb* color_buff, uint32_t len) {
+ 142              		.loc 1 29 71 is_stmt 1 view -0
+ 143              		.cfi_startproc
+ 144              		@ args = 0, pretend = 0, frame = 0
+ 145              		@ frame_needed = 0, uses_anonymous_args = 0
+ 146              		.loc 1 29 71 is_stmt 0 view .LVU36
+ 147 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 148              	.LCFI3:
+ 149              		.cfi_def_cfa_offset 24
+ 150              		.cfi_offset 3, -24
+ 151              		.cfi_offset 4, -20
+ 152              		.cfi_offset 5, -16
+ 153              		.cfi_offset 6, -12
+ 154              		.cfi_offset 7, -8
+ 155              		.cfi_offset 14, -4
+ 156 0002 0746     		mov	r7, r0
+ 157 0004 0D46     		mov	r5, r1
+ 158 0006 1646     		mov	r6, r2
+  30:Core/HAL/driver/ws2812b/ws2812b.c ****     for (uint32_t i = 0; i < len; ++i) {
+ 159              		.loc 1 30 5 is_stmt 1 view .LVU37
+ 160              	.LBB3:
+ 161              		.loc 1 30 10 view .LVU38
+ 162              	.LVL6:
+ 163              		.loc 1 30 19 is_stmt 0 view .LVU39
+ 164 0008 0024     		movs	r4, #0
+ 165              		.loc 1 30 5 view .LVU40
+ 166 000a 11E0     		b	.L13
+ 167              	.LVL7:
+ 168              	.L14:
+  31:Core/HAL/driver/ws2812b/ws2812b.c ****         rgb_2_raw(buff + i * 24, color_buff[i]);
+ 169              		.loc 1 31 9 is_stmt 1 discriminator 3 view .LVU41
+ 170              		.loc 1 31 24 is_stmt 0 discriminator 3 view .LVU42
+ 171 000c 04EB4400 		add	r0, r4, r4, lsl #1
+ 172              		.loc 1 31 44 discriminator 3 view .LVU43
+ 173 0010 05EB000C 		add	ip, r5, r0
+ 174              		.loc 1 31 9 discriminator 3 view .LVU44
+ 175 0014 2B5C     		ldrb	r3, [r5, r0]	@ zero_extendqisi2
+ 176 0016 9CF80110 		ldrb	r1, [ip, #1]	@ zero_extendqisi2
+ 177 001a 43EA0123 		orr	r3, r3, r1, lsl #8
+ 178 001e 9CF80210 		ldrb	r1, [ip, #2]	@ zero_extendqisi2
+ 179 0022 43EA0141 		orr	r1, r3, r1, lsl #16
+ 180 0026 07EB0010 		add	r0, r7, r0, lsl #4
+ 181 002a FFF7FEFF 		bl	rgb_2_raw
+ 182              	.LVL8:
+  30:Core/HAL/driver/ws2812b/ws2812b.c ****     for (uint32_t i = 0; i < len; ++i) {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 5
+
+
+ 183              		.loc 1 30 35 is_stmt 1 discriminator 3 view .LVU45
+ 184 002e 0134     		adds	r4, r4, #1
+ 185              	.LVL9:
+ 186              	.L13:
+  30:Core/HAL/driver/ws2812b/ws2812b.c ****     for (uint32_t i = 0; i < len; ++i) {
+ 187              		.loc 1 30 26 discriminator 1 view .LVU46
+  30:Core/HAL/driver/ws2812b/ws2812b.c ****     for (uint32_t i = 0; i < len; ++i) {
+ 188              		.loc 1 30 5 is_stmt 0 discriminator 1 view .LVU47
+ 189 0030 B442     		cmp	r4, r6
+ 190 0032 EBD3     		bcc	.L14
+ 191              	.LBE3:
+  32:Core/HAL/driver/ws2812b/ws2812b.c ****     }
+  33:Core/HAL/driver/ws2812b/ws2812b.c **** }
+ 192              		.loc 1 33 1 view .LVU48
+ 193 0034 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 194              		.loc 1 33 1 view .LVU49
+ 195              		.cfi_endproc
+ 196              	.LFE1:
+ 198              		.section	.text.ws2812_create,"ax",%progbits
+ 199              		.align	1
+ 200              		.global	ws2812_create
+ 201              		.syntax unified
+ 202              		.thumb
+ 203              		.thumb_func
+ 205              	ws2812_create:
+ 206              	.LVL10:
+ 207              	.LFB2:
+  34:Core/HAL/driver/ws2812b/ws2812b.c **** 
+  35:Core/HAL/driver/ws2812b/ws2812b.c **** ws2812* ws2812_create(ws2812_config* config) {
+ 208              		.loc 1 35 46 is_stmt 1 view -0
+ 209              		.cfi_startproc
+ 210              		@ args = 0, pretend = 0, frame = 0
+ 211              		@ frame_needed = 0, uses_anonymous_args = 0
+ 212              		.loc 1 35 46 is_stmt 0 view .LVU51
+ 213 0000 70B5     		push	{r4, r5, r6, lr}
+ 214              	.LCFI4:
+ 215              		.cfi_def_cfa_offset 16
+ 216              		.cfi_offset 4, -16
+ 217              		.cfi_offset 5, -12
+ 218              		.cfi_offset 6, -8
+ 219              		.cfi_offset 14, -4
+ 220 0002 0646     		mov	r6, r0
+  36:Core/HAL/driver/ws2812b/ws2812b.c ****     ws2812* obj = (ws2812*)malloc(sizeof(ws2812));
+ 221              		.loc 1 36 5 is_stmt 1 view .LVU52
+ 222              		.loc 1 36 28 is_stmt 0 view .LVU53
+ 223 0004 0F20     		movs	r0, #15
+ 224              	.LVL11:
+ 225              		.loc 1 36 28 view .LVU54
+ 226 0006 FFF7FEFF 		bl	malloc
+ 227              	.LVL12:
+ 228 000a 0446     		mov	r4, r0
+ 229              	.LVL13:
+  37:Core/HAL/driver/ws2812b/ws2812b.c ****     memset(obj, 0, sizeof(ws2812));
+ 230              		.loc 1 37 5 is_stmt 1 view .LVU55
+ 231 000c 0025     		movs	r5, #0
+ 232 000e 0560     		str	r5, [r0]	@ unaligned
+ 233 0010 4560     		str	r5, [r0, #4]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 6
+
+
+ 234 0012 8560     		str	r5, [r0, #8]	@ unaligned
+ 235 0014 C0F80B50 		str	r5, [r0, #11]	@ unaligned
+  38:Core/HAL/driver/ws2812b/ws2812b.c ****     obj->config = *config;
+ 236              		.loc 1 38 5 view .LVU56
+ 237              		.loc 1 38 17 is_stmt 0 view .LVU57
+ 238 0018 3368     		ldr	r3, [r6]	@ unaligned
+ 239 001a C0F80A30 		str	r3, [r0, #10]	@ unaligned
+ 240 001e 3379     		ldrb	r3, [r6, #4]	@ zero_extendqisi2
+ 241 0020 8373     		strb	r3, [r0, #14]
+  39:Core/HAL/driver/ws2812b/ws2812b.c ****     obj->send_len = 3 + 24 * obj->config.max_len + 1;
+ 242              		.loc 1 39 5 is_stmt 1 view .LVU58
+ 243              		.loc 1 39 41 is_stmt 0 view .LVU59
+ 244 0022 D0F80B30 		ldr	r3, [r0, #11]	@ unaligned
+ 245              		.loc 1 39 50 view .LVU60
+ 246 0026 03EB4303 		add	r3, r3, r3, lsl #1
+ 247 002a DB00     		lsls	r3, r3, #3
+ 248 002c 0433     		adds	r3, r3, #4
+ 249 002e 9EB2     		uxth	r6, r3
+ 250              	.LVL14:
+ 251              		.loc 1 39 19 view .LVU61
+ 252 0030 0381     		strh	r3, [r0, #8]	@ unaligned
+  40:Core/HAL/driver/ws2812b/ws2812b.c ****     obj->buffer = malloc(obj->send_len * 2);
+ 253              		.loc 1 40 5 is_stmt 1 view .LVU62
+ 254              		.loc 1 40 40 is_stmt 0 view .LVU63
+ 255 0032 7600     		lsls	r6, r6, #1
+ 256              		.loc 1 40 19 view .LVU64
+ 257 0034 3046     		mov	r0, r6
+ 258              	.LVL15:
+ 259              		.loc 1 40 19 view .LVU65
+ 260 0036 FFF7FEFF 		bl	malloc
+ 261              	.LVL16:
+ 262              		.loc 1 40 17 view .LVU66
+ 263 003a 2060     		str	r0, [r4]	@ unaligned
+  41:Core/HAL/driver/ws2812b/ws2812b.c ****     memset(obj->buffer, 0, obj->send_len * 2);
+ 264              		.loc 1 41 5 is_stmt 1 view .LVU67
+ 265 003c 3246     		mov	r2, r6
+ 266 003e 2946     		mov	r1, r5
+ 267 0040 FFF7FEFF 		bl	memset
+ 268              	.LVL17:
+  42:Core/HAL/driver/ws2812b/ws2812b.c ****     obj->frame_start = obj->buffer + 3;
+ 269              		.loc 1 42 5 view .LVU68
+ 270              		.loc 1 42 27 is_stmt 0 view .LVU69
+ 271 0044 2368     		ldr	r3, [r4]	@ unaligned
+ 272              		.loc 1 42 36 view .LVU70
+ 273 0046 0633     		adds	r3, r3, #6
+ 274              		.loc 1 42 22 view .LVU71
+ 275 0048 6360     		str	r3, [r4, #4]	@ unaligned
+  43:Core/HAL/driver/ws2812b/ws2812b.c ****     return obj;
+ 276              		.loc 1 43 5 is_stmt 1 view .LVU72
+  44:Core/HAL/driver/ws2812b/ws2812b.c **** }
+ 277              		.loc 1 44 1 is_stmt 0 view .LVU73
+ 278 004a 2046     		mov	r0, r4
+ 279 004c 70BD     		pop	{r4, r5, r6, pc}
+ 280              		.loc 1 44 1 view .LVU74
+ 281              		.cfi_endproc
+ 282              	.LFE2:
+ 284              		.section	.text.ws2812_send_frame,"ax",%progbits
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 7
+
+
+ 285              		.align	1
+ 286              		.global	ws2812_send_frame
+ 287              		.syntax unified
+ 288              		.thumb
+ 289              		.thumb_func
+ 291              	ws2812_send_frame:
+ 292              	.LVL18:
+ 293              	.LFB3:
+  45:Core/HAL/driver/ws2812b/ws2812b.c **** 
+  46:Core/HAL/driver/ws2812b/ws2812b.c **** void ws2812_send_frame(ws2812* obj) { BSP_PWM_StartCCR_DMA(obj->config.pwm_id, (uint32_t*)obj->buff
+ 294              		.loc 1 46 37 is_stmt 1 view -0
+ 295              		.cfi_startproc
+ 296              		@ args = 0, pretend = 0, frame = 0
+ 297              		@ frame_needed = 0, uses_anonymous_args = 0
+ 298              		.loc 1 46 37 is_stmt 0 view .LVU76
+ 299 0000 08B5     		push	{r3, lr}
+ 300              	.LCFI5:
+ 301              		.cfi_def_cfa_offset 8
+ 302              		.cfi_offset 3, -8
+ 303              		.cfi_offset 14, -4
+ 304              		.loc 1 46 39 is_stmt 1 view .LVU77
+ 305 0002 0289     		ldrh	r2, [r0, #8]	@ unaligned
+ 306 0004 0168     		ldr	r1, [r0]	@ unaligned
+ 307 0006 807A     		ldrb	r0, [r0, #10]	@ zero_extendqisi2
+ 308              	.LVL19:
+ 309              		.loc 1 46 39 is_stmt 0 view .LVU78
+ 310 0008 FFF7FEFF 		bl	BSP_PWM_StartCCR_DMA
+ 311              	.LVL20:
+ 312              		.loc 1 46 120 view .LVU79
+ 313 000c 08BD     		pop	{r3, pc}
+ 314              		.cfi_endproc
+ 315              	.LFE3:
+ 317              		.section	.text.ws2812_set_all,"ax",%progbits
+ 318              		.align	1
+ 319              		.global	ws2812_set_all
+ 320              		.syntax unified
+ 321              		.thumb
+ 322              		.thumb_func
+ 324              	ws2812_set_all:
+ 325              	.LVL21:
+ 326              	.LFB4:
+  47:Core/HAL/driver/ws2812b/ws2812b.c **** 
+  48:Core/HAL/driver/ws2812b/ws2812b.c **** void ws2812_set_all(ws2812* obj, color_rgb color) {
+ 327              		.loc 1 48 51 is_stmt 1 view -0
+ 328              		.cfi_startproc
+ 329              		@ args = 0, pretend = 0, frame = 8
+ 330              		@ frame_needed = 0, uses_anonymous_args = 0
+ 331              		.loc 1 48 51 is_stmt 0 view .LVU81
+ 332 0000 30B5     		push	{r4, r5, lr}
+ 333              	.LCFI6:
+ 334              		.cfi_def_cfa_offset 12
+ 335              		.cfi_offset 4, -12
+ 336              		.cfi_offset 5, -8
+ 337              		.cfi_offset 14, -4
+ 338 0002 83B0     		sub	sp, sp, #12
+ 339              	.LCFI7:
+ 340              		.cfi_def_cfa_offset 24
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 8
+
+
+ 341 0004 0546     		mov	r5, r0
+ 342 0006 0191     		str	r1, [sp, #4]
+  49:Core/HAL/driver/ws2812b/ws2812b.c ****     for (size_t i = 0; i < obj->config.max_len; ++i) {
+ 343              		.loc 1 49 5 is_stmt 1 view .LVU82
+ 344              	.LBB4:
+ 345              		.loc 1 49 10 view .LVU83
+ 346              	.LVL22:
+ 347              		.loc 1 49 17 is_stmt 0 view .LVU84
+ 348 0008 0024     		movs	r4, #0
+ 349              		.loc 1 49 5 view .LVU85
+ 350 000a 08E0     		b	.L21
+ 351              	.LVL23:
+ 352              	.L22:
+  50:Core/HAL/driver/ws2812b/ws2812b.c ****         rgb_2_raw(obj->frame_start + i * 24, color);
+ 353              		.loc 1 50 9 is_stmt 1 discriminator 3 view .LVU86
+ 354              		.loc 1 50 22 is_stmt 0 discriminator 3 view .LVU87
+ 355 000c 6B68     		ldr	r3, [r5, #4]	@ unaligned
+ 356              		.loc 1 50 36 discriminator 3 view .LVU88
+ 357 000e 04EB4400 		add	r0, r4, r4, lsl #1
+ 358              		.loc 1 50 9 discriminator 3 view .LVU89
+ 359 0012 0199     		ldr	r1, [sp, #4]
+ 360 0014 03EB0010 		add	r0, r3, r0, lsl #4
+ 361 0018 FFF7FEFF 		bl	rgb_2_raw
+ 362              	.LVL24:
+  49:Core/HAL/driver/ws2812b/ws2812b.c ****     for (size_t i = 0; i < obj->config.max_len; ++i) {
+ 363              		.loc 1 49 49 is_stmt 1 discriminator 3 view .LVU90
+ 364 001c 0134     		adds	r4, r4, #1
+ 365              	.LVL25:
+ 366              	.L21:
+  49:Core/HAL/driver/ws2812b/ws2812b.c ****     for (size_t i = 0; i < obj->config.max_len; ++i) {
+ 367              		.loc 1 49 24 discriminator 1 view .LVU91
+  49:Core/HAL/driver/ws2812b/ws2812b.c ****     for (size_t i = 0; i < obj->config.max_len; ++i) {
+ 368              		.loc 1 49 39 is_stmt 0 discriminator 1 view .LVU92
+ 369 001e D5F80B30 		ldr	r3, [r5, #11]	@ unaligned
+  49:Core/HAL/driver/ws2812b/ws2812b.c ****     for (size_t i = 0; i < obj->config.max_len; ++i) {
+ 370              		.loc 1 49 5 discriminator 1 view .LVU93
+ 371 0022 A342     		cmp	r3, r4
+ 372 0024 F2D8     		bhi	.L22
+ 373              	.LBE4:
+  51:Core/HAL/driver/ws2812b/ws2812b.c ****     }
+  52:Core/HAL/driver/ws2812b/ws2812b.c ****     ws2812_send_frame(obj);
+ 374              		.loc 1 52 5 is_stmt 1 view .LVU94
+ 375 0026 2846     		mov	r0, r5
+ 376 0028 FFF7FEFF 		bl	ws2812_send_frame
+ 377              	.LVL26:
+  53:Core/HAL/driver/ws2812b/ws2812b.c **** }
+ 378              		.loc 1 53 1 is_stmt 0 view .LVU95
+ 379 002c 03B0     		add	sp, sp, #12
+ 380              	.LCFI8:
+ 381              		.cfi_def_cfa_offset 12
+ 382              		@ sp needed
+ 383 002e 30BD     		pop	{r4, r5, pc}
+ 384              		.loc 1 53 1 view .LVU96
+ 385              		.cfi_endproc
+ 386              	.LFE4:
+ 388              		.section	.text.ws2812_close_all,"ax",%progbits
+ 389              		.align	1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 9
+
+
+ 390              		.global	ws2812_close_all
+ 391              		.syntax unified
+ 392              		.thumb
+ 393              		.thumb_func
+ 395              	ws2812_close_all:
+ 396              	.LVL27:
+ 397              	.LFB5:
+  54:Core/HAL/driver/ws2812b/ws2812b.c **** 
+  55:Core/HAL/driver/ws2812b/ws2812b.c **** void ws2812_close_all(ws2812* obj) { ws2812_set_all(obj, off); }
+ 398              		.loc 1 55 36 is_stmt 1 view -0
+ 399              		.cfi_startproc
+ 400              		@ args = 0, pretend = 0, frame = 0
+ 401              		@ frame_needed = 0, uses_anonymous_args = 0
+ 402              		.loc 1 55 36 is_stmt 0 view .LVU98
+ 403 0000 08B5     		push	{r3, lr}
+ 404              	.LCFI9:
+ 405              		.cfi_def_cfa_offset 8
+ 406              		.cfi_offset 3, -8
+ 407              		.cfi_offset 14, -4
+ 408              		.loc 1 55 38 is_stmt 1 view .LVU99
+ 409 0002 024B     		ldr	r3, .L26
+ 410 0004 1968     		ldr	r1, [r3]
+ 411 0006 FFF7FEFF 		bl	ws2812_set_all
+ 412              	.LVL28:
+ 413              		.loc 1 55 64 is_stmt 0 view .LVU100
+ 414 000a 08BD     		pop	{r3, pc}
+ 415              	.L27:
+ 416              		.align	2
+ 417              	.L26:
+ 418 000c 00000000 		.word	.LANCHOR0
+ 419              		.cfi_endproc
+ 420              	.LFE5:
+ 422              		.section	.text.ws2812_set_array,"ax",%progbits
+ 423              		.align	1
+ 424              		.global	ws2812_set_array
+ 425              		.syntax unified
+ 426              		.thumb
+ 427              		.thumb_func
+ 429              	ws2812_set_array:
+ 430              	.LVL29:
+ 431              	.LFB6:
+  56:Core/HAL/driver/ws2812b/ws2812b.c **** 
+  57:Core/HAL/driver/ws2812b/ws2812b.c **** void ws2812_set_array(ws2812* obj, color_rgb* color_buffer, uint32_t len) {
+ 432              		.loc 1 57 75 is_stmt 1 view -0
+ 433              		.cfi_startproc
+ 434              		@ args = 0, pretend = 0, frame = 0
+ 435              		@ frame_needed = 0, uses_anonymous_args = 0
+ 436              		.loc 1 57 75 is_stmt 0 view .LVU102
+ 437 0000 10B5     		push	{r4, lr}
+ 438              	.LCFI10:
+ 439              		.cfi_def_cfa_offset 8
+ 440              		.cfi_offset 4, -8
+ 441              		.cfi_offset 14, -4
+ 442 0002 0446     		mov	r4, r0
+  58:Core/HAL/driver/ws2812b/ws2812b.c ****     array_2_raw(obj->frame_start, color_buffer, len);
+ 443              		.loc 1 58 5 is_stmt 1 view .LVU103
+ 444 0004 4068     		ldr	r0, [r0, #4]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 10
+
+
+ 445              	.LVL30:
+ 446              		.loc 1 58 5 is_stmt 0 view .LVU104
+ 447 0006 FFF7FEFF 		bl	array_2_raw
+ 448              	.LVL31:
+  59:Core/HAL/driver/ws2812b/ws2812b.c ****     ws2812_send_frame(obj);
+ 449              		.loc 1 59 5 is_stmt 1 view .LVU105
+ 450 000a 2046     		mov	r0, r4
+ 451 000c FFF7FEFF 		bl	ws2812_send_frame
+ 452              	.LVL32:
+  60:Core/HAL/driver/ws2812b/ws2812b.c **** }...
+ 453              		.loc 1 60 1 is_stmt 0 view .LVU106
+ 454 0010 10BD     		pop	{r4, pc}
+ 455              		.loc 1 60 1 view .LVU107
+ 456              		.cfi_endproc
+ 457              	.LFE6:
+ 459              		.global	off
+ 460              		.global	blue
+ 461              		.global	purple
+ 462              		.global	green
+ 463              		.global	red
+ 464              		.section	.bss.off,"aw",%nobits
+ 465              		.align	2
+ 466              		.set	.LANCHOR0,. + 0
+ 469              	off:
+ 470 0000 000000   		.space	3
+ 471              		.section	.data.blue,"aw"
+ 472              		.align	2
+ 475              	blue:
+ 476 0000 00       		.byte	0
+ 477 0001 00       		.byte	0
+ 478 0002 14       		.byte	20
+ 479              		.section	.data.green,"aw"
+ 480              		.align	2
+ 483              	green:
+ 484 0000 00       		.byte	0
+ 485 0001 0A       		.byte	10
+ 486 0002 00       		.byte	0
+ 487              		.section	.data.purple,"aw"
+ 488              		.align	2
+ 491              	purple:
+ 492 0000 0E       		.byte	14
+ 493 0001 04       		.byte	4
+ 494 0002 17       		.byte	23
+ 495              		.section	.data.red,"aw"
+ 496              		.align	2
+ 499              	red:
+ 500 0000 14       		.byte	20
+ 501 0001 00       		.byte	0
+ 502 0002 00       		.byte	0
+ 503              		.text
+ 504              	.Letext0:
+ 505              		.file 2 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 506              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 507              		.file 4 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 508              		.file 5 "Core/HAL/driver/ws2812b/ws2812b.h"
+ 509              		.file 6 "Core/BSP/interface/bsp_pwm.h"
+ 510              		.file 7 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 11
+
+
+ 511              		.file 8 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ws2812b.c
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:20     .text.rgb_2_raw:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:26     .text.rgb_2_raw:00000000 rgb_2_raw
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:133    .text.array_2_raw:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:139    .text.array_2_raw:00000000 array_2_raw
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:199    .text.ws2812_create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:205    .text.ws2812_create:00000000 ws2812_create
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:285    .text.ws2812_send_frame:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:291    .text.ws2812_send_frame:00000000 ws2812_send_frame
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:318    .text.ws2812_set_all:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:324    .text.ws2812_set_all:00000000 ws2812_set_all
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:389    .text.ws2812_close_all:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:395    .text.ws2812_close_all:00000000 ws2812_close_all
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:418    .text.ws2812_close_all:0000000c $d
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:423    .text.ws2812_set_array:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:429    .text.ws2812_set_array:00000000 ws2812_set_array
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:469    .bss.off:00000000 off
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:475    .data.blue:00000000 blue
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:491    .data.purple:00000000 purple
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:483    .data.green:00000000 green
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:499    .data.red:00000000 red
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:465    .bss.off:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:472    .data.blue:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:480    .data.green:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:488    .data.purple:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRyhoWw.s:496    .data.red:00000000 $d
+
+UNDEFINED SYMBOLS
+malloc
+memset
+BSP_PWM_StartCCR_DMA

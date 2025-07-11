@@ -12,6 +12,9 @@
 
 #include "common.h"
 #include "math.h"
+#include <string.h>
+
+#define M_PI 3.14
 
 float sat(float x, float lower_bound, float upper_bound);
 void MTDFunction(MTD_t *ptd, float aim);
@@ -125,4 +128,18 @@ void mrac_Init(mrac_2d *mrac, Mrac_config *config) {
     mrac->x2_td.x2 = 0;
     mrac->x2_td.aim = 0;
     mrac->x2_td.x = 0;
+}
+
+void mrac_SetConfig(Mrac_config *mrac_config, float k1, float k2, float alpha1, float alpha2,
+                    float alpha3, float alpha4, float output_max,
+                    float integrator_ki, float integrator_sum_err_max) {
+    mrac_config->k1 = k1;
+    mrac_config->k2 = k2;
+    mrac_config->alpha1 = alpha1;
+    mrac_config->alpha2 = alpha2;
+    mrac_config->alpha3 = alpha3;
+    mrac_config->alpha4 = alpha4;
+    mrac_config->output_max = output_max;
+    mrac_config->integrator_ki = integrator_ki;
+    mrac_config->integrator_sum_err_max = integrator_sum_err_max;
 }

@@ -1,0 +1,240 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bsp_spi.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.BSP_SPI_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	BSP_SPI_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	BSP_SPI_Init:
+  27              	.LFB130:
+  28              		.file 1 "Core/BSP/interface/bsp_spi.c"
+   1:Core/BSP/interface/bsp_spi.c **** #include "bsp_spi.h"
+   2:Core/BSP/interface/bsp_spi.c **** 
+   3:Core/BSP/interface/bsp_spi.c **** #include "bsp_def.h"
+   4:Core/BSP/interface/bsp_spi.c **** #include "spi.h"
+   5:Core/BSP/interface/bsp_spi.c **** 
+   6:Core/BSP/interface/bsp_spi.c **** typedef struct BSP_SPI_Typedef_t {
+   7:Core/BSP/interface/bsp_spi.c ****     SPI_HandleTypeDef *port;
+   8:Core/BSP/interface/bsp_spi.c **** } BSP_SPI_Typedef;
+   9:Core/BSP/interface/bsp_spi.c **** 
+  10:Core/BSP/interface/bsp_spi.c **** BSP_SPI_Typedef spi_ports[DEVICE_SPI_CNT];
+  11:Core/BSP/interface/bsp_spi.c **** 
+  12:Core/BSP/interface/bsp_spi.c **** void BSP_SPI_Init() {
+  29              		.loc 1 12 21 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  13:Core/BSP/interface/bsp_spi.c ****     spi_ports[0].port = SPI_0_PORT;
+  34              		.loc 1 13 5 view .LVU1
+  35              		.loc 1 13 23 is_stmt 0 view .LVU2
+  36 0000 014B     		ldr	r3, .L2
+  37 0002 024A     		ldr	r2, .L2+4
+  38 0004 1A60     		str	r2, [r3]
+  14:Core/BSP/interface/bsp_spi.c **** }
+  39              		.loc 1 14 1 view .LVU3
+  40 0006 7047     		bx	lr
+  41              	.L3:
+  42              		.align	2
+  43              	.L2:
+  44 0008 00000000 		.word	.LANCHOR0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s 			page 2
+
+
+  45 000c 00000000 		.word	hspi1
+  46              		.cfi_endproc
+  47              	.LFE130:
+  49              		.section	.text.BSP_SPI_TransmitReceive,"ax",%progbits
+  50              		.align	1
+  51              		.global	BSP_SPI_TransmitReceive
+  52              		.syntax unified
+  53              		.thumb
+  54              		.thumb_func
+  56              	BSP_SPI_TransmitReceive:
+  57              	.LVL0:
+  58              	.LFB131:
+  15:Core/BSP/interface/bsp_spi.c **** 
+  16:Core/BSP/interface/bsp_spi.c **** void BSP_SPI_TransmitReceive(uint8_t spi_index, uint8_t *pTxData,
+  17:Core/BSP/interface/bsp_spi.c ****                              uint8_t *pRxData, uint16_t Size,
+  18:Core/BSP/interface/bsp_spi.c ****                              uint32_t Timeout) {
+  59              		.loc 1 18 48 is_stmt 1 view -0
+  60              		.cfi_startproc
+  61              		@ args = 4, pretend = 0, frame = 0
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63              		.loc 1 18 48 is_stmt 0 view .LVU5
+  64 0000 10B5     		push	{r4, lr}
+  65              	.LCFI0:
+  66              		.cfi_def_cfa_offset 8
+  67              		.cfi_offset 4, -8
+  68              		.cfi_offset 14, -4
+  69 0002 82B0     		sub	sp, sp, #8
+  70              	.LCFI1:
+  71              		.cfi_def_cfa_offset 16
+  19:Core/BSP/interface/bsp_spi.c ****     HAL_SPI_TransmitReceive(spi_ports[spi_index].port, pTxData, pRxData, Size,
+  72              		.loc 1 19 5 is_stmt 1 view .LVU6
+  73 0004 049C     		ldr	r4, [sp, #16]
+  74 0006 0094     		str	r4, [sp]
+  75 0008 034C     		ldr	r4, .L6
+  76 000a 54F82000 		ldr	r0, [r4, r0, lsl #2]
+  77              	.LVL1:
+  78              		.loc 1 19 5 is_stmt 0 view .LVU7
+  79 000e FFF7FEFF 		bl	HAL_SPI_TransmitReceive
+  80              	.LVL2:
+  20:Core/BSP/interface/bsp_spi.c ****                             Timeout);
+  21:Core/BSP/interface/bsp_spi.c **** }
+  81              		.loc 1 21 1 view .LVU8
+  82 0012 02B0     		add	sp, sp, #8
+  83              	.LCFI2:
+  84              		.cfi_def_cfa_offset 8
+  85              		@ sp needed
+  86 0014 10BD     		pop	{r4, pc}
+  87              	.LVL3:
+  88              	.L7:
+  89              		.loc 1 21 1 view .LVU9
+  90 0016 00BF     		.align	2
+  91              	.L6:
+  92 0018 00000000 		.word	.LANCHOR0
+  93              		.cfi_endproc
+  94              	.LFE131:
+  96              		.section	.text.BSP_SPI_Transmit,"ax",%progbits
+  97              		.align	1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s 			page 3
+
+
+  98              		.global	BSP_SPI_Transmit
+  99              		.syntax unified
+ 100              		.thumb
+ 101              		.thumb_func
+ 103              	BSP_SPI_Transmit:
+ 104              	.LVL4:
+ 105              	.LFB132:
+  22:Core/BSP/interface/bsp_spi.c **** 
+  23:Core/BSP/interface/bsp_spi.c **** void BSP_SPI_Transmit(uint8_t spi_index, uint8_t *pTxData, uint16_t Size, uint32_t Timeout) {
+ 106              		.loc 1 23 93 is_stmt 1 view -0
+ 107              		.cfi_startproc
+ 108              		@ args = 0, pretend = 0, frame = 0
+ 109              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110              		.loc 1 23 93 is_stmt 0 view .LVU11
+ 111 0000 10B5     		push	{r4, lr}
+ 112              	.LCFI3:
+ 113              		.cfi_def_cfa_offset 8
+ 114              		.cfi_offset 4, -8
+ 115              		.cfi_offset 14, -4
+  24:Core/BSP/interface/bsp_spi.c ****     HAL_SPI_Transmit(spi_ports[spi_index].port, pTxData, Size, Timeout);
+ 116              		.loc 1 24 5 is_stmt 1 view .LVU12
+ 117 0002 034C     		ldr	r4, .L10
+ 118 0004 54F82000 		ldr	r0, [r4, r0, lsl #2]
+ 119              	.LVL5:
+ 120              		.loc 1 24 5 is_stmt 0 view .LVU13
+ 121 0008 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 122              	.LVL6:
+  25:Core/BSP/interface/bsp_spi.c **** }
+ 123              		.loc 1 25 1 view .LVU14
+ 124 000c 10BD     		pop	{r4, pc}
+ 125              	.L11:
+ 126 000e 00BF     		.align	2
+ 127              	.L10:
+ 128 0010 00000000 		.word	.LANCHOR0
+ 129              		.cfi_endproc
+ 130              	.LFE132:
+ 132              		.section	.text.BSP_SPI_Receive,"ax",%progbits
+ 133              		.align	1
+ 134              		.global	BSP_SPI_Receive
+ 135              		.syntax unified
+ 136              		.thumb
+ 137              		.thumb_func
+ 139              	BSP_SPI_Receive:
+ 140              	.LVL7:
+ 141              	.LFB133:
+  26:Core/BSP/interface/bsp_spi.c **** 
+  27:Core/BSP/interface/bsp_spi.c **** void BSP_SPI_Receive(uint8_t spi_index, uint8_t *pRxData, uint16_t Size, uint32_t Timeout) {
+ 142              		.loc 1 27 92 is_stmt 1 view -0
+ 143              		.cfi_startproc
+ 144              		@ args = 0, pretend = 0, frame = 0
+ 145              		@ frame_needed = 0, uses_anonymous_args = 0
+ 146              		.loc 1 27 92 is_stmt 0 view .LVU16
+ 147 0000 10B5     		push	{r4, lr}
+ 148              	.LCFI4:
+ 149              		.cfi_def_cfa_offset 8
+ 150              		.cfi_offset 4, -8
+ 151              		.cfi_offset 14, -4
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s 			page 4
+
+
+  28:Core/BSP/interface/bsp_spi.c ****     HAL_SPI_Receive(spi_ports[spi_index].port, pRxData, Size, Timeout);
+ 152              		.loc 1 28 5 is_stmt 1 view .LVU17
+ 153 0002 034C     		ldr	r4, .L14
+ 154 0004 54F82000 		ldr	r0, [r4, r0, lsl #2]
+ 155              	.LVL8:
+ 156              		.loc 1 28 5 is_stmt 0 view .LVU18
+ 157 0008 FFF7FEFF 		bl	HAL_SPI_Receive
+ 158              	.LVL9:
+  29:Core/BSP/interface/bsp_spi.c **** }...
+ 159              		.loc 1 29 1 view .LVU19
+ 160 000c 10BD     		pop	{r4, pc}
+ 161              	.L15:
+ 162 000e 00BF     		.align	2
+ 163              	.L14:
+ 164 0010 00000000 		.word	.LANCHOR0
+ 165              		.cfi_endproc
+ 166              	.LFE133:
+ 168              		.global	spi_ports
+ 169              		.section	.bss.spi_ports,"aw",%nobits
+ 170              		.align	2
+ 171              		.set	.LANCHOR0,. + 0
+ 174              	spi_ports:
+ 175 0000 00000000 		.space	4
+ 176              		.text
+ 177              	.Letext0:
+ 178              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 179              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 180              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 181              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 182              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 183              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h"
+ 184              		.file 8 "Core/Inc/spi.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp_spi.c
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:20     .text.BSP_SPI_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:26     .text.BSP_SPI_Init:00000000 BSP_SPI_Init
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:44     .text.BSP_SPI_Init:00000008 $d
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:50     .text.BSP_SPI_TransmitReceive:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:56     .text.BSP_SPI_TransmitReceive:00000000 BSP_SPI_TransmitReceive
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:92     .text.BSP_SPI_TransmitReceive:00000018 $d
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:97     .text.BSP_SPI_Transmit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:103    .text.BSP_SPI_Transmit:00000000 BSP_SPI_Transmit
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:128    .text.BSP_SPI_Transmit:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:133    .text.BSP_SPI_Receive:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:139    .text.BSP_SPI_Receive:00000000 BSP_SPI_Receive
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:164    .text.BSP_SPI_Receive:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:174    .bss.spi_ports:00000000 spi_ports
+C:\Users\lenovo\AppData\Local\Temp\ccSo91ye.s:170    .bss.spi_ports:00000000 $d
+
+UNDEFINED SYMBOLS
+hspi1
+HAL_SPI_TransmitReceive
+HAL_SPI_Transmit
+HAL_SPI_Receive

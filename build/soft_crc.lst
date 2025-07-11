@@ -1,0 +1,814 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"soft_crc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.bit_reverse_u16,"ax",%progbits
+  20              		.align	1
+  21              		.global	bit_reverse_u16
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	bit_reverse_u16:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/lib/soft_crc.c"
+   1:Core/HAL/lib/soft_crc.c **** #include "soft_crc.h"
+   2:Core/HAL/lib/soft_crc.c **** 
+   3:Core/HAL/lib/soft_crc.c **** #include <stdlib.h>
+   4:Core/HAL/lib/soft_crc.c **** 
+   5:Core/HAL/lib/soft_crc.c **** CRC16* crc16_default;
+   6:Core/HAL/lib/soft_crc.c **** CRC8* crc8_default;
+   7:Core/HAL/lib/soft_crc.c **** 
+   8:Core/HAL/lib/soft_crc.c **** uint16_t bit_reverse_u16(uint16_t x) {
+  30              		.loc 1 8 38 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              		.loc 1 8 38 is_stmt 0 view .LVU1
+  36 0000 8446     		mov	ip, r0
+   9:Core/HAL/lib/soft_crc.c ****     uint16_t result = 0;
+  37              		.loc 1 9 5 is_stmt 1 view .LVU2
+  38              	.LVL1:
+  10:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 16; ++i) {
+  39              		.loc 1 10 5 view .LVU3
+  40              	.LBB2:
+  41              		.loc 1 10 10 view .LVU4
+  42              		.loc 1 10 14 is_stmt 0 view .LVU5
+  43 0002 0022     		movs	r2, #0
+  44              	.LBE2:
+   9:Core/HAL/lib/soft_crc.c ****     uint16_t result = 0;
+  45              		.loc 1 9 14 view .LVU6
+  46 0004 1046     		mov	r0, r2
+  47              	.LVL2:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 2
+
+
+  48              	.LBB4:
+  49              		.loc 1 10 5 view .LVU7
+  50 0006 09E0     		b	.L2
+  51              	.LVL3:
+  52              	.L3:
+  53              	.LBB3:
+  11:Core/HAL/lib/soft_crc.c ****         uint16_t nowbit = (x >> i) & 1;
+  54              		.loc 1 11 9 is_stmt 1 discriminator 3 view .LVU8
+  55              		.loc 1 11 30 is_stmt 0 discriminator 3 view .LVU9
+  56 0008 4CFA02F3 		asr	r3, ip, r2
+  57              		.loc 1 11 18 discriminator 3 view .LVU10
+  58 000c 03F00103 		and	r3, r3, #1
+  59              	.LVL4:
+  12:Core/HAL/lib/soft_crc.c ****         result |= (nowbit << (15 - i));
+  60              		.loc 1 12 9 is_stmt 1 discriminator 3 view .LVU11
+  61              		.loc 1 12 34 is_stmt 0 discriminator 3 view .LVU12
+  62 0010 C2F10F01 		rsb	r1, r2, #15
+  63              		.loc 1 12 27 discriminator 3 view .LVU13
+  64 0014 8B40     		lsls	r3, r3, r1
+  65              	.LVL5:
+  66              		.loc 1 12 16 discriminator 3 view .LVU14
+  67 0016 1843     		orrs	r0, r0, r3
+  68              	.LVL6:
+  69              		.loc 1 12 16 discriminator 3 view .LVU15
+  70 0018 80B2     		uxth	r0, r0
+  71              	.LVL7:
+  72              		.loc 1 12 16 discriminator 3 view .LVU16
+  73              	.LBE3:
+  10:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 16; ++i) {
+  74              		.loc 1 10 29 is_stmt 1 discriminator 3 view .LVU17
+  75 001a 0132     		adds	r2, r2, #1
+  76              	.LVL8:
+  77              	.L2:
+  10:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 16; ++i) {
+  78              		.loc 1 10 21 discriminator 1 view .LVU18
+  10:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 16; ++i) {
+  79              		.loc 1 10 5 is_stmt 0 discriminator 1 view .LVU19
+  80 001c 0F2A     		cmp	r2, #15
+  81 001e F3DD     		ble	.L3
+  82              	.LBE4:
+  13:Core/HAL/lib/soft_crc.c ****     }
+  14:Core/HAL/lib/soft_crc.c ****     return result;
+  83              		.loc 1 14 5 is_stmt 1 view .LVU20
+  15:Core/HAL/lib/soft_crc.c **** }
+  84              		.loc 1 15 1 is_stmt 0 view .LVU21
+  85 0020 7047     		bx	lr
+  86              		.cfi_endproc
+  87              	.LFE0:
+  89              		.section	.text.bit_reverse_u8,"ax",%progbits
+  90              		.align	1
+  91              		.global	bit_reverse_u8
+  92              		.syntax unified
+  93              		.thumb
+  94              		.thumb_func
+  96              	bit_reverse_u8:
+  97              	.LVL9:
+  98              	.LFB1:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 3
+
+
+  16:Core/HAL/lib/soft_crc.c **** 
+  17:Core/HAL/lib/soft_crc.c **** uint8_t bit_reverse_u8(uint8_t x) {
+  99              		.loc 1 17 35 is_stmt 1 view -0
+ 100              		.cfi_startproc
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103              		@ link register save eliminated.
+ 104              		.loc 1 17 35 is_stmt 0 view .LVU23
+ 105 0000 8446     		mov	ip, r0
+  18:Core/HAL/lib/soft_crc.c ****     uint8_t result = 0;
+ 106              		.loc 1 18 5 is_stmt 1 view .LVU24
+ 107              	.LVL10:
+  19:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 8; ++i) {
+ 108              		.loc 1 19 5 view .LVU25
+ 109              	.LBB5:
+ 110              		.loc 1 19 10 view .LVU26
+ 111              		.loc 1 19 14 is_stmt 0 view .LVU27
+ 112 0002 0022     		movs	r2, #0
+ 113              	.LBE5:
+  18:Core/HAL/lib/soft_crc.c ****     uint8_t result = 0;
+ 114              		.loc 1 18 13 view .LVU28
+ 115 0004 1046     		mov	r0, r2
+ 116              	.LVL11:
+ 117              	.LBB7:
+ 118              		.loc 1 19 5 view .LVU29
+ 119 0006 09E0     		b	.L5
+ 120              	.LVL12:
+ 121              	.L6:
+ 122              	.LBB6:
+  20:Core/HAL/lib/soft_crc.c ****         uint8_t nowbit = (x >> i) & 1;
+ 123              		.loc 1 20 9 is_stmt 1 discriminator 3 view .LVU30
+ 124              		.loc 1 20 29 is_stmt 0 discriminator 3 view .LVU31
+ 125 0008 4CFA02F3 		asr	r3, ip, r2
+ 126              		.loc 1 20 17 discriminator 3 view .LVU32
+ 127 000c 03F00103 		and	r3, r3, #1
+ 128              	.LVL13:
+  21:Core/HAL/lib/soft_crc.c ****         result |= (nowbit << (7 - i));
+ 129              		.loc 1 21 9 is_stmt 1 discriminator 3 view .LVU33
+ 130              		.loc 1 21 33 is_stmt 0 discriminator 3 view .LVU34
+ 131 0010 C2F10701 		rsb	r1, r2, #7
+ 132              		.loc 1 21 27 discriminator 3 view .LVU35
+ 133 0014 8B40     		lsls	r3, r3, r1
+ 134              	.LVL14:
+ 135              		.loc 1 21 16 discriminator 3 view .LVU36
+ 136 0016 1843     		orrs	r0, r0, r3
+ 137              	.LVL15:
+ 138              		.loc 1 21 16 discriminator 3 view .LVU37
+ 139 0018 C0B2     		uxtb	r0, r0
+ 140              	.LVL16:
+ 141              		.loc 1 21 16 discriminator 3 view .LVU38
+ 142              	.LBE6:
+  19:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 8; ++i) {
+ 143              		.loc 1 19 28 is_stmt 1 discriminator 3 view .LVU39
+ 144 001a 0132     		adds	r2, r2, #1
+ 145              	.LVL17:
+ 146              	.L5:
+  19:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 8; ++i) {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 4
+
+
+ 147              		.loc 1 19 21 discriminator 1 view .LVU40
+  19:Core/HAL/lib/soft_crc.c ****     for (int i = 0; i < 8; ++i) {
+ 148              		.loc 1 19 5 is_stmt 0 discriminator 1 view .LVU41
+ 149 001c 072A     		cmp	r2, #7
+ 150 001e F3DD     		ble	.L6
+ 151              	.LBE7:
+  22:Core/HAL/lib/soft_crc.c ****     }
+  23:Core/HAL/lib/soft_crc.c ****     return result;
+ 152              		.loc 1 23 5 is_stmt 1 view .LVU42
+  24:Core/HAL/lib/soft_crc.c **** }
+ 153              		.loc 1 24 1 is_stmt 0 view .LVU43
+ 154 0020 7047     		bx	lr
+ 155              		.cfi_endproc
+ 156              	.LFE1:
+ 158              		.section	.text.CRC16_Create,"ax",%progbits
+ 159              		.align	1
+ 160              		.global	CRC16_Create
+ 161              		.syntax unified
+ 162              		.thumb
+ 163              		.thumb_func
+ 165              	CRC16_Create:
+ 166              	.LVL18:
+ 167              	.LFB2:
+  25:Core/HAL/lib/soft_crc.c **** 
+  26:Core/HAL/lib/soft_crc.c **** CRC16* CRC16_Create(CRC16_config* config) {
+ 168              		.loc 1 26 43 is_stmt 1 view -0
+ 169              		.cfi_startproc
+ 170              		@ args = 0, pretend = 0, frame = 0
+ 171              		@ frame_needed = 0, uses_anonymous_args = 0
+ 172              		.loc 1 26 43 is_stmt 0 view .LVU45
+ 173 0000 38B5     		push	{r3, r4, r5, lr}
+ 174              	.LCFI0:
+ 175              		.cfi_def_cfa_offset 16
+ 176              		.cfi_offset 3, -16
+ 177              		.cfi_offset 4, -12
+ 178              		.cfi_offset 5, -8
+ 179              		.cfi_offset 14, -4
+ 180 0002 0546     		mov	r5, r0
+  27:Core/HAL/lib/soft_crc.c ****     CRC16* obj = (CRC16*)malloc(sizeof(CRC16));
+ 181              		.loc 1 27 5 is_stmt 1 view .LVU46
+ 182              		.loc 1 27 26 is_stmt 0 view .LVU47
+ 183 0004 40F20220 		movw	r0, #514
+ 184              	.LVL19:
+ 185              		.loc 1 27 26 view .LVU48
+ 186 0008 FFF7FEFF 		bl	malloc
+ 187              	.LVL20:
+ 188 000c 0446     		mov	r4, r0
+ 189              	.LVL21:
+  28:Core/HAL/lib/soft_crc.c ****     uint16_t table_poly = bit_reverse_u16(config->poly);
+ 190              		.loc 1 28 5 is_stmt 1 view .LVU49
+ 191              		.loc 1 28 27 is_stmt 0 view .LVU50
+ 192 000e 2888     		ldrh	r0, [r5]	@ unaligned
+ 193              	.LVL22:
+ 194              		.loc 1 28 27 view .LVU51
+ 195 0010 FFF7FEFF 		bl	bit_reverse_u16
+ 196              	.LVL23:
+ 197 0014 8646     		mov	lr, r0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 5
+
+
+ 198              	.LVL24:
+  29:Core/HAL/lib/soft_crc.c ****     for (uint16_t i = 0; i < 256; ++i) {
+ 199              		.loc 1 29 5 is_stmt 1 view .LVU52
+ 200              	.LBB8:
+ 201              		.loc 1 29 10 view .LVU53
+ 202              		.loc 1 29 19 is_stmt 0 view .LVU54
+ 203 0016 4FF0000C 		mov	ip, #0
+ 204              		.loc 1 29 5 view .LVU55
+ 205 001a 15E0     		b	.L8
+ 206              	.LVL25:
+ 207              	.L9:
+ 208              	.LBB9:
+ 209              	.LBB10:
+  30:Core/HAL/lib/soft_crc.c ****         uint16_t crc = 0, c = i;
+  31:Core/HAL/lib/soft_crc.c ****         for (uint16_t j = 0; j < 8; ++j) {
+  32:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x0001) {
+  33:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+  34:Core/HAL/lib/soft_crc.c ****             } else
+  35:Core/HAL/lib/soft_crc.c ****                 crc = crc >> 1;
+ 210              		.loc 1 35 17 is_stmt 1 view .LVU56
+ 211              		.loc 1 35 21 is_stmt 0 view .LVU57
+ 212 001c 5208     		lsrs	r2, r2, #1
+ 213              	.LVL26:
+ 214              	.L10:
+  36:Core/HAL/lib/soft_crc.c ****             c = c >> 1;
+ 215              		.loc 1 36 13 is_stmt 1 discriminator 2 view .LVU58
+ 216              		.loc 1 36 15 is_stmt 0 discriminator 2 view .LVU59
+ 217 001e C1F34F01 		ubfx	r1, r1, #1, #16
+ 218              	.LVL27:
+  31:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x0001) {
+ 219              		.loc 1 31 37 is_stmt 1 discriminator 2 view .LVU60
+ 220 0022 0133     		adds	r3, r3, #1
+ 221              	.LVL28:
+  31:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x0001) {
+ 222              		.loc 1 31 37 is_stmt 0 discriminator 2 view .LVU61
+ 223 0024 9BB2     		uxth	r3, r3
+ 224              	.LVL29:
+ 225              	.L12:
+  31:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x0001) {
+ 226              		.loc 1 31 30 is_stmt 1 discriminator 1 view .LVU62
+  31:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x0001) {
+ 227              		.loc 1 31 9 is_stmt 0 discriminator 1 view .LVU63
+ 228 0026 072B     		cmp	r3, #7
+ 229 0028 08D8     		bhi	.L15
+  32:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+ 230              		.loc 1 32 13 is_stmt 1 view .LVU64
+  32:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+ 231              		.loc 1 32 27 is_stmt 0 view .LVU65
+ 232 002a 82EA0100 		eor	r0, r2, r1
+  32:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+ 233              		.loc 1 32 16 view .LVU66
+ 234 002e 10F0010F 		tst	r0, #1
+ 235 0032 F3D0     		beq	.L9
+  33:Core/HAL/lib/soft_crc.c ****             } else
+ 236              		.loc 1 33 17 is_stmt 1 view .LVU67
+  33:Core/HAL/lib/soft_crc.c ****             } else
+ 237              		.loc 1 33 21 is_stmt 0 view .LVU68
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 6
+
+
+ 238 0034 8EEA5202 		eor	r2, lr, r2, lsr #1
+ 239              	.LVL30:
+  33:Core/HAL/lib/soft_crc.c ****             } else
+ 240              		.loc 1 33 21 view .LVU69
+ 241 0038 92B2     		uxth	r2, r2
+ 242              	.LVL31:
+  33:Core/HAL/lib/soft_crc.c ****             } else
+ 243              		.loc 1 33 21 view .LVU70
+ 244 003a F0E7     		b	.L10
+ 245              	.L15:
+  33:Core/HAL/lib/soft_crc.c ****             } else
+ 246              		.loc 1 33 21 view .LVU71
+ 247              	.LBE10:
+  37:Core/HAL/lib/soft_crc.c ****         }
+  38:Core/HAL/lib/soft_crc.c ****         obj->table[i] = crc;
+ 248              		.loc 1 38 9 is_stmt 1 discriminator 2 view .LVU72
+ 249              		.loc 1 38 23 is_stmt 0 discriminator 2 view .LVU73
+ 250 003c 24F81C20 		strh	r2, [r4, ip, lsl #1]	@ unaligned
+ 251              	.LBE9:
+  29:Core/HAL/lib/soft_crc.c ****         uint16_t crc = 0, c = i;
+ 252              		.loc 1 29 35 is_stmt 1 discriminator 2 view .LVU74
+ 253 0040 0CF1010C 		add	ip, ip, #1
+ 254              	.LVL32:
+  29:Core/HAL/lib/soft_crc.c ****         uint16_t crc = 0, c = i;
+ 255              		.loc 1 29 35 is_stmt 0 discriminator 2 view .LVU75
+ 256 0044 1FFA8CFC 		uxth	ip, ip
+ 257              	.LVL33:
+ 258              	.L8:
+  29:Core/HAL/lib/soft_crc.c ****         uint16_t crc = 0, c = i;
+ 259              		.loc 1 29 26 is_stmt 1 discriminator 1 view .LVU76
+  29:Core/HAL/lib/soft_crc.c ****         uint16_t crc = 0, c = i;
+ 260              		.loc 1 29 5 is_stmt 0 discriminator 1 view .LVU77
+ 261 0048 BCF1FF0F 		cmp	ip, #255
+ 262 004c 03D8     		bhi	.L16
+ 263              	.LBB12:
+  30:Core/HAL/lib/soft_crc.c ****         for (uint16_t j = 0; j < 8; ++j) {
+ 264              		.loc 1 30 27 view .LVU78
+ 265 004e 6146     		mov	r1, ip
+ 266              	.LBB11:
+  31:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x0001) {
+ 267              		.loc 1 31 23 view .LVU79
+ 268 0050 0023     		movs	r3, #0
+ 269              	.LBE11:
+  30:Core/HAL/lib/soft_crc.c ****         for (uint16_t j = 0; j < 8; ++j) {
+ 270              		.loc 1 30 18 view .LVU80
+ 271 0052 1A46     		mov	r2, r3
+ 272 0054 E7E7     		b	.L12
+ 273              	.L16:
+ 274              	.LBE12:
+ 275              	.LBE8:
+  39:Core/HAL/lib/soft_crc.c ****     }
+  40:Core/HAL/lib/soft_crc.c ****     obj->crc_init = config->crc_init;
+ 276              		.loc 1 40 5 is_stmt 1 view .LVU81
+ 277              		.loc 1 40 27 is_stmt 0 view .LVU82
+ 278 0056 6B88     		ldrh	r3, [r5, #2]	@ unaligned
+ 279              		.loc 1 40 19 view .LVU83
+ 280 0058 A4F80032 		strh	r3, [r4, #512]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 7
+
+
+  41:Core/HAL/lib/soft_crc.c ****     return obj;
+ 281              		.loc 1 41 5 is_stmt 1 view .LVU84
+  42:Core/HAL/lib/soft_crc.c **** }
+ 282              		.loc 1 42 1 is_stmt 0 view .LVU85
+ 283 005c 2046     		mov	r0, r4
+ 284 005e 38BD     		pop	{r3, r4, r5, pc}
+ 285              		.loc 1 42 1 view .LVU86
+ 286              		.cfi_endproc
+ 287              	.LFE2:
+ 289              		.section	.text.CRC8_Create,"ax",%progbits
+ 290              		.align	1
+ 291              		.global	CRC8_Create
+ 292              		.syntax unified
+ 293              		.thumb
+ 294              		.thumb_func
+ 296              	CRC8_Create:
+ 297              	.LVL34:
+ 298              	.LFB3:
+  43:Core/HAL/lib/soft_crc.c **** 
+  44:Core/HAL/lib/soft_crc.c **** CRC8* CRC8_Create(CRC8_config* config) {
+ 299              		.loc 1 44 40 is_stmt 1 view -0
+ 300              		.cfi_startproc
+ 301              		@ args = 0, pretend = 0, frame = 0
+ 302              		@ frame_needed = 0, uses_anonymous_args = 0
+ 303              		.loc 1 44 40 is_stmt 0 view .LVU88
+ 304 0000 38B5     		push	{r3, r4, r5, lr}
+ 305              	.LCFI1:
+ 306              		.cfi_def_cfa_offset 16
+ 307              		.cfi_offset 3, -16
+ 308              		.cfi_offset 4, -12
+ 309              		.cfi_offset 5, -8
+ 310              		.cfi_offset 14, -4
+ 311 0002 0546     		mov	r5, r0
+  45:Core/HAL/lib/soft_crc.c ****     CRC8* obj = (CRC8*)malloc(sizeof(CRC8));
+ 312              		.loc 1 45 5 is_stmt 1 view .LVU89
+ 313              		.loc 1 45 24 is_stmt 0 view .LVU90
+ 314 0004 40F20110 		movw	r0, #257
+ 315              	.LVL35:
+ 316              		.loc 1 45 24 view .LVU91
+ 317 0008 FFF7FEFF 		bl	malloc
+ 318              	.LVL36:
+ 319 000c 0446     		mov	r4, r0
+ 320              	.LVL37:
+  46:Core/HAL/lib/soft_crc.c ****     uint8_t table_poly = bit_reverse_u8(config->poly);
+ 321              		.loc 1 46 5 is_stmt 1 view .LVU92
+ 322              		.loc 1 46 26 is_stmt 0 view .LVU93
+ 323 000e 2878     		ldrb	r0, [r5]	@ zero_extendqisi2
+ 324              	.LVL38:
+ 325              		.loc 1 46 26 view .LVU94
+ 326 0010 FFF7FEFF 		bl	bit_reverse_u8
+ 327              	.LVL39:
+ 328 0014 8646     		mov	lr, r0
+ 329              	.LVL40:
+  47:Core/HAL/lib/soft_crc.c ****     for (uint16_t i = 0; i < 256; ++i) {
+ 330              		.loc 1 47 5 is_stmt 1 view .LVU95
+ 331              	.LBB13:
+ 332              		.loc 1 47 10 view .LVU96
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 8
+
+
+ 333              		.loc 1 47 19 is_stmt 0 view .LVU97
+ 334 0016 4FF0000C 		mov	ip, #0
+ 335              		.loc 1 47 5 view .LVU98
+ 336 001a 14E0     		b	.L18
+ 337              	.LVL41:
+ 338              	.L20:
+ 339              	.LBB14:
+ 340              	.LBB15:
+  48:Core/HAL/lib/soft_crc.c ****         uint8_t crc = 0, c = i;
+  49:Core/HAL/lib/soft_crc.c ****         for (uint8_t j = 0; j < 8; ++j) {
+  50:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+  51:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+  52:Core/HAL/lib/soft_crc.c ****             } else {
+  53:Core/HAL/lib/soft_crc.c ****                 crc = crc >> 1;
+ 341              		.loc 1 53 17 is_stmt 1 view .LVU99
+ 342              		.loc 1 53 21 is_stmt 0 view .LVU100
+ 343 001c 5208     		lsrs	r2, r2, #1
+ 344              	.LVL42:
+ 345              	.L21:
+  54:Core/HAL/lib/soft_crc.c ****             }
+  55:Core/HAL/lib/soft_crc.c ****             c = c >> 1;
+ 346              		.loc 1 55 13 is_stmt 1 discriminator 2 view .LVU101
+ 347              		.loc 1 55 15 is_stmt 0 discriminator 2 view .LVU102
+ 348 001e 4908     		lsrs	r1, r1, #1
+ 349              	.LVL43:
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 350              		.loc 1 49 36 is_stmt 1 discriminator 2 view .LVU103
+ 351 0020 0133     		adds	r3, r3, #1
+ 352              	.LVL44:
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 353              		.loc 1 49 36 is_stmt 0 discriminator 2 view .LVU104
+ 354 0022 DBB2     		uxtb	r3, r3
+ 355              	.LVL45:
+ 356              	.L19:
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 357              		.loc 1 49 29 is_stmt 1 discriminator 1 view .LVU105
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 358              		.loc 1 49 9 is_stmt 0 discriminator 1 view .LVU106
+ 359 0024 072B     		cmp	r3, #7
+ 360 0026 08D8     		bhi	.L25
+  50:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+ 361              		.loc 1 50 13 is_stmt 1 view .LVU107
+  50:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+ 362              		.loc 1 50 27 is_stmt 0 view .LVU108
+ 363 0028 82EA0100 		eor	r0, r2, r1
+  50:Core/HAL/lib/soft_crc.c ****                 crc = (crc >> 1) ^ table_poly;
+ 364              		.loc 1 50 16 view .LVU109
+ 365 002c 10F0010F 		tst	r0, #1
+ 366 0030 F4D0     		beq	.L20
+  51:Core/HAL/lib/soft_crc.c ****             } else {
+ 367              		.loc 1 51 17 is_stmt 1 view .LVU110
+  51:Core/HAL/lib/soft_crc.c ****             } else {
+ 368              		.loc 1 51 21 is_stmt 0 view .LVU111
+ 369 0032 8EEA5202 		eor	r2, lr, r2, lsr #1
+ 370              	.LVL46:
+  51:Core/HAL/lib/soft_crc.c ****             } else {
+ 371              		.loc 1 51 21 view .LVU112
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 9
+
+
+ 372 0036 D2B2     		uxtb	r2, r2
+ 373              	.LVL47:
+  51:Core/HAL/lib/soft_crc.c ****             } else {
+ 374              		.loc 1 51 21 view .LVU113
+ 375 0038 F1E7     		b	.L21
+ 376              	.L25:
+  51:Core/HAL/lib/soft_crc.c ****             } else {
+ 377              		.loc 1 51 21 view .LVU114
+ 378              	.LBE15:
+  56:Core/HAL/lib/soft_crc.c ****         }
+  57:Core/HAL/lib/soft_crc.c ****         obj->table[i] = crc;
+ 379              		.loc 1 57 9 is_stmt 1 discriminator 2 view .LVU115
+ 380              		.loc 1 57 23 is_stmt 0 discriminator 2 view .LVU116
+ 381 003a 04F80C20 		strb	r2, [r4, ip]
+ 382              	.LBE14:
+  47:Core/HAL/lib/soft_crc.c ****         uint8_t crc = 0, c = i;
+ 383              		.loc 1 47 35 is_stmt 1 discriminator 2 view .LVU117
+ 384 003e 0CF1010C 		add	ip, ip, #1
+ 385              	.LVL48:
+  47:Core/HAL/lib/soft_crc.c ****         uint8_t crc = 0, c = i;
+ 386              		.loc 1 47 35 is_stmt 0 discriminator 2 view .LVU118
+ 387 0042 1FFA8CFC 		uxth	ip, ip
+ 388              	.LVL49:
+ 389              	.L18:
+  47:Core/HAL/lib/soft_crc.c ****         uint8_t crc = 0, c = i;
+ 390              		.loc 1 47 26 is_stmt 1 discriminator 1 view .LVU119
+  47:Core/HAL/lib/soft_crc.c ****         uint8_t crc = 0, c = i;
+ 391              		.loc 1 47 5 is_stmt 0 discriminator 1 view .LVU120
+ 392 0046 BCF1FF0F 		cmp	ip, #255
+ 393 004a 04D8     		bhi	.L26
+ 394              	.LBB18:
+  48:Core/HAL/lib/soft_crc.c ****         for (uint8_t j = 0; j < 8; ++j) {
+ 395              		.loc 1 48 9 is_stmt 1 view .LVU121
+ 396              	.LVL50:
+  48:Core/HAL/lib/soft_crc.c ****         for (uint8_t j = 0; j < 8; ++j) {
+ 397              		.loc 1 48 26 is_stmt 0 view .LVU122
+ 398 004c 5FFA8CF1 		uxtb	r1, ip
+ 399              	.LVL51:
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 400              		.loc 1 49 9 is_stmt 1 view .LVU123
+ 401              	.LBB16:
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 402              		.loc 1 49 14 view .LVU124
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 403              		.loc 1 49 22 is_stmt 0 view .LVU125
+ 404 0050 0023     		movs	r3, #0
+ 405              	.LBE16:
+  48:Core/HAL/lib/soft_crc.c ****         for (uint8_t j = 0; j < 8; ++j) {
+ 406              		.loc 1 48 17 view .LVU126
+ 407 0052 1A46     		mov	r2, r3
+ 408              	.LBB17:
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ 409              		.loc 1 49 9 view .LVU127
+ 410 0054 E6E7     		b	.L19
+ 411              	.LVL52:
+ 412              	.L26:
+  49:Core/HAL/lib/soft_crc.c ****             if ((crc ^ c) & 0x01) {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 10
+
+
+ 413              		.loc 1 49 9 view .LVU128
+ 414              	.LBE17:
+ 415              	.LBE18:
+ 416              	.LBE13:
+  58:Core/HAL/lib/soft_crc.c ****     }
+  59:Core/HAL/lib/soft_crc.c ****     obj->crc_init = config->crc_init;
+ 417              		.loc 1 59 5 is_stmt 1 view .LVU129
+ 418              		.loc 1 59 27 is_stmt 0 view .LVU130
+ 419 0056 6B78     		ldrb	r3, [r5, #1]	@ zero_extendqisi2
+ 420              		.loc 1 59 19 view .LVU131
+ 421 0058 84F80031 		strb	r3, [r4, #256]
+  60:Core/HAL/lib/soft_crc.c ****     return obj;
+ 422              		.loc 1 60 5 is_stmt 1 view .LVU132
+  61:Core/HAL/lib/soft_crc.c **** }
+ 423              		.loc 1 61 1 is_stmt 0 view .LVU133
+ 424 005c 2046     		mov	r0, r4
+ 425 005e 38BD     		pop	{r3, r4, r5, pc}
+ 426              		.loc 1 61 1 view .LVU134
+ 427              		.cfi_endproc
+ 428              	.LFE3:
+ 430              		.section	.text.soft_crc_Init,"ax",%progbits
+ 431              		.align	1
+ 432              		.global	soft_crc_Init
+ 433              		.syntax unified
+ 434              		.thumb
+ 435              		.thumb_func
+ 437              	soft_crc_Init:
+ 438              	.LFB4:
+  62:Core/HAL/lib/soft_crc.c **** 
+  63:Core/HAL/lib/soft_crc.c **** void soft_crc_Init() {
+ 439              		.loc 1 63 22 is_stmt 1 view -0
+ 440              		.cfi_startproc
+ 441              		@ args = 0, pretend = 0, frame = 8
+ 442              		@ frame_needed = 0, uses_anonymous_args = 0
+ 443 0000 10B5     		push	{r4, lr}
+ 444              	.LCFI2:
+ 445              		.cfi_def_cfa_offset 8
+ 446              		.cfi_offset 4, -8
+ 447              		.cfi_offset 14, -4
+ 448 0002 82B0     		sub	sp, sp, #8
+ 449              	.LCFI3:
+ 450              		.cfi_def_cfa_offset 16
+  64:Core/HAL/lib/soft_crc.c ****     CRC16_config crc16_default_config;
+ 451              		.loc 1 64 5 view .LVU136
+  65:Core/HAL/lib/soft_crc.c ****     crc16_default_config.crc_init = CRC_START_MODBUS_16;
+ 452              		.loc 1 65 5 view .LVU137
+ 453              		.loc 1 65 35 is_stmt 0 view .LVU138
+ 454 0004 4FF6FF74 		movw	r4, #65535
+ 455 0008 ADF80640 		strh	r4, [sp, #6]	@ movhi
+  66:Core/HAL/lib/soft_crc.c ****     crc16_default_config.poly = CRC16_CCITT;
+ 456              		.loc 1 66 5 is_stmt 1 view .LVU139
+ 457              		.loc 1 66 31 is_stmt 0 view .LVU140
+ 458 000c 41F22103 		movw	r3, #4129
+ 459 0010 ADF80430 		strh	r3, [sp, #4]	@ movhi
+  67:Core/HAL/lib/soft_crc.c ****     crc16_default = CRC16_Create(&crc16_default_config);
+ 460              		.loc 1 67 5 is_stmt 1 view .LVU141
+ 461              		.loc 1 67 21 is_stmt 0 view .LVU142
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 11
+
+
+ 462 0014 01A8     		add	r0, sp, #4
+ 463 0016 FFF7FEFF 		bl	CRC16_Create
+ 464              	.LVL53:
+ 465              		.loc 1 67 19 view .LVU143
+ 466 001a 074B     		ldr	r3, .L29
+ 467 001c 1860     		str	r0, [r3]
+  68:Core/HAL/lib/soft_crc.c **** 
+  69:Core/HAL/lib/soft_crc.c ****     CRC8_config crc8_default_config;
+ 468              		.loc 1 69 5 is_stmt 1 view .LVU144
+  70:Core/HAL/lib/soft_crc.c ****     crc8_default_config.crc_init = CRC_START_MODBUS_8;
+ 469              		.loc 1 70 5 view .LVU145
+ 470              		.loc 1 70 34 is_stmt 0 view .LVU146
+ 471 001e 8DF80140 		strb	r4, [sp, #1]
+  71:Core/HAL/lib/soft_crc.c ****     crc8_default_config.poly = CRC8_MAXIM;
+ 472              		.loc 1 71 5 is_stmt 1 view .LVU147
+ 473              		.loc 1 71 30 is_stmt 0 view .LVU148
+ 474 0022 3123     		movs	r3, #49
+ 475 0024 8DF80030 		strb	r3, [sp]
+  72:Core/HAL/lib/soft_crc.c ****     crc8_default = CRC8_Create(&crc8_default_config);
+ 476              		.loc 1 72 5 is_stmt 1 view .LVU149
+ 477              		.loc 1 72 20 is_stmt 0 view .LVU150
+ 478 0028 6846     		mov	r0, sp
+ 479 002a FFF7FEFF 		bl	CRC8_Create
+ 480              	.LVL54:
+ 481              		.loc 1 72 18 view .LVU151
+ 482 002e 034B     		ldr	r3, .L29+4
+ 483 0030 1860     		str	r0, [r3]
+  73:Core/HAL/lib/soft_crc.c **** }
+ 484              		.loc 1 73 1 view .LVU152
+ 485 0032 02B0     		add	sp, sp, #8
+ 486              	.LCFI4:
+ 487              		.cfi_def_cfa_offset 8
+ 488              		@ sp needed
+ 489 0034 10BD     		pop	{r4, pc}
+ 490              	.L30:
+ 491 0036 00BF     		.align	2
+ 492              	.L29:
+ 493 0038 00000000 		.word	.LANCHOR0
+ 494 003c 00000000 		.word	.LANCHOR1
+ 495              		.cfi_endproc
+ 496              	.LFE4:
+ 498              		.section	.text.CRC16_Modbus_calc,"ax",%progbits
+ 499              		.align	1
+ 500              		.global	CRC16_Modbus_calc
+ 501              		.syntax unified
+ 502              		.thumb
+ 503              		.thumb_func
+ 505              	CRC16_Modbus_calc:
+ 506              	.LVL55:
+ 507              	.LFB5:
+  74:Core/HAL/lib/soft_crc.c **** 
+  75:Core/HAL/lib/soft_crc.c **** uint16_t CRC16_Modbus_calc(uint8_t* data, uint32_t num_bytes, CRC16* crc16) {
+ 508              		.loc 1 75 77 is_stmt 1 view -0
+ 509              		.cfi_startproc
+ 510              		@ args = 0, pretend = 0, frame = 0
+ 511              		@ frame_needed = 0, uses_anonymous_args = 0
+ 512              		@ link register save eliminated.
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 12
+
+
+ 513              		.loc 1 75 77 is_stmt 0 view .LVU154
+ 514 0000 0346     		mov	r3, r0
+  76:Core/HAL/lib/soft_crc.c ****     uint16_t crc = crc16->crc_init;
+ 515              		.loc 1 76 5 is_stmt 1 view .LVU155
+ 516              		.loc 1 76 14 is_stmt 0 view .LVU156
+ 517 0002 B2F80002 		ldrh	r0, [r2, #512]	@ unaligned
+ 518              	.LVL56:
+  77:Core/HAL/lib/soft_crc.c ****     while (num_bytes--) crc = (crc >> 8) ^ crc16->table[(crc ^ *data++) & 0xff];
+ 519              		.loc 1 77 5 is_stmt 1 view .LVU157
+ 520              		.loc 1 77 11 is_stmt 0 view .LVU158
+ 521 0006 08E0     		b	.L32
+ 522              	.LVL57:
+ 523              	.L33:
+ 524              		.loc 1 77 25 is_stmt 1 discriminator 2 view .LVU159
+ 525              		.loc 1 77 64 is_stmt 0 discriminator 2 view .LVU160
+ 526 0008 13F8011B 		ldrb	r1, [r3], #1	@ zero_extendqisi2
+ 527              	.LVL58:
+ 528              		.loc 1 77 62 discriminator 2 view .LVU161
+ 529 000c 4140     		eors	r1, r1, r0
+ 530              		.loc 1 77 73 discriminator 2 view .LVU162
+ 531 000e C9B2     		uxtb	r1, r1
+ 532              		.loc 1 77 56 discriminator 2 view .LVU163
+ 533 0010 32F81110 		ldrh	r1, [r2, r1, lsl #1]	@ unaligned
+ 534              		.loc 1 77 29 discriminator 2 view .LVU164
+ 535 0014 81EA1020 		eor	r0, r1, r0, lsr #8
+ 536              	.LVL59:
+ 537              		.loc 1 77 21 discriminator 2 view .LVU165
+ 538 0018 6146     		mov	r1, ip
+ 539              	.LVL60:
+ 540              	.L32:
+ 541              		.loc 1 77 11 is_stmt 1 discriminator 1 view .LVU166
+ 542              		.loc 1 77 21 is_stmt 0 discriminator 1 view .LVU167
+ 543 001a 01F1FF3C 		add	ip, r1, #-1
+ 544              	.LVL61:
+ 545              		.loc 1 77 11 discriminator 1 view .LVU168
+ 546 001e 0029     		cmp	r1, #0
+ 547 0020 F2D1     		bne	.L33
+  78:Core/HAL/lib/soft_crc.c ****     return crc;
+ 548              		.loc 1 78 5 is_stmt 1 view .LVU169
+  79:Core/HAL/lib/soft_crc.c **** }
+ 549              		.loc 1 79 1 is_stmt 0 view .LVU170
+ 550 0022 7047     		bx	lr
+ 551              		.cfi_endproc
+ 552              	.LFE5:
+ 554              		.section	.text.CRC8_Modbus_calc,"ax",%progbits
+ 555              		.align	1
+ 556              		.global	CRC8_Modbus_calc
+ 557              		.syntax unified
+ 558              		.thumb
+ 559              		.thumb_func
+ 561              	CRC8_Modbus_calc:
+ 562              	.LVL62:
+ 563              	.LFB6:
+  80:Core/HAL/lib/soft_crc.c **** 
+  81:Core/HAL/lib/soft_crc.c **** uint8_t CRC8_Modbus_calc(uint8_t* data, uint32_t num_bytes, CRC8* crc8) {
+ 564              		.loc 1 81 73 is_stmt 1 view -0
+ 565              		.cfi_startproc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 13
+
+
+ 566              		@ args = 0, pretend = 0, frame = 0
+ 567              		@ frame_needed = 0, uses_anonymous_args = 0
+ 568              		@ link register save eliminated.
+ 569              		.loc 1 81 73 is_stmt 0 view .LVU172
+ 570 0000 0346     		mov	r3, r0
+  82:Core/HAL/lib/soft_crc.c ****     uint8_t crc = crc8->crc_init;
+ 571              		.loc 1 82 5 is_stmt 1 view .LVU173
+ 572              		.loc 1 82 13 is_stmt 0 view .LVU174
+ 573 0002 92F80001 		ldrb	r0, [r2, #256]	@ zero_extendqisi2
+ 574              	.LVL63:
+  83:Core/HAL/lib/soft_crc.c ****     while (num_bytes--) crc = crc8->table[(crc ^ *data++)];
+ 575              		.loc 1 83 5 is_stmt 1 view .LVU175
+ 576              		.loc 1 83 11 is_stmt 0 view .LVU176
+ 577 0006 04E0     		b	.L35
+ 578              	.LVL64:
+ 579              	.L36:
+ 580              		.loc 1 83 25 is_stmt 1 discriminator 2 view .LVU177
+ 581              		.loc 1 83 50 is_stmt 0 discriminator 2 view .LVU178
+ 582 0008 13F8011B 		ldrb	r1, [r3], #1	@ zero_extendqisi2
+ 583              	.LVL65:
+ 584              		.loc 1 83 48 discriminator 2 view .LVU179
+ 585 000c 4140     		eors	r1, r1, r0
+ 586              		.loc 1 83 29 discriminator 2 view .LVU180
+ 587 000e 505C     		ldrb	r0, [r2, r1]	@ zero_extendqisi2
+ 588              	.LVL66:
+ 589              		.loc 1 83 21 discriminator 2 view .LVU181
+ 590 0010 6146     		mov	r1, ip
+ 591              	.LVL67:
+ 592              	.L35:
+ 593              		.loc 1 83 11 is_stmt 1 discriminator 1 view .LVU182
+ 594              		.loc 1 83 21 is_stmt 0 discriminator 1 view .LVU183
+ 595 0012 01F1FF3C 		add	ip, r1, #-1
+ 596              	.LVL68:
+ 597              		.loc 1 83 11 discriminator 1 view .LVU184
+ 598 0016 0029     		cmp	r1, #0
+ 599 0018 F6D1     		bne	.L36
+  84:Core/HAL/lib/soft_crc.c ****     return crc;
+ 600              		.loc 1 84 5 is_stmt 1 view .LVU185
+  85:Core/HAL/lib/soft_crc.c **** }...
+ 601              		.loc 1 85 1 is_stmt 0 view .LVU186
+ 602 001a 7047     		bx	lr
+ 603              		.cfi_endproc
+ 604              	.LFE6:
+ 606              		.global	crc8_default
+ 607              		.global	crc16_default
+ 608              		.section	.bss.crc16_default,"aw",%nobits
+ 609              		.align	2
+ 610              		.set	.LANCHOR0,. + 0
+ 613              	crc16_default:
+ 614 0000 00000000 		.space	4
+ 615              		.section	.bss.crc8_default,"aw",%nobits
+ 616              		.align	2
+ 617              		.set	.LANCHOR1,. + 0
+ 620              	crc8_default:
+ 621 0000 00000000 		.space	4
+ 622              		.text
+ 623              	.Letext0:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 14
+
+
+ 624              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 625              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 626              		.file 4 "Core/HAL/lib/soft_crc.h"
+ 627              		.file 5 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 soft_crc.c
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:20     .text.bit_reverse_u16:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:26     .text.bit_reverse_u16:00000000 bit_reverse_u16
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:90     .text.bit_reverse_u8:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:96     .text.bit_reverse_u8:00000000 bit_reverse_u8
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:159    .text.CRC16_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:165    .text.CRC16_Create:00000000 CRC16_Create
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:290    .text.CRC8_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:296    .text.CRC8_Create:00000000 CRC8_Create
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:431    .text.soft_crc_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:437    .text.soft_crc_Init:00000000 soft_crc_Init
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:493    .text.soft_crc_Init:00000038 $d
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:499    .text.CRC16_Modbus_calc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:505    .text.CRC16_Modbus_calc:00000000 CRC16_Modbus_calc
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:555    .text.CRC8_Modbus_calc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:561    .text.CRC8_Modbus_calc:00000000 CRC8_Modbus_calc
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:620    .bss.crc8_default:00000000 crc8_default
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:613    .bss.crc16_default:00000000 crc16_default
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:609    .bss.crc16_default:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccqkjSwI.s:616    .bss.crc8_default:00000000 $d
+
+UNDEFINED SYMBOLS
+malloc

@@ -1,0 +1,585 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"radiotube.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Radiotube_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	Radiotube_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Radiotube_Init:
+  27              	.LFB133:
+  28              		.file 1 "Core/HAL/driver/radiotube/radiotube.c"
+   1:Core/HAL/driver/radiotube/radiotube.c **** #include "radiotube.h"
+   2:Core/HAL/driver/radiotube/radiotube.c **** 
+   3:Core/HAL/driver/radiotube/radiotube.c **** #include "bsp_def.h"
+   4:Core/HAL/driver/radiotube/radiotube.c **** #include "bsp_delay.h"
+   5:Core/HAL/driver/radiotube/radiotube.c **** #include "bsp_gpio.h"
+   6:Core/HAL/driver/radiotube/radiotube.c **** #include "spi.h"
+   7:Core/HAL/driver/radiotube/radiotube.c **** #include "stdlib.h"
+   8:Core/HAL/driver/radiotube/radiotube.c **** #include "string.h"
+   9:Core/HAL/driver/radiotube/radiotube.c **** 
+  10:Core/HAL/driver/radiotube/radiotube.c **** //本驱动默认spi数为2且每个spi都只有一组串联的电磁阀驱动板
+  11:Core/HAL/driver/radiotube/radiotube.c **** //因此是一份不完善的驱动，但是对本比赛够用
+  12:Core/HAL/driver/radiotube/radiotube.c **** //完整形态应该是spi数、串联组数、每组驱动板个数均为不定
+  13:Core/HAL/driver/radiotube/radiotube.c **** 
+  14:Core/HAL/driver/radiotube/radiotube.c **** //改完之后没测过，待测试
+  15:Core/HAL/driver/radiotube/radiotube.c **** 
+  16:Core/HAL/driver/radiotube/radiotube.c **** cvector *radios;
+  17:Core/HAL/driver/radiotube/radiotube.c **** Spi_io spi_io[2];
+  18:Core/HAL/driver/radiotube/radiotube.c **** 
+  19:Core/HAL/driver/radiotube/radiotube.c **** void Radiotube_Init() {
+  29              		.loc 1 19 23 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  20:Core/HAL/driver/radiotube/radiotube.c ****     radios = cvector_create(sizeof(radiotube *));
+  38              		.loc 1 20 5 view .LVU1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 2
+
+
+  39              		.loc 1 20 14 is_stmt 0 view .LVU2
+  40 0002 0420     		movs	r0, #4
+  41 0004 FFF7FEFF 		bl	cvector_create
+  42              	.LVL0:
+  43              		.loc 1 20 12 view .LVU3
+  44 0008 014B     		ldr	r3, .L3
+  45 000a 1860     		str	r0, [r3]
+  21:Core/HAL/driver/radiotube/radiotube.c ****     // spi_io[1].tx_port = HC595_DRCLK;
+  22:Core/HAL/driver/radiotube/radiotube.c ****     // spi_io[1].rx_port = HC165_LD;
+  23:Core/HAL/driver/radiotube/radiotube.c **** }
+  46              		.loc 1 23 1 view .LVU4
+  47 000c 08BD     		pop	{r3, pc}
+  48              	.L4:
+  49 000e 00BF     		.align	2
+  50              	.L3:
+  51 0010 00000000 		.word	.LANCHOR0
+  52              		.cfi_endproc
+  53              	.LFE133:
+  55              		.section	.text.Radiotube_Create,"ax",%progbits
+  56              		.align	1
+  57              		.global	Radiotube_Create
+  58              		.syntax unified
+  59              		.thumb
+  60              		.thumb_func
+  62              	Radiotube_Create:
+  63              	.LVL1:
+  64              	.LFB134:
+  24:Core/HAL/driver/radiotube/radiotube.c **** 
+  25:Core/HAL/driver/radiotube/radiotube.c **** radiotube *Radiotube_Create(radiotube_config *config) {
+  65              		.loc 1 25 55 is_stmt 1 view -0
+  66              		.cfi_startproc
+  67              		@ args = 0, pretend = 0, frame = 8
+  68              		@ frame_needed = 0, uses_anonymous_args = 0
+  69              		.loc 1 25 55 is_stmt 0 view .LVU6
+  70 0000 10B5     		push	{r4, lr}
+  71              	.LCFI1:
+  72              		.cfi_def_cfa_offset 8
+  73              		.cfi_offset 4, -8
+  74              		.cfi_offset 14, -4
+  75 0002 82B0     		sub	sp, sp, #8
+  76              	.LCFI2:
+  77              		.cfi_def_cfa_offset 16
+  78 0004 0446     		mov	r4, r0
+  26:Core/HAL/driver/radiotube/radiotube.c ****     radiotube *obj = (radiotube *)malloc(sizeof(radiotube));
+  79              		.loc 1 26 5 is_stmt 1 view .LVU7
+  80              		.loc 1 26 35 is_stmt 0 view .LVU8
+  81 0006 0220     		movs	r0, #2
+  82              	.LVL2:
+  83              		.loc 1 26 35 view .LVU9
+  84 0008 FFF7FEFF 		bl	malloc
+  85              	.LVL3:
+  86              		.loc 1 26 16 view .LVU10
+  87 000c 0190     		str	r0, [sp, #4]
+  27:Core/HAL/driver/radiotube/radiotube.c ****     memset(obj, 0, sizeof(radiotube));
+  88              		.loc 1 27 5 is_stmt 1 view .LVU11
+  89 000e 0023     		movs	r3, #0
+  90 0010 0380     		strh	r3, [r0]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 3
+
+
+  28:Core/HAL/driver/radiotube/radiotube.c ****     obj->config = *config;
+  91              		.loc 1 28 5 view .LVU12
+  92              		.loc 1 28 17 is_stmt 0 view .LVU13
+  93 0012 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+  94 0014 4370     		strb	r3, [r0, #1]
+  29:Core/HAL/driver/radiotube/radiotube.c ****     // obj->monitor = Monitor_Register(obj->config.lost_callback, 10, obj);
+  30:Core/HAL/driver/radiotube/radiotube.c ****     cvector_pushback(radios, &obj);
+  95              		.loc 1 30 5 is_stmt 1 view .LVU14
+  96 0016 01A9     		add	r1, sp, #4
+  97 0018 034B     		ldr	r3, .L7
+  98 001a 1868     		ldr	r0, [r3]
+  99 001c FFF7FEFF 		bl	cvector_pushback
+ 100              	.LVL4:
+  31:Core/HAL/driver/radiotube/radiotube.c ****     return obj;
+ 101              		.loc 1 31 5 view .LVU15
+  32:Core/HAL/driver/radiotube/radiotube.c **** }
+ 102              		.loc 1 32 1 is_stmt 0 view .LVU16
+ 103 0020 0198     		ldr	r0, [sp, #4]
+ 104 0022 02B0     		add	sp, sp, #8
+ 105              	.LCFI3:
+ 106              		.cfi_def_cfa_offset 8
+ 107              		@ sp needed
+ 108 0024 10BD     		pop	{r4, pc}
+ 109              	.LVL5:
+ 110              	.L8:
+ 111              		.loc 1 32 1 view .LVU17
+ 112 0026 00BF     		.align	2
+ 113              	.L7:
+ 114 0028 00000000 		.word	.LANCHOR0
+ 115              		.cfi_endproc
+ 116              	.LFE134:
+ 118              		.section	.text.Radiotube_Receive,"ax",%progbits
+ 119              		.align	1
+ 120              		.global	Radiotube_Receive
+ 121              		.syntax unified
+ 122              		.thumb
+ 123              		.thumb_func
+ 125              	Radiotube_Receive:
+ 126              	.LVL6:
+ 127              	.LFB135:
+  33:Core/HAL/driver/radiotube/radiotube.c **** 
+  34:Core/HAL/driver/radiotube/radiotube.c **** void Radiotube_Receive(radiotube *obj, uint8_t *radiotube_rx_data) {
+ 128              		.loc 1 34 68 is_stmt 1 view -0
+ 129              		.cfi_startproc
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132              		.loc 1 34 68 is_stmt 0 view .LVU19
+ 133 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 134              	.LCFI4:
+ 135              		.cfi_def_cfa_offset 24
+ 136              		.cfi_offset 3, -24
+ 137              		.cfi_offset 4, -20
+ 138              		.cfi_offset 5, -16
+ 139              		.cfi_offset 6, -12
+ 140              		.cfi_offset 7, -8
+ 141              		.cfi_offset 14, -4
+ 142 0002 0546     		mov	r5, r0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 4
+
+
+ 143 0004 0F46     		mov	r7, r1
+  35:Core/HAL/driver/radiotube/radiotube.c ****     // obj->monitor->reset(obj->monitor);
+  36:Core/HAL/driver/radiotube/radiotube.c ****     uint8_t radio_len = 0;
+ 144              		.loc 1 36 5 is_stmt 1 view .LVU20
+ 145              	.LVL7:
+  37:Core/HAL/driver/radiotube/radiotube.c ****     for (size_t i = 0; i < radios->cv_len; i++) {
+ 146              		.loc 1 37 5 view .LVU21
+ 147              	.LBB2:
+ 148              		.loc 1 37 10 view .LVU22
+ 149              		.loc 1 37 17 is_stmt 0 view .LVU23
+ 150 0006 0024     		movs	r4, #0
+ 151              	.LBE2:
+  36:Core/HAL/driver/radiotube/radiotube.c ****     for (size_t i = 0; i < radios->cv_len; i++) {
+ 152              		.loc 1 36 13 view .LVU24
+ 153 0008 2646     		mov	r6, r4
+ 154              	.LBB4:
+ 155              		.loc 1 37 5 view .LVU25
+ 156 000a 00E0     		b	.L10
+ 157              	.LVL8:
+ 158              	.L11:
+ 159              		.loc 1 37 44 is_stmt 1 discriminator 2 view .LVU26
+ 160              		.loc 1 37 45 is_stmt 0 discriminator 2 view .LVU27
+ 161 000c 0134     		adds	r4, r4, #1
+ 162              	.LVL9:
+ 163              	.L10:
+ 164              		.loc 1 37 24 is_stmt 1 discriminator 1 view .LVU28
+ 165              		.loc 1 37 34 is_stmt 0 discriminator 1 view .LVU29
+ 166 000e 164B     		ldr	r3, .L15
+ 167 0010 1868     		ldr	r0, [r3]
+ 168 0012 4368     		ldr	r3, [r0, #4]	@ unaligned
+ 169              		.loc 1 37 5 discriminator 1 view .LVU30
+ 170 0014 A342     		cmp	r3, r4
+ 171 0016 0AD9     		bls	.L14
+ 172              	.LBB3:
+  38:Core/HAL/driver/radiotube/radiotube.c ****         radiotube *radio = *(radiotube **)cvector_val_at(radios, i);
+ 173              		.loc 1 38 9 is_stmt 1 view .LVU31
+ 174              		.loc 1 38 43 is_stmt 0 view .LVU32
+ 175 0018 2146     		mov	r1, r4
+ 176 001a FFF7FEFF 		bl	cvector_val_at
+ 177              	.LVL10:
+ 178              		.loc 1 38 20 view .LVU33
+ 179 001e 0368     		ldr	r3, [r0]
+ 180              	.LVL11:
+  39:Core/HAL/driver/radiotube/radiotube.c ****         if (obj->config.bsp_spi_index == radio->config.bsp_spi_index) radio_len++;  // 遍历，获
+ 181              		.loc 1 39 9 is_stmt 1 view .LVU34
+ 182              		.loc 1 39 24 is_stmt 0 view .LVU35
+ 183 0020 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 184              		.loc 1 39 55 view .LVU36
+ 185 0022 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 186              	.LVL12:
+ 187              		.loc 1 39 12 view .LVU37
+ 188 0024 9A42     		cmp	r2, r3
+ 189 0026 F1D1     		bne	.L11
+ 190              		.loc 1 39 71 is_stmt 1 discriminator 1 view .LVU38
+ 191              		.loc 1 39 80 is_stmt 0 discriminator 1 view .LVU39
+ 192 0028 0136     		adds	r6, r6, #1
+ 193              	.LVL13:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 5
+
+
+ 194              		.loc 1 39 80 discriminator 1 view .LVU40
+ 195 002a F6B2     		uxtb	r6, r6
+ 196              	.LVL14:
+ 197              		.loc 1 39 80 discriminator 1 view .LVU41
+ 198 002c EEE7     		b	.L11
+ 199              	.LVL15:
+ 200              	.L14:
+ 201              		.loc 1 39 80 discriminator 1 view .LVU42
+ 202              	.LBE3:
+ 203              	.LBE4:
+  40:Core/HAL/driver/radiotube/radiotube.c ****     }
+  41:Core/HAL/driver/radiotube/radiotube.c ****     BSP_GPIO_Set(spi_io[obj->config.bsp_spi_index].rx_port, 0);  //读取数据到寄存器
+ 204              		.loc 1 41 5 is_stmt 1 view .LVU43
+ 205              		.loc 1 41 36 is_stmt 0 view .LVU44
+ 206 002e 6B78     		ldrb	r3, [r5, #1]	@ zero_extendqisi2
+ 207              		.loc 1 41 51 view .LVU45
+ 208 0030 0E4C     		ldr	r4, .L15+4
+ 209              	.LVL16:
+ 210              		.loc 1 41 51 view .LVU46
+ 211 0032 04EBC303 		add	r3, r4, r3, lsl #3
+ 212              		.loc 1 41 5 view .LVU47
+ 213 0036 0021     		movs	r1, #0
+ 214 0038 1879     		ldrb	r0, [r3, #4]	@ zero_extendqisi2
+ 215 003a FFF7FEFF 		bl	BSP_GPIO_Set
+ 216              	.LVL17:
+  42:Core/HAL/driver/radiotube/radiotube.c ****     bsp_delay_us(20);
+ 217              		.loc 1 42 5 is_stmt 1 view .LVU48
+ 218 003e 1420     		movs	r0, #20
+ 219 0040 FFF7FEFF 		bl	bsp_delay_us
+ 220              	.LVL18:
+  43:Core/HAL/driver/radiotube/radiotube.c ****     BSP_GPIO_Set(spi_io[obj->config.bsp_spi_index].rx_port, 1);  //停止读取并允许移位
+ 221              		.loc 1 43 5 view .LVU49
+ 222              		.loc 1 43 36 is_stmt 0 view .LVU50
+ 223 0044 6B78     		ldrb	r3, [r5, #1]	@ zero_extendqisi2
+ 224              		.loc 1 43 51 view .LVU51
+ 225 0046 04EBC304 		add	r4, r4, r3, lsl #3
+ 226              		.loc 1 43 5 view .LVU52
+ 227 004a 0121     		movs	r1, #1
+ 228 004c 2079     		ldrb	r0, [r4, #4]	@ zero_extendqisi2
+ 229 004e FFF7FEFF 		bl	BSP_GPIO_Set
+ 230              	.LVL19:
+  44:Core/HAL/driver/radiotube/radiotube.c ****     bsp_delay_us(20);
+ 231              		.loc 1 44 5 is_stmt 1 view .LVU53
+ 232 0052 1420     		movs	r0, #20
+ 233 0054 FFF7FEFF 		bl	bsp_delay_us
+ 234              	.LVL20:
+  45:Core/HAL/driver/radiotube/radiotube.c ****     BSP_SPI_Receive(obj->config.bsp_spi_index, radiotube_rx_data, radio_len, 100);  //接收，提�
+ 235              		.loc 1 45 5 view .LVU54
+ 236 0058 6423     		movs	r3, #100
+ 237 005a 3246     		mov	r2, r6
+ 238 005c 3946     		mov	r1, r7
+ 239 005e 6878     		ldrb	r0, [r5, #1]	@ zero_extendqisi2
+ 240 0060 FFF7FEFF 		bl	BSP_SPI_Receive
+ 241              	.LVL21:
+  46:Core/HAL/driver/radiotube/radiotube.c **** }
+ 242              		.loc 1 46 1 is_stmt 0 view .LVU55
+ 243 0064 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 6
+
+
+ 244              	.LVL22:
+ 245              	.L16:
+ 246              		.loc 1 46 1 view .LVU56
+ 247 0066 00BF     		.align	2
+ 248              	.L15:
+ 249 0068 00000000 		.word	.LANCHOR0
+ 250 006c 00000000 		.word	.LANCHOR1
+ 251              		.cfi_endproc
+ 252              	.LFE135:
+ 254              		.section	.text.Radiotube_Transmit,"ax",%progbits
+ 255              		.align	1
+ 256              		.global	Radiotube_Transmit
+ 257              		.syntax unified
+ 258              		.thumb
+ 259              		.thumb_func
+ 261              	Radiotube_Transmit:
+ 262              	.LFB136:
+  47:Core/HAL/driver/radiotube/radiotube.c ****     
+  48:Core/HAL/driver/radiotube/radiotube.c **** void Radiotube_Transmit() {
+ 263              		.loc 1 48 27 is_stmt 1 view -0
+ 264              		.cfi_startproc
+ 265              		@ args = 0, pretend = 0, frame = 8
+ 266              		@ frame_needed = 0, uses_anonymous_args = 0
+ 267 0000 30B5     		push	{r4, r5, lr}
+ 268              	.LCFI5:
+ 269              		.cfi_def_cfa_offset 12
+ 270              		.cfi_offset 4, -12
+ 271              		.cfi_offset 5, -8
+ 272              		.cfi_offset 14, -4
+ 273 0002 83B0     		sub	sp, sp, #12
+ 274              	.LCFI6:
+ 275              		.cfi_def_cfa_offset 24
+  49:Core/HAL/driver/radiotube/radiotube.c ****     static uint8_t data[8] = {0};
+ 276              		.loc 1 49 5 view .LVU58
+  50:Core/HAL/driver/radiotube/radiotube.c ****     uint8_t radio_len[2] = {0};  //每一串板组的板子个数
+ 277              		.loc 1 50 5 view .LVU59
+ 278              		.loc 1 50 13 is_stmt 0 view .LVU60
+ 279 0004 0025     		movs	r5, #0
+ 280 0006 ADF80450 		strh	r5, [sp, #4]	@ movhi
+  51:Core/HAL/driver/radiotube/radiotube.c ****     for (size_t spi_id = 0; spi_id < 2; spi_id++) {
+ 281              		.loc 1 51 5 is_stmt 1 view .LVU61
+ 282              	.LBB5:
+ 283              		.loc 1 51 10 view .LVU62
+ 284              	.LVL23:
+ 285              	.L18:
+ 286              		.loc 1 51 29 discriminator 1 view .LVU63
+ 287              		.loc 1 51 5 is_stmt 0 discriminator 1 view .LVU64
+ 288 000a 012D     		cmp	r5, #1
+ 289 000c 43D8     		bhi	.L17
+ 290              	.LBB6:
+  52:Core/HAL/driver/radiotube/radiotube.c ****         for (size_t i = 0; i < radios->cv_len; i++) {
+ 291              		.loc 1 52 21 view .LVU65
+ 292 000e 0024     		movs	r4, #0
+ 293 0010 00E0     		b	.L24
+ 294              	.LVL24:
+ 295              	.L21:
+ 296              		.loc 1 52 48 is_stmt 1 discriminator 2 view .LVU66
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 7
+
+
+ 297              		.loc 1 52 49 is_stmt 0 discriminator 2 view .LVU67
+ 298 0012 0134     		adds	r4, r4, #1
+ 299              	.LVL25:
+ 300              	.L24:
+ 301              		.loc 1 52 28 is_stmt 1 discriminator 1 view .LVU68
+ 302              		.loc 1 52 38 is_stmt 0 discriminator 1 view .LVU69
+ 303 0014 214B     		ldr	r3, .L29
+ 304 0016 1868     		ldr	r0, [r3]
+ 305 0018 4368     		ldr	r3, [r0, #4]	@ unaligned
+ 306              		.loc 1 52 9 discriminator 1 view .LVU70
+ 307 001a A342     		cmp	r3, r4
+ 308 001c 14D9     		bls	.L27
+ 309              	.LBB7:
+  53:Core/HAL/driver/radiotube/radiotube.c ****             radiotube *obj = *(radiotube **)cvector_val_at(radios, i);
+ 310              		.loc 1 53 13 is_stmt 1 view .LVU71
+ 311              		.loc 1 53 45 is_stmt 0 view .LVU72
+ 312 001e 2146     		mov	r1, r4
+ 313 0020 FFF7FEFF 		bl	cvector_val_at
+ 314              	.LVL26:
+ 315              		.loc 1 53 24 view .LVU73
+ 316 0024 0368     		ldr	r3, [r0]
+ 317              	.LVL27:
+  54:Core/HAL/driver/radiotube/radiotube.c ****             if (obj == NULL)
+ 318              		.loc 1 54 13 is_stmt 1 view .LVU74
+ 319              		.loc 1 54 16 is_stmt 0 view .LVU75
+ 320 0026 B3B3     		cbz	r3, .L17
+  55:Core/HAL/driver/radiotube/radiotube.c ****                 return;
+  56:Core/HAL/driver/radiotube/radiotube.c ****             else if (spi_id == obj->config.bsp_spi_index) {
+ 321              		.loc 1 56 18 is_stmt 1 view .LVU76
+ 322              		.loc 1 56 43 is_stmt 0 view .LVU77
+ 323 0028 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 324              		.loc 1 56 21 view .LVU78
+ 325 002a AA42     		cmp	r2, r5
+ 326 002c F1D1     		bne	.L21
+  57:Core/HAL/driver/radiotube/radiotube.c ****                 data[i] = (uint8_t)(obj->data);
+ 327              		.loc 1 57 17 is_stmt 1 view .LVU79
+ 328              		.loc 1 57 40 is_stmt 0 view .LVU80
+ 329 002e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 330              		.loc 1 57 25 view .LVU81
+ 331 0030 1B4B     		ldr	r3, .L29+4
+ 332              	.LVL28:
+ 333              		.loc 1 57 25 view .LVU82
+ 334 0032 1A55     		strb	r2, [r3, r4]
+ 335              	.LVL29:
+  58:Core/HAL/driver/radiotube/radiotube.c ****                 radio_len[spi_id]++;
+ 336              		.loc 1 58 17 is_stmt 1 view .LVU83
+ 337              		.loc 1 58 26 is_stmt 0 view .LVU84
+ 338 0034 05F10803 		add	r3, r5, #8
+ 339 0038 0DEB0302 		add	r2, sp, r3
+ 340 003c 12F8043C 		ldrb	r3, [r2, #-4]	@ zero_extendqisi2
+ 341              		.loc 1 58 34 view .LVU85
+ 342 0040 0133     		adds	r3, r3, #1
+ 343 0042 02F8043C 		strb	r3, [r2, #-4]
+ 344 0046 E4E7     		b	.L21
+ 345              	.L27:
+ 346              		.loc 1 58 34 view .LVU86
+ 347              	.LBE7:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 8
+
+
+ 348              	.LBE6:
+  59:Core/HAL/driver/radiotube/radiotube.c ****             }
+  60:Core/HAL/driver/radiotube/radiotube.c ****         }
+  61:Core/HAL/driver/radiotube/radiotube.c ****         if (radio_len[spi_id] != 0) {
+ 349              		.loc 1 61 9 is_stmt 1 view .LVU87
+ 350              		.loc 1 61 22 is_stmt 0 view .LVU88
+ 351 0048 05F10803 		add	r3, r5, #8
+ 352 004c 6B44     		add	r3, sp, r3
+ 353 004e 13F8042C 		ldrb	r2, [r3, #-4]	@ zero_extendqisi2
+ 354              		.loc 1 61 12 view .LVU89
+ 355 0052 0AB9     		cbnz	r2, .L28
+ 356              	.LVL30:
+ 357              	.L23:
+  51:Core/HAL/driver/radiotube/radiotube.c ****         for (size_t i = 0; i < radios->cv_len; i++) {
+ 358              		.loc 1 51 41 is_stmt 1 discriminator 2 view .LVU90
+  51:Core/HAL/driver/radiotube/radiotube.c ****         for (size_t i = 0; i < radios->cv_len; i++) {
+ 359              		.loc 1 51 47 is_stmt 0 discriminator 2 view .LVU91
+ 360 0054 0135     		adds	r5, r5, #1
+ 361              	.LVL31:
+  51:Core/HAL/driver/radiotube/radiotube.c ****         for (size_t i = 0; i < radios->cv_len; i++) {
+ 362              		.loc 1 51 47 discriminator 2 view .LVU92
+ 363 0056 D8E7     		b	.L18
+ 364              	.LVL32:
+ 365              	.L28:
+  62:Core/HAL/driver/radiotube/radiotube.c ****             BSP_SPI_Transmit(spi_id, data, radio_len[spi_id], 100);  //发送数据到寄存器
+ 366              		.loc 1 62 13 is_stmt 1 view .LVU93
+ 367 0058 6423     		movs	r3, #100
+ 368 005a 1149     		ldr	r1, .L29+4
+ 369 005c E8B2     		uxtb	r0, r5
+ 370 005e FFF7FEFF 		bl	BSP_SPI_Transmit
+ 371              	.LVL33:
+  63:Core/HAL/driver/radiotube/radiotube.c ****             bsp_delay_us(20);
+ 372              		.loc 1 63 13 view .LVU94
+ 373 0062 1420     		movs	r0, #20
+ 374 0064 FFF7FEFF 		bl	bsp_delay_us
+ 375              	.LVL34:
+  64:Core/HAL/driver/radiotube/radiotube.c ****             BSP_GPIO_Set(spi_io[spi_id].tx_port, 0);  //将移位寄存器的数据载入到存储�
+ 376              		.loc 1 64 13 view .LVU95
+ 377              		.loc 1 64 40 is_stmt 0 view .LVU96
+ 378 0068 0E4C     		ldr	r4, .L29+8
+ 379              	.LVL35:
+ 380              		.loc 1 64 13 view .LVU97
+ 381 006a 0021     		movs	r1, #0
+ 382 006c 14F83500 		ldrb	r0, [r4, r5, lsl #3]	@ zero_extendqisi2
+ 383 0070 FFF7FEFF 		bl	BSP_GPIO_Set
+ 384              	.LVL36:
+  65:Core/HAL/driver/radiotube/radiotube.c ****             bsp_delay_us(20);
+ 385              		.loc 1 65 13 is_stmt 1 view .LVU98
+ 386 0074 1420     		movs	r0, #20
+ 387 0076 FFF7FEFF 		bl	bsp_delay_us
+ 388              	.LVL37:
+  66:Core/HAL/driver/radiotube/radiotube.c ****             BSP_GPIO_Set(spi_io[spi_id].tx_port, 1);  //更新输出状态（提供一个脉冲）
+ 389              		.loc 1 66 13 view .LVU99
+ 390 007a 0121     		movs	r1, #1
+ 391 007c 14F83500 		ldrb	r0, [r4, r5, lsl #3]	@ zero_extendqisi2
+ 392 0080 FFF7FEFF 		bl	BSP_GPIO_Set
+ 393              	.LVL38:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 9
+
+
+  67:Core/HAL/driver/radiotube/radiotube.c ****             bsp_delay_us(20);
+ 394              		.loc 1 67 13 view .LVU100
+ 395 0084 1420     		movs	r0, #20
+ 396 0086 FFF7FEFF 		bl	bsp_delay_us
+ 397              	.LVL39:
+  68:Core/HAL/driver/radiotube/radiotube.c ****             BSP_GPIO_Set(spi_io[spi_id].tx_port, 0);
+ 398              		.loc 1 68 13 view .LVU101
+ 399 008a 0021     		movs	r1, #0
+ 400 008c 14F83500 		ldrb	r0, [r4, r5, lsl #3]	@ zero_extendqisi2
+ 401 0090 FFF7FEFF 		bl	BSP_GPIO_Set
+ 402              	.LVL40:
+ 403 0094 DEE7     		b	.L23
+ 404              	.L17:
+ 405              		.loc 1 68 13 is_stmt 0 view .LVU102
+ 406              	.LBE5:
+  69:Core/HAL/driver/radiotube/radiotube.c ****         }
+  70:Core/HAL/driver/radiotube/radiotube.c ****     }
+  71:Core/HAL/driver/radiotube/radiotube.c **** }...
+ 407              		.loc 1 71 1 view .LVU103
+ 408 0096 03B0     		add	sp, sp, #12
+ 409              	.LCFI7:
+ 410              		.cfi_def_cfa_offset 12
+ 411              		@ sp needed
+ 412 0098 30BD     		pop	{r4, r5, pc}
+ 413              	.LVL41:
+ 414              	.L30:
+ 415              		.loc 1 71 1 view .LVU104
+ 416 009a 00BF     		.align	2
+ 417              	.L29:
+ 418 009c 00000000 		.word	.LANCHOR0
+ 419 00a0 00000000 		.word	.LANCHOR2
+ 420 00a4 00000000 		.word	.LANCHOR1
+ 421              		.cfi_endproc
+ 422              	.LFE136:
+ 424              		.global	spi_io
+ 425              		.global	radios
+ 426              		.section	.bss.data.0,"aw",%nobits
+ 427              		.align	2
+ 428              		.set	.LANCHOR2,. + 0
+ 431              	data.0:
+ 432 0000 00000000 		.space	8
+ 432      00000000 
+ 433              		.section	.bss.radios,"aw",%nobits
+ 434              		.align	2
+ 435              		.set	.LANCHOR0,. + 0
+ 438              	radios:
+ 439 0000 00000000 		.space	4
+ 440              		.section	.bss.spi_io,"aw",%nobits
+ 441              		.align	2
+ 442              		.set	.LANCHOR1,. + 0
+ 445              	spi_io:
+ 446 0000 00000000 		.space	16
+ 446      00000000 
+ 446      00000000 
+ 446      00000000 
+ 447              		.text
+ 448              	.Letext0:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 10
+
+
+ 449              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 450              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 451              		.file 4 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 452              		.file 5 "Core/HAL/lib/cvector.h"
+ 453              		.file 6 "Core/HAL/driver/radiotube/radiotube.h"
+ 454              		.file 7 "Core/BSP/interface/bsp_spi.h"
+ 455              		.file 8 "Core/BSP/lib/bsp_delay.h"
+ 456              		.file 9 "Core/BSP/interface/bsp_gpio.h"
+ 457              		.file 10 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 radiotube.c
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:20     .text.Radiotube_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:26     .text.Radiotube_Init:00000000 Radiotube_Init
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:51     .text.Radiotube_Init:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:56     .text.Radiotube_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:62     .text.Radiotube_Create:00000000 Radiotube_Create
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:114    .text.Radiotube_Create:00000028 $d
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:119    .text.Radiotube_Receive:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:125    .text.Radiotube_Receive:00000000 Radiotube_Receive
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:249    .text.Radiotube_Receive:00000068 $d
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:255    .text.Radiotube_Transmit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:261    .text.Radiotube_Transmit:00000000 Radiotube_Transmit
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:418    .text.Radiotube_Transmit:0000009c $d
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:445    .bss.spi_io:00000000 spi_io
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:438    .bss.radios:00000000 radios
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:427    .bss.data.0:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:431    .bss.data.0:00000000 data.0
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:434    .bss.radios:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\cc9Hf9DZ.s:441    .bss.spi_io:00000000 $d
+
+UNDEFINED SYMBOLS
+cvector_create
+malloc
+cvector_pushback
+cvector_val_at
+BSP_GPIO_Set
+bsp_delay_us
+BSP_SPI_Receive
+BSP_SPI_Transmit

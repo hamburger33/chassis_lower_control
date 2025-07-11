@@ -1,0 +1,890 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"MadgwickAHRS.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.MadgwickAHRS_clear,"ax",%progbits
+  20              		.align	1
+  21              		.global	MadgwickAHRS_clear
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MadgwickAHRS_clear:
+  27              	.LVL0:
+  28              	.LFB1:
+  29              		.file 1 "Core/HAL/lib/MadgwickAHRS.c"
+   1:Core/HAL/lib/MadgwickAHRS.c **** #include "MadgwickAHRS.h"
+   2:Core/HAL/lib/MadgwickAHRS.c **** 
+   3:Core/HAL/lib/MadgwickAHRS.c **** #include "common.h"
+   4:Core/HAL/lib/MadgwickAHRS.c **** #include "math.h"
+   5:Core/HAL/lib/MadgwickAHRS.c **** #include "string.h"
+   6:Core/HAL/lib/MadgwickAHRS.c **** void MadgwickAHRS_init(MadgwickAHRS *obj, float _beta, float _sampleFreq) {
+   7:Core/HAL/lib/MadgwickAHRS.c ****     obj->beta = _beta;
+   8:Core/HAL/lib/MadgwickAHRS.c ****     obj->sampleFreq = _sampleFreq;
+   9:Core/HAL/lib/MadgwickAHRS.c ****     MadgwickAHRS_clear(obj);
+  10:Core/HAL/lib/MadgwickAHRS.c **** }
+  11:Core/HAL/lib/MadgwickAHRS.c **** void MadgwickAHRS_clear(MadgwickAHRS *obj) {
+  30              		.loc 1 11 44 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  12:Core/HAL/lib/MadgwickAHRS.c ****     obj->q0 = 1.0f;
+  35              		.loc 1 12 5 view .LVU1
+  36              		.loc 1 12 13 is_stmt 0 view .LVU2
+  37 0000 4FF07E53 		mov	r3, #1065353216
+  38 0004 8360     		str	r3, [r0, #8]	@ unaligned
+  13:Core/HAL/lib/MadgwickAHRS.c ****     obj->q1 = obj->q2 = obj->q3 = 0.0f;
+  39              		.loc 1 13 5 is_stmt 1 view .LVU3
+  40              		.loc 1 13 33 is_stmt 0 view .LVU4
+  41 0006 0023     		movs	r3, #0
+  42 0008 4361     		str	r3, [r0, #20]	@ unaligned
+  43              		.loc 1 13 23 view .LVU5
+  44 000a 0361     		str	r3, [r0, #16]	@ unaligned
+  45              		.loc 1 13 13 view .LVU6
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 2
+
+
+  46 000c C360     		str	r3, [r0, #12]	@ unaligned
+  14:Core/HAL/lib/MadgwickAHRS.c ****     memset(obj->euler, 0, sizeof(float) * 3);
+  47              		.loc 1 14 5 is_stmt 1 view .LVU7
+  48 000e 8361     		str	r3, [r0, #24]	@ unaligned
+  49 0010 C361     		str	r3, [r0, #28]	@ unaligned
+  50 0012 0362     		str	r3, [r0, #32]	@ unaligned
+  15:Core/HAL/lib/MadgwickAHRS.c **** }
+  51              		.loc 1 15 1 is_stmt 0 view .LVU8
+  52 0014 7047     		bx	lr
+  53              		.cfi_endproc
+  54              	.LFE1:
+  56              		.section	.text.MadgwickAHRS_init,"ax",%progbits
+  57              		.align	1
+  58              		.global	MadgwickAHRS_init
+  59              		.syntax unified
+  60              		.thumb
+  61              		.thumb_func
+  63              	MadgwickAHRS_init:
+  64              	.LVL1:
+  65              	.LFB0:
+   6:Core/HAL/lib/MadgwickAHRS.c ****     obj->beta = _beta;
+  66              		.loc 1 6 75 is_stmt 1 view -0
+  67              		.cfi_startproc
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+   6:Core/HAL/lib/MadgwickAHRS.c ****     obj->beta = _beta;
+  70              		.loc 1 6 75 is_stmt 0 view .LVU10
+  71 0000 08B5     		push	{r3, lr}
+  72              	.LCFI0:
+  73              		.cfi_def_cfa_offset 8
+  74              		.cfi_offset 3, -8
+  75              		.cfi_offset 14, -4
+   7:Core/HAL/lib/MadgwickAHRS.c ****     obj->sampleFreq = _sampleFreq;
+  76              		.loc 1 7 5 is_stmt 1 view .LVU11
+   7:Core/HAL/lib/MadgwickAHRS.c ****     obj->sampleFreq = _sampleFreq;
+  77              		.loc 1 7 15 is_stmt 0 view .LVU12
+  78 0002 10EE102A 		vmov	r2, s0
+  79 0006 0260     		str	r2, [r0]	@ unaligned
+   8:Core/HAL/lib/MadgwickAHRS.c ****     MadgwickAHRS_clear(obj);
+  80              		.loc 1 8 5 is_stmt 1 view .LVU13
+   8:Core/HAL/lib/MadgwickAHRS.c ****     MadgwickAHRS_clear(obj);
+  81              		.loc 1 8 21 is_stmt 0 view .LVU14
+  82 0008 10EE902A 		vmov	r2, s1
+  83 000c 4260     		str	r2, [r0, #4]	@ unaligned
+   9:Core/HAL/lib/MadgwickAHRS.c **** }
+  84              		.loc 1 9 5 is_stmt 1 view .LVU15
+  85 000e FFF7FEFF 		bl	MadgwickAHRS_clear
+  86              	.LVL2:
+  10:Core/HAL/lib/MadgwickAHRS.c **** void MadgwickAHRS_clear(MadgwickAHRS *obj) {
+  87              		.loc 1 10 1 is_stmt 0 view .LVU16
+  88 0012 08BD     		pop	{r3, pc}
+  89              		.cfi_endproc
+  90              	.LFE0:
+  92              		.global	__aeabi_f2d
+  93              		.global	__aeabi_d2f
+  94              		.section	.text.MadgwickAHRS_update,"ax",%progbits
+  95              		.align	1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 3
+
+
+  96              		.global	MadgwickAHRS_update
+  97              		.syntax unified
+  98              		.thumb
+  99              		.thumb_func
+ 101              	MadgwickAHRS_update:
+ 102              	.LVL3:
+ 103              	.LFB2:
+  16:Core/HAL/lib/MadgwickAHRS.c **** void MadgwickAHRS_update(MadgwickAHRS *obj, float gx, float gy, float gz,
+  17:Core/HAL/lib/MadgwickAHRS.c ****                          float ax, float ay, float az) {
+ 104              		.loc 1 17 56 is_stmt 1 view -0
+ 105              		.cfi_startproc
+ 106              		@ args = 0, pretend = 0, frame = 0
+ 107              		@ frame_needed = 0, uses_anonymous_args = 0
+ 108              		.loc 1 17 56 is_stmt 0 view .LVU18
+ 109 0000 10B5     		push	{r4, lr}
+ 110              	.LCFI1:
+ 111              		.cfi_def_cfa_offset 8
+ 112              		.cfi_offset 4, -8
+ 113              		.cfi_offset 14, -4
+ 114 0002 2DED0A8B 		vpush.64	{d8, d9, d10, d11, d12}
+ 115              	.LCFI2:
+ 116              		.cfi_def_cfa_offset 48
+ 117              		.cfi_offset 80, -48
+ 118              		.cfi_offset 81, -44
+ 119              		.cfi_offset 82, -40
+ 120              		.cfi_offset 83, -36
+ 121              		.cfi_offset 84, -32
+ 122              		.cfi_offset 85, -28
+ 123              		.cfi_offset 86, -24
+ 124              		.cfi_offset 87, -20
+ 125              		.cfi_offset 88, -16
+ 126              		.cfi_offset 89, -12
+ 127 0006 0446     		mov	r4, r0
+ 128 0008 B0EE619A 		vmov.f32	s18, s3
+ 129 000c F0EE42BA 		vmov.f32	s23, s4
+ 130 0010 B0EE62BA 		vmov.f32	s22, s5
+  18:Core/HAL/lib/MadgwickAHRS.c ****     float recipNorm;
+ 131              		.loc 1 18 5 is_stmt 1 view .LVU19
+  19:Core/HAL/lib/MadgwickAHRS.c ****     float s0, s1, s2, s3;
+ 132              		.loc 1 19 5 view .LVU20
+  20:Core/HAL/lib/MadgwickAHRS.c ****     float qDot1, qDot2, qDot3, qDot4;
+ 133              		.loc 1 20 5 view .LVU21
+  21:Core/HAL/lib/MadgwickAHRS.c ****     float _2q0, _2q1, _2q2, _2q3, _4q0, _4q1, _4q2, _8q1, _8q2, q0q0, q1q1,
+ 134              		.loc 1 21 5 view .LVU22
+  22:Core/HAL/lib/MadgwickAHRS.c ****         q2q2, q3q3;
+  23:Core/HAL/lib/MadgwickAHRS.c **** 
+  24:Core/HAL/lib/MadgwickAHRS.c ****     // Rate of change of quaternion from gyroscope
+  25:Core/HAL/lib/MadgwickAHRS.c ****     qDot1 = 0.5f * (-obj->q1 * gx - obj->q2 * gy - obj->q3 * gz);
+ 135              		.loc 1 25 5 view .LVU23
+ 136              		.loc 1 25 25 is_stmt 0 view .LVU24
+ 137 0014 C368     		ldr	r3, [r0, #12]	@ unaligned
+ 138 0016 06EE903A 		vmov	s13, r3	@ int
+ 139              		.loc 1 25 30 view .LVU25
+ 140 001a 66EEC08A 		vnmul.f32	s17, s13, s0
+ 141              		.loc 1 25 40 view .LVU26
+ 142 001e 0369     		ldr	r3, [r0, #16]	@ unaligned
+ 143 0020 07EE103A 		vmov	s14, r3	@ int
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 4
+
+
+ 144              		.loc 1 25 45 view .LVU27
+ 145 0024 67EE207A 		vmul.f32	s15, s14, s1
+ 146              		.loc 1 25 35 view .LVU28
+ 147 0028 78EEE78A 		vsub.f32	s17, s17, s15
+ 148              		.loc 1 25 55 view .LVU29
+ 149 002c 4369     		ldr	r3, [r0, #20]	@ unaligned
+ 150 002e 06EE103A 		vmov	s12, r3	@ int
+ 151              		.loc 1 25 60 view .LVU30
+ 152 0032 66EE017A 		vmul.f32	s15, s12, s2
+ 153              		.loc 1 25 50 view .LVU31
+ 154 0036 78EEE78A 		vsub.f32	s17, s17, s15
+ 155              		.loc 1 25 11 view .LVU32
+ 156 003a F6EE005A 		vmov.f32	s11, #5.0e-1
+ 157 003e 68EEA58A 		vmul.f32	s17, s17, s11
+ 158              	.LVL4:
+  26:Core/HAL/lib/MadgwickAHRS.c ****     qDot2 = 0.5f * (obj->q0 * gx + obj->q2 * gz - obj->q3 * gy);
+ 159              		.loc 1 26 5 is_stmt 1 view .LVU33
+ 160              		.loc 1 26 24 is_stmt 0 view .LVU34
+ 161 0042 8368     		ldr	r3, [r0, #8]	@ unaligned
+ 162 0044 07EE903A 		vmov	s15, r3	@ int
+ 163              		.loc 1 26 29 view .LVU35
+ 164 0048 27EE80AA 		vmul.f32	s20, s15, s0
+ 165              		.loc 1 26 44 view .LVU36
+ 166 004c 27EE015A 		vmul.f32	s10, s14, s2
+ 167              		.loc 1 26 34 view .LVU37
+ 168 0050 3AEE05AA 		vadd.f32	s20, s20, s10
+ 169              		.loc 1 26 59 view .LVU38
+ 170 0054 26EE205A 		vmul.f32	s10, s12, s1
+ 171              		.loc 1 26 49 view .LVU39
+ 172 0058 3AEE45AA 		vsub.f32	s20, s20, s10
+ 173              		.loc 1 26 11 view .LVU40
+ 174 005c 2AEE25AA 		vmul.f32	s20, s20, s11
+ 175              	.LVL5:
+  27:Core/HAL/lib/MadgwickAHRS.c ****     qDot3 = 0.5f * (obj->q0 * gy - obj->q1 * gz + obj->q3 * gx);
+ 176              		.loc 1 27 5 is_stmt 1 view .LVU41
+ 177              		.loc 1 27 29 is_stmt 0 view .LVU42
+ 178 0060 67EEA09A 		vmul.f32	s19, s15, s1
+ 179              		.loc 1 27 44 view .LVU43
+ 180 0064 26EE815A 		vmul.f32	s10, s13, s2
+ 181              		.loc 1 27 34 view .LVU44
+ 182 0068 79EEC59A 		vsub.f32	s19, s19, s10
+ 183              		.loc 1 27 59 view .LVU45
+ 184 006c 26EE006A 		vmul.f32	s12, s12, s0
+ 185              		.loc 1 27 49 view .LVU46
+ 186 0070 79EE869A 		vadd.f32	s19, s19, s12
+ 187              		.loc 1 27 11 view .LVU47
+ 188 0074 69EEA59A 		vmul.f32	s19, s19, s11
+ 189              	.LVL6:
+  28:Core/HAL/lib/MadgwickAHRS.c ****     qDot4 = 0.5f * (obj->q0 * gz + obj->q1 * gy - obj->q2 * gx);
+ 190              		.loc 1 28 5 is_stmt 1 view .LVU48
+ 191              		.loc 1 28 29 is_stmt 0 view .LVU49
+ 192 0078 67EE817A 		vmul.f32	s15, s15, s2
+ 193              		.loc 1 28 44 view .LVU50
+ 194 007c 66EEA0AA 		vmul.f32	s21, s13, s1
+ 195              		.loc 1 28 34 view .LVU51
+ 196 0080 77EEAAAA 		vadd.f32	s21, s15, s21
+ 197              		.loc 1 28 59 view .LVU52
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 5
+
+
+ 198 0084 27EE007A 		vmul.f32	s14, s14, s0
+ 199              		.loc 1 28 49 view .LVU53
+ 200 0088 7AEEC7AA 		vsub.f32	s21, s21, s14
+ 201              		.loc 1 28 11 view .LVU54
+ 202 008c 6AEEA5AA 		vmul.f32	s21, s21, s11
+ 203              	.LVL7:
+  29:Core/HAL/lib/MadgwickAHRS.c **** 
+  30:Core/HAL/lib/MadgwickAHRS.c ****     // Compute feedback only if accelerometer measurement valid (avoids NaN in
+  31:Core/HAL/lib/MadgwickAHRS.c ****     // accelerometer normalisation)
+  32:Core/HAL/lib/MadgwickAHRS.c ****     if (!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
+ 204              		.loc 1 32 5 is_stmt 1 view .LVU55
+ 205              		.loc 1 32 8 is_stmt 0 view .LVU56
+ 206 0090 F5EE401A 		vcmp.f32	s3, #0
+ 207 0094 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 208 0098 0AD1     		bne	.L5
+ 209              		.loc 1 32 24 discriminator 1 view .LVU57
+ 210 009a B5EE402A 		vcmp.f32	s4, #0
+ 211 009e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 212 00a2 05D1     		bne	.L5
+ 213              		.loc 1 32 9 discriminator 2 view .LVU58
+ 214 00a4 F5EE402A 		vcmp.f32	s5, #0
+ 215 00a8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 216 00ac 00F0C180 		beq	.L6
+ 217              	.L5:
+  33:Core/HAL/lib/MadgwickAHRS.c ****         // Normalise accelerometer measurement
+  34:Core/HAL/lib/MadgwickAHRS.c ****         recipNorm = invSqrt(ax * ax + ay * ay + az * az);
+ 218              		.loc 1 34 9 is_stmt 1 view .LVU59
+ 219              		.loc 1 34 32 is_stmt 0 view .LVU60
+ 220 00b0 69EE097A 		vmul.f32	s15, s18, s18
+ 221              		.loc 1 34 42 view .LVU61
+ 222 00b4 2BEEAB0A 		vmul.f32	s0, s23, s23
+ 223              	.LVL8:
+ 224              		.loc 1 34 37 view .LVU62
+ 225 00b8 77EE807A 		vadd.f32	s15, s15, s0
+ 226              		.loc 1 34 52 view .LVU63
+ 227 00bc 2BEE0B0A 		vmul.f32	s0, s22, s22
+ 228              		.loc 1 34 21 view .LVU64
+ 229 00c0 37EE800A 		vadd.f32	s0, s15, s0
+ 230 00c4 FFF7FEFF 		bl	invSqrt
+ 231              	.LVL9:
+  35:Core/HAL/lib/MadgwickAHRS.c ****         ax *= recipNorm;
+ 232              		.loc 1 35 9 is_stmt 1 view .LVU65
+ 233              		.loc 1 35 12 is_stmt 0 view .LVU66
+ 234 00c8 69EE001A 		vmul.f32	s3, s18, s0
+ 235              	.LVL10:
+  36:Core/HAL/lib/MadgwickAHRS.c ****         ay *= recipNorm;
+ 236              		.loc 1 36 9 is_stmt 1 view .LVU67
+ 237              		.loc 1 36 12 is_stmt 0 view .LVU68
+ 238 00cc 2BEE802A 		vmul.f32	s4, s23, s0
+ 239              	.LVL11:
+  37:Core/HAL/lib/MadgwickAHRS.c ****         az *= recipNorm;
+ 240              		.loc 1 37 9 is_stmt 1 view .LVU69
+ 241              		.loc 1 37 12 is_stmt 0 view .LVU70
+ 242 00d0 6BEE002A 		vmul.f32	s5, s22, s0
+ 243              	.LVL12:
+  38:Core/HAL/lib/MadgwickAHRS.c **** 
+  39:Core/HAL/lib/MadgwickAHRS.c ****         // Auxiliary variables to avoid repeated arithmetic
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 6
+
+
+  40:Core/HAL/lib/MadgwickAHRS.c ****         _2q0 = 2.0f * obj->q0;
+ 244              		.loc 1 40 9 is_stmt 1 view .LVU71
+ 245              		.loc 1 40 26 is_stmt 0 view .LVU72
+ 246 00d4 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 247 00d6 03EE103A 		vmov	s6, r3	@ int
+ 248              		.loc 1 40 14 view .LVU73
+ 249 00da 33EE030A 		vadd.f32	s0, s6, s6
+ 250              	.LVL13:
+  41:Core/HAL/lib/MadgwickAHRS.c ****         _2q1 = 2.0f * obj->q1;
+ 251              		.loc 1 41 9 is_stmt 1 view .LVU74
+ 252              		.loc 1 41 26 is_stmt 0 view .LVU75
+ 253 00de E368     		ldr	r3, [r4, #12]	@ unaligned
+ 254 00e0 04EE903A 		vmov	s9, r3	@ int
+ 255              		.loc 1 41 14 view .LVU76
+ 256 00e4 74EEA4BA 		vadd.f32	s23, s9, s9
+ 257              	.LVL14:
+  42:Core/HAL/lib/MadgwickAHRS.c ****         _2q2 = 2.0f * obj->q2;
+ 258              		.loc 1 42 9 is_stmt 1 view .LVU77
+ 259              		.loc 1 42 26 is_stmt 0 view .LVU78
+ 260 00e8 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 261 00ea 07EE903A 		vmov	s15, r3	@ int
+ 262              		.loc 1 42 14 view .LVU79
+ 263 00ee 77EEA75A 		vadd.f32	s11, s15, s15
+ 264              	.LVL15:
+  43:Core/HAL/lib/MadgwickAHRS.c ****         _2q3 = 2.0f * obj->q3;
+ 265              		.loc 1 43 9 is_stmt 1 view .LVU80
+ 266              		.loc 1 43 26 is_stmt 0 view .LVU81
+ 267 00f2 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 268 00f4 06EE903A 		vmov	s13, r3	@ int
+ 269              		.loc 1 43 14 view .LVU82
+ 270 00f8 36EEA61A 		vadd.f32	s2, s13, s13
+ 271              	.LVL16:
+  44:Core/HAL/lib/MadgwickAHRS.c ****         _4q0 = 4.0f * obj->q0;
+ 272              		.loc 1 44 9 is_stmt 1 view .LVU83
+ 273              		.loc 1 44 14 is_stmt 0 view .LVU84
+ 274 00fc B1EE005A 		vmov.f32	s10, #4.0e+0
+ 275 0100 23EE059A 		vmul.f32	s18, s6, s10
+ 276              	.LVL17:
+  45:Core/HAL/lib/MadgwickAHRS.c ****         _4q1 = 4.0f * obj->q1;
+ 277              		.loc 1 45 9 is_stmt 1 view .LVU85
+ 278              		.loc 1 45 14 is_stmt 0 view .LVU86
+ 279 0104 24EE85CA 		vmul.f32	s24, s9, s10
+ 280              	.LVL18:
+  46:Core/HAL/lib/MadgwickAHRS.c ****         _4q2 = 4.0f * obj->q2;
+ 281              		.loc 1 46 9 is_stmt 1 view .LVU87
+ 282              		.loc 1 46 14 is_stmt 0 view .LVU88
+ 283 0108 27EE854A 		vmul.f32	s8, s15, s10
+ 284              	.LVL19:
+  47:Core/HAL/lib/MadgwickAHRS.c ****         _8q1 = 8.0f * obj->q1;
+ 285              		.loc 1 47 9 is_stmt 1 view .LVU89
+ 286              		.loc 1 47 14 is_stmt 0 view .LVU90
+ 287 010c F2EE003A 		vmov.f32	s7, #8.0e+0
+ 288 0110 64EEA3CA 		vmul.f32	s25, s9, s7
+ 289              	.LVL20:
+  48:Core/HAL/lib/MadgwickAHRS.c ****         _8q2 = 8.0f * obj->q2;
+ 290              		.loc 1 48 9 is_stmt 1 view .LVU91
+ 291              		.loc 1 48 14 is_stmt 0 view .LVU92
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 7
+
+
+ 292 0114 67EEA33A 		vmul.f32	s7, s15, s7
+ 293              	.LVL21:
+  49:Core/HAL/lib/MadgwickAHRS.c ****         q0q0 = obj->q0 * obj->q0;
+ 294              		.loc 1 49 9 is_stmt 1 view .LVU93
+ 295              		.loc 1 49 14 is_stmt 0 view .LVU94
+ 296 0118 23EE033A 		vmul.f32	s6, s6, s6
+ 297              	.LVL22:
+  50:Core/HAL/lib/MadgwickAHRS.c ****         q1q1 = obj->q1 * obj->q1;
+ 298              		.loc 1 50 9 is_stmt 1 view .LVU95
+ 299              		.loc 1 50 14 is_stmt 0 view .LVU96
+ 300 011c 24EEA47A 		vmul.f32	s14, s9, s9
+ 301              	.LVL23:
+  51:Core/HAL/lib/MadgwickAHRS.c ****         q2q2 = obj->q2 * obj->q2;
+ 302              		.loc 1 51 9 is_stmt 1 view .LVU97
+ 303              		.loc 1 51 14 is_stmt 0 view .LVU98
+ 304 0120 27EEA76A 		vmul.f32	s12, s15, s15
+ 305              	.LVL24:
+  52:Core/HAL/lib/MadgwickAHRS.c ****         q3q3 = obj->q3 * obj->q3;
+ 306              		.loc 1 52 9 is_stmt 1 view .LVU99
+ 307              		.loc 1 52 14 is_stmt 0 view .LVU100
+ 308 0124 66EEA60A 		vmul.f32	s1, s13, s13
+ 309              	.LVL25:
+  53:Core/HAL/lib/MadgwickAHRS.c **** 
+  54:Core/HAL/lib/MadgwickAHRS.c ****         // Gradient decent algorithm corrective step
+  55:Core/HAL/lib/MadgwickAHRS.c ****         s0 = _4q0 * q2q2 + _2q2 * ax + _4q0 * q1q1 - _2q1 * ay;
+ 310              		.loc 1 55 9 is_stmt 1 view .LVU101
+ 311              		.loc 1 55 19 is_stmt 0 view .LVU102
+ 312 0128 29EE06BA 		vmul.f32	s22, s18, s12
+ 313              		.loc 1 55 33 view .LVU103
+ 314 012c 21EEA58A 		vmul.f32	s16, s3, s11
+ 315              		.loc 1 55 26 view .LVU104
+ 316 0130 3BEE08BA 		vadd.f32	s22, s22, s16
+ 317              		.loc 1 55 45 view .LVU105
+ 318 0134 29EE079A 		vmul.f32	s18, s18, s14
+ 319              	.LVL26:
+ 320              		.loc 1 55 38 view .LVU106
+ 321 0138 3BEE09BA 		vadd.f32	s22, s22, s18
+ 322              		.loc 1 55 59 view .LVU107
+ 323 013c 22EE2B8A 		vmul.f32	s16, s4, s23
+ 324              		.loc 1 55 12 view .LVU108
+ 325 0140 3BEE48BA 		vsub.f32	s22, s22, s16
+ 326              	.LVL27:
+  56:Core/HAL/lib/MadgwickAHRS.c ****         s1 = _4q1 * q3q3 - _2q3 * ax + 4.0f * q0q0 * obj->q1 - _2q0 * ay -
+ 327              		.loc 1 56 9 is_stmt 1 view .LVU109
+ 328              		.loc 1 56 19 is_stmt 0 view .LVU110
+ 329 0144 2CEE209A 		vmul.f32	s18, s24, s1
+ 330              		.loc 1 56 33 view .LVU111
+ 331 0148 21EE818A 		vmul.f32	s16, s3, s2
+ 332              		.loc 1 56 26 view .LVU112
+ 333 014c 39EE489A 		vsub.f32	s18, s18, s16
+ 334              		.loc 1 56 45 view .LVU113
+ 335 0150 23EE053A 		vmul.f32	s6, s6, s10
+ 336              	.LVL28:
+ 337              		.loc 1 56 52 view .LVU114
+ 338 0154 64EE834A 		vmul.f32	s9, s9, s6
+ 339              		.loc 1 56 38 view .LVU115
+ 340 0158 39EE249A 		vadd.f32	s18, s18, s9
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 8
+
+
+ 341              		.loc 1 56 69 view .LVU116
+ 342 015c 62EE004A 		vmul.f32	s9, s4, s0
+ 343              		.loc 1 56 62 view .LVU117
+ 344 0160 39EE649A 		vsub.f32	s18, s18, s9
+ 345              		.loc 1 56 74 view .LVU118
+ 346 0164 39EE4C9A 		vsub.f32	s18, s18, s24
+  57:Core/HAL/lib/MadgwickAHRS.c ****              _4q1 + _8q1 * q1q1 + _8q1 * q2q2 + _4q1 * az;
+ 347              		.loc 1 57 26 view .LVU119
+ 348 0168 6CEE874A 		vmul.f32	s9, s25, s14
+ 349              		.loc 1 57 19 view .LVU120
+ 350 016c 39EE249A 		vadd.f32	s18, s18, s9
+ 351              		.loc 1 57 40 view .LVU121
+ 352 0170 6CEE86CA 		vmul.f32	s25, s25, s12
+ 353              	.LVL29:
+ 354              		.loc 1 57 33 view .LVU122
+ 355 0174 39EE2C9A 		vadd.f32	s18, s18, s25
+ 356              		.loc 1 57 54 view .LVU123
+ 357 0178 22EE8CCA 		vmul.f32	s24, s5, s24
+ 358              	.LVL30:
+  56:Core/HAL/lib/MadgwickAHRS.c ****         s1 = _4q1 * q3q3 - _2q3 * ax + 4.0f * q0q0 * obj->q1 - _2q0 * ay -
+ 359              		.loc 1 56 12 view .LVU124
+ 360 017c 39EE0C9A 		vadd.f32	s18, s18, s24
+ 361              	.LVL31:
+  58:Core/HAL/lib/MadgwickAHRS.c ****         s2 = 4.0f * q0q0 * obj->q2 + _2q0 * ax + _4q2 * q3q3 - _2q3 * ay -
+ 362              		.loc 1 58 9 is_stmt 1 view .LVU125
+ 363              		.loc 1 58 26 is_stmt 0 view .LVU126
+ 364 0180 67EE837A 		vmul.f32	s15, s15, s6
+ 365              		.loc 1 58 43 view .LVU127
+ 366 0184 21EE808A 		vmul.f32	s16, s3, s0
+ 367              		.loc 1 58 36 view .LVU128
+ 368 0188 77EE887A 		vadd.f32	s15, s15, s16
+ 369              		.loc 1 58 55 view .LVU129
+ 370 018c 24EE208A 		vmul.f32	s16, s8, s1
+ 371              		.loc 1 58 48 view .LVU130
+ 372 0190 37EE888A 		vadd.f32	s16, s15, s16
+ 373              		.loc 1 58 69 view .LVU131
+ 374 0194 22EE011A 		vmul.f32	s2, s4, s2
+ 375              	.LVL32:
+ 376              		.loc 1 58 62 view .LVU132
+ 377 0198 38EE418A 		vsub.f32	s16, s16, s2
+ 378              		.loc 1 58 74 view .LVU133
+ 379 019c 38EE448A 		vsub.f32	s16, s16, s8
+  59:Core/HAL/lib/MadgwickAHRS.c ****              _4q2 + _8q2 * q1q1 + _8q2 * q2q2 + _4q2 * az;
+ 380              		.loc 1 59 26 view .LVU134
+ 381 01a0 63EE877A 		vmul.f32	s15, s7, s14
+ 382              		.loc 1 59 19 view .LVU135
+ 383 01a4 38EE278A 		vadd.f32	s16, s16, s15
+ 384              		.loc 1 59 40 view .LVU136
+ 385 01a8 63EE863A 		vmul.f32	s7, s7, s12
+ 386              	.LVL33:
+ 387              		.loc 1 59 33 view .LVU137
+ 388 01ac 38EE238A 		vadd.f32	s16, s16, s7
+ 389              		.loc 1 59 54 view .LVU138
+ 390 01b0 62EE842A 		vmul.f32	s5, s5, s8
+ 391              	.LVL34:
+  58:Core/HAL/lib/MadgwickAHRS.c ****         s2 = 4.0f * q0q0 * obj->q2 + _2q0 * ax + _4q2 * q3q3 - _2q3 * ay -
+ 392              		.loc 1 58 12 view .LVU139
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 9
+
+
+ 393 01b4 38EE228A 		vadd.f32	s16, s16, s5
+ 394              	.LVL35:
+  60:Core/HAL/lib/MadgwickAHRS.c ****         s3 = 4.0f * q1q1 * obj->q3 - _2q1 * ax + 4.0f * q2q2 * obj->q3 -
+ 395              		.loc 1 60 9 is_stmt 1 view .LVU140
+ 396              		.loc 1 60 19 is_stmt 0 view .LVU141
+ 397 01b8 27EE057A 		vmul.f32	s14, s14, s10
+ 398              	.LVL36:
+ 399              		.loc 1 60 26 view .LVU142
+ 400 01bc 26EE877A 		vmul.f32	s14, s13, s14
+ 401              		.loc 1 60 43 view .LVU143
+ 402 01c0 61EEABBA 		vmul.f32	s23, s3, s23
+ 403              	.LVL37:
+ 404              		.loc 1 60 36 view .LVU144
+ 405 01c4 77EE6BBA 		vsub.f32	s23, s14, s23
+ 406              		.loc 1 60 55 view .LVU145
+ 407 01c8 26EE056A 		vmul.f32	s12, s12, s10
+ 408              	.LVL38:
+ 409              		.loc 1 60 62 view .LVU146
+ 410 01cc 66EE866A 		vmul.f32	s13, s13, s12
+ 411              	.LVL39:
+ 412              		.loc 1 60 48 view .LVU147
+ 413 01d0 7BEEA6BA 		vadd.f32	s23, s23, s13
+  61:Core/HAL/lib/MadgwickAHRS.c ****              _2q2 * ay;
+ 414              		.loc 1 61 19 view .LVU148
+ 415 01d4 22EE252A 		vmul.f32	s4, s4, s11
+ 416              	.LVL40:
+  60:Core/HAL/lib/MadgwickAHRS.c ****         s3 = 4.0f * q1q1 * obj->q3 - _2q1 * ax + 4.0f * q2q2 * obj->q3 -
+ 417              		.loc 1 60 12 view .LVU149
+ 418 01d8 7BEEC2BA 		vsub.f32	s23, s23, s4
+ 419              	.LVL41:
+  62:Core/HAL/lib/MadgwickAHRS.c ****         recipNorm = invSqrt(s0 * s0 + s1 * s1 + s2 * s2 +
+ 420              		.loc 1 62 9 is_stmt 1 view .LVU150
+ 421              		.loc 1 62 32 is_stmt 0 view .LVU151
+ 422 01dc 6BEE0B7A 		vmul.f32	s15, s22, s22
+ 423              		.loc 1 62 42 view .LVU152
+ 424 01e0 29EE090A 		vmul.f32	s0, s18, s18
+ 425              	.LVL42:
+ 426              		.loc 1 62 37 view .LVU153
+ 427 01e4 77EE807A 		vadd.f32	s15, s15, s0
+ 428              		.loc 1 62 52 view .LVU154
+ 429 01e8 28EE080A 		vmul.f32	s0, s16, s16
+ 430              		.loc 1 62 47 view .LVU155
+ 431 01ec 77EE807A 		vadd.f32	s15, s15, s0
+  63:Core/HAL/lib/MadgwickAHRS.c ****                             s3 * s3);  // normalise step magnitude
+ 432              		.loc 1 63 32 view .LVU156
+ 433 01f0 2BEEAB0A 		vmul.f32	s0, s23, s23
+  62:Core/HAL/lib/MadgwickAHRS.c ****         recipNorm = invSqrt(s0 * s0 + s1 * s1 + s2 * s2 +
+ 434              		.loc 1 62 21 view .LVU157
+ 435 01f4 37EE800A 		vadd.f32	s0, s15, s0
+ 436 01f8 FFF7FEFF 		bl	invSqrt
+ 437              	.LVL43:
+  64:Core/HAL/lib/MadgwickAHRS.c ****         s0 *= recipNorm;
+ 438              		.loc 1 64 9 is_stmt 1 view .LVU158
+ 439              		.loc 1 64 12 is_stmt 0 view .LVU159
+ 440 01fc 2BEE00BA 		vmul.f32	s22, s22, s0
+ 441              	.LVL44:
+  65:Core/HAL/lib/MadgwickAHRS.c ****         s1 *= recipNorm;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 10
+
+
+ 442              		.loc 1 65 9 is_stmt 1 view .LVU160
+ 443              		.loc 1 65 12 is_stmt 0 view .LVU161
+ 444 0200 29EE009A 		vmul.f32	s18, s18, s0
+ 445              	.LVL45:
+  66:Core/HAL/lib/MadgwickAHRS.c ****         s2 *= recipNorm;
+ 446              		.loc 1 66 9 is_stmt 1 view .LVU162
+ 447              		.loc 1 66 12 is_stmt 0 view .LVU163
+ 448 0204 28EE008A 		vmul.f32	s16, s16, s0
+ 449              	.LVL46:
+  67:Core/HAL/lib/MadgwickAHRS.c ****         s3 *= recipNorm;
+ 450              		.loc 1 67 9 is_stmt 1 view .LVU164
+ 451              		.loc 1 67 12 is_stmt 0 view .LVU165
+ 452 0208 2BEE800A 		vmul.f32	s0, s23, s0
+ 453              	.LVL47:
+  68:Core/HAL/lib/MadgwickAHRS.c **** 
+  69:Core/HAL/lib/MadgwickAHRS.c ****         // Apply feedback step
+  70:Core/HAL/lib/MadgwickAHRS.c ****         qDot1 -= obj->beta * s0;
+ 454              		.loc 1 70 9 is_stmt 1 view .LVU166
+ 455              		.loc 1 70 21 is_stmt 0 view .LVU167
+ 456 020c 2368     		ldr	r3, [r4]	@ unaligned
+ 457 020e 07EE903A 		vmov	s15, r3	@ int
+ 458              		.loc 1 70 28 view .LVU168
+ 459 0212 27EE8BBA 		vmul.f32	s22, s15, s22
+ 460              	.LVL48:
+ 461              		.loc 1 70 15 view .LVU169
+ 462 0216 78EECB8A 		vsub.f32	s17, s17, s22
+ 463              	.LVL49:
+  71:Core/HAL/lib/MadgwickAHRS.c ****         qDot2 -= obj->beta * s1;
+ 464              		.loc 1 71 9 is_stmt 1 view .LVU170
+ 465              		.loc 1 71 28 is_stmt 0 view .LVU171
+ 466 021a 27EE899A 		vmul.f32	s18, s15, s18
+ 467              	.LVL50:
+ 468              		.loc 1 71 15 view .LVU172
+ 469 021e 3AEE49AA 		vsub.f32	s20, s20, s18
+ 470              	.LVL51:
+  72:Core/HAL/lib/MadgwickAHRS.c ****         qDot3 -= obj->beta * s2;
+ 471              		.loc 1 72 9 is_stmt 1 view .LVU173
+ 472              		.loc 1 72 28 is_stmt 0 view .LVU174
+ 473 0222 27EE888A 		vmul.f32	s16, s15, s16
+ 474              	.LVL52:
+ 475              		.loc 1 72 15 view .LVU175
+ 476 0226 79EEC89A 		vsub.f32	s19, s19, s16
+ 477              	.LVL53:
+  73:Core/HAL/lib/MadgwickAHRS.c ****         qDot4 -= obj->beta * s3;
+ 478              		.loc 1 73 9 is_stmt 1 view .LVU176
+ 479              		.loc 1 73 28 is_stmt 0 view .LVU177
+ 480 022a 67EE807A 		vmul.f32	s15, s15, s0
+ 481              		.loc 1 73 15 view .LVU178
+ 482 022e 7AEEE7AA 		vsub.f32	s21, s21, s15
+ 483              	.LVL54:
+ 484              	.L6:
+  74:Core/HAL/lib/MadgwickAHRS.c ****     }
+  75:Core/HAL/lib/MadgwickAHRS.c **** 
+  76:Core/HAL/lib/MadgwickAHRS.c ****     // Integrate rate of change of quaternion to yield quaternion
+  77:Core/HAL/lib/MadgwickAHRS.c ****     obj->q0 += qDot1 * (1.0f / obj->sampleFreq);
+ 485              		.loc 1 77 5 is_stmt 1 view .LVU179
+ 486              		.loc 1 77 35 is_stmt 0 view .LVU180
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 11
+
+
+ 487 0232 6368     		ldr	r3, [r4, #4]	@ unaligned
+ 488              		.loc 1 77 30 view .LVU181
+ 489 0234 B7EE008A 		vmov.f32	s16, #1.0e+0
+ 490 0238 07EE903A 		vmov	s15, r3
+ 491 023c 88EE277A 		vdiv.f32	s14, s16, s15
+ 492              		.loc 1 77 22 view .LVU182
+ 493 0240 67EE287A 		vmul.f32	s15, s14, s17
+ 494              		.loc 1 77 13 view .LVU183
+ 495 0244 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 496 0246 08EE903A 		vmov	s17, r3	@ int
+ 497              	.LVL55:
+ 498              		.loc 1 77 13 view .LVU184
+ 499 024a 77EEA88A 		vadd.f32	s17, s15, s17
+ 500 024e 18EE903A 		vmov	r3, s17
+ 501 0252 A360     		str	r3, [r4, #8]	@ unaligned
+  78:Core/HAL/lib/MadgwickAHRS.c ****     obj->q1 += qDot2 * (1.0f / obj->sampleFreq);
+ 502              		.loc 1 78 5 is_stmt 1 view .LVU185
+ 503              		.loc 1 78 22 is_stmt 0 view .LVU186
+ 504 0254 67EE0A7A 		vmul.f32	s15, s14, s20
+ 505              		.loc 1 78 13 view .LVU187
+ 506 0258 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 507 025a 0AEE103A 		vmov	s20, r3	@ int
+ 508              	.LVL56:
+ 509              		.loc 1 78 13 view .LVU188
+ 510 025e 37EE8AAA 		vadd.f32	s20, s15, s20
+ 511 0262 1AEE103A 		vmov	r3, s20
+ 512 0266 E360     		str	r3, [r4, #12]	@ unaligned
+  79:Core/HAL/lib/MadgwickAHRS.c ****     obj->q2 += qDot3 * (1.0f / obj->sampleFreq);
+ 513              		.loc 1 79 5 is_stmt 1 view .LVU189
+ 514              		.loc 1 79 22 is_stmt 0 view .LVU190
+ 515 0268 67EE297A 		vmul.f32	s15, s14, s19
+ 516              		.loc 1 79 13 view .LVU191
+ 517 026c 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 518 026e 09EE903A 		vmov	s19, r3	@ int
+ 519              	.LVL57:
+ 520              		.loc 1 79 13 view .LVU192
+ 521 0272 77EEA99A 		vadd.f32	s19, s15, s19
+ 522 0276 19EE903A 		vmov	r3, s19
+ 523 027a 2361     		str	r3, [r4, #16]	@ unaligned
+  80:Core/HAL/lib/MadgwickAHRS.c ****     obj->q3 += qDot4 * (1.0f / obj->sampleFreq);
+ 524              		.loc 1 80 5 is_stmt 1 view .LVU193
+ 525              		.loc 1 80 22 is_stmt 0 view .LVU194
+ 526 027c 27EE2A7A 		vmul.f32	s14, s14, s21
+ 527              		.loc 1 80 13 view .LVU195
+ 528 0280 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 529 0282 00EE103A 		vmov	s0, r3	@ int
+ 530 0286 37EE000A 		vadd.f32	s0, s14, s0
+ 531 028a 10EE103A 		vmov	r3, s0
+ 532 028e 6361     		str	r3, [r4, #20]	@ unaligned
+  81:Core/HAL/lib/MadgwickAHRS.c **** 
+  82:Core/HAL/lib/MadgwickAHRS.c ****     // Normalise quaternion
+  83:Core/HAL/lib/MadgwickAHRS.c ****     recipNorm = invSqrt(obj->q0 * obj->q0 + obj->q1 * obj->q1 +
+ 533              		.loc 1 83 5 is_stmt 1 view .LVU196
+ 534              		.loc 1 83 33 is_stmt 0 view .LVU197
+ 535 0290 68EEA88A 		vmul.f32	s17, s17, s17
+ 536              		.loc 1 83 53 view .LVU198
+ 537 0294 2AEE0AAA 		vmul.f32	s20, s20, s20
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 12
+
+
+ 538              		.loc 1 83 43 view .LVU199
+ 539 0298 78EE8A8A 		vadd.f32	s17, s17, s20
+  84:Core/HAL/lib/MadgwickAHRS.c ****                         obj->q2 * obj->q2 + obj->q3 * obj->q3);
+ 540              		.loc 1 84 33 view .LVU200
+ 541 029c 69EEA99A 		vmul.f32	s19, s19, s19
+  83:Core/HAL/lib/MadgwickAHRS.c ****                         obj->q2 * obj->q2 + obj->q3 * obj->q3);
+ 542              		.loc 1 83 63 view .LVU201
+ 543 02a0 78EEA98A 		vadd.f32	s17, s17, s19
+ 544              		.loc 1 84 53 view .LVU202
+ 545 02a4 20EE000A 		vmul.f32	s0, s0, s0
+  83:Core/HAL/lib/MadgwickAHRS.c ****                         obj->q2 * obj->q2 + obj->q3 * obj->q3);
+ 546              		.loc 1 83 17 view .LVU203
+ 547 02a8 38EE800A 		vadd.f32	s0, s17, s0
+ 548 02ac FFF7FEFF 		bl	invSqrt
+ 549              	.LVL58:
+  85:Core/HAL/lib/MadgwickAHRS.c ****     obj->q0 *= recipNorm;
+ 550              		.loc 1 85 5 is_stmt 1 view .LVU204
+ 551              		.loc 1 85 13 is_stmt 0 view .LVU205
+ 552 02b0 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 553 02b2 06EE903A 		vmov	s13, r3	@ int
+ 554 02b6 60EE266A 		vmul.f32	s13, s0, s13
+ 555 02ba 16EE903A 		vmov	r3, s13
+ 556 02be A360     		str	r3, [r4, #8]	@ unaligned
+  86:Core/HAL/lib/MadgwickAHRS.c ****     obj->q1 *= recipNorm;
+ 557              		.loc 1 86 5 is_stmt 1 view .LVU206
+ 558              		.loc 1 86 13 is_stmt 0 view .LVU207
+ 559 02c0 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 560 02c2 07EE903A 		vmov	s15, r3	@ int
+ 561 02c6 60EE277A 		vmul.f32	s15, s0, s15
+ 562 02ca 17EE903A 		vmov	r3, s15
+ 563 02ce E360     		str	r3, [r4, #12]	@ unaligned
+  87:Core/HAL/lib/MadgwickAHRS.c ****     obj->q2 *= recipNorm;
+ 564              		.loc 1 87 5 is_stmt 1 view .LVU208
+ 565              		.loc 1 87 13 is_stmt 0 view .LVU209
+ 566 02d0 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 567 02d2 06EE103A 		vmov	s12, r3	@ int
+ 568 02d6 20EE066A 		vmul.f32	s12, s0, s12
+ 569 02da 16EE103A 		vmov	r3, s12
+ 570 02de 2361     		str	r3, [r4, #16]	@ unaligned
+  88:Core/HAL/lib/MadgwickAHRS.c ****     obj->q3 *= recipNorm;
+ 571              		.loc 1 88 5 is_stmt 1 view .LVU210
+ 572              		.loc 1 88 13 is_stmt 0 view .LVU211
+ 573 02e0 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 574 02e2 07EE103A 		vmov	s14, r3	@ int
+ 575 02e6 20EE070A 		vmul.f32	s0, s0, s14
+ 576              	.LVL59:
+ 577              		.loc 1 88 13 view .LVU212
+ 578 02ea 10EE103A 		vmov	r3, s0
+ 579 02ee 6361     		str	r3, [r4, #20]	@ unaligned
+  89:Core/HAL/lib/MadgwickAHRS.c **** 
+  90:Core/HAL/lib/MadgwickAHRS.c ****     // Euler
+  91:Core/HAL/lib/MadgwickAHRS.c ****     obj->euler[0] = atan2(2 * (obj->q0 * obj->q1 + obj->q2 * obj->q3),
+ 580              		.loc 1 91 5 is_stmt 1 view .LVU213
+ 581              		.loc 1 91 40 is_stmt 0 view .LVU214
+ 582 02f0 66EEA76A 		vmul.f32	s13, s13, s15
+ 583              		.loc 1 91 60 view .LVU215
+ 584 02f4 26EE000A 		vmul.f32	s0, s12, s0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 13
+
+
+ 585              		.loc 1 91 50 view .LVU216
+ 586 02f8 36EE807A 		vadd.f32	s14, s13, s0
+ 587              		.loc 1 91 29 view .LVU217
+ 588 02fc 77EE078A 		vadd.f32	s17, s14, s14
+  92:Core/HAL/lib/MadgwickAHRS.c ****                           1 - 2 * (obj->q1 * obj->q1 + obj->q2 * obj->q2));
+ 589              		.loc 1 92 44 view .LVU218
+ 590 0300 67EEA77A 		vmul.f32	s15, s15, s15
+ 591              		.loc 1 92 64 view .LVU219
+ 592 0304 26EE066A 		vmul.f32	s12, s12, s12
+ 593              		.loc 1 92 54 view .LVU220
+ 594 0308 77EE867A 		vadd.f32	s15, s15, s12
+ 595              		.loc 1 92 33 view .LVU221
+ 596 030c 77EEA77A 		vadd.f32	s15, s15, s15
+  91:Core/HAL/lib/MadgwickAHRS.c ****                           1 - 2 * (obj->q1 * obj->q1 + obj->q2 * obj->q2));
+ 597              		.loc 1 91 21 view .LVU222
+ 598 0310 78EE677A 		vsub.f32	s15, s16, s15
+ 599 0314 17EE900A 		vmov	r0, s15
+ 600 0318 FFF7FEFF 		bl	__aeabi_f2d
+ 601              	.LVL60:
+ 602 031c 41EC190B 		vmov	d9, r0, r1
+ 603 0320 18EE900A 		vmov	r0, s17
+ 604 0324 FFF7FEFF 		bl	__aeabi_f2d
+ 605              	.LVL61:
+ 606 0328 B0EE491A 		vmov.f32	s2, s18
+ 607 032c F0EE691A 		vmov.f32	s3, s19
+ 608 0330 41EC100B 		vmov	d0, r0, r1
+ 609 0334 FFF7FEFF 		bl	atan2
+ 610              	.LVL62:
+ 611 0338 51EC100B 		vmov	r0, r1, d0
+ 612 033c FFF7FEFF 		bl	__aeabi_d2f
+ 613              	.LVL63:
+  91:Core/HAL/lib/MadgwickAHRS.c ****                           1 - 2 * (obj->q1 * obj->q1 + obj->q2 * obj->q2));
+ 614              		.loc 1 91 19 view .LVU223
+ 615 0340 A061     		str	r0, [r4, #24]	@ unaligned
+  93:Core/HAL/lib/MadgwickAHRS.c ****     obj->euler[1] = asin(2 * (obj->q0 * obj->q2 - obj->q3 * obj->q1));
+ 616              		.loc 1 93 5 is_stmt 1 view .LVU224
+ 617              		.loc 1 93 34 is_stmt 0 view .LVU225
+ 618 0342 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 619 0344 07EE903A 		vmov	s15, r3	@ int
+ 620              		.loc 1 93 44 view .LVU226
+ 621 0348 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 622 034a 07EE103A 		vmov	s14, r3	@ int
+ 623              		.loc 1 93 39 view .LVU227
+ 624 034e 27EE877A 		vmul.f32	s14, s15, s14
+ 625              		.loc 1 93 54 view .LVU228
+ 626 0352 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 627 0354 07EE903A 		vmov	s15, r3	@ int
+ 628              		.loc 1 93 64 view .LVU229
+ 629 0358 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 630              		.loc 1 93 59 view .LVU230
+ 631 035a 06EE903A 		vmov	s13, r3
+ 632 035e 67EEA67A 		vmul.f32	s15, s15, s13
+ 633              		.loc 1 93 49 view .LVU231
+ 634 0362 77EE677A 		vsub.f32	s15, s14, s15
+ 635              		.loc 1 93 21 view .LVU232
+ 636 0366 77EEA77A 		vadd.f32	s15, s15, s15
+ 637 036a 17EE900A 		vmov	r0, s15
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 14
+
+
+ 638 036e FFF7FEFF 		bl	__aeabi_f2d
+ 639              	.LVL64:
+ 640 0372 41EC100B 		vmov	d0, r0, r1
+ 641 0376 FFF7FEFF 		bl	asin
+ 642              	.LVL65:
+ 643 037a 51EC100B 		vmov	r0, r1, d0
+ 644 037e FFF7FEFF 		bl	__aeabi_d2f
+ 645              	.LVL66:
+ 646              		.loc 1 93 19 view .LVU233
+ 647 0382 E061     		str	r0, [r4, #28]	@ unaligned
+  94:Core/HAL/lib/MadgwickAHRS.c ****     obj->euler[2] = atan2(2 * (obj->q0 * obj->q3 + obj->q1 * obj->q2),
+ 648              		.loc 1 94 5 is_stmt 1 view .LVU234
+ 649              		.loc 1 94 35 is_stmt 0 view .LVU235
+ 650 0384 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 651 0386 07EE103A 		vmov	s14, r3	@ int
+ 652              		.loc 1 94 45 view .LVU236
+ 653 038a 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 654 038c 06EE103A 		vmov	s12, r3	@ int
+ 655              		.loc 1 94 40 view .LVU237
+ 656 0390 67EE066A 		vmul.f32	s13, s14, s12
+ 657              		.loc 1 94 55 view .LVU238
+ 658 0394 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 659 0396 07EE103A 		vmov	s14, r3	@ int
+ 660              		.loc 1 94 65 view .LVU239
+ 661 039a 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 662 039c 07EE903A 		vmov	s15, r3	@ int
+ 663              		.loc 1 94 60 view .LVU240
+ 664 03a0 27EE277A 		vmul.f32	s14, s14, s15
+ 665              		.loc 1 94 50 view .LVU241
+ 666 03a4 36EE877A 		vadd.f32	s14, s13, s14
+ 667              		.loc 1 94 29 view .LVU242
+ 668 03a8 77EE078A 		vadd.f32	s17, s14, s14
+  95:Core/HAL/lib/MadgwickAHRS.c ****                           1 - 2 * (obj->q2 * obj->q2 + obj->q3 * obj->q3));
+ 669              		.loc 1 95 44 view .LVU243
+ 670 03ac 67EEA77A 		vmul.f32	s15, s15, s15
+ 671              		.loc 1 95 64 view .LVU244
+ 672 03b0 26EE066A 		vmul.f32	s12, s12, s12
+ 673              		.loc 1 95 54 view .LVU245
+ 674 03b4 77EE867A 		vadd.f32	s15, s15, s12
+ 675              		.loc 1 95 33 view .LVU246
+ 676 03b8 77EEA77A 		vadd.f32	s15, s15, s15
+  94:Core/HAL/lib/MadgwickAHRS.c ****     obj->euler[2] = atan2(2 * (obj->q0 * obj->q3 + obj->q1 * obj->q2),
+ 677              		.loc 1 94 21 view .LVU247
+ 678 03bc 78EE677A 		vsub.f32	s15, s16, s15
+ 679 03c0 17EE900A 		vmov	r0, s15
+ 680 03c4 FFF7FEFF 		bl	__aeabi_f2d
+ 681              	.LVL67:
+ 682 03c8 41EC190B 		vmov	d9, r0, r1
+ 683 03cc 18EE900A 		vmov	r0, s17
+ 684 03d0 FFF7FEFF 		bl	__aeabi_f2d
+ 685              	.LVL68:
+ 686 03d4 B0EE491A 		vmov.f32	s2, s18
+ 687 03d8 F0EE691A 		vmov.f32	s3, s19
+ 688 03dc 41EC100B 		vmov	d0, r0, r1
+ 689 03e0 FFF7FEFF 		bl	atan2
+ 690              	.LVL69:
+ 691 03e4 51EC100B 		vmov	r0, r1, d0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 15
+
+
+ 692 03e8 FFF7FEFF 		bl	__aeabi_d2f
+ 693              	.LVL70:
+  94:Core/HAL/lib/MadgwickAHRS.c ****     obj->euler[2] = atan2(2 * (obj->q0 * obj->q3 + obj->q1 * obj->q2),
+ 694              		.loc 1 94 19 view .LVU248
+ 695 03ec 2062     		str	r0, [r4, #32]	@ unaligned
+  96:Core/HAL/lib/MadgwickAHRS.c **** }
+ 696              		.loc 1 96 1 view .LVU249
+ 697 03ee BDEC0A8B 		vldm	sp!, {d8-d12}
+ 698              	.LCFI3:
+ 699              		.cfi_restore 88
+ 700              		.cfi_restore 89
+ 701              		.cfi_restore 86
+ 702              		.cfi_restore 87
+ 703              		.cfi_restore 84
+ 704              		.cfi_restore 85
+ 705              		.cfi_restore 82
+ 706              		.cfi_restore 83
+ 707              		.cfi_restore 80
+ 708              		.cfi_restore 81
+ 709              		.cfi_def_cfa_offset 8
+ 710 03f2 10BD     		pop	{r4, pc}
+ 711              		.loc 1 96 1 view .LVU250
+ 712              		.cfi_endproc
+ 713              	.LFE2:
+ 715              		.text
+ 716              	.Letext0:
+ 717              		.file 2 "Core/HAL/lib/MadgwickAHRS.h"
+ 718              		.file 3 "Core/HAL/lib/common.h"
+ 719              		.file 4 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\math.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MadgwickAHRS.c
+C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s:20     .text.MadgwickAHRS_clear:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s:26     .text.MadgwickAHRS_clear:00000000 MadgwickAHRS_clear
+C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s:57     .text.MadgwickAHRS_init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s:63     .text.MadgwickAHRS_init:00000000 MadgwickAHRS_init
+C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s:95     .text.MadgwickAHRS_update:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccJBgFHc.s:101    .text.MadgwickAHRS_update:00000000 MadgwickAHRS_update
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_d2f
+invSqrt
+atan2
+asin

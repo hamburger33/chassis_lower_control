@@ -9,10 +9,8 @@
  */
 
 #include "adrc.h"
-
 #include <common.h>
 #include <string.h>
-
 #include "math.h"
 
 float ConstrainFloat(float amt, float low, float high);

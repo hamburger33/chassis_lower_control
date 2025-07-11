@@ -2,6 +2,7 @@
 
 #include "bsp.h"
 #include "cvector.h"
+#include "bsp_log.h"
 
 #define BULLET_SPEED_MAX 30
 
@@ -45,7 +46,6 @@ void referee_Rx_callback(uint8_t uart_index, uint8_t *data, uint32_t len) {
 
 void referee_data_solve(Referee *obj) {
     uint8_t *byte_now_pt = NULL;
-
     // 反复弹出直到缓冲队列长度为0
     while (obj->primary_data->cq_len >= obj->tool.next_step_wait_len) {
         byte_now_pt = circular_queue_pop(obj->primary_data);

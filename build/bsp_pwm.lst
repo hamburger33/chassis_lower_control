@@ -1,0 +1,427 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bsp_pwm.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.BSP_PWM_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	BSP_PWM_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	BSP_PWM_Init:
+  27              	.LFB130:
+  28              		.file 1 "Core/BSP/interface/bsp_pwm.c"
+   1:Core/BSP/interface/bsp_pwm.c **** #include "bsp_pwm.h"
+   2:Core/BSP/interface/bsp_pwm.c **** 
+   3:Core/BSP/interface/bsp_pwm.c **** #include "bsp_def.h"
+   4:Core/BSP/interface/bsp_pwm.c **** #include "dma.h"
+   5:Core/BSP/interface/bsp_pwm.c **** #include "tim.h"
+   6:Core/BSP/interface/bsp_pwm.c **** 
+   7:Core/BSP/interface/bsp_pwm.c **** typedef struct BSP_PWM_Typedef_t {
+   8:Core/BSP/interface/bsp_pwm.c ****     TIM_HandleTypeDef* base;
+   9:Core/BSP/interface/bsp_pwm.c ****     uint16_t channel;
+  10:Core/BSP/interface/bsp_pwm.c **** } BSP_PWM_Typedef;
+  11:Core/BSP/interface/bsp_pwm.c **** 
+  12:Core/BSP/interface/bsp_pwm.c **** BSP_PWM_Typedef pwm_ports[DEVICE_PWM_CNT];
+  13:Core/BSP/interface/bsp_pwm.c **** extern DMA_HandleTypeDef PWM_DMA_1;
+  14:Core/BSP/interface/bsp_pwm.c **** void BSP_PWM_Init() {
+  29              		.loc 1 14 21 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  15:Core/BSP/interface/bsp_pwm.c ****     pwm_ports[0].base = PWM_0_BASE;
+  34              		.loc 1 15 5 view .LVU1
+  35              		.loc 1 15 23 is_stmt 0 view .LVU2
+  36 0000 064B     		ldr	r3, .L2
+  37 0002 074A     		ldr	r2, .L2+4
+  38 0004 1A60     		str	r2, [r3]
+  16:Core/BSP/interface/bsp_pwm.c ****     pwm_ports[0].channel = PWM_0_CHANNEL;
+  39              		.loc 1 16 5 is_stmt 1 view .LVU3
+  40              		.loc 1 16 26 is_stmt 0 view .LVU4
+  41 0006 0022     		movs	r2, #0
+  42 0008 9A80     		strh	r2, [r3, #4]	@ movhi
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 2
+
+
+  17:Core/BSP/interface/bsp_pwm.c **** 
+  18:Core/BSP/interface/bsp_pwm.c ****     pwm_ports[1].base = PWM_1_BASE;
+  43              		.loc 1 18 5 is_stmt 1 view .LVU5
+  44              		.loc 1 18 23 is_stmt 0 view .LVU6
+  45 000a 0649     		ldr	r1, .L2+8
+  46 000c 9960     		str	r1, [r3, #8]
+  19:Core/BSP/interface/bsp_pwm.c ****     pwm_ports[1].channel = PWM_1_CHANNEL;
+  47              		.loc 1 19 5 is_stmt 1 view .LVU7
+  48              		.loc 1 19 26 is_stmt 0 view .LVU8
+  49 000e 0821     		movs	r1, #8
+  50 0010 9981     		strh	r1, [r3, #12]	@ movhi
+  20:Core/BSP/interface/bsp_pwm.c **** 
+  21:Core/BSP/interface/bsp_pwm.c ****     pwm_ports[2].base = PWM_2_BASE;
+  51              		.loc 1 21 5 is_stmt 1 view .LVU9
+  52              		.loc 1 21 23 is_stmt 0 view .LVU10
+  53 0012 0549     		ldr	r1, .L2+12
+  54 0014 1961     		str	r1, [r3, #16]
+  22:Core/BSP/interface/bsp_pwm.c ****     pwm_ports[2].channel = PWM_2_CHANNEL;
+  55              		.loc 1 22 5 is_stmt 1 view .LVU11
+  56              		.loc 1 22 26 is_stmt 0 view .LVU12
+  57 0016 9A82     		strh	r2, [r3, #20]	@ movhi
+  23:Core/BSP/interface/bsp_pwm.c **** }
+  58              		.loc 1 23 1 view .LVU13
+  59 0018 7047     		bx	lr
+  60              	.L3:
+  61 001a 00BF     		.align	2
+  62              	.L2:
+  63 001c 00000000 		.word	.LANCHOR0
+  64 0020 00000000 		.word	htim10
+  65 0024 00000000 		.word	htim4
+  66 0028 00000000 		.word	htim1
+  67              		.cfi_endproc
+  68              	.LFE130:
+  70              		.section	.text.BSP_PWM_Start,"ax",%progbits
+  71              		.align	1
+  72              		.global	BSP_PWM_Start
+  73              		.syntax unified
+  74              		.thumb
+  75              		.thumb_func
+  77              	BSP_PWM_Start:
+  78              	.LVL0:
+  79              	.LFB131:
+  24:Core/BSP/interface/bsp_pwm.c **** 
+  25:Core/BSP/interface/bsp_pwm.c **** void BSP_PWM_Start(uint8_t pwm_index) { HAL_TIM_PWM_Start(pwm_ports[pwm_index].base, pwm_ports[pwm_
+  80              		.loc 1 25 39 is_stmt 1 view -0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 0, uses_anonymous_args = 0
+  84              		.loc 1 25 39 is_stmt 0 view .LVU15
+  85 0000 08B5     		push	{r3, lr}
+  86              	.LCFI0:
+  87              		.cfi_def_cfa_offset 8
+  88              		.cfi_offset 3, -8
+  89              		.cfi_offset 14, -4
+  90              		.loc 1 25 41 is_stmt 1 view .LVU16
+  91              		.loc 1 25 106 is_stmt 0 view .LVU17
+  92 0002 044B     		ldr	r3, .L6
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 3
+
+
+  93 0004 03EBC002 		add	r2, r3, r0, lsl #3
+  94              		.loc 1 25 41 view .LVU18
+  95 0008 9188     		ldrh	r1, [r2, #4]
+  96 000a 53F83000 		ldr	r0, [r3, r0, lsl #3]
+  97              	.LVL1:
+  98              		.loc 1 25 41 view .LVU19
+  99 000e FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 100              	.LVL2:
+ 101              		.loc 1 25 117 view .LVU20
+ 102 0012 08BD     		pop	{r3, pc}
+ 103              	.L7:
+ 104              		.align	2
+ 105              	.L6:
+ 106 0014 00000000 		.word	.LANCHOR0
+ 107              		.cfi_endproc
+ 108              	.LFE131:
+ 110              		.section	.text.BSP_PWM_Stop,"ax",%progbits
+ 111              		.align	1
+ 112              		.global	BSP_PWM_Stop
+ 113              		.syntax unified
+ 114              		.thumb
+ 115              		.thumb_func
+ 117              	BSP_PWM_Stop:
+ 118              	.LVL3:
+ 119              	.LFB132:
+  26:Core/BSP/interface/bsp_pwm.c **** 
+  27:Core/BSP/interface/bsp_pwm.c **** void BSP_PWM_Stop(uint8_t pwm_index) { HAL_TIM_PWM_Stop(pwm_ports[pwm_index].base, pwm_ports[pwm_in
+ 120              		.loc 1 27 38 is_stmt 1 view -0
+ 121              		.cfi_startproc
+ 122              		@ args = 0, pretend = 0, frame = 0
+ 123              		@ frame_needed = 0, uses_anonymous_args = 0
+ 124              		.loc 1 27 38 is_stmt 0 view .LVU22
+ 125 0000 08B5     		push	{r3, lr}
+ 126              	.LCFI1:
+ 127              		.cfi_def_cfa_offset 8
+ 128              		.cfi_offset 3, -8
+ 129              		.cfi_offset 14, -4
+ 130              		.loc 1 27 40 is_stmt 1 view .LVU23
+ 131              		.loc 1 27 104 is_stmt 0 view .LVU24
+ 132 0002 044B     		ldr	r3, .L10
+ 133 0004 03EBC002 		add	r2, r3, r0, lsl #3
+ 134              		.loc 1 27 40 view .LVU25
+ 135 0008 9188     		ldrh	r1, [r2, #4]
+ 136 000a 53F83000 		ldr	r0, [r3, r0, lsl #3]
+ 137              	.LVL4:
+ 138              		.loc 1 27 40 view .LVU26
+ 139 000e FFF7FEFF 		bl	HAL_TIM_PWM_Stop
+ 140              	.LVL5:
+ 141              		.loc 1 27 115 view .LVU27
+ 142 0012 08BD     		pop	{r3, pc}
+ 143              	.L11:
+ 144              		.align	2
+ 145              	.L10:
+ 146 0014 00000000 		.word	.LANCHOR0
+ 147              		.cfi_endproc
+ 148              	.LFE132:
+ 150              		.section	.text.BSP_PWM_SetCCR,"ax",%progbits
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 4
+
+
+ 151              		.align	1
+ 152              		.global	BSP_PWM_SetCCR
+ 153              		.syntax unified
+ 154              		.thumb
+ 155              		.thumb_func
+ 157              	BSP_PWM_SetCCR:
+ 158              	.LVL6:
+ 159              	.LFB133:
+  28:Core/BSP/interface/bsp_pwm.c **** 
+  29:Core/BSP/interface/bsp_pwm.c **** void BSP_PWM_SetCCR(uint8_t pwm_index, uint32_t ccr_value) { __HAL_TIM_SetCompare(pwm_ports[pwm_ind
+ 160              		.loc 1 29 60 is_stmt 1 view -0
+ 161              		.cfi_startproc
+ 162              		@ args = 0, pretend = 0, frame = 0
+ 163              		@ frame_needed = 0, uses_anonymous_args = 0
+ 164              		@ link register save eliminated.
+ 165              		.loc 1 29 62 view .LVU29
+ 166 0000 104B     		ldr	r3, .L19
+ 167 0002 03EBC003 		add	r3, r3, r0, lsl #3
+ 168 0006 9B88     		ldrh	r3, [r3, #4]
+ 169 0008 2BB9     		cbnz	r3, .L13
+ 170              		.loc 1 29 62 is_stmt 0 discriminator 1 view .LVU30
+ 171 000a 0E4B     		ldr	r3, .L19
+ 172 000c 53F83030 		ldr	r3, [r3, r0, lsl #3]
+ 173 0010 1B68     		ldr	r3, [r3]
+ 174 0012 5963     		str	r1, [r3, #52]
+ 175 0014 7047     		bx	lr
+ 176              	.L13:
+ 177              		.loc 1 29 62 discriminator 2 view .LVU31
+ 178 0016 042B     		cmp	r3, #4
+ 179 0018 07D0     		beq	.L17
+ 180              		.loc 1 29 62 discriminator 5 view .LVU32
+ 181 001a 082B     		cmp	r3, #8
+ 182 001c 0BD0     		beq	.L18
+ 183              		.loc 1 29 62 discriminator 8 view .LVU33
+ 184 001e 094B     		ldr	r3, .L19
+ 185 0020 53F83030 		ldr	r3, [r3, r0, lsl #3]
+ 186 0024 1B68     		ldr	r3, [r3]
+ 187 0026 1964     		str	r1, [r3, #64]
+ 188              		.loc 1 29 152 discriminator 8 view .LVU34
+ 189 0028 7047     		bx	lr
+ 190              	.L17:
+ 191              		.loc 1 29 62 discriminator 4 view .LVU35
+ 192 002a 064B     		ldr	r3, .L19
+ 193 002c 53F83030 		ldr	r3, [r3, r0, lsl #3]
+ 194 0030 1B68     		ldr	r3, [r3]
+ 195 0032 9963     		str	r1, [r3, #56]
+ 196 0034 7047     		bx	lr
+ 197              	.L18:
+ 198              		.loc 1 29 62 discriminator 7 view .LVU36
+ 199 0036 034B     		ldr	r3, .L19
+ 200 0038 53F83030 		ldr	r3, [r3, r0, lsl #3]
+ 201 003c 1B68     		ldr	r3, [r3]
+ 202 003e D963     		str	r1, [r3, #60]
+ 203 0040 7047     		bx	lr
+ 204              	.L20:
+ 205 0042 00BF     		.align	2
+ 206              	.L19:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 5
+
+
+ 207 0044 00000000 		.word	.LANCHOR0
+ 208              		.cfi_endproc
+ 209              	.LFE133:
+ 211              		.section	.text.BSP_PWM_SetARR,"ax",%progbits
+ 212              		.align	1
+ 213              		.global	BSP_PWM_SetARR
+ 214              		.syntax unified
+ 215              		.thumb
+ 216              		.thumb_func
+ 218              	BSP_PWM_SetARR:
+ 219              	.LVL7:
+ 220              	.LFB134:
+  30:Core/BSP/interface/bsp_pwm.c **** 
+  31:Core/BSP/interface/bsp_pwm.c **** void BSP_PWM_SetARR(uint8_t pwm_index, uint32_t arr_value) { __HAL_TIM_SetAutoreload(pwm_ports[pwm_
+ 221              		.loc 1 31 60 is_stmt 1 view -0
+ 222              		.cfi_startproc
+ 223              		@ args = 0, pretend = 0, frame = 0
+ 224              		@ frame_needed = 0, uses_anonymous_args = 0
+ 225              		@ link register save eliminated.
+ 226              		.loc 1 31 62 view .LVU38
+ 227              		.loc 1 31 62 view .LVU39
+ 228 0000 034B     		ldr	r3, .L22
+ 229 0002 53F83030 		ldr	r3, [r3, r0, lsl #3]
+ 230 0006 1A68     		ldr	r2, [r3]
+ 231 0008 D162     		str	r1, [r2, #44]
+ 232              		.loc 1 31 62 view .LVU40
+ 233 000a D960     		str	r1, [r3, #12]
+ 234              		.loc 1 31 62 view .LVU41
+ 235              		.loc 1 31 125 is_stmt 0 view .LVU42
+ 236 000c 7047     		bx	lr
+ 237              	.L23:
+ 238 000e 00BF     		.align	2
+ 239              	.L22:
+ 240 0010 00000000 		.word	.LANCHOR0
+ 241              		.cfi_endproc
+ 242              	.LFE134:
+ 244              		.section	.text.BSP_PWM_StartCCR_DMA,"ax",%progbits
+ 245              		.align	1
+ 246              		.global	BSP_PWM_StartCCR_DMA
+ 247              		.syntax unified
+ 248              		.thumb
+ 249              		.thumb_func
+ 251              	BSP_PWM_StartCCR_DMA:
+ 252              	.LVL8:
+ 253              	.LFB135:
+  32:Core/BSP/interface/bsp_pwm.c **** 
+  33:Core/BSP/interface/bsp_pwm.c **** void BSP_PWM_StartCCR_DMA(uint8_t pwm_index, uint32_t* ccr_data, uint16_t len) { HAL_TIM_PWM_Start_
+ 254              		.loc 1 33 80 is_stmt 1 view -0
+ 255              		.cfi_startproc
+ 256              		@ args = 0, pretend = 0, frame = 0
+ 257              		@ frame_needed = 0, uses_anonymous_args = 0
+ 258              		.loc 1 33 80 is_stmt 0 view .LVU44
+ 259 0000 10B5     		push	{r4, lr}
+ 260              	.LCFI2:
+ 261              		.cfi_def_cfa_offset 8
+ 262              		.cfi_offset 4, -8
+ 263              		.cfi_offset 14, -4
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 6
+
+
+ 264 0002 1346     		mov	r3, r2
+ 265              		.loc 1 33 82 is_stmt 1 view .LVU45
+ 266              		.loc 1 33 151 is_stmt 0 view .LVU46
+ 267 0004 054C     		ldr	r4, .L26
+ 268 0006 04EBC00C 		add	ip, r4, r0, lsl #3
+ 269              		.loc 1 33 82 view .LVU47
+ 270 000a 0A46     		mov	r2, r1
+ 271              	.LVL9:
+ 272              		.loc 1 33 82 view .LVU48
+ 273 000c BCF80410 		ldrh	r1, [ip, #4]
+ 274              	.LVL10:
+ 275              		.loc 1 33 82 view .LVU49
+ 276 0010 54F83000 		ldr	r0, [r4, r0, lsl #3]
+ 277              	.LVL11:
+ 278              		.loc 1 33 82 view .LVU50
+ 279 0014 FFF7FEFF 		bl	HAL_TIM_PWM_Start_DMA
+ 280              	.LVL12:
+ 281              		.loc 1 33 177 view .LVU51
+ 282 0018 10BD     		pop	{r4, pc}
+ 283              	.L27:
+ 284 001a 00BF     		.align	2
+ 285              	.L26:
+ 286 001c 00000000 		.word	.LANCHOR0
+ 287              		.cfi_endproc
+ 288              	.LFE135:
+ 290              		.section	.text.BSP_PWM_ReadCCR,"ax",%progbits
+ 291              		.align	1
+ 292              		.global	BSP_PWM_ReadCCR
+ 293              		.syntax unified
+ 294              		.thumb
+ 295              		.thumb_func
+ 297              	BSP_PWM_ReadCCR:
+ 298              	.LVL13:
+ 299              	.LFB136:
+  34:Core/BSP/interface/bsp_pwm.c **** 
+  35:Core/BSP/interface/bsp_pwm.c **** uint32_t BSP_PWM_ReadCCR(uint8_t pwm_index) { return HAL_TIM_ReadCapturedValue(pwm_ports[pwm_index]
+ 300              		.loc 1 35 45 is_stmt 1 view -0
+ 301              		.cfi_startproc
+ 302              		@ args = 0, pretend = 0, frame = 0
+ 303              		@ frame_needed = 0, uses_anonymous_args = 0
+ 304              		.loc 1 35 45 is_stmt 0 view .LVU53
+ 305 0000 08B5     		push	{r3, lr}
+ 306              	.LCFI3:
+ 307              		.cfi_def_cfa_offset 8
+ 308              		.cfi_offset 3, -8
+ 309              		.cfi_offset 14, -4
+ 310              		.loc 1 35 47 is_stmt 1 view .LVU54
+ 311              		.loc 1 35 127 is_stmt 0 view .LVU55
+ 312 0002 044B     		ldr	r3, .L30
+ 313 0004 03EBC002 		add	r2, r3, r0, lsl #3
+ 314              		.loc 1 35 54 view .LVU56
+ 315 0008 9188     		ldrh	r1, [r2, #4]
+ 316 000a 53F83000 		ldr	r0, [r3, r0, lsl #3]
+ 317              	.LVL14:
+ 318              		.loc 1 35 54 view .LVU57
+ 319 000e FFF7FEFF 		bl	HAL_TIM_ReadCapturedValue
+ 320              	.LVL15:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 7
+
+
+ 321              		.loc 1 35 138 view .LVU58
+ 322 0012 08BD     		pop	{r3, pc}
+ 323              	.L31:
+ 324              		.align	2
+ 325              	.L30:
+ 326 0014 00000000 		.word	.LANCHOR0
+ 327              		.cfi_endproc
+ 328              	.LFE136:
+ 330              		.global	pwm_ports
+ 331              		.section	.bss.pwm_ports,"aw",%nobits
+ 332              		.align	2
+ 333              		.set	.LANCHOR0,. + 0
+ 336              	pwm_ports:
+ 337 0000 00000000 		.space	24
+ 337      00000000 
+ 337      00000000 
+ 337      00000000 
+ 337      00000000 
+ 338              		.text
+ 339              	.Letext0:
+ 340              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 341              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 342              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 343              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 344              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 345              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 346              		.file 8 "Core/Inc/tim.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp_pwm.c
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:20     .text.BSP_PWM_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:26     .text.BSP_PWM_Init:00000000 BSP_PWM_Init
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:63     .text.BSP_PWM_Init:0000001c $d
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:71     .text.BSP_PWM_Start:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:77     .text.BSP_PWM_Start:00000000 BSP_PWM_Start
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:106    .text.BSP_PWM_Start:00000014 $d
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:111    .text.BSP_PWM_Stop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:117    .text.BSP_PWM_Stop:00000000 BSP_PWM_Stop
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:146    .text.BSP_PWM_Stop:00000014 $d
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:151    .text.BSP_PWM_SetCCR:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:157    .text.BSP_PWM_SetCCR:00000000 BSP_PWM_SetCCR
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:207    .text.BSP_PWM_SetCCR:00000044 $d
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:212    .text.BSP_PWM_SetARR:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:218    .text.BSP_PWM_SetARR:00000000 BSP_PWM_SetARR
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:240    .text.BSP_PWM_SetARR:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:245    .text.BSP_PWM_StartCCR_DMA:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:251    .text.BSP_PWM_StartCCR_DMA:00000000 BSP_PWM_StartCCR_DMA
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:286    .text.BSP_PWM_StartCCR_DMA:0000001c $d
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:291    .text.BSP_PWM_ReadCCR:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:297    .text.BSP_PWM_ReadCCR:00000000 BSP_PWM_ReadCCR
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:326    .text.BSP_PWM_ReadCCR:00000014 $d
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:336    .bss.pwm_ports:00000000 pwm_ports
+C:\Users\lenovo\AppData\Local\Temp\cczgm2l5.s:332    .bss.pwm_ports:00000000 $d
+
+UNDEFINED SYMBOLS
+htim10
+htim4
+htim1
+HAL_TIM_PWM_Start
+HAL_TIM_PWM_Stop
+HAL_TIM_PWM_Start_DMA
+HAL_TIM_ReadCapturedValue

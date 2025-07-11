@@ -3,6 +3,8 @@
 #include "stdlib.h"
 #include "string.h"
 
+
+//话题的pub，sub和名称
 struct internal_topic {
     Publisher* pub;
     cvector* subs;
@@ -13,6 +15,7 @@ cvector* topics;
 
 void SubPub_Init() { topics = cvector_create(sizeof(struct internal_topic*)); }
 
+//压入数据
 void pub_commit(struct publisher_t* pub, publish_data data) {
     for (uint32_t i = 0; i < pub->topic->subs->cv_len; ++i) {
         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
@@ -20,6 +23,7 @@ void pub_commit(struct publisher_t* pub, publish_data data) {
         circular_queue_push(now->queue, &data);
     }
 }
+
 
 publish_data sub_get(struct subscriber_t* sub) {
     publish_data now;

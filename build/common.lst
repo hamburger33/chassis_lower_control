@@ -1,0 +1,263 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"common.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.invSqrt,"ax",%progbits
+  20              		.align	1
+  21              		.global	invSqrt
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	invSqrt:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/lib/common.c"
+   1:Core/HAL/lib/common.c **** #include <common.h>
+   2:Core/HAL/lib/common.c **** #include <math.h>
+   3:Core/HAL/lib/common.c **** float invSqrt(float x) {
+  30              		.loc 1 3 24 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+   4:Core/HAL/lib/common.c ****     float halfx = 0.5f * x;
+  35              		.loc 1 4 5 view .LVU1
+  36              		.loc 1 4 11 is_stmt 0 view .LVU2
+  37 0000 F6EE007A 		vmov.f32	s15, #5.0e-1
+  38 0004 60EE277A 		vmul.f32	s15, s0, s15
+  39              	.LVL1:
+   5:Core/HAL/lib/common.c ****     float y = x;
+  40              		.loc 1 5 5 is_stmt 1 view .LVU3
+   6:Core/HAL/lib/common.c ****     long i = *(long *)&y;
+  41              		.loc 1 6 5 view .LVU4
+  42              		.loc 1 6 14 is_stmt 0 view .LVU5
+  43 0008 10EE103A 		vmov	r3, s0	@ int
+  44              	.LVL2:
+   7:Core/HAL/lib/common.c ****     i = 0x5f3759df - (i >> 1);
+  45              		.loc 1 7 5 is_stmt 1 view .LVU6
+   8:Core/HAL/lib/common.c ****     y = *(float *)&i;
+  46              		.loc 1 8 5 view .LVU7
+  47              		.loc 1 8 9 is_stmt 0 view .LVU8
+  48 000c 074A     		ldr	r2, .L2
+  49 000e A2EB6303 		sub	r3, r2, r3, asr #1
+  50              	.LVL3:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s 			page 2
+
+
+  51              		.loc 1 8 9 view .LVU9
+  52 0012 07EE103A 		vmov	s14, r3	@ int
+  53              	.LVL4:
+   9:Core/HAL/lib/common.c ****     y = y * (1.5f - (halfx * y * y));
+  54              		.loc 1 9 5 is_stmt 1 view .LVU10
+  55              		.loc 1 9 28 is_stmt 0 view .LVU11
+  56 0016 67EE277A 		vmul.f32	s15, s14, s15
+  57              	.LVL5:
+  58              		.loc 1 9 32 view .LVU12
+  59 001a 67EE277A 		vmul.f32	s15, s14, s15
+  60              		.loc 1 9 19 view .LVU13
+  61 001e B7EE080A 		vmov.f32	s0, #1.5e+0
+  62              	.LVL6:
+  63              		.loc 1 9 19 view .LVU14
+  64 0022 30EE670A 		vsub.f32	s0, s0, s15
+  65              	.LVL7:
+  10:Core/HAL/lib/common.c ****     return y;
+  66              		.loc 1 10 5 is_stmt 1 view .LVU15
+  11:Core/HAL/lib/common.c **** }
+  67              		.loc 1 11 1 is_stmt 0 view .LVU16
+  68 0026 27EE000A 		vmul.f32	s0, s14, s0
+  69 002a 7047     		bx	lr
+  70              	.L3:
+  71              		.align	2
+  72              	.L2:
+  73 002c DF59375F 		.word	1597463007
+  74              		.cfi_endproc
+  75              	.LFE0:
+  77              		.section	.text.sgn,"ax",%progbits
+  78              		.align	1
+  79              		.global	sgn
+  80              		.syntax unified
+  81              		.thumb
+  82              		.thumb_func
+  84              	sgn:
+  85              	.LVL8:
+  86              	.LFB1:
+  12:Core/HAL/lib/common.c **** 
+  13:Core/HAL/lib/common.c **** int sgn(int x){
+  87              		.loc 1 13 15 is_stmt 1 view -0
+  88              		.cfi_startproc
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91              		@ link register save eliminated.
+  14:Core/HAL/lib/common.c ****     return x == 0 ? 0 : x > 0 ? 1 : -1;
+  92              		.loc 1 14 5 view .LVU18
+  93              		.loc 1 14 23 is_stmt 0 view .LVU19
+  94 0000 0346     		mov	r3, r0
+  95 0002 10B1     		cbz	r0, .L5
+  96              		.loc 1 14 35 discriminator 1 view .LVU20
+  97 0004 0028     		cmp	r0, #0
+  98 0006 02DD     		ble	.L6
+  99              		.loc 1 14 35 view .LVU21
+ 100 0008 0123     		movs	r3, #1
+ 101              	.L5:
+  15:Core/HAL/lib/common.c **** }
+ 102              		.loc 1 15 1 discriminator 8 view .LVU22
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s 			page 3
+
+
+ 103 000a 1846     		mov	r0, r3
+ 104              	.LVL9:
+ 105              		.loc 1 15 1 discriminator 8 view .LVU23
+ 106 000c 7047     		bx	lr
+ 107              	.LVL10:
+ 108              	.L6:
+  14:Core/HAL/lib/common.c ****     return x == 0 ? 0 : x > 0 ? 1 : -1;
+ 109              		.loc 1 14 35 view .LVU24
+ 110 000e 4FF0FF33 		mov	r3, #-1
+ 111 0012 FAE7     		b	.L5
+ 112              		.cfi_endproc
+ 113              	.LFE1:
+ 115              		.section	.text.fsgn,"ax",%progbits
+ 116              		.align	1
+ 117              		.global	fsgn
+ 118              		.syntax unified
+ 119              		.thumb
+ 120              		.thumb_func
+ 122              	fsgn:
+ 123              	.LVL11:
+ 124              	.LFB2:
+  16:Core/HAL/lib/common.c **** 
+  17:Core/HAL/lib/common.c **** int fsgn(float x) {
+ 125              		.loc 1 17 19 is_stmt 1 view -0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 0
+ 128              		@ frame_needed = 0, uses_anonymous_args = 0
+ 129              		@ link register save eliminated.
+  18:Core/HAL/lib/common.c ****     return (x != 0.0f ? (x < 0.0f ? -1 : 1) : 0);
+ 130              		.loc 1 18 5 view .LVU26
+ 131              		.loc 1 18 45 is_stmt 0 view .LVU27
+ 132 0000 B5EE400A 		vcmp.f32	s0, #0
+ 133 0004 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 134 0008 09D0     		beq	.L10
+ 135              		.loc 1 18 40 discriminator 1 view .LVU28
+ 136 000a B5EEC00A 		vcmpe.f32	s0, #0
+ 137 000e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 138 0012 01D4     		bmi	.L14
+ 139              		.loc 1 18 40 view .LVU29
+ 140 0014 0120     		movs	r0, #1
+  19:Core/HAL/lib/common.c **** }
+ 141              		.loc 1 19 1 view .LVU30
+ 142 0016 7047     		bx	lr
+ 143              	.L14:
+  18:Core/HAL/lib/common.c ****     return (x != 0.0f ? (x < 0.0f ? -1 : 1) : 0);
+ 144              		.loc 1 18 40 view .LVU31
+ 145 0018 4FF0FF30 		mov	r0, #-1
+ 146 001c 7047     		bx	lr
+ 147              	.L10:
+  18:Core/HAL/lib/common.c ****     return (x != 0.0f ? (x < 0.0f ? -1 : 1) : 0);
+ 148              		.loc 1 18 45 view .LVU32
+ 149 001e 0020     		movs	r0, #0
+ 150 0020 7047     		bx	lr
+ 151              		.cfi_endproc
+ 152              	.LFE2:
+ 154              		.section	.text.sgn_like,"ax",%progbits
+ 155              		.align	1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s 			page 4
+
+
+ 156              		.global	sgn_like
+ 157              		.syntax unified
+ 158              		.thumb
+ 159              		.thumb_func
+ 161              	sgn_like:
+ 162              	.LVL12:
+ 163              	.LFB3:
+  20:Core/HAL/lib/common.c **** 
+  21:Core/HAL/lib/common.c **** float sgn_like(float x, float d) {
+ 164              		.loc 1 21 34 is_stmt 1 view -0
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168              		.loc 1 21 34 is_stmt 0 view .LVU34
+ 169 0000 F0EE407A 		vmov.f32	s15, s0
+  22:Core/HAL/lib/common.c ****     if (fabs(x) >= d)
+ 170              		.loc 1 22 5 is_stmt 1 view .LVU35
+ 171              		.loc 1 22 9 is_stmt 0 view .LVU36
+ 172 0004 B0EEC07A 		vabs.f32	s14, s0
+ 173              		.loc 1 22 8 view .LVU37
+ 174 0008 B4EEE07A 		vcmpe.f32	s14, s1
+ 175 000c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 176 0010 07DB     		blt	.L20
+  21:Core/HAL/lib/common.c ****     if (fabs(x) >= d)
+ 177              		.loc 1 21 34 view .LVU38
+ 178 0012 08B5     		push	{r3, lr}
+ 179              	.LCFI0:
+ 180              		.cfi_def_cfa_offset 8
+ 181              		.cfi_offset 3, -8
+ 182              		.cfi_offset 14, -4
+  23:Core/HAL/lib/common.c ****         return fsgn(x);
+ 183              		.loc 1 23 9 is_stmt 1 view .LVU39
+ 184              		.loc 1 23 16 is_stmt 0 view .LVU40
+ 185 0014 FFF7FEFF 		bl	fsgn
+ 186              	.LVL13:
+ 187              		.loc 1 23 16 view .LVU41
+ 188 0018 00EE100A 		vmov	s0, r0	@ int
+ 189 001c B8EEC00A 		vcvt.f32.s32	s0, s0
+  24:Core/HAL/lib/common.c ****     else
+  25:Core/HAL/lib/common.c ****         return x / d;
+  26:Core/HAL/lib/common.c **** }...
+ 190              		.loc 1 26 1 view .LVU42
+ 191 0020 08BD     		pop	{r3, pc}
+ 192              	.LVL14:
+ 193              	.L20:
+ 194              	.LCFI1:
+ 195              		.cfi_def_cfa_offset 0
+ 196              		.cfi_restore 3
+ 197              		.cfi_restore 14
+  25:Core/HAL/lib/common.c ****         return x / d;
+ 198              		.loc 1 25 9 is_stmt 1 view .LVU43
+  25:Core/HAL/lib/common.c ****         return x / d;
+ 199              		.loc 1 25 18 is_stmt 0 view .LVU44
+ 200 0022 87EEA00A 		vdiv.f32	s0, s15, s1
+ 201              	.LVL15:
+ 202              		.loc 1 26 1 view .LVU45
+ 203 0026 7047     		bx	lr
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s 			page 5
+
+
+ 204              		.cfi_endproc
+ 205              	.LFE3:
+ 207              		.text
+ 208              	.Letext0:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 common.c
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:20     .text.invSqrt:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:26     .text.invSqrt:00000000 invSqrt
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:73     .text.invSqrt:0000002c $d
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:78     .text.sgn:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:84     .text.sgn:00000000 sgn
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:116    .text.fsgn:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:122    .text.fsgn:00000000 fsgn
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:155    .text.sgn_like:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccI3nQux.s:161    .text.sgn_like:00000000 sgn_like
+
+NO UNDEFINED SYMBOLS

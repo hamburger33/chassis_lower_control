@@ -1,0 +1,1739 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"referee.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.referee_Rx_callback,"ax",%progbits
+  20              		.align	1
+  21              		.global	referee_Rx_callback
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	referee_Rx_callback:
+  27              	.LVL0:
+  28              	.LFB135:
+  29              		.file 1 "Core/HAL/driver/referee/referee.c"
+   1:Core/HAL/driver/referee/referee.c **** #include "referee.h"
+   2:Core/HAL/driver/referee/referee.c **** 
+   3:Core/HAL/driver/referee/referee.c **** #include "bsp.h"
+   4:Core/HAL/driver/referee/referee.c **** #include "cvector.h"
+   5:Core/HAL/driver/referee/referee.c **** #include "bsp_log.h"
+   6:Core/HAL/driver/referee/referee.c **** 
+   7:Core/HAL/driver/referee/referee.c **** #define BULLET_SPEED_MAX 30
+   8:Core/HAL/driver/referee/referee.c **** 
+   9:Core/HAL/driver/referee/referee.c **** cvector *referee_instances;
+  10:Core/HAL/driver/referee/referee.c **** 
+  11:Core/HAL/driver/referee/referee.c **** void referee_Rx_callback(uint8_t uart_index, uint8_t *data, uint32_t len);
+  12:Core/HAL/driver/referee/referee.c **** void referee_solve_pack(Referee *obj, referee_rx_pack *rx_pack);
+  13:Core/HAL/driver/referee/referee.c **** 
+  14:Core/HAL/driver/referee/referee.c **** void referee_driver_init() {
+  15:Core/HAL/driver/referee/referee.c ****     referee_instances = cvector_create(sizeof(Referee *));
+  16:Core/HAL/driver/referee/referee.c ****     BSP_UART_RegisterRxCallback(UART_REFEREE_PORT, referee_Rx_callback);
+  17:Core/HAL/driver/referee/referee.c **** }
+  18:Core/HAL/driver/referee/referee.c **** 
+  19:Core/HAL/driver/referee/referee.c **** Referee *referee_Create(referee_config *config) {
+  20:Core/HAL/driver/referee/referee.c ****     Referee *obj = (Referee *)malloc(sizeof(Referee));
+  21:Core/HAL/driver/referee/referee.c ****     memset(obj, 0, sizeof(Referee));
+  22:Core/HAL/driver/referee/referee.c ****     obj->config = *config;
+  23:Core/HAL/driver/referee/referee.c ****     obj->monitor = Monitor_Register(obj->config.lost_callback, 10, obj);
+  24:Core/HAL/driver/referee/referee.c ****     cvector_pushback(referee_instances, &obj);
+  25:Core/HAL/driver/referee/referee.c ****     // 数据接收队列
+  26:Core/HAL/driver/referee/referee.c ****     obj->primary_data = create_circular_queue(sizeof(uint8_t), REFEREE_RX_QUENE_MAX_LEN);
+  27:Core/HAL/driver/referee/referee.c ****     obj->tool.next_step_wait_len = 1;
+  28:Core/HAL/driver/referee/referee.c ****     obj->robot_status_received = 0;
+  29:Core/HAL/driver/referee/referee.c ****     return obj;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 2
+
+
+  30:Core/HAL/driver/referee/referee.c **** }
+  31:Core/HAL/driver/referee/referee.c **** 
+  32:Core/HAL/driver/referee/referee.c **** void referee_Rx_callback(uint8_t uart_index, uint8_t *data, uint32_t len) {
+  30              		.loc 1 32 75 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 32 75 is_stmt 0 view .LVU1
+  35 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 32
+  38              		.cfi_offset 3, -32
+  39              		.cfi_offset 4, -28
+  40              		.cfi_offset 5, -24
+  41              		.cfi_offset 6, -20
+  42              		.cfi_offset 7, -16
+  43              		.cfi_offset 8, -12
+  44              		.cfi_offset 9, -8
+  45              		.cfi_offset 14, -4
+  46 0004 8146     		mov	r9, r0
+  47 0006 8846     		mov	r8, r1
+  48 0008 1746     		mov	r7, r2
+  33:Core/HAL/driver/referee/referee.c ****     for (size_t i = 0; i < referee_instances->cv_len; i++) {
+  49              		.loc 1 33 5 is_stmt 1 view .LVU2
+  50              	.LBB2:
+  51              		.loc 1 33 10 view .LVU3
+  52              	.LVL1:
+  53              		.loc 1 33 17 is_stmt 0 view .LVU4
+  54 000a 0025     		movs	r5, #0
+  55              		.loc 1 33 5 view .LVU5
+  56 000c 0CE0     		b	.L2
+  57              	.LVL2:
+  58              	.L5:
+  59              	.LBB3:
+  60              	.LBB4:
+  34:Core/HAL/driver/referee/referee.c ****         Referee *now = *(Referee **)cvector_val_at(referee_instances, i);
+  35:Core/HAL/driver/referee/referee.c ****         if (uart_index == now->config.bsp_uart_index) {
+  36:Core/HAL/driver/referee/referee.c ****             // 注释原因：刚开局时可能一次性收到大量数据
+  37:Core/HAL/driver/referee/referee.c ****             // if (len > REFEREE_RX_MAX_SIZE) return;
+  38:Core/HAL/driver/referee/referee.c ****             for (size_t i = 0; i < len; i++) {
+  39:Core/HAL/driver/referee/referee.c ****                 // 将数据直接塞进缓冲队列 可能一个包触发两次空闲中断/多个
+  40:Core/HAL/driver/referee/referee.c ****                 circular_queue_push(now->primary_data, &data[i]);
+  61              		.loc 1 40 17 is_stmt 1 discriminator 3 view .LVU6
+  62 000e 08EB0401 		add	r1, r8, r4
+  63 0012 3068     		ldr	r0, [r6]
+  64 0014 FFF7FEFF 		bl	circular_queue_push
+  65              	.LVL3:
+  38:Core/HAL/driver/referee/referee.c ****                 // 将数据直接塞进缓冲队列 可能一个包触发两次空闲中断/多个
+  66              		.loc 1 38 41 discriminator 3 view .LVU7
+  38:Core/HAL/driver/referee/referee.c ****                 // 将数据直接塞进缓冲队列 可能一个包触发两次空闲中断/多个
+  67              		.loc 1 38 42 is_stmt 0 discriminator 3 view .LVU8
+  68 0018 0134     		adds	r4, r4, #1
+  69              	.LVL4:
+  70              	.L3:
+  38:Core/HAL/driver/referee/referee.c ****                 // 将数据直接塞进缓冲队列 可能一个包触发两次空闲中断/多个
+  71              		.loc 1 38 32 is_stmt 1 discriminator 1 view .LVU9
+  38:Core/HAL/driver/referee/referee.c ****                 // 将数据直接塞进缓冲队列 可能一个包触发两次空闲中断/多个
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 3
+
+
+  72              		.loc 1 38 13 is_stmt 0 discriminator 1 view .LVU10
+  73 001a BC42     		cmp	r4, r7
+  74 001c F7D3     		bcc	.L5
+  75              	.LBE4:
+  41:Core/HAL/driver/referee/referee.c ****             }
+  42:Core/HAL/driver/referee/referee.c ****             now->monitor->reset(now->monitor);
+  76              		.loc 1 42 13 is_stmt 1 view .LVU11
+  77              		.loc 1 42 16 is_stmt 0 view .LVU12
+  78 001e D6F82C01 		ldr	r0, [r6, #300]
+  79              		.loc 1 42 25 view .LVU13
+  80 0022 C368     		ldr	r3, [r0, #12]	@ unaligned
+  81              		.loc 1 42 13 view .LVU14
+  82 0024 9847     		blx	r3
+  83              	.LVL5:
+  84              	.L4:
+  85              		.loc 1 42 13 view .LVU15
+  86              	.LBE3:
+  33:Core/HAL/driver/referee/referee.c ****         Referee *now = *(Referee **)cvector_val_at(referee_instances, i);
+  87              		.loc 1 33 55 is_stmt 1 discriminator 2 view .LVU16
+  33:Core/HAL/driver/referee/referee.c ****         Referee *now = *(Referee **)cvector_val_at(referee_instances, i);
+  88              		.loc 1 33 56 is_stmt 0 discriminator 2 view .LVU17
+  89 0026 0135     		adds	r5, r5, #1
+  90              	.LVL6:
+  91              	.L2:
+  33:Core/HAL/driver/referee/referee.c ****         Referee *now = *(Referee **)cvector_val_at(referee_instances, i);
+  92              		.loc 1 33 24 is_stmt 1 discriminator 1 view .LVU18
+  33:Core/HAL/driver/referee/referee.c ****         Referee *now = *(Referee **)cvector_val_at(referee_instances, i);
+  93              		.loc 1 33 45 is_stmt 0 discriminator 1 view .LVU19
+  94 0028 084B     		ldr	r3, .L10
+  95 002a 1868     		ldr	r0, [r3]
+  96 002c 4368     		ldr	r3, [r0, #4]	@ unaligned
+  33:Core/HAL/driver/referee/referee.c ****         Referee *now = *(Referee **)cvector_val_at(referee_instances, i);
+  97              		.loc 1 33 5 discriminator 1 view .LVU20
+  98 002e AB42     		cmp	r3, r5
+  99 0030 09D9     		bls	.L9
+ 100              	.LBB6:
+  34:Core/HAL/driver/referee/referee.c ****         if (uart_index == now->config.bsp_uart_index) {
+ 101              		.loc 1 34 9 is_stmt 1 view .LVU21
+  34:Core/HAL/driver/referee/referee.c ****         if (uart_index == now->config.bsp_uart_index) {
+ 102              		.loc 1 34 37 is_stmt 0 view .LVU22
+ 103 0032 2946     		mov	r1, r5
+ 104 0034 FFF7FEFF 		bl	cvector_val_at
+ 105              	.LVL7:
+  34:Core/HAL/driver/referee/referee.c ****         if (uart_index == now->config.bsp_uart_index) {
+ 106              		.loc 1 34 18 view .LVU23
+ 107 0038 0668     		ldr	r6, [r0]
+ 108              	.LVL8:
+  35:Core/HAL/driver/referee/referee.c ****             // 注释原因：刚开局时可能一次性收到大量数据
+ 109              		.loc 1 35 9 is_stmt 1 view .LVU24
+  35:Core/HAL/driver/referee/referee.c ****             // 注释原因：刚开局时可能一次性收到大量数据
+ 110              		.loc 1 35 38 is_stmt 0 view .LVU25
+ 111 003a 96F82431 		ldrb	r3, [r6, #292]	@ zero_extendqisi2
+  35:Core/HAL/driver/referee/referee.c ****             // 注释原因：刚开局时可能一次性收到大量数据
+ 112              		.loc 1 35 12 view .LVU26
+ 113 003e 4B45     		cmp	r3, r9
+ 114 0040 F1D1     		bne	.L4
+ 115              	.LBB5:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 4
+
+
+  38:Core/HAL/driver/referee/referee.c ****                 // 将数据直接塞进缓冲队列 可能一个包触发两次空闲中断/多个
+ 116              		.loc 1 38 25 view .LVU27
+ 117 0042 0024     		movs	r4, #0
+ 118 0044 E9E7     		b	.L3
+ 119              	.LVL9:
+ 120              	.L9:
+  38:Core/HAL/driver/referee/referee.c ****                 // 将数据直接塞进缓冲队列 可能一个包触发两次空闲中断/多个
+ 121              		.loc 1 38 25 view .LVU28
+ 122              	.LBE5:
+ 123              	.LBE6:
+ 124              	.LBE2:
+  43:Core/HAL/driver/referee/referee.c ****         }
+  44:Core/HAL/driver/referee/referee.c ****     }
+  45:Core/HAL/driver/referee/referee.c **** }
+ 125              		.loc 1 45 1 view .LVU29
+ 126 0046 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 127              	.LVL10:
+ 128              	.L11:
+ 129              		.loc 1 45 1 view .LVU30
+ 130 004a 00BF     		.align	2
+ 131              	.L10:
+ 132 004c 00000000 		.word	.LANCHOR0
+ 133              		.cfi_endproc
+ 134              	.LFE135:
+ 136              		.section	.text.referee_driver_init,"ax",%progbits
+ 137              		.align	1
+ 138              		.global	referee_driver_init
+ 139              		.syntax unified
+ 140              		.thumb
+ 141              		.thumb_func
+ 143              	referee_driver_init:
+ 144              	.LFB133:
+  14:Core/HAL/driver/referee/referee.c ****     referee_instances = cvector_create(sizeof(Referee *));
+ 145              		.loc 1 14 28 is_stmt 1 view -0
+ 146              		.cfi_startproc
+ 147              		@ args = 0, pretend = 0, frame = 0
+ 148              		@ frame_needed = 0, uses_anonymous_args = 0
+ 149 0000 08B5     		push	{r3, lr}
+ 150              	.LCFI1:
+ 151              		.cfi_def_cfa_offset 8
+ 152              		.cfi_offset 3, -8
+ 153              		.cfi_offset 14, -4
+  15:Core/HAL/driver/referee/referee.c ****     BSP_UART_RegisterRxCallback(UART_REFEREE_PORT, referee_Rx_callback);
+ 154              		.loc 1 15 5 view .LVU32
+  15:Core/HAL/driver/referee/referee.c ****     BSP_UART_RegisterRxCallback(UART_REFEREE_PORT, referee_Rx_callback);
+ 155              		.loc 1 15 25 is_stmt 0 view .LVU33
+ 156 0002 0420     		movs	r0, #4
+ 157 0004 FFF7FEFF 		bl	cvector_create
+ 158              	.LVL11:
+  15:Core/HAL/driver/referee/referee.c ****     BSP_UART_RegisterRxCallback(UART_REFEREE_PORT, referee_Rx_callback);
+ 159              		.loc 1 15 23 view .LVU34
+ 160 0008 034B     		ldr	r3, .L14
+ 161 000a 1860     		str	r0, [r3]
+  16:Core/HAL/driver/referee/referee.c **** }
+ 162              		.loc 1 16 5 is_stmt 1 view .LVU35
+ 163 000c 0349     		ldr	r1, .L14+4
+ 164 000e 0120     		movs	r0, #1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 5
+
+
+ 165 0010 FFF7FEFF 		bl	BSP_UART_RegisterRxCallback
+ 166              	.LVL12:
+  17:Core/HAL/driver/referee/referee.c **** 
+ 167              		.loc 1 17 1 is_stmt 0 view .LVU36
+ 168 0014 08BD     		pop	{r3, pc}
+ 169              	.L15:
+ 170 0016 00BF     		.align	2
+ 171              	.L14:
+ 172 0018 00000000 		.word	.LANCHOR0
+ 173 001c 00000000 		.word	referee_Rx_callback
+ 174              		.cfi_endproc
+ 175              	.LFE133:
+ 177              		.section	.text.referee_Create,"ax",%progbits
+ 178              		.align	1
+ 179              		.global	referee_Create
+ 180              		.syntax unified
+ 181              		.thumb
+ 182              		.thumb_func
+ 184              	referee_Create:
+ 185              	.LVL13:
+ 186              	.LFB134:
+  19:Core/HAL/driver/referee/referee.c ****     Referee *obj = (Referee *)malloc(sizeof(Referee));
+ 187              		.loc 1 19 49 is_stmt 1 view -0
+ 188              		.cfi_startproc
+ 189              		@ args = 0, pretend = 0, frame = 8
+ 190              		@ frame_needed = 0, uses_anonymous_args = 0
+  19:Core/HAL/driver/referee/referee.c ****     Referee *obj = (Referee *)malloc(sizeof(Referee));
+ 191              		.loc 1 19 49 is_stmt 0 view .LVU38
+ 192 0000 30B5     		push	{r4, r5, lr}
+ 193              	.LCFI2:
+ 194              		.cfi_def_cfa_offset 12
+ 195              		.cfi_offset 4, -12
+ 196              		.cfi_offset 5, -8
+ 197              		.cfi_offset 14, -4
+ 198 0002 83B0     		sub	sp, sp, #12
+ 199              	.LCFI3:
+ 200              		.cfi_def_cfa_offset 24
+ 201 0004 0546     		mov	r5, r0
+  20:Core/HAL/driver/referee/referee.c ****     memset(obj, 0, sizeof(Referee));
+ 202              		.loc 1 20 5 is_stmt 1 view .LVU39
+  20:Core/HAL/driver/referee/referee.c ****     memset(obj, 0, sizeof(Referee));
+ 203              		.loc 1 20 31 is_stmt 0 view .LVU40
+ 204 0006 4FF4E070 		mov	r0, #448
+ 205              	.LVL14:
+  20:Core/HAL/driver/referee/referee.c ****     memset(obj, 0, sizeof(Referee));
+ 206              		.loc 1 20 31 view .LVU41
+ 207 000a FFF7FEFF 		bl	malloc
+ 208              	.LVL15:
+  20:Core/HAL/driver/referee/referee.c ****     memset(obj, 0, sizeof(Referee));
+ 209              		.loc 1 20 14 view .LVU42
+ 210 000e 0190     		str	r0, [sp, #4]
+  21:Core/HAL/driver/referee/referee.c ****     obj->config = *config;
+ 211              		.loc 1 21 5 is_stmt 1 view .LVU43
+ 212 0010 4FF4E072 		mov	r2, #448
+ 213 0014 0021     		movs	r1, #0
+ 214 0016 FFF7FEFF 		bl	memset
+ 215              	.LVL16:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 6
+
+
+  22:Core/HAL/driver/referee/referee.c ****     obj->monitor = Monitor_Register(obj->config.lost_callback, 10, obj);
+ 216              		.loc 1 22 5 view .LVU44
+  22:Core/HAL/driver/referee/referee.c ****     obj->monitor = Monitor_Register(obj->config.lost_callback, 10, obj);
+ 217              		.loc 1 22 8 is_stmt 0 view .LVU45
+ 218 001a 019C     		ldr	r4, [sp, #4]
+  22:Core/HAL/driver/referee/referee.c ****     obj->monitor = Monitor_Register(obj->config.lost_callback, 10, obj);
+ 219              		.loc 1 22 17 view .LVU46
+ 220 001c 04F59273 		add	r3, r4, #292
+ 221 0020 95E80300 		ldm	r5, {r0, r1}
+ 222 0024 83E80300 		stm	r3, {r0, r1}
+  23:Core/HAL/driver/referee/referee.c ****     cvector_pushback(referee_instances, &obj);
+ 223              		.loc 1 23 5 is_stmt 1 view .LVU47
+  23:Core/HAL/driver/referee/referee.c ****     cvector_pushback(referee_instances, &obj);
+ 224              		.loc 1 23 20 is_stmt 0 view .LVU48
+ 225 0028 2246     		mov	r2, r4
+ 226 002a 0A21     		movs	r1, #10
+ 227 002c D4F82801 		ldr	r0, [r4, #296]
+ 228 0030 FFF7FEFF 		bl	Monitor_Register
+ 229              	.LVL17:
+  23:Core/HAL/driver/referee/referee.c ****     cvector_pushback(referee_instances, &obj);
+ 230              		.loc 1 23 18 view .LVU49
+ 231 0034 C4F82C01 		str	r0, [r4, #300]
+  24:Core/HAL/driver/referee/referee.c ****     // 数据接收队列
+ 232              		.loc 1 24 5 is_stmt 1 view .LVU50
+ 233 0038 01A9     		add	r1, sp, #4
+ 234 003a 0A4B     		ldr	r3, .L18
+ 235 003c 1868     		ldr	r0, [r3]
+ 236 003e FFF7FEFF 		bl	cvector_pushback
+ 237              	.LVL18:
+  26:Core/HAL/driver/referee/referee.c ****     obj->tool.next_step_wait_len = 1;
+ 238              		.loc 1 26 5 view .LVU51
+  26:Core/HAL/driver/referee/referee.c ****     obj->tool.next_step_wait_len = 1;
+ 239              		.loc 1 26 8 is_stmt 0 view .LVU52
+ 240 0042 019C     		ldr	r4, [sp, #4]
+  26:Core/HAL/driver/referee/referee.c ****     obj->tool.next_step_wait_len = 1;
+ 241              		.loc 1 26 25 view .LVU53
+ 242 0044 4FF48061 		mov	r1, #1024
+ 243 0048 0120     		movs	r0, #1
+ 244 004a FFF7FEFF 		bl	create_circular_queue
+ 245              	.LVL19:
+  26:Core/HAL/driver/referee/referee.c ****     obj->tool.next_step_wait_len = 1;
+ 246              		.loc 1 26 23 view .LVU54
+ 247 004e 2060     		str	r0, [r4]
+  27:Core/HAL/driver/referee/referee.c ****     obj->robot_status_received = 0;
+ 248              		.loc 1 27 5 is_stmt 1 view .LVU55
+  27:Core/HAL/driver/referee/referee.c ****     obj->robot_status_received = 0;
+ 249              		.loc 1 27 8 is_stmt 0 view .LVU56
+ 250 0050 0198     		ldr	r0, [sp, #4]
+  27:Core/HAL/driver/referee/referee.c ****     obj->robot_status_received = 0;
+ 251              		.loc 1 27 34 view .LVU57
+ 252 0052 0123     		movs	r3, #1
+ 253 0054 A0F8BA31 		strh	r3, [r0, #442]	@ movhi
+  28:Core/HAL/driver/referee/referee.c ****     return obj;
+ 254              		.loc 1 28 5 is_stmt 1 view .LVU58
+  28:Core/HAL/driver/referee/referee.c ****     return obj;
+ 255              		.loc 1 28 32 is_stmt 0 view .LVU59
+ 256 0058 0023     		movs	r3, #0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 7
+
+
+ 257 005a 80F8BC31 		strb	r3, [r0, #444]
+  29:Core/HAL/driver/referee/referee.c **** }
+ 258              		.loc 1 29 5 is_stmt 1 view .LVU60
+  30:Core/HAL/driver/referee/referee.c **** 
+ 259              		.loc 1 30 1 is_stmt 0 view .LVU61
+ 260 005e 03B0     		add	sp, sp, #12
+ 261              	.LCFI4:
+ 262              		.cfi_def_cfa_offset 12
+ 263              		@ sp needed
+ 264 0060 30BD     		pop	{r4, r5, pc}
+ 265              	.LVL20:
+ 266              	.L19:
+  30:Core/HAL/driver/referee/referee.c **** 
+ 267              		.loc 1 30 1 view .LVU62
+ 268 0062 00BF     		.align	2
+ 269              	.L18:
+ 270 0064 00000000 		.word	.LANCHOR0
+ 271              		.cfi_endproc
+ 272              	.LFE134:
+ 274              		.section	.text.referee_solve_pack,"ax",%progbits
+ 275              		.align	1
+ 276              		.global	referee_solve_pack
+ 277              		.syntax unified
+ 278              		.thumb
+ 279              		.thumb_func
+ 281              	referee_solve_pack:
+ 282              	.LVL21:
+ 283              	.LFB137:
+  46:Core/HAL/driver/referee/referee.c **** 
+  47:Core/HAL/driver/referee/referee.c **** void referee_data_solve(Referee *obj) {
+  48:Core/HAL/driver/referee/referee.c ****     uint8_t *byte_now_pt = NULL;
+  49:Core/HAL/driver/referee/referee.c ****     // 反复弹出直到缓冲队列长度为0
+  50:Core/HAL/driver/referee/referee.c ****     while (obj->primary_data->cq_len >= obj->tool.next_step_wait_len) {
+  51:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+  52:Core/HAL/driver/referee/referee.c ****         uint8_t byte_now = *byte_now_pt;
+  53:Core/HAL/driver/referee/referee.c ****         switch (obj->tool.step) {
+  54:Core/HAL/driver/referee/referee.c ****             case s_header_sof:
+  55:Core/HAL/driver/referee/referee.c ****                 // 包错误判断-固定起始字节
+  56:Core/HAL/driver/referee/referee.c ****                 if (byte_now == REFEREE_SOF) {
+  57:Core/HAL/driver/referee/referee.c ****                     obj->tool.step++;
+  58:Core/HAL/driver/referee/referee.c ****                     obj->tool.rx_pack.header.SOF = byte_now;
+  59:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 2;
+  60:Core/HAL/driver/referee/referee.c ****                 } else {
+  61:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = 0;
+  62:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+  63:Core/HAL/driver/referee/referee.c ****                 }
+  64:Core/HAL/driver/referee/referee.c ****                 break;
+  65:Core/HAL/driver/referee/referee.c ****             case s_header_length:
+  66:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.header.data_length = byte_now;
+  67:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+  68:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+  69:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.header.data_length |= ((uint16_t)byte_now << 8);
+  70:Core/HAL/driver/referee/referee.c ****                 // 包错误判断-长度超范围
+  71:Core/HAL/driver/referee/referee.c ****                 if (obj->tool.rx_pack.header.data_length > REFEREE_PACK_LEN_DATA_MAX) {
+  72:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = 0;
+  73:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+  74:Core/HAL/driver/referee/referee.c ****                 } else {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 8
+
+
+  75:Core/HAL/driver/referee/referee.c ****                     obj->tool.step++;
+  76:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+  77:Core/HAL/driver/referee/referee.c ****                 }
+  78:Core/HAL/driver/referee/referee.c ****                 break;
+  79:Core/HAL/driver/referee/referee.c ****             case s_header_seq:
+  80:Core/HAL/driver/referee/referee.c ****                 // 没看出来这个数有啥意义 暂时不管
+  81:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.header.seq = byte_now;
+  82:Core/HAL/driver/referee/referee.c ****                 obj->tool.step++;
+  83:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 1;
+  84:Core/HAL/driver/referee/referee.c ****                 break;
+  85:Core/HAL/driver/referee/referee.c ****             case s_header_crc8: {
+  86:Core/HAL/driver/referee/referee.c ****                 // 包错误判断-CRC8校验
+  87:Core/HAL/driver/referee/referee.c ****                 uint8_t crc8_result = CRC8_Modbus_calc(&(obj->tool.rx_pack.header.SOF), sizeof(fram
+  88:Core/HAL/driver/referee/referee.c ****                 if (crc8_result == byte_now) {
+  89:Core/HAL/driver/referee/referee.c ****                     obj->tool.step++;
+  90:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 2;
+  91:Core/HAL/driver/referee/referee.c ****                     obj->tool.rx_pack.header.CRC8 = byte_now;
+  92:Core/HAL/driver/referee/referee.c ****                     // printf_log("crc8:%d\n",obj->tool.buffer_pt);
+  93:Core/HAL/driver/referee/referee.c ****                 } else {
+  94:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = 0;
+  95:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+  96:Core/HAL/driver/referee/referee.c ****                 }
+  97:Core/HAL/driver/referee/referee.c ****                 break;
+  98:Core/HAL/driver/referee/referee.c ****             }
+  99:Core/HAL/driver/referee/referee.c ****             case s_cmd_id:
+ 100:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.cmd_id = byte_now;
+ 101:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+ 102:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 103:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.cmd_id |= ((uint16_t)byte_now << 8);
+ 104:Core/HAL/driver/referee/referee.c ****                 obj->tool.step++;
+ 105:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = obj->tool.rx_pack.header.data_length;
+ 106:Core/HAL/driver/referee/referee.c ****                 break;
+ 107:Core/HAL/driver/referee/referee.c ****             case s_data:
+ 108:Core/HAL/driver/referee/referee.c ****                 for (size_t i = 0; i < obj->tool.rx_pack.header.data_length; i++) {
+ 109:Core/HAL/driver/referee/referee.c ****                     if (i > 0) {
+ 110:Core/HAL/driver/referee/referee.c ****                         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 111:Core/HAL/driver/referee/referee.c ****                         byte_now = *byte_now_pt;
+ 112:Core/HAL/driver/referee/referee.c ****                     }
+ 113:Core/HAL/driver/referee/referee.c ****                     obj->tool.rx_pack.data[i] = byte_now;
+ 114:Core/HAL/driver/referee/referee.c ****                 }
+ 115:Core/HAL/driver/referee/referee.c ****                 obj->tool.step++;
+ 116:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 2;
+ 117:Core/HAL/driver/referee/referee.c ****                 break;
+ 118:Core/HAL/driver/referee/referee.c ****             case s_crc16: {
+ 119:Core/HAL/driver/referee/referee.c ****                 uint16_t crc16_recv = byte_now;
+ 120:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+ 121:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 122:Core/HAL/driver/referee/referee.c ****                 crc16_recv |= ((uint16_t)byte_now << 8);
+ 123:Core/HAL/driver/referee/referee.c ****                 // printf_log("a:%d %d\n",REFEREE_PACK_LEN_HEADER + REFEREE_PACK_LEN_CMD_ID + obj->
+ 124:Core/HAL/driver/referee/referee.c ****                 // 包错误判断-CRC16校验
+ 125:Core/HAL/driver/referee/referee.c ****                 uint16_t crc16_result = CRC16_Modbus_calc(&(obj->tool.rx_pack.header.SOF), REFEREE_
+ 126:Core/HAL/driver/referee/referee.c **** 
+ 127:Core/HAL/driver/referee/referee.c ****                 if (crc16_result != crc16_recv) {
+ 128:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = s_header_sof;
+ 129:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 130:Core/HAL/driver/referee/referee.c ****                 } else {
+ 131:Core/HAL/driver/referee/referee.c ****                     // 包提取完成 拷贝数据
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 9
+
+
+ 132:Core/HAL/driver/referee/referee.c ****                     referee_solve_pack(obj, &(obj->tool.rx_pack));
+ 133:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = s_header_sof;
+ 134:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 135:Core/HAL/driver/referee/referee.c ****                 }
+ 136:Core/HAL/driver/referee/referee.c ****                 break;
+ 137:Core/HAL/driver/referee/referee.c ****             }
+ 138:Core/HAL/driver/referee/referee.c ****             default:
+ 139:Core/HAL/driver/referee/referee.c ****                 obj->tool.step = 0;
+ 140:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 1;
+ 141:Core/HAL/driver/referee/referee.c ****                 break;
+ 142:Core/HAL/driver/referee/referee.c ****         }
+ 143:Core/HAL/driver/referee/referee.c ****     }
+ 144:Core/HAL/driver/referee/referee.c **** 
+ 145:Core/HAL/driver/referee/referee.c ****     // 裁判系统准备时间给5倍数值处理 最小弹速*5>最大弹速
+ 146:Core/HAL/driver/referee/referee.c ****     if (obj->rx_data.game_robot_state.shooter_id1_17mm_speed_limit > BULLET_SPEED_MAX) {
+ 147:Core/HAL/driver/referee/referee.c ****         obj->rx_data.game_robot_state.shooter_id1_17mm_speed_limit /= 5;
+ 148:Core/HAL/driver/referee/referee.c ****     }
+ 149:Core/HAL/driver/referee/referee.c **** }
+ 150:Core/HAL/driver/referee/referee.c **** 
+ 151:Core/HAL/driver/referee/referee.c **** void referee_solve_pack(Referee *obj, referee_rx_pack *rx_pack) {
+ 284              		.loc 1 151 65 is_stmt 1 view -0
+ 285              		.cfi_startproc
+ 286              		@ args = 0, pretend = 0, frame = 0
+ 287              		@ frame_needed = 0, uses_anonymous_args = 0
+ 288              		.loc 1 151 65 is_stmt 0 view .LVU64
+ 289 0000 08B5     		push	{r3, lr}
+ 290              	.LCFI5:
+ 291              		.cfi_def_cfa_offset 8
+ 292              		.cfi_offset 3, -8
+ 293              		.cfi_offset 14, -4
+ 152:Core/HAL/driver/referee/referee.c ****     switch (rx_pack->cmd_id) {
+ 294              		.loc 1 152 5 is_stmt 1 view .LVU65
+ 295              		.loc 1 152 20 is_stmt 0 view .LVU66
+ 296 0002 B1F80520 		ldrh	r2, [r1, #5]	@ unaligned
+ 297 0006 93B2     		uxth	r3, r2
+ 298              		.loc 1 152 5 view .LVU67
+ 299 0008 40F20A2C 		movw	ip, #522
+ 300 000c 6345     		cmp	r3, ip
+ 301 000e 28D8     		bhi	.L21
+ 302 0010 B3F5007F 		cmp	r3, #512
+ 303 0014 13D8     		bhi	.L22
+ 304 0016 042B     		cmp	r3, #4
+ 305 0018 0ED9     		bls	.L53
+ 306 001a B3F5837F 		cmp	r3, #262
+ 307 001e 0DD2     		bcs	.L20
+ 308 0020 B3F5807F 		cmp	r3, #256
+ 309 0024 0AD9     		bls	.L20
+ 310 0026 A3F20113 		subw	r3, r3, #257
+ 311 002a 042B     		cmp	r3, #4
+ 312 002c 06D8     		bhi	.L20
+ 313 002e DFE803F0 		tbb	[pc, r3]
+ 314              	.L38:
+ 315 0032 6C       		.byte	(.L41-.L38)/2
+ 316 0033 71       		.byte	(.L40-.L38)/2
+ 317 0034 05       		.byte	(.L20-.L38)/2
+ 318 0035 76       		.byte	(.L39-.L38)/2
+ 319 0036 7B       		.byte	(.L37-.L38)/2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 10
+
+
+ 320 0037 00       		.p2align 1
+ 321              	.L53:
+ 322 0038 12B2     		sxth	r2, r2
+ 323 003a 5AB9     		cbnz	r2, .L54
+ 324              	.LVL22:
+ 325              	.L20:
+ 153:Core/HAL/driver/referee/referee.c ****         case GAME_STATE_CMD_ID:
+ 154:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.game_state, rx_pack->data, sizeof(obj->rx_data.game_state));
+ 155:Core/HAL/driver/referee/referee.c ****             break;
+ 156:Core/HAL/driver/referee/referee.c ****         case GAME_RESULT_CMD_ID:
+ 157:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.game_result, rx_pack->data, sizeof(obj->rx_data.game_result));
+ 158:Core/HAL/driver/referee/referee.c ****             break;
+ 159:Core/HAL/driver/referee/referee.c ****         case GAME_ROBOT_HP_CMD_ID:
+ 160:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.robot_HP, rx_pack->data, sizeof(obj->rx_data.robot_HP));
+ 161:Core/HAL/driver/referee/referee.c ****             break;
+ 162:Core/HAL/driver/referee/referee.c ****         case DART_STATUS_ID:
+ 163:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.dart_status, rx_pack->data, sizeof(obj->rx_data.dart_status));
+ 164:Core/HAL/driver/referee/referee.c ****             break;
+ 165:Core/HAL/driver/referee/referee.c ****         case FIELD_EVENTS_CMD_ID:
+ 166:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.event, rx_pack->data, sizeof(obj->rx_data.event));
+ 167:Core/HAL/driver/referee/referee.c ****             break;
+ 168:Core/HAL/driver/referee/referee.c ****         case SUPPLY_PROJECTILE_ACTION_CMD_ID:
+ 169:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.supply_projectile_action, rx_pack->data, sizeof(obj->rx_data.suppl
+ 170:Core/HAL/driver/referee/referee.c ****             break;
+ 171:Core/HAL/driver/referee/referee.c ****         case SUPPLY_PROJECTILE_BOOKING_CMD_ID:
+ 172:Core/HAL/driver/referee/referee.c ****             // RM对抗赛尚未开放
+ 173:Core/HAL/driver/referee/referee.c ****             break;
+ 174:Core/HAL/driver/referee/referee.c ****         case REFEREE_WARNING_CMD_ID:
+ 175:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.referee_warning, rx_pack->data, sizeof(obj->rx_data.referee_warnin
+ 176:Core/HAL/driver/referee/referee.c ****             break;
+ 177:Core/HAL/driver/referee/referee.c ****         case DART_REMAINING_TIME_ID:
+ 178:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.dart_remaining_time, rx_pack->data, sizeof(obj->rx_data.dart_remai
+ 179:Core/HAL/driver/referee/referee.c ****             break;
+ 180:Core/HAL/driver/referee/referee.c ****         case ROBOT_STATE_CMD_ID:
+ 181:Core/HAL/driver/referee/referee.c ****             //第一次收到时置位为1
+ 182:Core/HAL/driver/referee/referee.c ****             if (!obj->robot_status_received) {
+ 183:Core/HAL/driver/referee/referee.c ****                 obj->robot_status_received = 1;
+ 184:Core/HAL/driver/referee/referee.c ****             }
+ 185:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.game_robot_state, rx_pack->data, sizeof(obj->rx_data.game_robot_st
+ 186:Core/HAL/driver/referee/referee.c ****             break;
+ 187:Core/HAL/driver/referee/referee.c ****         case POWER_HEAT_DATA_CMD_ID:
+ 188:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.power_heat, rx_pack->data, sizeof(obj->rx_data.power_heat));
+ 189:Core/HAL/driver/referee/referee.c ****             break;
+ 190:Core/HAL/driver/referee/referee.c ****         case ROBOT_POS_CMD_ID:
+ 191:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.robot_pos, rx_pack->data, sizeof(obj->rx_data.robot_pos));
+ 192:Core/HAL/driver/referee/referee.c ****             break;
+ 193:Core/HAL/driver/referee/referee.c ****         case BUFF_MUSK_CMD_ID:
+ 194:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.buff, rx_pack->data, sizeof(obj->rx_data.buff));
+ 195:Core/HAL/driver/referee/referee.c ****             break;
+ 196:Core/HAL/driver/referee/referee.c ****         case AERIAL_ROBOT_ENERGY_CMD_ID:
+ 197:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.aerial_robot_energy, rx_pack->data, sizeof(obj->rx_data.aerial_rob
+ 198:Core/HAL/driver/referee/referee.c ****             break;
+ 199:Core/HAL/driver/referee/referee.c ****         case ROBOT_HURT_CMD_ID:
+ 200:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.robot_hurt, rx_pack->data, sizeof(obj->rx_data.robot_hurt));
+ 201:Core/HAL/driver/referee/referee.c ****             break;
+ 202:Core/HAL/driver/referee/referee.c ****         case SHOOT_DATA_CMD_ID:
+ 203:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.shoot_data, rx_pack->data, sizeof(obj->rx_data.shoot_data));
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 11
+
+
+ 204:Core/HAL/driver/referee/referee.c ****             break;
+ 205:Core/HAL/driver/referee/referee.c ****         case BULLET_REMAINING_CMD_ID:
+ 206:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.bullet_remaining, rx_pack->data, sizeof(obj->rx_data.bullet_remain
+ 207:Core/HAL/driver/referee/referee.c ****             break;
+ 208:Core/HAL/driver/referee/referee.c ****         case RFID_STATUS_ID:
+ 209:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.rfid_status, rx_pack->data, sizeof(obj->rx_data.rfid_status));
+ 210:Core/HAL/driver/referee/referee.c ****             break;
+ 211:Core/HAL/driver/referee/referee.c ****         case DART_CILENT_CMD_T:
+ 212:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.dart_cilent_cmd, rx_pack->data, sizeof(obj->rx_data.dart_cilent_cm
+ 213:Core/HAL/driver/referee/referee.c ****             break;
+ 214:Core/HAL/driver/referee/referee.c ****         case ROBOT_INTERACT_ID: {
+ 215:Core/HAL/driver/referee/referee.c ****             // 机器人间通信接收
+ 216:Core/HAL/driver/referee/referee.c ****             uint16_t recv_len = rx_pack->header.data_length;
+ 217:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.interactve_data, rx_pack->data, recv_len);
+ 218:Core/HAL/driver/referee/referee.c ****             break;
+ 219:Core/HAL/driver/referee/referee.c ****         }
+ 220:Core/HAL/driver/referee/referee.c ****         case ROBOT_EXT_CONTROL_ID:
+ 221:Core/HAL/driver/referee/referee.c ****             // 自定义控制器 暂无
+ 222:Core/HAL/driver/referee/referee.c ****             break;
+ 223:Core/HAL/driver/referee/referee.c ****         case ROBOT_COMMAND_T:
+ 224:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.robot_command, rx_pack->data, sizeof(obj->rx_data.robot_command));
+ 225:Core/HAL/driver/referee/referee.c ****             break;
+ 226:Core/HAL/driver/referee/referee.c ****         case CLIENT_MAP_COMMAND_T:
+ 227:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.client_map_command, rx_pack->data, sizeof(obj->rx_data.client_map_
+ 228:Core/HAL/driver/referee/referee.c ****             break;
+ 229:Core/HAL/driver/referee/referee.c ****         default:
+ 230:Core/HAL/driver/referee/referee.c ****             break;
+ 231:Core/HAL/driver/referee/referee.c ****     }
+ 232:Core/HAL/driver/referee/referee.c **** }
+ 326              		.loc 1 232 1 view .LVU68
+ 327 003c 08BD     		pop	{r3, pc}
+ 328              	.LVL23:
+ 329              	.L22:
+ 152:Core/HAL/driver/referee/referee.c ****     switch (rx_pack->cmd_id) {
+ 330              		.loc 1 152 5 view .LVU69
+ 331 003e A3F20123 		subw	r3, r3, #513
+ 332 0042 092B     		cmp	r3, #9
+ 333 0044 FAD8     		bhi	.L20
+ 334 0046 DFE803F0 		tbb	[pc, r3]
+ 335              	.L27:
+ 336 004a 73       		.byte	(.L36-.L27)/2
+ 337 004b 9A       		.byte	(.L35-.L27)/2
+ 338 004c AB       		.byte	(.L34-.L27)/2
+ 339 004d BC       		.byte	(.L33-.L27)/2
+ 340 004e C0       		.byte	(.L32-.L27)/2
+ 341 004f C4       		.byte	(.L31-.L27)/2
+ 342 0050 C8       		.byte	(.L30-.L27)/2
+ 343 0051 D3       		.byte	(.L29-.L27)/2
+ 344 0052 DC       		.byte	(.L28-.L27)/2
+ 345 0053 E1       		.byte	(.L26-.L27)/2
+ 346              		.p2align 1
+ 347              	.L54:
+ 348 0054 013B     		subs	r3, r3, #1
+ 349 0056 032B     		cmp	r3, #3
+ 350 0058 F0D8     		bhi	.L20
+ 351 005a DFE803F0 		tbb	[pc, r3]
+ 352              	.L43:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 12
+
+
+ 353 005e 23       		.byte	(.L46-.L43)/2
+ 354 005f 2F       		.byte	(.L45-.L43)/2
+ 355 0060 32       		.byte	(.L44-.L43)/2
+ 356 0061 4F       		.byte	(.L42-.L43)/2
+ 357              		.p2align 1
+ 358              	.L21:
+ 359 0062 40F20332 		movw	r2, #771
+ 360 0066 9342     		cmp	r3, r2
+ 361 0068 00F0D980 		beq	.L48
+ 362 006c 40F20532 		movw	r2, #773
+ 363 0070 9342     		cmp	r3, r2
+ 364 0072 0CD1     		bne	.L55
+ 227:Core/HAL/driver/referee/referee.c ****             break;
+ 365              		.loc 1 227 13 is_stmt 1 view .LVU70
+ 366 0074 D1F80720 		ldr	r2, [r1, #7]	@ unaligned
+ 367 0078 D1F80B30 		ldr	r3, [r1, #11]	@ unaligned
+ 368 007c C0F8A220 		str	r2, [r0, #162]	@ unaligned
+ 369 0080 C0F8A630 		str	r3, [r0, #166]	@ unaligned
+ 370 0084 B1F80F30 		ldrh	r3, [r1, #15]	@ unaligned
+ 371 0088 A0F8AA30 		strh	r3, [r0, #170]	@ unaligned
+ 228:Core/HAL/driver/referee/referee.c ****         default:
+ 372              		.loc 1 228 13 view .LVU71
+ 373              		.loc 1 232 1 is_stmt 0 view .LVU72
+ 374 008c D6E7     		b	.L20
+ 375              	.L55:
+ 152:Core/HAL/driver/referee/referee.c ****         case GAME_STATE_CMD_ID:
+ 376              		.loc 1 152 5 view .LVU73
+ 377 008e 40F20132 		movw	r2, #769
+ 378 0092 9342     		cmp	r3, r2
+ 379 0094 D2D1     		bne	.L20
+ 380              	.LBB7:
+ 216:Core/HAL/driver/referee/referee.c ****             memcpy(&obj->rx_data.interactve_data, rx_pack->data, recv_len);
+ 381              		.loc 1 216 13 is_stmt 1 view .LVU74
+ 382              	.LVL24:
+ 217:Core/HAL/driver/referee/referee.c ****             break;
+ 383              		.loc 1 217 13 view .LVU75
+ 384 0096 B1F80120 		ldrh	r2, [r1, #1]	@ unaligned
+ 385 009a 0731     		adds	r1, r1, #7
+ 386              	.LVL25:
+ 217:Core/HAL/driver/referee/referee.c ****             break;
+ 387              		.loc 1 217 13 is_stmt 0 view .LVU76
+ 388 009c AC30     		adds	r0, r0, #172
+ 389              	.LVL26:
+ 217:Core/HAL/driver/referee/referee.c ****             break;
+ 390              		.loc 1 217 13 view .LVU77
+ 391 009e FFF7FEFF 		bl	memcpy
+ 392              	.LVL27:
+ 218:Core/HAL/driver/referee/referee.c ****         }
+ 393              		.loc 1 218 13 is_stmt 1 view .LVU78
+ 394 00a2 CBE7     		b	.L20
+ 395              	.LVL28:
+ 396              	.L46:
+ 218:Core/HAL/driver/referee/referee.c ****         }
+ 397              		.loc 1 218 13 is_stmt 0 view .LVU79
+ 398              	.LBE7:
+ 154:Core/HAL/driver/referee/referee.c ****             break;
+ 399              		.loc 1 154 13 is_stmt 1 view .LVU80
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 13
+
+
+ 400 00a4 D1F80720 		ldr	r2, [r1, #7]	@ unaligned
+ 401 00a8 D1F80B30 		ldr	r3, [r1, #11]	@ unaligned
+ 402 00ac 4260     		str	r2, [r0, #4]	@ unaligned
+ 403 00ae 8360     		str	r3, [r0, #8]	@ unaligned
+ 404 00b0 B1F80F20 		ldrh	r2, [r1, #15]	@ unaligned
+ 405 00b4 4B7C     		ldrb	r3, [r1, #17]	@ zero_extendqisi2
+ 406 00b6 8281     		strh	r2, [r0, #12]	@ unaligned
+ 407 00b8 8373     		strb	r3, [r0, #14]
+ 155:Core/HAL/driver/referee/referee.c ****         case GAME_RESULT_CMD_ID:
+ 408              		.loc 1 155 13 view .LVU81
+ 409 00ba BFE7     		b	.L20
+ 410              	.L45:
+ 157:Core/HAL/driver/referee/referee.c ****             break;
+ 411              		.loc 1 157 13 view .LVU82
+ 412 00bc CB79     		ldrb	r3, [r1, #7]	@ zero_extendqisi2
+ 413 00be C373     		strb	r3, [r0, #15]
+ 158:Core/HAL/driver/referee/referee.c ****         case GAME_ROBOT_HP_CMD_ID:
+ 414              		.loc 1 158 13 view .LVU83
+ 415 00c0 BCE7     		b	.L20
+ 416              	.L44:
+ 160:Core/HAL/driver/referee/referee.c ****             break;
+ 417              		.loc 1 160 13 view .LVU84
+ 418 00c2 D1F807E0 		ldr	lr, [r1, #7]	@ unaligned
+ 419 00c6 D1F80BC0 		ldr	ip, [r1, #11]	@ unaligned
+ 420 00ca D1F80F20 		ldr	r2, [r1, #15]	@ unaligned
+ 421 00ce D1F81330 		ldr	r3, [r1, #19]	@ unaligned
+ 422 00d2 C0F810E0 		str	lr, [r0, #16]	@ unaligned
+ 423 00d6 C0F814C0 		str	ip, [r0, #20]	@ unaligned
+ 424 00da 8261     		str	r2, [r0, #24]	@ unaligned
+ 425 00dc C361     		str	r3, [r0, #28]	@ unaligned
+ 426 00de D1F817E0 		ldr	lr, [r1, #23]	@ unaligned
+ 427 00e2 D1F81BC0 		ldr	ip, [r1, #27]	@ unaligned
+ 428 00e6 D1F81F20 		ldr	r2, [r1, #31]	@ unaligned
+ 429 00ea D1F82330 		ldr	r3, [r1, #35]	@ unaligned
+ 430 00ee C0F820E0 		str	lr, [r0, #32]	@ unaligned
+ 431 00f2 C0F824C0 		str	ip, [r0, #36]	@ unaligned
+ 432 00f6 8262     		str	r2, [r0, #40]	@ unaligned
+ 433 00f8 C362     		str	r3, [r0, #44]	@ unaligned
+ 161:Core/HAL/driver/referee/referee.c ****         case DART_STATUS_ID:
+ 434              		.loc 1 161 13 view .LVU85
+ 435 00fa 9FE7     		b	.L20
+ 436              	.L42:
+ 163:Core/HAL/driver/referee/referee.c ****             break;
+ 437              		.loc 1 163 13 view .LVU86
+ 438 00fc B1F80720 		ldrh	r2, [r1, #7]	@ unaligned
+ 439 0100 4B7A     		ldrb	r3, [r1, #9]	@ zero_extendqisi2
+ 440 0102 0286     		strh	r2, [r0, #48]	@ unaligned
+ 441 0104 80F83230 		strb	r3, [r0, #50]
+ 164:Core/HAL/driver/referee/referee.c ****         case FIELD_EVENTS_CMD_ID:
+ 442              		.loc 1 164 13 view .LVU87
+ 443 0108 98E7     		b	.L20
+ 444              	.L41:
+ 166:Core/HAL/driver/referee/referee.c ****             break;
+ 445              		.loc 1 166 13 view .LVU88
+ 446 010a D1F80730 		ldr	r3, [r1, #7]	@ unaligned
+ 447 010e C0F83330 		str	r3, [r0, #51]	@ unaligned
+ 167:Core/HAL/driver/referee/referee.c ****         case SUPPLY_PROJECTILE_ACTION_CMD_ID:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 14
+
+
+ 448              		.loc 1 167 13 view .LVU89
+ 449 0112 93E7     		b	.L20
+ 450              	.L40:
+ 169:Core/HAL/driver/referee/referee.c ****             break;
+ 451              		.loc 1 169 13 view .LVU90
+ 452 0114 D1F80730 		ldr	r3, [r1, #7]	@ unaligned
+ 453 0118 C0F83730 		str	r3, [r0, #55]	@ unaligned
+ 170:Core/HAL/driver/referee/referee.c ****         case SUPPLY_PROJECTILE_BOOKING_CMD_ID:
+ 454              		.loc 1 170 13 view .LVU91
+ 455 011c 8EE7     		b	.L20
+ 456              	.L39:
+ 175:Core/HAL/driver/referee/referee.c ****             break;
+ 457              		.loc 1 175 13 view .LVU92
+ 458 011e B1F80730 		ldrh	r3, [r1, #7]	@ unaligned
+ 459 0122 A0F83B30 		strh	r3, [r0, #59]	@ unaligned
+ 176:Core/HAL/driver/referee/referee.c ****         case DART_REMAINING_TIME_ID:
+ 460              		.loc 1 176 13 view .LVU93
+ 461 0126 89E7     		b	.L20
+ 462              	.L37:
+ 178:Core/HAL/driver/referee/referee.c ****             break;
+ 463              		.loc 1 178 13 view .LVU94
+ 464 0128 CB79     		ldrb	r3, [r1, #7]	@ zero_extendqisi2
+ 465 012a 80F83D30 		strb	r3, [r0, #61]
+ 179:Core/HAL/driver/referee/referee.c ****         case ROBOT_STATE_CMD_ID:
+ 466              		.loc 1 179 13 view .LVU95
+ 467 012e 85E7     		b	.L20
+ 468              	.L36:
+ 182:Core/HAL/driver/referee/referee.c ****                 obj->robot_status_received = 1;
+ 469              		.loc 1 182 13 view .LVU96
+ 182:Core/HAL/driver/referee/referee.c ****                 obj->robot_status_received = 1;
+ 470              		.loc 1 182 21 is_stmt 0 view .LVU97
+ 471 0130 90F8BC31 		ldrb	r3, [r0, #444]	@ zero_extendqisi2
+ 182:Core/HAL/driver/referee/referee.c ****                 obj->robot_status_received = 1;
+ 472              		.loc 1 182 16 view .LVU98
+ 473 0134 13B9     		cbnz	r3, .L51
+ 183:Core/HAL/driver/referee/referee.c ****             }
+ 474              		.loc 1 183 17 is_stmt 1 view .LVU99
+ 183:Core/HAL/driver/referee/referee.c ****             }
+ 475              		.loc 1 183 44 is_stmt 0 view .LVU100
+ 476 0136 0123     		movs	r3, #1
+ 477 0138 80F8BC31 		strb	r3, [r0, #444]
+ 478              	.L51:
+ 185:Core/HAL/driver/referee/referee.c ****             break;
+ 479              		.loc 1 185 13 is_stmt 1 view .LVU101
+ 480 013c D1F80720 		ldr	r2, [r1, #7]	@ unaligned
+ 481 0140 D1F80B30 		ldr	r3, [r1, #11]	@ unaligned
+ 482 0144 D1F80FE0 		ldr	lr, [r1, #15]	@ unaligned
+ 483 0148 D1F813C0 		ldr	ip, [r1, #19]	@ unaligned
+ 484 014c C0F83E20 		str	r2, [r0, #62]	@ unaligned
+ 485 0150 C0F84230 		str	r3, [r0, #66]	@ unaligned
+ 486 0154 C0F846E0 		str	lr, [r0, #70]	@ unaligned
+ 487 0158 C0F84AC0 		str	ip, [r0, #74]	@ unaligned
+ 488 015c D1F81720 		ldr	r2, [r1, #23]	@ unaligned
+ 489 0160 D1F81B30 		ldr	r3, [r1, #27]	@ unaligned
+ 490 0164 C0F84E20 		str	r2, [r0, #78]	@ unaligned
+ 491 0168 C0F85230 		str	r3, [r0, #82]	@ unaligned
+ 492 016c B1F81F20 		ldrh	r2, [r1, #31]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 15
+
+
+ 493 0170 91F82130 		ldrb	r3, [r1, #33]	@ zero_extendqisi2
+ 494 0174 A0F85620 		strh	r2, [r0, #86]	@ unaligned
+ 495 0178 80F85830 		strb	r3, [r0, #88]
+ 186:Core/HAL/driver/referee/referee.c ****         case POWER_HEAT_DATA_CMD_ID:
+ 496              		.loc 1 186 13 view .LVU102
+ 497 017c 5EE7     		b	.L20
+ 498              	.L35:
+ 188:Core/HAL/driver/referee/referee.c ****             break;
+ 499              		.loc 1 188 13 view .LVU103
+ 500 017e D1F807E0 		ldr	lr, [r1, #7]	@ unaligned
+ 501 0182 D1F80BC0 		ldr	ip, [r1, #11]	@ unaligned
+ 502 0186 D1F80F20 		ldr	r2, [r1, #15]	@ unaligned
+ 503 018a D1F81330 		ldr	r3, [r1, #19]	@ unaligned
+ 504 018e C0F859E0 		str	lr, [r0, #89]	@ unaligned
+ 505 0192 C0F85DC0 		str	ip, [r0, #93]	@ unaligned
+ 506 0196 C0F86120 		str	r2, [r0, #97]	@ unaligned
+ 507 019a C0F86530 		str	r3, [r0, #101]	@ unaligned
+ 189:Core/HAL/driver/referee/referee.c ****         case ROBOT_POS_CMD_ID:
+ 508              		.loc 1 189 13 view .LVU104
+ 509 019e 4DE7     		b	.L20
+ 510              	.L34:
+ 191:Core/HAL/driver/referee/referee.c ****             break;
+ 511              		.loc 1 191 13 view .LVU105
+ 512 01a0 D1F807E0 		ldr	lr, [r1, #7]	@ unaligned
+ 513 01a4 D1F80BC0 		ldr	ip, [r1, #11]	@ unaligned
+ 514 01a8 D1F80F20 		ldr	r2, [r1, #15]	@ unaligned
+ 515 01ac D1F81330 		ldr	r3, [r1, #19]	@ unaligned
+ 516 01b0 C0F869E0 		str	lr, [r0, #105]	@ unaligned
+ 517 01b4 C0F86DC0 		str	ip, [r0, #109]	@ unaligned
+ 518 01b8 C0F87120 		str	r2, [r0, #113]	@ unaligned
+ 519 01bc C0F87530 		str	r3, [r0, #117]	@ unaligned
+ 192:Core/HAL/driver/referee/referee.c ****         case BUFF_MUSK_CMD_ID:
+ 520              		.loc 1 192 13 view .LVU106
+ 521 01c0 3CE7     		b	.L20
+ 522              	.L33:
+ 194:Core/HAL/driver/referee/referee.c ****             break;
+ 523              		.loc 1 194 13 view .LVU107
+ 524 01c2 CB79     		ldrb	r3, [r1, #7]	@ zero_extendqisi2
+ 525 01c4 80F87930 		strb	r3, [r0, #121]
+ 195:Core/HAL/driver/referee/referee.c ****         case AERIAL_ROBOT_ENERGY_CMD_ID:
+ 526              		.loc 1 195 13 view .LVU108
+ 527 01c8 38E7     		b	.L20
+ 528              	.L32:
+ 197:Core/HAL/driver/referee/referee.c ****             break;
+ 529              		.loc 1 197 13 view .LVU109
+ 530 01ca CB79     		ldrb	r3, [r1, #7]	@ zero_extendqisi2
+ 531 01cc 80F87A30 		strb	r3, [r0, #122]
+ 198:Core/HAL/driver/referee/referee.c ****         case ROBOT_HURT_CMD_ID:
+ 532              		.loc 1 198 13 view .LVU110
+ 533 01d0 34E7     		b	.L20
+ 534              	.L31:
+ 200:Core/HAL/driver/referee/referee.c ****             break;
+ 535              		.loc 1 200 13 view .LVU111
+ 536 01d2 CB79     		ldrb	r3, [r1, #7]	@ zero_extendqisi2
+ 537 01d4 80F87B30 		strb	r3, [r0, #123]
+ 201:Core/HAL/driver/referee/referee.c ****         case SHOOT_DATA_CMD_ID:
+ 538              		.loc 1 201 13 view .LVU112
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 16
+
+
+ 539 01d8 30E7     		b	.L20
+ 540              	.L30:
+ 203:Core/HAL/driver/referee/referee.c ****             break;
+ 541              		.loc 1 203 13 view .LVU113
+ 542 01da D1F80730 		ldr	r3, [r1, #7]	@ unaligned
+ 543 01de C367     		str	r3, [r0, #124]	@ unaligned
+ 544 01e0 B1F80B20 		ldrh	r2, [r1, #11]	@ unaligned
+ 545 01e4 4B7B     		ldrb	r3, [r1, #13]	@ zero_extendqisi2
+ 546 01e6 A0F88020 		strh	r2, [r0, #128]	@ unaligned
+ 547 01ea 80F88230 		strb	r3, [r0, #130]
+ 204:Core/HAL/driver/referee/referee.c ****         case BULLET_REMAINING_CMD_ID:
+ 548              		.loc 1 204 13 view .LVU114
+ 549 01ee 25E7     		b	.L20
+ 550              	.L29:
+ 206:Core/HAL/driver/referee/referee.c ****             break;
+ 551              		.loc 1 206 13 view .LVU115
+ 552 01f0 D1F80730 		ldr	r3, [r1, #7]	@ unaligned
+ 553 01f4 C0F88330 		str	r3, [r0, #131]	@ unaligned
+ 554 01f8 B1F80B30 		ldrh	r3, [r1, #11]	@ unaligned
+ 555 01fc A0F88730 		strh	r3, [r0, #135]	@ unaligned
+ 207:Core/HAL/driver/referee/referee.c ****         case RFID_STATUS_ID:
+ 556              		.loc 1 207 13 view .LVU116
+ 557 0200 1CE7     		b	.L20
+ 558              	.L28:
+ 209:Core/HAL/driver/referee/referee.c ****             break;
+ 559              		.loc 1 209 13 view .LVU117
+ 560 0202 D1F80730 		ldr	r3, [r1, #7]	@ unaligned
+ 561 0206 C0F88930 		str	r3, [r0, #137]	@ unaligned
+ 210:Core/HAL/driver/referee/referee.c ****         case DART_CILENT_CMD_T:
+ 562              		.loc 1 210 13 view .LVU118
+ 563 020a 17E7     		b	.L20
+ 564              	.L26:
+ 212:Core/HAL/driver/referee/referee.c ****             break;
+ 565              		.loc 1 212 13 view .LVU119
+ 566 020c D1F80730 		ldr	r3, [r1, #7]	@ unaligned
+ 567 0210 C0F88D30 		str	r3, [r0, #141]	@ unaligned
+ 568 0214 B1F80B30 		ldrh	r3, [r1, #11]	@ unaligned
+ 569 0218 A0F89130 		strh	r3, [r0, #145]	@ unaligned
+ 213:Core/HAL/driver/referee/referee.c ****         case ROBOT_INTERACT_ID: {
+ 570              		.loc 1 213 13 view .LVU120
+ 571 021c 0EE7     		b	.L20
+ 572              	.L48:
+ 224:Core/HAL/driver/referee/referee.c ****             break;
+ 573              		.loc 1 224 13 view .LVU121
+ 574 021e D1F807C0 		ldr	ip, [r1, #7]	@ unaligned
+ 575 0222 D1F80B20 		ldr	r2, [r1, #11]	@ unaligned
+ 576 0226 D1F80F30 		ldr	r3, [r1, #15]	@ unaligned
+ 577 022a C0F893C0 		str	ip, [r0, #147]	@ unaligned
+ 578 022e C0F89720 		str	r2, [r0, #151]	@ unaligned
+ 579 0232 C0F89B30 		str	r3, [r0, #155]	@ unaligned
+ 580 0236 B1F81320 		ldrh	r2, [r1, #19]	@ unaligned
+ 581 023a 4B7D     		ldrb	r3, [r1, #21]	@ zero_extendqisi2
+ 582 023c A0F89F20 		strh	r2, [r0, #159]	@ unaligned
+ 583 0240 80F8A130 		strb	r3, [r0, #161]
+ 225:Core/HAL/driver/referee/referee.c ****         case CLIENT_MAP_COMMAND_T:
+ 584              		.loc 1 225 13 view .LVU122
+ 585 0244 FAE6     		b	.L20
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 17
+
+
+ 586              		.cfi_endproc
+ 587              	.LFE137:
+ 589              		.section	.text.referee_data_solve,"ax",%progbits
+ 590              		.align	1
+ 591              		.global	referee_data_solve
+ 592              		.syntax unified
+ 593              		.thumb
+ 594              		.thumb_func
+ 596              	referee_data_solve:
+ 597              	.LVL29:
+ 598              	.LFB136:
+  47:Core/HAL/driver/referee/referee.c ****     uint8_t *byte_now_pt = NULL;
+ 599              		.loc 1 47 39 view -0
+ 600              		.cfi_startproc
+ 601              		@ args = 0, pretend = 0, frame = 0
+ 602              		@ frame_needed = 0, uses_anonymous_args = 0
+  47:Core/HAL/driver/referee/referee.c ****     uint8_t *byte_now_pt = NULL;
+ 603              		.loc 1 47 39 is_stmt 0 view .LVU124
+ 604 0000 70B5     		push	{r4, r5, r6, lr}
+ 605              	.LCFI6:
+ 606              		.cfi_def_cfa_offset 16
+ 607              		.cfi_offset 4, -16
+ 608              		.cfi_offset 5, -12
+ 609              		.cfi_offset 6, -8
+ 610              		.cfi_offset 14, -4
+ 611 0002 0446     		mov	r4, r0
+  48:Core/HAL/driver/referee/referee.c ****     // 反复弹出直到缓冲队列长度为0
+ 612              		.loc 1 48 5 is_stmt 1 view .LVU125
+ 613              	.LVL30:
+  50:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 614              		.loc 1 50 5 view .LVU126
+  50:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 615              		.loc 1 50 11 is_stmt 0 view .LVU127
+ 616 0004 37E0     		b	.L57
+ 617              	.LVL31:
+ 618              	.L66:
+ 619              	.LBB8:
+  56:Core/HAL/driver/referee/referee.c ****                     obj->tool.step++;
+ 620              		.loc 1 56 17 is_stmt 1 view .LVU128
+  56:Core/HAL/driver/referee/referee.c ****                     obj->tool.step++;
+ 621              		.loc 1 56 20 is_stmt 0 view .LVU129
+ 622 0006 A52E     		cmp	r6, #165
+ 623 0008 06D0     		beq	.L78
+  61:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 624              		.loc 1 61 21 is_stmt 1 view .LVU130
+  61:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 625              		.loc 1 61 36 is_stmt 0 view .LVU131
+ 626 000a 0023     		movs	r3, #0
+ 627 000c 84F8B931 		strb	r3, [r4, #441]
+  62:Core/HAL/driver/referee/referee.c ****                 }
+ 628              		.loc 1 62 21 is_stmt 1 view .LVU132
+  62:Core/HAL/driver/referee/referee.c ****                 }
+ 629              		.loc 1 62 50 is_stmt 0 view .LVU133
+ 630 0010 0123     		movs	r3, #1
+ 631 0012 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 632 0016 2EE0     		b	.L57
+ 633              	.L78:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 18
+
+
+  57:Core/HAL/driver/referee/referee.c ****                     obj->tool.rx_pack.header.SOF = byte_now;
+ 634              		.loc 1 57 21 is_stmt 1 view .LVU134
+  57:Core/HAL/driver/referee/referee.c ****                     obj->tool.rx_pack.header.SOF = byte_now;
+ 635              		.loc 1 57 35 is_stmt 0 view .LVU135
+ 636 0018 0133     		adds	r3, r3, #1
+ 637 001a 84F8B931 		strb	r3, [r4, #441]
+  58:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 2;
+ 638              		.loc 1 58 21 is_stmt 1 view .LVU136
+  58:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 2;
+ 639              		.loc 1 58 50 is_stmt 0 view .LVU137
+ 640 001e 84F83061 		strb	r6, [r4, #304]
+  59:Core/HAL/driver/referee/referee.c ****                 } else {
+ 641              		.loc 1 59 21 is_stmt 1 view .LVU138
+  59:Core/HAL/driver/referee/referee.c ****                 } else {
+ 642              		.loc 1 59 50 is_stmt 0 view .LVU139
+ 643 0022 0223     		movs	r3, #2
+ 644 0024 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 645 0028 25E0     		b	.L57
+ 646              	.L65:
+  66:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+ 647              		.loc 1 66 17 is_stmt 1 view .LVU140
+  66:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+ 648              		.loc 1 66 54 is_stmt 0 view .LVU141
+ 649 002a A4F83161 		strh	r6, [r4, #305]	@ unaligned
+  67:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 650              		.loc 1 67 17 is_stmt 1 view .LVU142
+  67:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 651              		.loc 1 67 31 is_stmt 0 view .LVU143
+ 652 002e 2068     		ldr	r0, [r4]
+ 653              	.LVL32:
+  67:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 654              		.loc 1 67 31 view .LVU144
+ 655 0030 FFF7FEFF 		bl	circular_queue_pop
+ 656              	.LVL33:
+  68:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.header.data_length |= ((uint16_t)byte_now << 8);
+ 657              		.loc 1 68 17 is_stmt 1 view .LVU145
+  68:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.header.data_length |= ((uint16_t)byte_now << 8);
+ 658              		.loc 1 68 26 is_stmt 0 view .LVU146
+ 659 0034 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+ 660              	.LVL34:
+  69:Core/HAL/driver/referee/referee.c ****                 // 包错误判断-长度超范围
+ 661              		.loc 1 69 17 is_stmt 1 view .LVU147
+  69:Core/HAL/driver/referee/referee.c ****                 // 包错误判断-长度超范围
+ 662              		.loc 1 69 54 is_stmt 0 view .LVU148
+ 663 0036 B4F83131 		ldrh	r3, [r4, #305]	@ unaligned
+ 664 003a 43EA0223 		orr	r3, r3, r2, lsl #8
+ 665 003e A4F83131 		strh	r3, [r4, #305]	@ unaligned
+  71:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = 0;
+ 666              		.loc 1 71 17 is_stmt 1 view .LVU149
+  71:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = 0;
+ 667              		.loc 1 71 20 is_stmt 0 view .LVU150
+ 668 0042 772B     		cmp	r3, #119
+ 669 0044 06D9     		bls	.L69
+  72:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 670              		.loc 1 72 21 is_stmt 1 view .LVU151
+  72:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 671              		.loc 1 72 36 is_stmt 0 view .LVU152
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 19
+
+
+ 672 0046 0023     		movs	r3, #0
+ 673 0048 84F8B931 		strb	r3, [r4, #441]
+  73:Core/HAL/driver/referee/referee.c ****                 } else {
+ 674              		.loc 1 73 21 is_stmt 1 view .LVU153
+  73:Core/HAL/driver/referee/referee.c ****                 } else {
+ 675              		.loc 1 73 50 is_stmt 0 view .LVU154
+ 676 004c 0123     		movs	r3, #1
+ 677 004e A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 678 0052 10E0     		b	.L57
+ 679              	.L69:
+  75:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 680              		.loc 1 75 21 is_stmt 1 view .LVU155
+  75:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 681              		.loc 1 75 30 is_stmt 0 view .LVU156
+ 682 0054 94F8B931 		ldrb	r3, [r4, #441]	@ zero_extendqisi2
+  75:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 683              		.loc 1 75 35 view .LVU157
+ 684 0058 0133     		adds	r3, r3, #1
+ 685 005a 84F8B931 		strb	r3, [r4, #441]
+  76:Core/HAL/driver/referee/referee.c ****                 }
+ 686              		.loc 1 76 21 is_stmt 1 view .LVU158
+  76:Core/HAL/driver/referee/referee.c ****                 }
+ 687              		.loc 1 76 50 is_stmt 0 view .LVU159
+ 688 005e 0123     		movs	r3, #1
+ 689 0060 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 690 0064 07E0     		b	.L57
+ 691              	.LVL35:
+ 692              	.L64:
+  81:Core/HAL/driver/referee/referee.c ****                 obj->tool.step++;
+ 693              		.loc 1 81 17 is_stmt 1 view .LVU160
+  81:Core/HAL/driver/referee/referee.c ****                 obj->tool.step++;
+ 694              		.loc 1 81 46 is_stmt 0 view .LVU161
+ 695 0066 84F83361 		strb	r6, [r4, #307]
+  82:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 1;
+ 696              		.loc 1 82 17 is_stmt 1 view .LVU162
+  82:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 1;
+ 697              		.loc 1 82 31 is_stmt 0 view .LVU163
+ 698 006a 0133     		adds	r3, r3, #1
+ 699 006c 84F8B931 		strb	r3, [r4, #441]
+  83:Core/HAL/driver/referee/referee.c ****                 break;
+ 700              		.loc 1 83 17 is_stmt 1 view .LVU164
+  83:Core/HAL/driver/referee/referee.c ****                 break;
+ 701              		.loc 1 83 46 is_stmt 0 view .LVU165
+ 702 0070 0123     		movs	r3, #1
+ 703 0072 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+  84:Core/HAL/driver/referee/referee.c ****             case s_header_crc8: {
+ 704              		.loc 1 84 17 is_stmt 1 view .LVU166
+ 705              	.LVL36:
+ 706              	.L57:
+  84:Core/HAL/driver/referee/referee.c ****             case s_header_crc8: {
+ 707              		.loc 1 84 17 is_stmt 0 view .LVU167
+ 708              	.LBE8:
+  50:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 709              		.loc 1 50 11 is_stmt 1 view .LVU168
+  50:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 710              		.loc 1 50 15 is_stmt 0 view .LVU169
+ 711 0076 2068     		ldr	r0, [r4]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 20
+
+
+  50:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 712              		.loc 1 50 29 view .LVU170
+ 713 0078 8268     		ldr	r2, [r0, #8]	@ unaligned
+  50:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 714              		.loc 1 50 50 view .LVU171
+ 715 007a B4F8BA31 		ldrh	r3, [r4, #442]
+  50:Core/HAL/driver/referee/referee.c ****         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 716              		.loc 1 50 11 view .LVU172
+ 717 007e 9A42     		cmp	r2, r3
+ 718 0080 C0F08E80 		bcc	.L79
+ 719              	.LBB12:
+  51:Core/HAL/driver/referee/referee.c ****         uint8_t byte_now = *byte_now_pt;
+ 720              		.loc 1 51 9 is_stmt 1 view .LVU173
+  51:Core/HAL/driver/referee/referee.c ****         uint8_t byte_now = *byte_now_pt;
+ 721              		.loc 1 51 23 is_stmt 0 view .LVU174
+ 722 0084 FFF7FEFF 		bl	circular_queue_pop
+ 723              	.LVL37:
+  52:Core/HAL/driver/referee/referee.c ****         switch (obj->tool.step) {
+ 724              		.loc 1 52 9 is_stmt 1 view .LVU175
+  52:Core/HAL/driver/referee/referee.c ****         switch (obj->tool.step) {
+ 725              		.loc 1 52 17 is_stmt 0 view .LVU176
+ 726 0088 0678     		ldrb	r6, [r0]	@ zero_extendqisi2
+ 727              	.LVL38:
+  53:Core/HAL/driver/referee/referee.c ****             case s_header_sof:
+ 728              		.loc 1 53 9 is_stmt 1 view .LVU177
+  53:Core/HAL/driver/referee/referee.c ****             case s_header_sof:
+ 729              		.loc 1 53 26 is_stmt 0 view .LVU178
+ 730 008a 94F8B931 		ldrb	r3, [r4, #441]	@ zero_extendqisi2
+  53:Core/HAL/driver/referee/referee.c ****             case s_header_sof:
+ 731              		.loc 1 53 9 view .LVU179
+ 732 008e 062B     		cmp	r3, #6
+ 733 0090 7FD8     		bhi	.L58
+ 734 0092 01A2     		adr	r2, .L60
+ 735 0094 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 736              		.p2align 2
+ 737              	.L60:
+ 738 0098 07000000 		.word	.L66+1
+ 739 009c 2B000000 		.word	.L65+1
+ 740 00a0 67000000 		.word	.L64+1
+ 741 00a4 B5000000 		.word	.L63+1
+ 742 00a8 EB000000 		.word	.L62+1
+ 743 00ac 35010000 		.word	.L76+1
+ 744 00b0 4B010000 		.word	.L59+1
+ 745              		.p2align 1
+ 746              	.L63:
+ 747              	.LBB9:
+  87:Core/HAL/driver/referee/referee.c ****                 if (crc8_result == byte_now) {
+ 748              		.loc 1 87 17 is_stmt 1 view .LVU180
+  87:Core/HAL/driver/referee/referee.c ****                 if (crc8_result == byte_now) {
+ 749              		.loc 1 87 39 is_stmt 0 view .LVU181
+ 750 00b4 404B     		ldr	r3, .L82
+ 751 00b6 1A68     		ldr	r2, [r3]
+ 752 00b8 0421     		movs	r1, #4
+ 753 00ba 04F59870 		add	r0, r4, #304
+ 754              	.LVL39:
+  87:Core/HAL/driver/referee/referee.c ****                 if (crc8_result == byte_now) {
+ 755              		.loc 1 87 39 view .LVU182
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 21
+
+
+ 756 00be FFF7FEFF 		bl	CRC8_Modbus_calc
+ 757              	.LVL40:
+  88:Core/HAL/driver/referee/referee.c ****                     obj->tool.step++;
+ 758              		.loc 1 88 17 is_stmt 1 view .LVU183
+  88:Core/HAL/driver/referee/referee.c ****                     obj->tool.step++;
+ 759              		.loc 1 88 20 is_stmt 0 view .LVU184
+ 760 00c2 8642     		cmp	r6, r0
+ 761 00c4 06D0     		beq	.L80
+  94:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 762              		.loc 1 94 21 is_stmt 1 view .LVU185
+  94:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 763              		.loc 1 94 36 is_stmt 0 view .LVU186
+ 764 00c6 0023     		movs	r3, #0
+ 765 00c8 84F8B931 		strb	r3, [r4, #441]
+  95:Core/HAL/driver/referee/referee.c ****                 }
+ 766              		.loc 1 95 21 is_stmt 1 view .LVU187
+  95:Core/HAL/driver/referee/referee.c ****                 }
+ 767              		.loc 1 95 50 is_stmt 0 view .LVU188
+ 768 00cc 0123     		movs	r3, #1
+ 769 00ce A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 770 00d2 D0E7     		b	.L57
+ 771              	.L80:
+  89:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 2;
+ 772              		.loc 1 89 21 is_stmt 1 view .LVU189
+  89:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 2;
+ 773              		.loc 1 89 30 is_stmt 0 view .LVU190
+ 774 00d4 94F8B931 		ldrb	r3, [r4, #441]	@ zero_extendqisi2
+  89:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 2;
+ 775              		.loc 1 89 35 view .LVU191
+ 776 00d8 0133     		adds	r3, r3, #1
+ 777 00da 84F8B931 		strb	r3, [r4, #441]
+  90:Core/HAL/driver/referee/referee.c ****                     obj->tool.rx_pack.header.CRC8 = byte_now;
+ 778              		.loc 1 90 21 is_stmt 1 view .LVU192
+  90:Core/HAL/driver/referee/referee.c ****                     obj->tool.rx_pack.header.CRC8 = byte_now;
+ 779              		.loc 1 90 50 is_stmt 0 view .LVU193
+ 780 00de 0223     		movs	r3, #2
+ 781 00e0 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+  91:Core/HAL/driver/referee/referee.c ****                     // printf_log("crc8:%d\n",obj->tool.buffer_pt);
+ 782              		.loc 1 91 21 is_stmt 1 view .LVU194
+  91:Core/HAL/driver/referee/referee.c ****                     // printf_log("crc8:%d\n",obj->tool.buffer_pt);
+ 783              		.loc 1 91 51 is_stmt 0 view .LVU195
+ 784 00e4 84F83461 		strb	r6, [r4, #308]
+ 785 00e8 C5E7     		b	.L57
+ 786              	.LVL41:
+ 787              	.L62:
+  91:Core/HAL/driver/referee/referee.c ****                     // printf_log("crc8:%d\n",obj->tool.buffer_pt);
+ 788              		.loc 1 91 51 view .LVU196
+ 789              	.LBE9:
+ 100:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+ 790              		.loc 1 100 17 is_stmt 1 view .LVU197
+ 100:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+ 791              		.loc 1 100 42 is_stmt 0 view .LVU198
+ 792 00ea A4F83561 		strh	r6, [r4, #309]	@ unaligned
+ 101:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 793              		.loc 1 101 17 is_stmt 1 view .LVU199
+ 101:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 794              		.loc 1 101 31 is_stmt 0 view .LVU200
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 22
+
+
+ 795 00ee 2068     		ldr	r0, [r4]
+ 796              	.LVL42:
+ 101:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 797              		.loc 1 101 31 view .LVU201
+ 798 00f0 FFF7FEFF 		bl	circular_queue_pop
+ 799              	.LVL43:
+ 102:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.cmd_id |= ((uint16_t)byte_now << 8);
+ 800              		.loc 1 102 17 is_stmt 1 view .LVU202
+ 102:Core/HAL/driver/referee/referee.c ****                 obj->tool.rx_pack.cmd_id |= ((uint16_t)byte_now << 8);
+ 801              		.loc 1 102 26 is_stmt 0 view .LVU203
+ 802 00f4 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+ 803              	.LVL44:
+ 103:Core/HAL/driver/referee/referee.c ****                 obj->tool.step++;
+ 804              		.loc 1 103 17 is_stmt 1 view .LVU204
+ 103:Core/HAL/driver/referee/referee.c ****                 obj->tool.step++;
+ 805              		.loc 1 103 42 is_stmt 0 view .LVU205
+ 806 00f6 B4F83531 		ldrh	r3, [r4, #309]	@ unaligned
+ 807 00fa 43EA0223 		orr	r3, r3, r2, lsl #8
+ 808 00fe A4F83531 		strh	r3, [r4, #309]	@ unaligned
+ 104:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = obj->tool.rx_pack.header.data_length;
+ 809              		.loc 1 104 17 is_stmt 1 view .LVU206
+ 104:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = obj->tool.rx_pack.header.data_length;
+ 810              		.loc 1 104 26 is_stmt 0 view .LVU207
+ 811 0102 94F8B931 		ldrb	r3, [r4, #441]	@ zero_extendqisi2
+ 104:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = obj->tool.rx_pack.header.data_length;
+ 812              		.loc 1 104 31 view .LVU208
+ 813 0106 0133     		adds	r3, r3, #1
+ 814 0108 84F8B931 		strb	r3, [r4, #441]
+ 105:Core/HAL/driver/referee/referee.c ****                 break;
+ 815              		.loc 1 105 17 is_stmt 1 view .LVU209
+ 105:Core/HAL/driver/referee/referee.c ****                 break;
+ 816              		.loc 1 105 72 is_stmt 0 view .LVU210
+ 817 010c B4F83131 		ldrh	r3, [r4, #305]	@ unaligned
+ 105:Core/HAL/driver/referee/referee.c ****                 break;
+ 818              		.loc 1 105 46 view .LVU211
+ 819 0110 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 106:Core/HAL/driver/referee/referee.c ****             case s_data:
+ 820              		.loc 1 106 17 is_stmt 1 view .LVU212
+ 821 0114 AFE7     		b	.L57
+ 822              	.LVL45:
+ 823              	.L71:
+ 824              	.LBB10:
+ 113:Core/HAL/driver/referee/referee.c ****                 }
+ 825              		.loc 1 113 21 discriminator 2 view .LVU213
+ 113:Core/HAL/driver/referee/referee.c ****                 }
+ 826              		.loc 1 113 47 is_stmt 0 discriminator 2 view .LVU214
+ 827 0116 6319     		adds	r3, r4, r5
+ 828 0118 83F83761 		strb	r6, [r3, #311]
+ 108:Core/HAL/driver/referee/referee.c ****                     if (i > 0) {
+ 829              		.loc 1 108 78 is_stmt 1 discriminator 2 view .LVU215
+ 108:Core/HAL/driver/referee/referee.c ****                     if (i > 0) {
+ 830              		.loc 1 108 79 is_stmt 0 discriminator 2 view .LVU216
+ 831 011c 0135     		adds	r5, r5, #1
+ 832              	.LVL46:
+ 833              	.L61:
+ 108:Core/HAL/driver/referee/referee.c ****                     if (i > 0) {
+ 834              		.loc 1 108 36 is_stmt 1 discriminator 1 view .LVU217
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 23
+
+
+ 108:Core/HAL/driver/referee/referee.c ****                     if (i > 0) {
+ 835              		.loc 1 108 64 is_stmt 0 discriminator 1 view .LVU218
+ 836 011e B4F83131 		ldrh	r3, [r4, #305]	@ unaligned
+ 108:Core/HAL/driver/referee/referee.c ****                     if (i > 0) {
+ 837              		.loc 1 108 17 discriminator 1 view .LVU219
+ 838 0122 AB42     		cmp	r3, r5
+ 839 0124 08D9     		bls	.L81
+ 109:Core/HAL/driver/referee/referee.c ****                         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 840              		.loc 1 109 21 is_stmt 1 view .LVU220
+ 109:Core/HAL/driver/referee/referee.c ****                         byte_now_pt = circular_queue_pop(obj->primary_data);
+ 841              		.loc 1 109 24 is_stmt 0 view .LVU221
+ 842 0126 002D     		cmp	r5, #0
+ 843 0128 F5D0     		beq	.L71
+ 110:Core/HAL/driver/referee/referee.c ****                         byte_now = *byte_now_pt;
+ 844              		.loc 1 110 25 is_stmt 1 view .LVU222
+ 110:Core/HAL/driver/referee/referee.c ****                         byte_now = *byte_now_pt;
+ 845              		.loc 1 110 39 is_stmt 0 view .LVU223
+ 846 012a 2068     		ldr	r0, [r4]
+ 847              	.LVL47:
+ 110:Core/HAL/driver/referee/referee.c ****                         byte_now = *byte_now_pt;
+ 848              		.loc 1 110 39 view .LVU224
+ 849 012c FFF7FEFF 		bl	circular_queue_pop
+ 850              	.LVL48:
+ 111:Core/HAL/driver/referee/referee.c ****                     }
+ 851              		.loc 1 111 25 is_stmt 1 view .LVU225
+ 111:Core/HAL/driver/referee/referee.c ****                     }
+ 852              		.loc 1 111 34 is_stmt 0 view .LVU226
+ 853 0130 0678     		ldrb	r6, [r0]	@ zero_extendqisi2
+ 854              	.LVL49:
+ 111:Core/HAL/driver/referee/referee.c ****                     }
+ 855              		.loc 1 111 34 view .LVU227
+ 856 0132 F0E7     		b	.L71
+ 857              	.LVL50:
+ 858              	.L76:
+ 111:Core/HAL/driver/referee/referee.c ****                     }
+ 859              		.loc 1 111 34 view .LVU228
+ 860              	.LBE10:
+  53:Core/HAL/driver/referee/referee.c ****             case s_header_sof:
+ 861              		.loc 1 53 9 view .LVU229
+ 862 0134 0025     		movs	r5, #0
+ 863 0136 F2E7     		b	.L61
+ 864              	.LVL51:
+ 865              	.L81:
+ 115:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 2;
+ 866              		.loc 1 115 17 is_stmt 1 view .LVU230
+ 115:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 2;
+ 867              		.loc 1 115 26 is_stmt 0 view .LVU231
+ 868 0138 94F8B931 		ldrb	r3, [r4, #441]	@ zero_extendqisi2
+ 115:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 2;
+ 869              		.loc 1 115 31 view .LVU232
+ 870 013c 0133     		adds	r3, r3, #1
+ 871 013e 84F8B931 		strb	r3, [r4, #441]
+ 116:Core/HAL/driver/referee/referee.c ****                 break;
+ 872              		.loc 1 116 17 is_stmt 1 view .LVU233
+ 116:Core/HAL/driver/referee/referee.c ****                 break;
+ 873              		.loc 1 116 46 is_stmt 0 view .LVU234
+ 874 0142 0223     		movs	r3, #2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 24
+
+
+ 875 0144 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 117:Core/HAL/driver/referee/referee.c ****             case s_crc16: {
+ 876              		.loc 1 117 17 is_stmt 1 view .LVU235
+ 877 0148 95E7     		b	.L57
+ 878              	.LVL52:
+ 879              	.L59:
+ 880              	.LBB11:
+ 119:Core/HAL/driver/referee/referee.c ****                 byte_now_pt = circular_queue_pop(obj->primary_data);
+ 881              		.loc 1 119 17 view .LVU236
+ 120:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 882              		.loc 1 120 17 view .LVU237
+ 120:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 883              		.loc 1 120 31 is_stmt 0 view .LVU238
+ 884 014a 2068     		ldr	r0, [r4]
+ 885              	.LVL53:
+ 120:Core/HAL/driver/referee/referee.c ****                 byte_now = *byte_now_pt;
+ 886              		.loc 1 120 31 view .LVU239
+ 887 014c FFF7FEFF 		bl	circular_queue_pop
+ 888              	.LVL54:
+ 121:Core/HAL/driver/referee/referee.c ****                 crc16_recv |= ((uint16_t)byte_now << 8);
+ 889              		.loc 1 121 17 is_stmt 1 view .LVU240
+ 121:Core/HAL/driver/referee/referee.c ****                 crc16_recv |= ((uint16_t)byte_now << 8);
+ 890              		.loc 1 121 26 is_stmt 0 view .LVU241
+ 891 0150 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 892              	.LVL55:
+ 122:Core/HAL/driver/referee/referee.c ****                 // printf_log("a:%d %d\n",REFEREE_PACK_LEN_HEADER + REFEREE_PACK_LEN_CMD_ID + obj->
+ 893              		.loc 1 122 17 is_stmt 1 view .LVU242
+ 122:Core/HAL/driver/referee/referee.c ****                 // printf_log("a:%d %d\n",REFEREE_PACK_LEN_HEADER + REFEREE_PACK_LEN_CMD_ID + obj->
+ 894              		.loc 1 122 28 is_stmt 0 view .LVU243
+ 895 0152 46EA0326 		orr	r6, r6, r3, lsl #8
+ 896              	.LVL56:
+ 125:Core/HAL/driver/referee/referee.c **** 
+ 897              		.loc 1 125 17 is_stmt 1 view .LVU244
+ 125:Core/HAL/driver/referee/referee.c **** 
+ 898              		.loc 1 125 168 is_stmt 0 view .LVU245
+ 899 0156 B4F83111 		ldrh	r1, [r4, #305]	@ unaligned
+ 125:Core/HAL/driver/referee/referee.c **** 
+ 900              		.loc 1 125 41 view .LVU246
+ 901 015a 184B     		ldr	r3, .L82+4
+ 902              	.LVL57:
+ 125:Core/HAL/driver/referee/referee.c **** 
+ 903              		.loc 1 125 41 view .LVU247
+ 904 015c 1A68     		ldr	r2, [r3]
+ 905 015e 0731     		adds	r1, r1, #7
+ 906 0160 04F59870 		add	r0, r4, #304
+ 907              	.LVL58:
+ 125:Core/HAL/driver/referee/referee.c **** 
+ 908              		.loc 1 125 41 view .LVU248
+ 909 0164 FFF7FEFF 		bl	CRC16_Modbus_calc
+ 910              	.LVL59:
+ 127:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = s_header_sof;
+ 911              		.loc 1 127 17 is_stmt 1 view .LVU249
+ 127:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = s_header_sof;
+ 912              		.loc 1 127 20 is_stmt 0 view .LVU250
+ 913 0168 8642     		cmp	r6, r0
+ 914 016a 06D0     		beq	.L73
+ 128:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 25
+
+
+ 915              		.loc 1 128 21 is_stmt 1 view .LVU251
+ 128:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 916              		.loc 1 128 36 is_stmt 0 view .LVU252
+ 917 016c 0023     		movs	r3, #0
+ 918 016e 84F8B931 		strb	r3, [r4, #441]
+ 129:Core/HAL/driver/referee/referee.c ****                 } else {
+ 919              		.loc 1 129 21 is_stmt 1 view .LVU253
+ 129:Core/HAL/driver/referee/referee.c ****                 } else {
+ 920              		.loc 1 129 50 is_stmt 0 view .LVU254
+ 921 0172 0123     		movs	r3, #1
+ 922 0174 A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 923 0178 7DE7     		b	.L57
+ 924              	.L73:
+ 132:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = s_header_sof;
+ 925              		.loc 1 132 21 is_stmt 1 view .LVU255
+ 926 017a 04F59871 		add	r1, r4, #304
+ 927 017e 2046     		mov	r0, r4
+ 928              	.LVL60:
+ 132:Core/HAL/driver/referee/referee.c ****                     obj->tool.step = s_header_sof;
+ 929              		.loc 1 132 21 is_stmt 0 view .LVU256
+ 930 0180 FFF7FEFF 		bl	referee_solve_pack
+ 931              	.LVL61:
+ 133:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 932              		.loc 1 133 21 is_stmt 1 view .LVU257
+ 133:Core/HAL/driver/referee/referee.c ****                     obj->tool.next_step_wait_len = 1;
+ 933              		.loc 1 133 36 is_stmt 0 view .LVU258
+ 934 0184 0023     		movs	r3, #0
+ 935 0186 84F8B931 		strb	r3, [r4, #441]
+ 134:Core/HAL/driver/referee/referee.c ****                 }
+ 936              		.loc 1 134 21 is_stmt 1 view .LVU259
+ 134:Core/HAL/driver/referee/referee.c ****                 }
+ 937              		.loc 1 134 50 is_stmt 0 view .LVU260
+ 938 018a 0123     		movs	r3, #1
+ 939 018c A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 940 0190 71E7     		b	.L57
+ 941              	.LVL62:
+ 942              	.L58:
+ 134:Core/HAL/driver/referee/referee.c ****                 }
+ 943              		.loc 1 134 50 view .LVU261
+ 944              	.LBE11:
+ 139:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 1;
+ 945              		.loc 1 139 17 is_stmt 1 view .LVU262
+ 139:Core/HAL/driver/referee/referee.c ****                 obj->tool.next_step_wait_len = 1;
+ 946              		.loc 1 139 32 is_stmt 0 view .LVU263
+ 947 0192 0023     		movs	r3, #0
+ 948 0194 84F8B931 		strb	r3, [r4, #441]
+ 140:Core/HAL/driver/referee/referee.c ****                 break;
+ 949              		.loc 1 140 17 is_stmt 1 view .LVU264
+ 140:Core/HAL/driver/referee/referee.c ****                 break;
+ 950              		.loc 1 140 46 is_stmt 0 view .LVU265
+ 951 0198 0123     		movs	r3, #1
+ 952 019a A4F8BA31 		strh	r3, [r4, #442]	@ movhi
+ 141:Core/HAL/driver/referee/referee.c ****         }
+ 953              		.loc 1 141 17 is_stmt 1 view .LVU266
+ 954 019e 6AE7     		b	.L57
+ 955              	.LVL63:
+ 956              	.L79:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 26
+
+
+ 141:Core/HAL/driver/referee/referee.c ****         }
+ 957              		.loc 1 141 17 is_stmt 0 view .LVU267
+ 958              	.LBE12:
+ 146:Core/HAL/driver/referee/referee.c ****         obj->rx_data.game_robot_state.shooter_id1_17mm_speed_limit /= 5;
+ 959              		.loc 1 146 5 is_stmt 1 view .LVU268
+ 146:Core/HAL/driver/referee/referee.c ****         obj->rx_data.game_robot_state.shooter_id1_17mm_speed_limit /= 5;
+ 960              		.loc 1 146 38 is_stmt 0 view .LVU269
+ 961 01a0 B4F84830 		ldrh	r3, [r4, #72]
+ 146:Core/HAL/driver/referee/referee.c ****         obj->rx_data.game_robot_state.shooter_id1_17mm_speed_limit /= 5;
+ 962              		.loc 1 146 8 view .LVU270
+ 963 01a4 1E2B     		cmp	r3, #30
+ 964 01a6 05D9     		bls	.L56
+ 147:Core/HAL/driver/referee/referee.c ****     }
+ 965              		.loc 1 147 9 is_stmt 1 view .LVU271
+ 147:Core/HAL/driver/referee/referee.c ****     }
+ 966              		.loc 1 147 68 is_stmt 0 view .LVU272
+ 967 01a8 054A     		ldr	r2, .L82+8
+ 968 01aa A2FB0323 		umull	r2, r3, r2, r3
+ 969 01ae 9B08     		lsrs	r3, r3, #2
+ 970 01b0 A4F84830 		strh	r3, [r4, #72]	@ movhi
+ 971              	.L56:
+ 149:Core/HAL/driver/referee/referee.c **** 
+ 972              		.loc 1 149 1 view .LVU273
+ 973 01b4 70BD     		pop	{r4, r5, r6, pc}
+ 974              	.LVL64:
+ 975              	.L83:
+ 149:Core/HAL/driver/referee/referee.c **** 
+ 976              		.loc 1 149 1 view .LVU274
+ 977 01b6 00BF     		.align	2
+ 978              	.L82:
+ 979 01b8 00000000 		.word	crc8_default
+ 980 01bc 00000000 		.word	crc16_default
+ 981 01c0 CDCCCCCC 		.word	-858993459
+ 982              		.cfi_endproc
+ 983              	.LFE136:
+ 985              		.section	.text.referee_recv_loop,"ax",%progbits
+ 986              		.align	1
+ 987              		.global	referee_recv_loop
+ 988              		.syntax unified
+ 989              		.thumb
+ 990              		.thumb_func
+ 992              	referee_recv_loop:
+ 993              	.LFB138:
+ 233:Core/HAL/driver/referee/referee.c **** 
+ 234:Core/HAL/driver/referee/referee.c **** void referee_recv_loop() {
+ 994              		.loc 1 234 26 is_stmt 1 view -0
+ 995              		.cfi_startproc
+ 996              		@ args = 0, pretend = 0, frame = 0
+ 997              		@ frame_needed = 0, uses_anonymous_args = 0
+ 998 0000 10B5     		push	{r4, lr}
+ 999              	.LCFI7:
+ 1000              		.cfi_def_cfa_offset 8
+ 1001              		.cfi_offset 4, -8
+ 1002              		.cfi_offset 14, -4
+ 235:Core/HAL/driver/referee/referee.c ****     for (size_t i = 0; i < referee_instances->cv_len; i++) {
+ 1003              		.loc 1 235 5 view .LVU276
+ 1004              	.LBB13:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 27
+
+
+ 1005              		.loc 1 235 10 view .LVU277
+ 1006              	.LVL65:
+ 1007              		.loc 1 235 17 is_stmt 0 view .LVU278
+ 1008 0002 0024     		movs	r4, #0
+ 1009              		.loc 1 235 5 view .LVU279
+ 1010 0004 06E0     		b	.L85
+ 1011              	.LVL66:
+ 1012              	.L86:
+ 1013              	.LBB14:
+ 236:Core/HAL/driver/referee/referee.c ****         Referee *now = *(Referee **)cvector_val_at(referee_instances, i);
+ 1014              		.loc 1 236 9 is_stmt 1 discriminator 3 view .LVU280
+ 1015              		.loc 1 236 37 is_stmt 0 discriminator 3 view .LVU281
+ 1016 0006 2146     		mov	r1, r4
+ 1017 0008 FFF7FEFF 		bl	cvector_val_at
+ 1018              	.LVL67:
+ 237:Core/HAL/driver/referee/referee.c ****         referee_data_solve(now);
+ 1019              		.loc 1 237 9 is_stmt 1 discriminator 3 view .LVU282
+ 1020 000c 0068     		ldr	r0, [r0]
+ 1021              	.LVL68:
+ 1022              		.loc 1 237 9 is_stmt 0 discriminator 3 view .LVU283
+ 1023 000e FFF7FEFF 		bl	referee_data_solve
+ 1024              	.LVL69:
+ 1025              		.loc 1 237 9 discriminator 3 view .LVU284
+ 1026              	.LBE14:
+ 235:Core/HAL/driver/referee/referee.c ****     for (size_t i = 0; i < referee_instances->cv_len; i++) {
+ 1027              		.loc 1 235 55 is_stmt 1 discriminator 3 view .LVU285
+ 235:Core/HAL/driver/referee/referee.c ****     for (size_t i = 0; i < referee_instances->cv_len; i++) {
+ 1028              		.loc 1 235 56 is_stmt 0 discriminator 3 view .LVU286
+ 1029 0012 0134     		adds	r4, r4, #1
+ 1030              	.LVL70:
+ 1031              	.L85:
+ 235:Core/HAL/driver/referee/referee.c ****     for (size_t i = 0; i < referee_instances->cv_len; i++) {
+ 1032              		.loc 1 235 24 is_stmt 1 discriminator 1 view .LVU287
+ 235:Core/HAL/driver/referee/referee.c ****     for (size_t i = 0; i < referee_instances->cv_len; i++) {
+ 1033              		.loc 1 235 45 is_stmt 0 discriminator 1 view .LVU288
+ 1034 0014 024B     		ldr	r3, .L88
+ 1035 0016 1868     		ldr	r0, [r3]
+ 1036 0018 4368     		ldr	r3, [r0, #4]	@ unaligned
+ 235:Core/HAL/driver/referee/referee.c ****     for (size_t i = 0; i < referee_instances->cv_len; i++) {
+ 1037              		.loc 1 235 5 discriminator 1 view .LVU289
+ 1038 001a A342     		cmp	r3, r4
+ 1039 001c F3D8     		bhi	.L86
+ 1040              	.LBE13:
+ 238:Core/HAL/driver/referee/referee.c ****     }
+ 239:Core/HAL/driver/referee/referee.c **** }
+ 1041              		.loc 1 239 1 view .LVU290
+ 1042 001e 10BD     		pop	{r4, pc}
+ 1043              	.LVL71:
+ 1044              	.L89:
+ 1045              		.loc 1 239 1 view .LVU291
+ 1046              		.align	2
+ 1047              	.L88:
+ 1048 0020 00000000 		.word	.LANCHOR0
+ 1049              		.cfi_endproc
+ 1050              	.LFE138:
+ 1052              		.section	.text.referee_send_ext,"ax",%progbits
+ 1053              		.align	1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 28
+
+
+ 1054              		.global	referee_send_ext
+ 1055              		.syntax unified
+ 1056              		.thumb
+ 1057              		.thumb_func
+ 1059              	referee_send_ext:
+ 1060              	.LVL72:
+ 1061              	.LFB139:
+ 240:Core/HAL/driver/referee/referee.c **** 
+ 241:Core/HAL/driver/referee/referee.c **** void referee_send_ext(Referee *obj, ext_robot_interact_frame *frame) {
+ 1062              		.loc 1 241 70 is_stmt 1 view -0
+ 1063              		.cfi_startproc
+ 1064              		@ args = 0, pretend = 0, frame = 0
+ 1065              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1066              		.loc 1 241 70 is_stmt 0 view .LVU293
+ 1067 0000 08B5     		push	{r3, lr}
+ 1068              	.LCFI8:
+ 1069              		.cfi_def_cfa_offset 8
+ 1070              		.cfi_offset 3, -8
+ 1071              		.cfi_offset 14, -4
+ 242:Core/HAL/driver/referee/referee.c ****     uint16_t send_len = REFEREE_PACK_LEN_HEADER + REFEREE_PACK_LEN_CMD_ID + REFEREE_PACK_LEN_TAIL +
+ 1072              		.loc 1 242 5 is_stmt 1 view .LVU294
+ 1073              		.loc 1 242 114 is_stmt 0 view .LVU295
+ 1074 0002 B1F80120 		ldrh	r2, [r1, #1]	@ unaligned
+ 1075              		.loc 1 242 14 view .LVU296
+ 1076 0006 0932     		adds	r2, r2, #9
+ 1077              	.LVL73:
+ 243:Core/HAL/driver/referee/referee.c ****     BSP_UART_Send_queue(obj->config.bsp_uart_index, (uint8_t *)frame, send_len);
+ 1078              		.loc 1 243 5 is_stmt 1 view .LVU297
+ 1079 0008 92B2     		uxth	r2, r2
+ 1080              		.loc 1 243 5 is_stmt 0 view .LVU298
+ 1081 000a 90F82401 		ldrb	r0, [r0, #292]	@ zero_extendqisi2
+ 1082              	.LVL74:
+ 1083              		.loc 1 243 5 view .LVU299
+ 1084 000e FFF7FEFF 		bl	BSP_UART_Send_queue
+ 1085              	.LVL75:
+ 244:Core/HAL/driver/referee/referee.c **** }...
+ 1086              		.loc 1 244 1 view .LVU300
+ 1087 0012 08BD     		pop	{r3, pc}
+ 1088              		.cfi_endproc
+ 1089              	.LFE139:
+ 1091              		.global	referee_instances
+ 1092              		.section	.bss.referee_instances,"aw",%nobits
+ 1093              		.align	2
+ 1094              		.set	.LANCHOR0,. + 0
+ 1097              	referee_instances:
+ 1098 0000 00000000 		.space	4
+ 1099              		.text
+ 1100              	.Letext0:
+ 1101              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1102              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1103              		.file 4 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 1104              		.file 5 "Core/HAL/lib/circular_queue.h"
+ 1105              		.file 6 "Core/HAL/lib/cvector.h"
+ 1106              		.file 7 "Core/HAL/monitor/monitor.h"
+ 1107              		.file 8 "Core/HAL/driver/referee/referee_def.h"
+ 1108              		.file 9 "Core/HAL/lib/soft_crc.h"
+ 1109              		.file 10 "Core/HAL/driver/referee/referee.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 29
+
+
+ 1110              		.file 11 "Core/BSP/interface/bsp_uart.h"
+ 1111              		.file 12 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 1112              		.file 13 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s 			page 30
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 referee.c
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:20     .text.referee_Rx_callback:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:26     .text.referee_Rx_callback:00000000 referee_Rx_callback
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:132    .text.referee_Rx_callback:0000004c $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:137    .text.referee_driver_init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:143    .text.referee_driver_init:00000000 referee_driver_init
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:172    .text.referee_driver_init:00000018 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:178    .text.referee_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:184    .text.referee_Create:00000000 referee_Create
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:270    .text.referee_Create:00000064 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:275    .text.referee_solve_pack:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:281    .text.referee_solve_pack:00000000 referee_solve_pack
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:315    .text.referee_solve_pack:00000032 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:336    .text.referee_solve_pack:0000004a $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:346    .text.referee_solve_pack:00000054 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:353    .text.referee_solve_pack:0000005e $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:357    .text.referee_solve_pack:00000062 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:590    .text.referee_data_solve:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:596    .text.referee_data_solve:00000000 referee_data_solve
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:738    .text.referee_data_solve:00000098 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:745    .text.referee_data_solve:000000b4 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:979    .text.referee_data_solve:000001b8 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:986    .text.referee_recv_loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:992    .text.referee_recv_loop:00000000 referee_recv_loop
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:1048   .text.referee_recv_loop:00000020 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:1053   .text.referee_send_ext:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:1059   .text.referee_send_ext:00000000 referee_send_ext
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:1097   .bss.referee_instances:00000000 referee_instances
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:1093   .bss.referee_instances:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:320    .text.referee_solve_pack:00000037 $d
+C:\Users\lenovo\AppData\Local\Temp\ccYgTKE0.s:320    .text.referee_solve_pack:00000038 $t
+
+UNDEFINED SYMBOLS
+circular_queue_push
+cvector_val_at
+cvector_create
+BSP_UART_RegisterRxCallback
+malloc
+memset
+Monitor_Register
+cvector_pushback
+create_circular_queue
+memcpy
+circular_queue_pop
+CRC8_Modbus_calc
+CRC16_Modbus_calc
+crc8_default
+crc16_default
+BSP_UART_Send_queue

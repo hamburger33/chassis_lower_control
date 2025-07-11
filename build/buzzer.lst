@@ -1,0 +1,1004 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"buzzer.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Buzzer_Create,"ax",%progbits
+  20              		.align	1
+  21              		.global	Buzzer_Create
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Buzzer_Create:
+  27              	.LVL0:
+  28              	.LFB133:
+  29              		.file 1 "Core/HAL/driver/buzzer/buzzer.c"
+   1:Core/HAL/driver/buzzer/buzzer.c **** #include "buzzer.h"
+   2:Core/HAL/driver/buzzer/buzzer.c **** 
+   3:Core/HAL/driver/buzzer/buzzer.c **** #include "cvector.h"
+   4:Core/HAL/driver/buzzer/buzzer.c **** #include "stdlib.h"
+   5:Core/HAL/driver/buzzer/buzzer.c **** #include "string.h"
+   6:Core/HAL/driver/buzzer/buzzer.c **** #include "bsp.h"
+   7:Core/HAL/driver/buzzer/buzzer.c **** 
+   8:Core/HAL/driver/buzzer/buzzer.c **** #define L_Do 3822
+   9:Core/HAL/driver/buzzer/buzzer.c **** #define L_Re 3405
+  10:Core/HAL/driver/buzzer/buzzer.c **** #define L_Mi 3033
+  11:Core/HAL/driver/buzzer/buzzer.c **** #define L_Fa 2863
+  12:Core/HAL/driver/buzzer/buzzer.c **** #define L_So 2551
+  13:Core/HAL/driver/buzzer/buzzer.c **** #define L_La 2272
+  14:Core/HAL/driver/buzzer/buzzer.c **** #define L_Xi 2024
+  15:Core/HAL/driver/buzzer/buzzer.c **** #define M_Do 1911
+  16:Core/HAL/driver/buzzer/buzzer.c **** #define M_Re 1702
+  17:Core/HAL/driver/buzzer/buzzer.c **** #define M_Mi 1526
+  18:Core/HAL/driver/buzzer/buzzer.c **** #define M_Fa 1431
+  19:Core/HAL/driver/buzzer/buzzer.c **** #define M_So 1275
+  20:Core/HAL/driver/buzzer/buzzer.c **** #define M_La 1136
+  21:Core/HAL/driver/buzzer/buzzer.c **** #define M_Xi 1012
+  22:Core/HAL/driver/buzzer/buzzer.c **** #define H_Do 955
+  23:Core/HAL/driver/buzzer/buzzer.c **** #define H_Re 851
+  24:Core/HAL/driver/buzzer/buzzer.c **** #define H_Mi 758
+  25:Core/HAL/driver/buzzer/buzzer.c **** #define H_Fa 715
+  26:Core/HAL/driver/buzzer/buzzer.c **** #define H_So 637
+  27:Core/HAL/driver/buzzer/buzzer.c **** #define H_La 568
+  28:Core/HAL/driver/buzzer/buzzer.c **** #define H_Xi 506
+  29:Core/HAL/driver/buzzer/buzzer.c **** 
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 2
+
+
+  30:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music1[] = {M_Re, M_Mi, M_So, H_Do, 0, M_La, H_Do, H_Do};
+  31:Core/HAL/driver/buzzer/buzzer.c **** 
+  32:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music2[] = {H_Do, 0, M_So, 0, M_Mi, 0, M_Xi,
+  33:Core/HAL/driver/buzzer/buzzer.c ****                      M_Xi, M_Xi, M_Xi, M_La, 0, M_Xi, H_Do};
+  34:Core/HAL/driver/buzzer/buzzer.c **** 
+  35:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music3[] = {L_So, 0, M_Do, 0, 0, M_Mi, M_Re, 0, M_Do, 0, 0, 0,
+  36:Core/HAL/driver/buzzer/buzzer.c ****                      M_Mi, 0, M_So, 0, 0, M_La, M_Xi, 0, H_Do, H_Do, H_Do};
+  37:Core/HAL/driver/buzzer/buzzer.c **** 
+  38:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music4[] = {M_Do, 0, M_Do, M_Mi, M_Mi, M_Mi, M_Mi, 0, M_Do,
+  39:Core/HAL/driver/buzzer/buzzer.c ****                      0, M_Do, M_Mi, M_Mi, M_Mi, M_Mi, 0, M_La, 0,
+  40:Core/HAL/driver/buzzer/buzzer.c ****                      M_La, 0, M_So, 0, M_La, 0, M_So, M_Do, 0,
+  41:Core/HAL/driver/buzzer/buzzer.c ****                      M_Mi, M_Mi, 0, 0, H_Do, 0, M_La, M_La, M_So,
+  42:Core/HAL/driver/buzzer/buzzer.c ****                      0, M_La, 0, 0, M_So, 0, M_Do, M_Re, M_Re,
+  43:Core/HAL/driver/buzzer/buzzer.c ****                      0, 0, M_Xi, M_Xi, M_Xi, M_Xi, M_Xi, 0, M_Xi,
+  44:Core/HAL/driver/buzzer/buzzer.c ****                      0, M_So, M_Mi, 0, M_So, M_So, M_So};
+  45:Core/HAL/driver/buzzer/buzzer.c **** 
+  46:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music5[] = {H_Do, 0, M_Xi, 0, M_So, 0, M_So, 0, M_La,
+  47:Core/HAL/driver/buzzer/buzzer.c ****                      1145, M_La, 0, M_So, 0, M_So, 0, M_La, 1145,
+  48:Core/HAL/driver/buzzer/buzzer.c ****                      M_La, 0, M_So, 0, M_So, 0, M_La, 1145, M_La,
+  49:Core/HAL/driver/buzzer/buzzer.c ****                      0, M_La, 0, M_La, M_La, M_Xi, M_Xi, H_Do, H_Do,
+  50:Core/HAL/driver/buzzer/buzzer.c ****                      H_Re, H_Re, M_Xi, M_Xi, M_Xi, M_Xi, M_So, M_So, M_So,
+  51:Core/HAL/driver/buzzer/buzzer.c ****                      M_So, H_Fa, H_Fa, H_Fa, H_Fa, H_Re, H_Re, H_Re, 0,
+  52:Core/HAL/driver/buzzer/buzzer.c ****                      H_Re, H_Re, 0, H_Re, H_Re, H_Re, H_Mi, H_Mi};
+  53:Core/HAL/driver/buzzer/buzzer.c **** 
+  54:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music6[] = {
+  55:Core/HAL/driver/buzzer/buzzer.c ****     H_Do, H_Do, H_Do, 0, H_Do, 0, M_Xi, H_Do, H_Do, 0, H_Re, 0,
+  56:Core/HAL/driver/buzzer/buzzer.c ****     H_Mi, 0, H_Fa, 0, H_Mi, H_Mi, 0, H_Mi, H_Mi, 0, M_Xi, 0,
+  57:Core/HAL/driver/buzzer/buzzer.c ****     M_Xi, M_Xi, M_Xi, 0, 0, M_La, M_La, M_La, 0, M_La, 0, M_So,
+  58:Core/HAL/driver/buzzer/buzzer.c ****     M_La, M_La, 0, H_Fa, 0, H_Mi, 0, H_Re, 0, H_Re, H_Re, 0,
+  59:Core/HAL/driver/buzzer/buzzer.c ****     H_Do, H_Do, 0, H_Re, 0, H_Mi, H_Mi, H_Mi};
+  60:Core/HAL/driver/buzzer/buzzer.c **** 
+  61:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music_nxt[] = {M_Do, M_Do, M_Do, M_Do, M_Do, M_Do, M_Do, M_Do,
+  62:Core/HAL/driver/buzzer/buzzer.c ****                         M_La, M_La, M_La, M_La, M_La, M_La, M_La, M_Fa,
+  63:Core/HAL/driver/buzzer/buzzer.c ****                         M_Fa, M_Fa, M_Fa, M_Fa, M_Do, M_Do, M_Do, M_Do,
+  64:Core/HAL/driver/buzzer/buzzer.c ****                         M_Do, M_Do, M_Do, M_Do, H_Do, H_Do, H_Do, H_Do,
+  65:Core/HAL/driver/buzzer/buzzer.c ****                         H_Do, H_Do, H_Do, H_Do, H_Do, H_Do, H_Do, H_Do};
+  66:Core/HAL/driver/buzzer/buzzer.c **** 
+  67:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music_thankyou[] = {M_Do, 0, M_Re, 0, M_Mi, 0, M_So, 0, M_Mi, 0, M_Mi, M_Mi, 0, M_Re, 0, M
+  68:Core/HAL/driver/buzzer/buzzer.c ****                              M_Do, 0, L_La, 0, M_Do, M_Do, 0, L_So, 0, L_So, M_Re, 0, M_Do, M_Do, 0
+  69:Core/HAL/driver/buzzer/buzzer.c **** 
+  70:Core/HAL/driver/buzzer/buzzer.c **** uint16_t* musics[] = {music1, music2, music3, music4, music5, music6, music_nxt, music_thankyou};
+  71:Core/HAL/driver/buzzer/buzzer.c **** uint16_t music_lens[] = {sizeof(music1) / 2, sizeof(music2) / 2, sizeof(music3) / 2, sizeof(music4)
+  72:Core/HAL/driver/buzzer/buzzer.c ****                          sizeof(music5) / 2, sizeof(music6) / 2, sizeof(music_nxt) / 2, sizeof(musi
+  73:Core/HAL/driver/buzzer/buzzer.c **** 
+  74:Core/HAL/driver/buzzer/buzzer.c **** cvector* buzzer_instances;
+  75:Core/HAL/driver/buzzer/buzzer.c **** buzzer* Buzzer_Create(buzzer_config* config) {
+  30              		.loc 1 75 46 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 8
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 75 46 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  40 0002 82B0     		sub	sp, sp, #8
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 3
+
+
+  41              	.LCFI1:
+  42              		.cfi_def_cfa_offset 16
+  43 0004 0446     		mov	r4, r0
+  76:Core/HAL/driver/buzzer/buzzer.c ****     buzzer* obj = (buzzer*)malloc(sizeof(buzzer));
+  44              		.loc 1 76 5 is_stmt 1 view .LVU2
+  45              		.loc 1 76 28 is_stmt 0 view .LVU3
+  46 0006 0D20     		movs	r0, #13
+  47              	.LVL1:
+  48              		.loc 1 76 28 view .LVU4
+  49 0008 FFF7FEFF 		bl	malloc
+  50              	.LVL2:
+  51              		.loc 1 76 13 view .LVU5
+  52 000c 0190     		str	r0, [sp, #4]
+  77:Core/HAL/driver/buzzer/buzzer.c ****     obj->finished = 0;
+  53              		.loc 1 77 5 is_stmt 1 view .LVU6
+  54              		.loc 1 77 19 is_stmt 0 view .LVU7
+  55 000e 0023     		movs	r3, #0
+  56 0010 0370     		strb	r3, [r0]
+  57 0012 4370     		strb	r3, [r0, #1]
+  78:Core/HAL/driver/buzzer/buzzer.c ****     obj->started = 0;
+  58              		.loc 1 78 5 is_stmt 1 view .LVU8
+  59              		.loc 1 78 18 is_stmt 0 view .LVU9
+  60 0014 0371     		strb	r3, [r0, #4]
+  61 0016 4371     		strb	r3, [r0, #5]
+  79:Core/HAL/driver/buzzer/buzzer.c ****     obj->count = 0;
+  62              		.loc 1 79 5 is_stmt 1 view .LVU10
+  63              		.loc 1 79 16 is_stmt 0 view .LVU11
+  64 0018 8370     		strb	r3, [r0, #2]
+  65 001a C370     		strb	r3, [r0, #3]
+  80:Core/HAL/driver/buzzer/buzzer.c ****     obj->config = *config;
+  66              		.loc 1 80 5 is_stmt 1 view .LVU12
+  67              		.loc 1 80 17 is_stmt 0 view .LVU13
+  68 001c 2368     		ldr	r3, [r4]	@ unaligned
+  69 001e C0F80630 		str	r3, [r0, #6]	@ unaligned
+  70 0022 A288     		ldrh	r2, [r4, #4]	@ unaligned
+  71 0024 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+  72 0026 4281     		strh	r2, [r0, #10]	@ unaligned
+  73 0028 0373     		strb	r3, [r0, #12]
+  81:Core/HAL/driver/buzzer/buzzer.c ****     cvector_pushback(buzzer_instances, &obj);
+  74              		.loc 1 81 5 is_stmt 1 view .LVU14
+  75 002a 01A9     		add	r1, sp, #4
+  76 002c 034B     		ldr	r3, .L3
+  77 002e 1868     		ldr	r0, [r3]
+  78 0030 FFF7FEFF 		bl	cvector_pushback
+  79              	.LVL3:
+  82:Core/HAL/driver/buzzer/buzzer.c ****     return obj;
+  80              		.loc 1 82 5 view .LVU15
+  83:Core/HAL/driver/buzzer/buzzer.c **** }
+  81              		.loc 1 83 1 is_stmt 0 view .LVU16
+  82 0034 0198     		ldr	r0, [sp, #4]
+  83 0036 02B0     		add	sp, sp, #8
+  84              	.LCFI2:
+  85              		.cfi_def_cfa_offset 8
+  86              		@ sp needed
+  87 0038 10BD     		pop	{r4, pc}
+  88              	.LVL4:
+  89              	.L4:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 4
+
+
+  90              		.loc 1 83 1 view .LVU17
+  91 003a 00BF     		.align	2
+  92              	.L3:
+  93 003c 00000000 		.word	.LANCHOR0
+  94              		.cfi_endproc
+  95              	.LFE133:
+  97              		.section	.text.Buzzer_Driver_Init,"ax",%progbits
+  98              		.align	1
+  99              		.global	Buzzer_Driver_Init
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 104              	Buzzer_Driver_Init:
+ 105              	.LFB134:
+  84:Core/HAL/driver/buzzer/buzzer.c **** 
+  85:Core/HAL/driver/buzzer/buzzer.c **** void Buzzer_Driver_Init() {
+ 106              		.loc 1 85 27 is_stmt 1 view -0
+ 107              		.cfi_startproc
+ 108              		@ args = 0, pretend = 0, frame = 0
+ 109              		@ frame_needed = 0, uses_anonymous_args = 0
+ 110 0000 08B5     		push	{r3, lr}
+ 111              	.LCFI3:
+ 112              		.cfi_def_cfa_offset 8
+ 113              		.cfi_offset 3, -8
+ 114              		.cfi_offset 14, -4
+  86:Core/HAL/driver/buzzer/buzzer.c ****     buzzer_instances = cvector_create(sizeof(buzzer*));
+ 115              		.loc 1 86 5 view .LVU19
+ 116              		.loc 1 86 24 is_stmt 0 view .LVU20
+ 117 0002 0420     		movs	r0, #4
+ 118 0004 FFF7FEFF 		bl	cvector_create
+ 119              	.LVL5:
+ 120              		.loc 1 86 22 view .LVU21
+ 121 0008 014B     		ldr	r3, .L7
+ 122 000a 1860     		str	r0, [r3]
+  87:Core/HAL/driver/buzzer/buzzer.c **** }
+ 123              		.loc 1 87 1 view .LVU22
+ 124 000c 08BD     		pop	{r3, pc}
+ 125              	.L8:
+ 126 000e 00BF     		.align	2
+ 127              	.L7:
+ 128 0010 00000000 		.word	.LANCHOR0
+ 129              		.cfi_endproc
+ 130              	.LFE134:
+ 132              		.section	.text.Buzzer_Start,"ax",%progbits
+ 133              		.align	1
+ 134              		.global	Buzzer_Start
+ 135              		.syntax unified
+ 136              		.thumb
+ 137              		.thumb_func
+ 139              	Buzzer_Start:
+ 140              	.LVL6:
+ 141              	.LFB135:
+  88:Core/HAL/driver/buzzer/buzzer.c **** 
+  89:Core/HAL/driver/buzzer/buzzer.c **** void Buzzer_Start(buzzer* obj) {
+ 142              		.loc 1 89 32 is_stmt 1 view -0
+ 143              		.cfi_startproc
+ 144              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 5
+
+
+ 145              		@ frame_needed = 0, uses_anonymous_args = 0
+ 146              		.loc 1 89 32 is_stmt 0 view .LVU24
+ 147 0000 08B5     		push	{r3, lr}
+ 148              	.LCFI4:
+ 149              		.cfi_def_cfa_offset 8
+ 150              		.cfi_offset 3, -8
+ 151              		.cfi_offset 14, -4
+  90:Core/HAL/driver/buzzer/buzzer.c ****     obj->finished = 0;
+ 152              		.loc 1 90 5 is_stmt 1 view .LVU25
+ 153              		.loc 1 90 19 is_stmt 0 view .LVU26
+ 154 0002 0023     		movs	r3, #0
+ 155 0004 0370     		strb	r3, [r0]
+ 156 0006 4370     		strb	r3, [r0, #1]
+  91:Core/HAL/driver/buzzer/buzzer.c ****     obj->started = 1;
+ 157              		.loc 1 91 5 is_stmt 1 view .LVU27
+ 158              		.loc 1 91 18 is_stmt 0 view .LVU28
+ 159 0008 0122     		movs	r2, #1
+ 160 000a 0271     		strb	r2, [r0, #4]
+ 161 000c 4371     		strb	r3, [r0, #5]
+  92:Core/HAL/driver/buzzer/buzzer.c ****     BSP_PWM_Start(obj->config.bsp_pwm_index);
+ 162              		.loc 1 92 5 is_stmt 1 view .LVU29
+ 163 000e 007B     		ldrb	r0, [r0, #12]	@ zero_extendqisi2
+ 164              	.LVL7:
+ 165              		.loc 1 92 5 is_stmt 0 view .LVU30
+ 166 0010 FFF7FEFF 		bl	BSP_PWM_Start
+ 167              	.LVL8:
+  93:Core/HAL/driver/buzzer/buzzer.c **** }
+ 168              		.loc 1 93 1 view .LVU31
+ 169 0014 08BD     		pop	{r3, pc}
+ 170              		.cfi_endproc
+ 171              	.LFE135:
+ 173              		.section	.text.Buzzer_Update,"ax",%progbits
+ 174              		.align	1
+ 175              		.global	Buzzer_Update
+ 176              		.syntax unified
+ 177              		.thumb
+ 178              		.thumb_func
+ 180              	Buzzer_Update:
+ 181              	.LVL9:
+ 182              	.LFB136:
+  94:Core/HAL/driver/buzzer/buzzer.c **** 
+  95:Core/HAL/driver/buzzer/buzzer.c **** void Buzzer_Update(buzzer* obj) {
+ 183              		.loc 1 95 33 is_stmt 1 view -0
+ 184              		.cfi_startproc
+ 185              		@ args = 0, pretend = 0, frame = 0
+ 186              		@ frame_needed = 0, uses_anonymous_args = 0
+  96:Core/HAL/driver/buzzer/buzzer.c ****     if (!obj->started) return;
+ 187              		.loc 1 96 5 view .LVU33
+ 188              		.loc 1 96 13 is_stmt 0 view .LVU34
+ 189 0000 8388     		ldrh	r3, [r0, #4]	@ unaligned
+ 190              		.loc 1 96 8 view .LVU35
+ 191 0002 93B3     		cbz	r3, .L18
+  95:Core/HAL/driver/buzzer/buzzer.c ****     if (!obj->started) return;
+ 192              		.loc 1 95 33 view .LVU36
+ 193 0004 10B5     		push	{r4, lr}
+ 194              	.LCFI5:
+ 195              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 6
+
+
+ 196              		.cfi_offset 4, -8
+ 197              		.cfi_offset 14, -4
+ 198 0006 0446     		mov	r4, r0
+  97:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->finished) {
+ 199              		.loc 1 97 5 is_stmt 1 view .LVU37
+ 200              		.loc 1 97 12 is_stmt 0 view .LVU38
+ 201 0008 0388     		ldrh	r3, [r0]	@ unaligned
+ 202              		.loc 1 97 8 view .LVU39
+ 203 000a 63B1     		cbz	r3, .L13
+  98:Core/HAL/driver/buzzer/buzzer.c ****         if (obj->finished == 1) {
+ 204              		.loc 1 98 9 is_stmt 1 view .LVU40
+ 205              		.loc 1 98 12 is_stmt 0 view .LVU41
+ 206 000c 012B     		cmp	r3, #1
+ 207 000e 00D0     		beq	.L21
+ 208              	.LVL10:
+ 209              	.L11:
+  99:Core/HAL/driver/buzzer/buzzer.c ****             BSP_PWM_Stop(obj->config.bsp_pwm_index);
+ 100:Core/HAL/driver/buzzer/buzzer.c ****             obj->finished++;
+ 101:Core/HAL/driver/buzzer/buzzer.c ****             obj->started = 0;
+ 102:Core/HAL/driver/buzzer/buzzer.c ****         }
+ 103:Core/HAL/driver/buzzer/buzzer.c ****         return;
+ 104:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 105:Core/HAL/driver/buzzer/buzzer.c ****     BSP_PWM_SetARR(obj->config.bsp_pwm_index, obj->config.music[(int)obj->count]);
+ 106:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->config.music[obj->count] != 0) {
+ 107:Core/HAL/driver/buzzer/buzzer.c ****         BSP_PWM_SetCCR(obj->config.bsp_pwm_index, obj->config.music[obj->count] / 2);
+ 108:Core/HAL/driver/buzzer/buzzer.c ****     } else {
+ 109:Core/HAL/driver/buzzer/buzzer.c ****         BSP_PWM_SetCCR(obj->config.bsp_pwm_index, obj->config.music[obj->count]);
+ 110:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 111:Core/HAL/driver/buzzer/buzzer.c ****     obj->count++;
+ 112:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->count == obj->config.len) {
+ 113:Core/HAL/driver/buzzer/buzzer.c ****         obj->finished = 1;
+ 114:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 115:Core/HAL/driver/buzzer/buzzer.c **** }
+ 210              		.loc 1 115 1 view .LVU42
+ 211 0010 10BD     		pop	{r4, pc}
+ 212              	.LVL11:
+ 213              	.L21:
+  99:Core/HAL/driver/buzzer/buzzer.c ****             BSP_PWM_Stop(obj->config.bsp_pwm_index);
+ 214              		.loc 1 99 13 is_stmt 1 view .LVU43
+ 215 0012 007B     		ldrb	r0, [r0, #12]	@ zero_extendqisi2
+ 216              	.LVL12:
+  99:Core/HAL/driver/buzzer/buzzer.c ****             BSP_PWM_Stop(obj->config.bsp_pwm_index);
+ 217              		.loc 1 99 13 is_stmt 0 view .LVU44
+ 218 0014 FFF7FEFF 		bl	BSP_PWM_Stop
+ 219              	.LVL13:
+ 100:Core/HAL/driver/buzzer/buzzer.c ****             obj->started = 0;
+ 220              		.loc 1 100 13 is_stmt 1 view .LVU45
+ 100:Core/HAL/driver/buzzer/buzzer.c ****             obj->started = 0;
+ 221              		.loc 1 100 16 is_stmt 0 view .LVU46
+ 222 0018 2388     		ldrh	r3, [r4]	@ unaligned
+ 100:Core/HAL/driver/buzzer/buzzer.c ****             obj->started = 0;
+ 223              		.loc 1 100 26 view .LVU47
+ 224 001a 0133     		adds	r3, r3, #1
+ 225 001c 2380     		strh	r3, [r4]	@ unaligned
+ 101:Core/HAL/driver/buzzer/buzzer.c ****         }
+ 226              		.loc 1 101 13 is_stmt 1 view .LVU48
+ 101:Core/HAL/driver/buzzer/buzzer.c ****         }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 7
+
+
+ 227              		.loc 1 101 26 is_stmt 0 view .LVU49
+ 228 001e 0023     		movs	r3, #0
+ 229 0020 2371     		strb	r3, [r4, #4]
+ 230 0022 6371     		strb	r3, [r4, #5]
+ 103:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 231              		.loc 1 103 9 is_stmt 1 view .LVU50
+ 232 0024 F4E7     		b	.L11
+ 233              	.LVL14:
+ 234              	.L13:
+ 105:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->config.music[obj->count] != 0) {
+ 235              		.loc 1 105 5 view .LVU51
+ 105:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->config.music[obj->count] != 0) {
+ 236              		.loc 1 105 58 is_stmt 0 view .LVU52
+ 237 0026 D0F80630 		ldr	r3, [r0, #6]	@ unaligned
+ 105:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->config.music[obj->count] != 0) {
+ 238              		.loc 1 105 73 view .LVU53
+ 239 002a 4288     		ldrh	r2, [r0, #2]	@ unaligned
+ 105:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->config.music[obj->count] != 0) {
+ 240              		.loc 1 105 5 view .LVU54
+ 241 002c 33F81210 		ldrh	r1, [r3, r2, lsl #1]
+ 242 0030 007B     		ldrb	r0, [r0, #12]	@ zero_extendqisi2
+ 243              	.LVL15:
+ 105:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->config.music[obj->count] != 0) {
+ 244              		.loc 1 105 5 view .LVU55
+ 245 0032 FFF7FEFF 		bl	BSP_PWM_SetARR
+ 246              	.LVL16:
+ 106:Core/HAL/driver/buzzer/buzzer.c ****         BSP_PWM_SetCCR(obj->config.bsp_pwm_index, obj->config.music[obj->count] / 2);
+ 247              		.loc 1 106 5 is_stmt 1 view .LVU56
+ 106:Core/HAL/driver/buzzer/buzzer.c ****         BSP_PWM_SetCCR(obj->config.bsp_pwm_index, obj->config.music[obj->count] / 2);
+ 248              		.loc 1 106 20 is_stmt 0 view .LVU57
+ 249 0036 D4F80630 		ldr	r3, [r4, #6]	@ unaligned
+ 106:Core/HAL/driver/buzzer/buzzer.c ****         BSP_PWM_SetCCR(obj->config.bsp_pwm_index, obj->config.music[obj->count] / 2);
+ 250              		.loc 1 106 30 view .LVU58
+ 251 003a 6288     		ldrh	r2, [r4, #2]	@ unaligned
+ 106:Core/HAL/driver/buzzer/buzzer.c ****         BSP_PWM_SetCCR(obj->config.bsp_pwm_index, obj->config.music[obj->count] / 2);
+ 252              		.loc 1 106 26 view .LVU59
+ 253 003c 33F81210 		ldrh	r1, [r3, r2, lsl #1]
+ 106:Core/HAL/driver/buzzer/buzzer.c ****         BSP_PWM_SetCCR(obj->config.bsp_pwm_index, obj->config.music[obj->count] / 2);
+ 254              		.loc 1 106 8 view .LVU60
+ 255 0040 79B1     		cbz	r1, .L15
+ 107:Core/HAL/driver/buzzer/buzzer.c ****     } else {
+ 256              		.loc 1 107 9 is_stmt 1 view .LVU61
+ 257 0042 4908     		lsrs	r1, r1, #1
+ 258 0044 207B     		ldrb	r0, [r4, #12]	@ zero_extendqisi2
+ 259 0046 FFF7FEFF 		bl	BSP_PWM_SetCCR
+ 260              	.LVL17:
+ 261              	.L16:
+ 111:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->count == obj->config.len) {
+ 262              		.loc 1 111 5 view .LVU62
+ 111:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->count == obj->config.len) {
+ 263              		.loc 1 111 8 is_stmt 0 view .LVU63
+ 264 004a 6388     		ldrh	r3, [r4, #2]	@ unaligned
+ 111:Core/HAL/driver/buzzer/buzzer.c ****     if (obj->count == obj->config.len) {
+ 265              		.loc 1 111 15 view .LVU64
+ 266 004c 0133     		adds	r3, r3, #1
+ 267 004e 9AB2     		uxth	r2, r3
+ 268 0050 6380     		strh	r3, [r4, #2]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 8
+
+
+ 112:Core/HAL/driver/buzzer/buzzer.c ****         obj->finished = 1;
+ 269              		.loc 1 112 5 is_stmt 1 view .LVU65
+ 112:Core/HAL/driver/buzzer/buzzer.c ****         obj->finished = 1;
+ 270              		.loc 1 112 34 is_stmt 0 view .LVU66
+ 271 0052 6389     		ldrh	r3, [r4, #10]	@ unaligned
+ 112:Core/HAL/driver/buzzer/buzzer.c ****         obj->finished = 1;
+ 272              		.loc 1 112 8 view .LVU67
+ 273 0054 9A42     		cmp	r2, r3
+ 274 0056 DBD1     		bne	.L11
+ 113:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 275              		.loc 1 113 9 is_stmt 1 view .LVU68
+ 113:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 276              		.loc 1 113 23 is_stmt 0 view .LVU69
+ 277 0058 0123     		movs	r3, #1
+ 278 005a 2370     		strb	r3, [r4]
+ 279 005c 0023     		movs	r3, #0
+ 280 005e 6370     		strb	r3, [r4, #1]
+ 281 0060 D6E7     		b	.L11
+ 282              	.L15:
+ 109:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 283              		.loc 1 109 9 is_stmt 1 view .LVU70
+ 284 0062 207B     		ldrb	r0, [r4, #12]	@ zero_extendqisi2
+ 285 0064 FFF7FEFF 		bl	BSP_PWM_SetCCR
+ 286              	.LVL18:
+ 287 0068 EFE7     		b	.L16
+ 288              	.LVL19:
+ 289              	.L18:
+ 290              	.LCFI6:
+ 291              		.cfi_def_cfa_offset 0
+ 292              		.cfi_restore 4
+ 293              		.cfi_restore 14
+ 109:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 294              		.loc 1 109 9 is_stmt 0 view .LVU71
+ 295 006a 7047     		bx	lr
+ 296              		.cfi_endproc
+ 297              	.LFE136:
+ 299              		.section	.text.Buzzer_Loop,"ax",%progbits
+ 300              		.align	1
+ 301              		.global	Buzzer_Loop
+ 302              		.syntax unified
+ 303              		.thumb
+ 304              		.thumb_func
+ 306              	Buzzer_Loop:
+ 307              	.LFB137:
+ 116:Core/HAL/driver/buzzer/buzzer.c **** 
+ 117:Core/HAL/driver/buzzer/buzzer.c **** void Buzzer_Loop() {
+ 308              		.loc 1 117 20 is_stmt 1 view -0
+ 309              		.cfi_startproc
+ 310              		@ args = 0, pretend = 0, frame = 0
+ 311              		@ frame_needed = 0, uses_anonymous_args = 0
+ 312 0000 10B5     		push	{r4, lr}
+ 313              	.LCFI7:
+ 314              		.cfi_def_cfa_offset 8
+ 315              		.cfi_offset 4, -8
+ 316              		.cfi_offset 14, -4
+ 118:Core/HAL/driver/buzzer/buzzer.c ****     for (size_t i = 0; i < buzzer_instances->cv_len; ++i) {
+ 317              		.loc 1 118 5 view .LVU73
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 9
+
+
+ 318              	.LBB2:
+ 319              		.loc 1 118 10 view .LVU74
+ 320              	.LVL20:
+ 321              		.loc 1 118 17 is_stmt 0 view .LVU75
+ 322 0002 0024     		movs	r4, #0
+ 323              		.loc 1 118 5 view .LVU76
+ 324 0004 06E0     		b	.L23
+ 325              	.LVL21:
+ 326              	.L24:
+ 327              	.LBB3:
+ 119:Core/HAL/driver/buzzer/buzzer.c ****         buzzer* buzzer_now = *((buzzer**)cvector_val_at(buzzer_instances, i));
+ 328              		.loc 1 119 9 is_stmt 1 discriminator 3 view .LVU77
+ 329              		.loc 1 119 42 is_stmt 0 discriminator 3 view .LVU78
+ 330 0006 2146     		mov	r1, r4
+ 331 0008 FFF7FEFF 		bl	cvector_val_at
+ 332              	.LVL22:
+ 120:Core/HAL/driver/buzzer/buzzer.c ****         Buzzer_Update(buzzer_now);
+ 333              		.loc 1 120 9 is_stmt 1 discriminator 3 view .LVU79
+ 334 000c 0068     		ldr	r0, [r0]
+ 335              	.LVL23:
+ 336              		.loc 1 120 9 is_stmt 0 discriminator 3 view .LVU80
+ 337 000e FFF7FEFF 		bl	Buzzer_Update
+ 338              	.LVL24:
+ 339              		.loc 1 120 9 discriminator 3 view .LVU81
+ 340              	.LBE3:
+ 118:Core/HAL/driver/buzzer/buzzer.c ****     for (size_t i = 0; i < buzzer_instances->cv_len; ++i) {
+ 341              		.loc 1 118 54 is_stmt 1 discriminator 3 view .LVU82
+ 342 0012 0134     		adds	r4, r4, #1
+ 343              	.LVL25:
+ 344              	.L23:
+ 118:Core/HAL/driver/buzzer/buzzer.c ****     for (size_t i = 0; i < buzzer_instances->cv_len; ++i) {
+ 345              		.loc 1 118 24 discriminator 1 view .LVU83
+ 118:Core/HAL/driver/buzzer/buzzer.c ****     for (size_t i = 0; i < buzzer_instances->cv_len; ++i) {
+ 346              		.loc 1 118 44 is_stmt 0 discriminator 1 view .LVU84
+ 347 0014 024B     		ldr	r3, .L26
+ 348 0016 1868     		ldr	r0, [r3]
+ 349 0018 4368     		ldr	r3, [r0, #4]	@ unaligned
+ 118:Core/HAL/driver/buzzer/buzzer.c ****     for (size_t i = 0; i < buzzer_instances->cv_len; ++i) {
+ 350              		.loc 1 118 5 discriminator 1 view .LVU85
+ 351 001a A342     		cmp	r3, r4
+ 352 001c F3D8     		bhi	.L24
+ 353              	.LBE2:
+ 121:Core/HAL/driver/buzzer/buzzer.c ****     }
+ 122:Core/HAL/driver/buzzer/buzzer.c **** }...
+ 354              		.loc 1 122 1 view .LVU86
+ 355 001e 10BD     		pop	{r4, pc}
+ 356              	.LVL26:
+ 357              	.L27:
+ 358              		.loc 1 122 1 view .LVU87
+ 359              		.align	2
+ 360              	.L26:
+ 361 0020 00000000 		.word	.LANCHOR0
+ 362              		.cfi_endproc
+ 363              	.LFE137:
+ 365              		.global	buzzer_instances
+ 366              		.global	music_lens
+ 367              		.global	musics
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 10
+
+
+ 368              		.global	music_thankyou
+ 369              		.global	music_nxt
+ 370              		.global	music6
+ 371              		.global	music5
+ 372              		.global	music4
+ 373              		.global	music3
+ 374              		.global	music2
+ 375              		.global	music1
+ 376              		.section	.bss.buzzer_instances,"aw",%nobits
+ 377              		.align	2
+ 378              		.set	.LANCHOR0,. + 0
+ 381              	buzzer_instances:
+ 382 0000 00000000 		.space	4
+ 383              		.section	.data.music1,"aw"
+ 384              		.align	2
+ 387              	music1:
+ 388 0000 A606     		.short	1702
+ 389 0002 F605     		.short	1526
+ 390 0004 FB04     		.short	1275
+ 391 0006 BB03     		.short	955
+ 392 0008 0000     		.short	0
+ 393 000a 7004     		.short	1136
+ 394 000c BB03     		.short	955
+ 395 000e BB03     		.short	955
+ 396              		.section	.data.music2,"aw"
+ 397              		.align	2
+ 400              	music2:
+ 401 0000 BB03     		.short	955
+ 402 0002 0000     		.short	0
+ 403 0004 FB04     		.short	1275
+ 404 0006 0000     		.short	0
+ 405 0008 F605     		.short	1526
+ 406 000a 0000     		.short	0
+ 407 000c F403     		.short	1012
+ 408 000e F403     		.short	1012
+ 409 0010 F403     		.short	1012
+ 410 0012 F403     		.short	1012
+ 411 0014 7004     		.short	1136
+ 412 0016 0000     		.short	0
+ 413 0018 F403     		.short	1012
+ 414 001a BB03     		.short	955
+ 415              		.section	.data.music3,"aw"
+ 416              		.align	2
+ 419              	music3:
+ 420 0000 F709     		.short	2551
+ 421 0002 0000     		.short	0
+ 422 0004 7707     		.short	1911
+ 423 0006 0000     		.short	0
+ 424 0008 0000     		.short	0
+ 425 000a F605     		.short	1526
+ 426 000c A606     		.short	1702
+ 427 000e 0000     		.short	0
+ 428 0010 7707     		.short	1911
+ 429 0012 0000     		.short	0
+ 430 0014 0000     		.short	0
+ 431 0016 0000     		.short	0
+ 432 0018 F605     		.short	1526
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 11
+
+
+ 433 001a 0000     		.short	0
+ 434 001c FB04     		.short	1275
+ 435 001e 0000     		.short	0
+ 436 0020 0000     		.short	0
+ 437 0022 7004     		.short	1136
+ 438 0024 F403     		.short	1012
+ 439 0026 0000     		.short	0
+ 440 0028 BB03     		.short	955
+ 441 002a BB03     		.short	955
+ 442 002c BB03     		.short	955
+ 443              		.section	.data.music4,"aw"
+ 444              		.align	2
+ 447              	music4:
+ 448 0000 7707     		.short	1911
+ 449 0002 0000     		.short	0
+ 450 0004 7707     		.short	1911
+ 451 0006 F605     		.short	1526
+ 452 0008 F605     		.short	1526
+ 453 000a F605     		.short	1526
+ 454 000c F605     		.short	1526
+ 455 000e 0000     		.short	0
+ 456 0010 7707     		.short	1911
+ 457 0012 0000     		.short	0
+ 458 0014 7707     		.short	1911
+ 459 0016 F605     		.short	1526
+ 460 0018 F605     		.short	1526
+ 461 001a F605     		.short	1526
+ 462 001c F605     		.short	1526
+ 463 001e 0000     		.short	0
+ 464 0020 7004     		.short	1136
+ 465 0022 0000     		.short	0
+ 466 0024 7004     		.short	1136
+ 467 0026 0000     		.short	0
+ 468 0028 FB04     		.short	1275
+ 469 002a 0000     		.short	0
+ 470 002c 7004     		.short	1136
+ 471 002e 0000     		.short	0
+ 472 0030 FB04     		.short	1275
+ 473 0032 7707     		.short	1911
+ 474 0034 0000     		.short	0
+ 475 0036 F605     		.short	1526
+ 476 0038 F605     		.short	1526
+ 477 003a 0000     		.short	0
+ 478 003c 0000     		.short	0
+ 479 003e BB03     		.short	955
+ 480 0040 0000     		.short	0
+ 481 0042 7004     		.short	1136
+ 482 0044 7004     		.short	1136
+ 483 0046 FB04     		.short	1275
+ 484 0048 0000     		.short	0
+ 485 004a 7004     		.short	1136
+ 486 004c 0000     		.short	0
+ 487 004e 0000     		.short	0
+ 488 0050 FB04     		.short	1275
+ 489 0052 0000     		.short	0
+ 490 0054 7707     		.short	1911
+ 491 0056 A606     		.short	1702
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 12
+
+
+ 492 0058 A606     		.short	1702
+ 493 005a 0000     		.short	0
+ 494 005c 0000     		.short	0
+ 495 005e F403     		.short	1012
+ 496 0060 F403     		.short	1012
+ 497 0062 F403     		.short	1012
+ 498 0064 F403     		.short	1012
+ 499 0066 F403     		.short	1012
+ 500 0068 0000     		.short	0
+ 501 006a F403     		.short	1012
+ 502 006c 0000     		.short	0
+ 503 006e FB04     		.short	1275
+ 504 0070 F605     		.short	1526
+ 505 0072 0000     		.short	0
+ 506 0074 FB04     		.short	1275
+ 507 0076 FB04     		.short	1275
+ 508 0078 FB04     		.short	1275
+ 509              		.section	.data.music5,"aw"
+ 510              		.align	2
+ 513              	music5:
+ 514 0000 BB03     		.short	955
+ 515 0002 0000     		.short	0
+ 516 0004 F403     		.short	1012
+ 517 0006 0000     		.short	0
+ 518 0008 FB04     		.short	1275
+ 519 000a 0000     		.short	0
+ 520 000c FB04     		.short	1275
+ 521 000e 0000     		.short	0
+ 522 0010 7004     		.short	1136
+ 523 0012 7904     		.short	1145
+ 524 0014 7004     		.short	1136
+ 525 0016 0000     		.short	0
+ 526 0018 FB04     		.short	1275
+ 527 001a 0000     		.short	0
+ 528 001c FB04     		.short	1275
+ 529 001e 0000     		.short	0
+ 530 0020 7004     		.short	1136
+ 531 0022 7904     		.short	1145
+ 532 0024 7004     		.short	1136
+ 533 0026 0000     		.short	0
+ 534 0028 FB04     		.short	1275
+ 535 002a 0000     		.short	0
+ 536 002c FB04     		.short	1275
+ 537 002e 0000     		.short	0
+ 538 0030 7004     		.short	1136
+ 539 0032 7904     		.short	1145
+ 540 0034 7004     		.short	1136
+ 541 0036 0000     		.short	0
+ 542 0038 7004     		.short	1136
+ 543 003a 0000     		.short	0
+ 544 003c 7004     		.short	1136
+ 545 003e 7004     		.short	1136
+ 546 0040 F403     		.short	1012
+ 547 0042 F403     		.short	1012
+ 548 0044 BB03     		.short	955
+ 549 0046 BB03     		.short	955
+ 550 0048 5303     		.short	851
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 13
+
+
+ 551 004a 5303     		.short	851
+ 552 004c F403     		.short	1012
+ 553 004e F403     		.short	1012
+ 554 0050 F403     		.short	1012
+ 555 0052 F403     		.short	1012
+ 556 0054 FB04     		.short	1275
+ 557 0056 FB04     		.short	1275
+ 558 0058 FB04     		.short	1275
+ 559 005a FB04     		.short	1275
+ 560 005c CB02     		.short	715
+ 561 005e CB02     		.short	715
+ 562 0060 CB02     		.short	715
+ 563 0062 CB02     		.short	715
+ 564 0064 5303     		.short	851
+ 565 0066 5303     		.short	851
+ 566 0068 5303     		.short	851
+ 567 006a 0000     		.short	0
+ 568 006c 5303     		.short	851
+ 569 006e 5303     		.short	851
+ 570 0070 0000     		.short	0
+ 571 0072 5303     		.short	851
+ 572 0074 5303     		.short	851
+ 573 0076 5303     		.short	851
+ 574 0078 F602     		.short	758
+ 575 007a F602     		.short	758
+ 576              		.section	.data.music6,"aw"
+ 577              		.align	2
+ 580              	music6:
+ 581 0000 BB03     		.short	955
+ 582 0002 BB03     		.short	955
+ 583 0004 BB03     		.short	955
+ 584 0006 0000     		.short	0
+ 585 0008 BB03     		.short	955
+ 586 000a 0000     		.short	0
+ 587 000c F403     		.short	1012
+ 588 000e BB03     		.short	955
+ 589 0010 BB03     		.short	955
+ 590 0012 0000     		.short	0
+ 591 0014 5303     		.short	851
+ 592 0016 0000     		.short	0
+ 593 0018 F602     		.short	758
+ 594 001a 0000     		.short	0
+ 595 001c CB02     		.short	715
+ 596 001e 0000     		.short	0
+ 597 0020 F602     		.short	758
+ 598 0022 F602     		.short	758
+ 599 0024 0000     		.short	0
+ 600 0026 F602     		.short	758
+ 601 0028 F602     		.short	758
+ 602 002a 0000     		.short	0
+ 603 002c F403     		.short	1012
+ 604 002e 0000     		.short	0
+ 605 0030 F403     		.short	1012
+ 606 0032 F403     		.short	1012
+ 607 0034 F403     		.short	1012
+ 608 0036 0000     		.short	0
+ 609 0038 0000     		.short	0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 14
+
+
+ 610 003a 7004     		.short	1136
+ 611 003c 7004     		.short	1136
+ 612 003e 7004     		.short	1136
+ 613 0040 0000     		.short	0
+ 614 0042 7004     		.short	1136
+ 615 0044 0000     		.short	0
+ 616 0046 FB04     		.short	1275
+ 617 0048 7004     		.short	1136
+ 618 004a 7004     		.short	1136
+ 619 004c 0000     		.short	0
+ 620 004e CB02     		.short	715
+ 621 0050 0000     		.short	0
+ 622 0052 F602     		.short	758
+ 623 0054 0000     		.short	0
+ 624 0056 5303     		.short	851
+ 625 0058 0000     		.short	0
+ 626 005a 5303     		.short	851
+ 627 005c 5303     		.short	851
+ 628 005e 0000     		.short	0
+ 629 0060 BB03     		.short	955
+ 630 0062 BB03     		.short	955
+ 631 0064 0000     		.short	0
+ 632 0066 5303     		.short	851
+ 633 0068 0000     		.short	0
+ 634 006a F602     		.short	758
+ 635 006c F602     		.short	758
+ 636 006e F602     		.short	758
+ 637              		.section	.data.music_lens,"aw"
+ 638              		.align	2
+ 641              	music_lens:
+ 642 0000 0800     		.short	8
+ 643 0002 0E00     		.short	14
+ 644 0004 1700     		.short	23
+ 645 0006 3D00     		.short	61
+ 646 0008 3E00     		.short	62
+ 647 000a 3800     		.short	56
+ 648 000c 2800     		.short	40
+ 649 000e 3D00     		.short	61
+ 650              		.section	.data.music_nxt,"aw"
+ 651              		.align	2
+ 654              	music_nxt:
+ 655 0000 7707     		.short	1911
+ 656 0002 7707     		.short	1911
+ 657 0004 7707     		.short	1911
+ 658 0006 7707     		.short	1911
+ 659 0008 7707     		.short	1911
+ 660 000a 7707     		.short	1911
+ 661 000c 7707     		.short	1911
+ 662 000e 7707     		.short	1911
+ 663 0010 7004     		.short	1136
+ 664 0012 7004     		.short	1136
+ 665 0014 7004     		.short	1136
+ 666 0016 7004     		.short	1136
+ 667 0018 7004     		.short	1136
+ 668 001a 7004     		.short	1136
+ 669 001c 7004     		.short	1136
+ 670 001e 9705     		.short	1431
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 15
+
+
+ 671 0020 9705     		.short	1431
+ 672 0022 9705     		.short	1431
+ 673 0024 9705     		.short	1431
+ 674 0026 9705     		.short	1431
+ 675 0028 7707     		.short	1911
+ 676 002a 7707     		.short	1911
+ 677 002c 7707     		.short	1911
+ 678 002e 7707     		.short	1911
+ 679 0030 7707     		.short	1911
+ 680 0032 7707     		.short	1911
+ 681 0034 7707     		.short	1911
+ 682 0036 7707     		.short	1911
+ 683 0038 BB03     		.short	955
+ 684 003a BB03     		.short	955
+ 685 003c BB03     		.short	955
+ 686 003e BB03     		.short	955
+ 687 0040 BB03     		.short	955
+ 688 0042 BB03     		.short	955
+ 689 0044 BB03     		.short	955
+ 690 0046 BB03     		.short	955
+ 691 0048 BB03     		.short	955
+ 692 004a BB03     		.short	955
+ 693 004c BB03     		.short	955
+ 694 004e BB03     		.short	955
+ 695              		.section	.data.music_thankyou,"aw"
+ 696              		.align	2
+ 699              	music_thankyou:
+ 700 0000 7707     		.short	1911
+ 701 0002 0000     		.short	0
+ 702 0004 A606     		.short	1702
+ 703 0006 0000     		.short	0
+ 704 0008 F605     		.short	1526
+ 705 000a 0000     		.short	0
+ 706 000c FB04     		.short	1275
+ 707 000e 0000     		.short	0
+ 708 0010 F605     		.short	1526
+ 709 0012 0000     		.short	0
+ 710 0014 F605     		.short	1526
+ 711 0016 F605     		.short	1526
+ 712 0018 0000     		.short	0
+ 713 001a A606     		.short	1702
+ 714 001c 0000     		.short	0
+ 715 001e A606     		.short	1702
+ 716 0020 7707     		.short	1911
+ 717 0022 0000     		.short	0
+ 718 0024 A606     		.short	1702
+ 719 0026 A606     		.short	1702
+ 720 0028 0000     		.short	0
+ 721 002a 7707     		.short	1911
+ 722 002c 0000     		.short	0
+ 723 002e E008     		.short	2272
+ 724 0030 0000     		.short	0
+ 725 0032 7707     		.short	1911
+ 726 0034 0000     		.short	0
+ 727 0036 A606     		.short	1702
+ 728 0038 0000     		.short	0
+ 729 003a F605     		.short	1526
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 16
+
+
+ 730 003c F605     		.short	1526
+ 731 003e F605     		.short	1526
+ 732 0040 F605     		.short	1526
+ 733 0042 0000     		.short	0
+ 734 0044 7707     		.short	1911
+ 735 0046 0000     		.short	0
+ 736 0048 E008     		.short	2272
+ 737 004a 0000     		.short	0
+ 738 004c 7707     		.short	1911
+ 739 004e 7707     		.short	1911
+ 740 0050 0000     		.short	0
+ 741 0052 F709     		.short	2551
+ 742 0054 0000     		.short	0
+ 743 0056 F709     		.short	2551
+ 744 0058 A606     		.short	1702
+ 745 005a 0000     		.short	0
+ 746 005c 7707     		.short	1911
+ 747 005e 7707     		.short	1911
+ 748 0060 0000     		.short	0
+ 749 0062 F605     		.short	1526
+ 750 0064 0000     		.short	0
+ 751 0066 A606     		.short	1702
+ 752 0068 0000     		.short	0
+ 753 006a A606     		.short	1702
+ 754 006c 0000     		.short	0
+ 755 006e 7707     		.short	1911
+ 756 0070 0000     		.short	0
+ 757 0072 A606     		.short	1702
+ 758 0074 A606     		.short	1702
+ 759 0076 A606     		.short	1702
+ 760 0078 A606     		.short	1702
+ 761              		.section	.data.musics,"aw"
+ 762              		.align	2
+ 765              	musics:
+ 766 0000 00000000 		.word	music1
+ 767 0004 00000000 		.word	music2
+ 768 0008 00000000 		.word	music3
+ 769 000c 00000000 		.word	music4
+ 770 0010 00000000 		.word	music5
+ 771 0014 00000000 		.word	music6
+ 772 0018 00000000 		.word	music_nxt
+ 773 001c 00000000 		.word	music_thankyou
+ 774              		.text
+ 775              	.Letext0:
+ 776              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 777              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 778              		.file 4 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 779              		.file 5 "Core/HAL/driver/buzzer/buzzer.h"
+ 780              		.file 6 "Core/HAL/lib/cvector.h"
+ 781              		.file 7 "Core/BSP/interface/bsp_pwm.h"
+ 782              		.file 8 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 buzzer.c
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:20     .text.Buzzer_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:26     .text.Buzzer_Create:00000000 Buzzer_Create
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:93     .text.Buzzer_Create:0000003c $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:98     .text.Buzzer_Driver_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:104    .text.Buzzer_Driver_Init:00000000 Buzzer_Driver_Init
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:128    .text.Buzzer_Driver_Init:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:133    .text.Buzzer_Start:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:139    .text.Buzzer_Start:00000000 Buzzer_Start
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:174    .text.Buzzer_Update:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:180    .text.Buzzer_Update:00000000 Buzzer_Update
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:300    .text.Buzzer_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:306    .text.Buzzer_Loop:00000000 Buzzer_Loop
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:361    .text.Buzzer_Loop:00000020 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:381    .bss.buzzer_instances:00000000 buzzer_instances
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:641    .data.music_lens:00000000 music_lens
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:765    .data.musics:00000000 musics
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:699    .data.music_thankyou:00000000 music_thankyou
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:654    .data.music_nxt:00000000 music_nxt
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:580    .data.music6:00000000 music6
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:513    .data.music5:00000000 music5
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:447    .data.music4:00000000 music4
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:419    .data.music3:00000000 music3
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:400    .data.music2:00000000 music2
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:387    .data.music1:00000000 music1
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:377    .bss.buzzer_instances:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:384    .data.music1:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:397    .data.music2:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:416    .data.music3:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:444    .data.music4:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:510    .data.music5:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:577    .data.music6:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:638    .data.music_lens:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:651    .data.music_nxt:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:696    .data.music_thankyou:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccoTQeE7.s:762    .data.musics:00000000 $d
+
+UNDEFINED SYMBOLS
+malloc
+cvector_pushback
+cvector_create
+BSP_PWM_Start
+BSP_PWM_Stop
+BSP_PWM_SetARR
+BSP_PWM_SetCCR
+cvector_val_at

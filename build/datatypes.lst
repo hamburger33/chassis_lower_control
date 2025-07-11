@@ -1,0 +1,322 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"datatypes.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.CheckVaild,"ax",%progbits
+  20              		.align	1
+  21              		.global	CheckVaild
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	CheckVaild:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/lib/datatypes.c"
+   1:Core/HAL/lib/datatypes.c **** #include "datatypes.h"
+   2:Core/HAL/lib/datatypes.c **** 
+   3:Core/HAL/lib/datatypes.c **** #include "string.h"
+   4:Core/HAL/lib/datatypes.c **** 
+   5:Core/HAL/lib/datatypes.c **** uint8_t CheckVaild(uint8_t* buffer, uint32_t len) {
+  30              		.loc 1 5 51 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+   6:Core/HAL/lib/datatypes.c ****     if (buffer[0] + 3 != len) return 0;
+  34              		.loc 1 6 5 view .LVU1
+  35              		.loc 1 6 15 is_stmt 0 view .LVU2
+  36 0000 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+  37              		.loc 1 6 19 view .LVU3
+  38 0002 0333     		adds	r3, r3, #3
+  39              		.loc 1 6 8 view .LVU4
+  40 0004 8B42     		cmp	r3, r1
+  41 0006 01D0     		beq	.L8
+  42              		.loc 1 6 38 view .LVU5
+  43 0008 0020     		movs	r0, #0
+  44              	.LVL1:
+   7:Core/HAL/lib/datatypes.c ****     uint16_t crc_val;
+   8:Core/HAL/lib/datatypes.c ****     memcpy(&crc_val, buffer + len - 2, 2);
+   9:Core/HAL/lib/datatypes.c ****     uint16_t crc_chk = CRC16_Modbus_calc(buffer, len - 2, crc16_default);
+  10:Core/HAL/lib/datatypes.c ****     return crc_chk == crc_val;
+  11:Core/HAL/lib/datatypes.c **** }
+  45              		.loc 1 11 1 view .LVU6
+  46 000a 7047     		bx	lr
+  47              	.LVL2:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s 			page 2
+
+
+  48              	.L8:
+   5:Core/HAL/lib/datatypes.c ****     if (buffer[0] + 3 != len) return 0;
+  49              		.loc 1 5 51 view .LVU7
+  50 000c 10B5     		push	{r4, lr}
+  51              	.LCFI0:
+  52              		.cfi_def_cfa_offset 8
+  53              		.cfi_offset 4, -8
+  54              		.cfi_offset 14, -4
+   7:Core/HAL/lib/datatypes.c ****     uint16_t crc_val;
+  55              		.loc 1 7 5 is_stmt 1 view .LVU8
+   8:Core/HAL/lib/datatypes.c ****     uint16_t crc_chk = CRC16_Modbus_calc(buffer, len - 2, crc16_default);
+  56              		.loc 1 8 5 view .LVU9
+   8:Core/HAL/lib/datatypes.c ****     uint16_t crc_chk = CRC16_Modbus_calc(buffer, len - 2, crc16_default);
+  57              		.loc 1 8 35 is_stmt 0 view .LVU10
+  58 000e 0239     		subs	r1, r1, #2
+  59              	.LVL3:
+   8:Core/HAL/lib/datatypes.c ****     uint16_t crc_chk = CRC16_Modbus_calc(buffer, len - 2, crc16_default);
+  60              		.loc 1 8 35 view .LVU11
+  61 0010 445A     		ldrh	r4, [r0, r1]	@ unaligned
+  62              	.LVL4:
+   9:Core/HAL/lib/datatypes.c ****     return crc_chk == crc_val;
+  63              		.loc 1 9 5 is_stmt 1 view .LVU12
+   9:Core/HAL/lib/datatypes.c ****     return crc_chk == crc_val;
+  64              		.loc 1 9 24 is_stmt 0 view .LVU13
+  65 0012 044B     		ldr	r3, .L9
+  66 0014 1A68     		ldr	r2, [r3]
+  67 0016 FFF7FEFF 		bl	CRC16_Modbus_calc
+  68              	.LVL5:
+  10:Core/HAL/lib/datatypes.c **** }
+  69              		.loc 1 10 5 is_stmt 1 view .LVU14
+  10:Core/HAL/lib/datatypes.c **** }
+  70              		.loc 1 10 20 is_stmt 0 view .LVU15
+  71 001a 8442     		cmp	r4, r0
+  72 001c 14BF     		ite	ne
+  73 001e 0020     		movne	r0, #0
+  74              	.LVL6:
+  10:Core/HAL/lib/datatypes.c **** }
+  75              		.loc 1 10 20 view .LVU16
+  76 0020 0120     		moveq	r0, #1
+  77              		.loc 1 11 1 view .LVU17
+  78 0022 10BD     		pop	{r4, pc}
+  79              	.LVL7:
+  80              	.L10:
+  81              		.loc 1 11 1 view .LVU18
+  82              		.align	2
+  83              	.L9:
+  84 0024 00000000 		.word	crc16_default
+  85              		.cfi_endproc
+  86              	.LFE0:
+  88              		.section	.text.DataToBuffer,"ax",%progbits
+  89              		.align	1
+  90              		.global	DataToBuffer
+  91              		.syntax unified
+  92              		.thumb
+  93              		.thumb_func
+  95              	DataToBuffer:
+  96              	.LVL8:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s 			page 3
+
+
+  97              	.LFB1:
+  12:Core/HAL/lib/datatypes.c **** void DataToBuffer(general_data* data, uint8_t* buffer) {
+  98              		.loc 1 12 56 is_stmt 1 view -0
+  99              		.cfi_startproc
+ 100              		@ args = 0, pretend = 0, frame = 0
+ 101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 102              		.loc 1 12 56 is_stmt 0 view .LVU20
+ 103 0000 38B5     		push	{r3, r4, r5, lr}
+ 104              	.LCFI1:
+ 105              		.cfi_def_cfa_offset 16
+ 106              		.cfi_offset 3, -16
+ 107              		.cfi_offset 4, -12
+ 108              		.cfi_offset 5, -8
+ 109              		.cfi_offset 14, -4
+ 110 0002 0446     		mov	r4, r0
+ 111 0004 0D46     		mov	r5, r1
+  13:Core/HAL/lib/datatypes.c ****     buffer[0] = data->len;
+ 112              		.loc 1 13 5 is_stmt 1 view .LVU21
+ 113              		.loc 1 13 21 is_stmt 0 view .LVU22
+ 114 0006 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+ 115              		.loc 1 13 15 view .LVU23
+ 116 0008 0846     		mov	r0, r1
+ 117              	.LVL9:
+ 118              		.loc 1 13 15 view .LVU24
+ 119 000a 00F8012B 		strb	r2, [r0], #1
+  14:Core/HAL/lib/datatypes.c ****     memcpy(buffer + 1, data->data, data->len);
+ 120              		.loc 1 14 5 is_stmt 1 view .LVU25
+ 121 000e D4F80110 		ldr	r1, [r4, #1]	@ unaligned
+ 122              	.LVL10:
+ 123              		.loc 1 14 5 is_stmt 0 view .LVU26
+ 124 0012 FFF7FEFF 		bl	memcpy
+ 125              	.LVL11:
+  15:Core/HAL/lib/datatypes.c ****     memcpy(buffer + 1 + data->len, &data->crc16, 2);
+ 126              		.loc 1 15 5 is_stmt 1 view .LVU27
+ 127              		.loc 1 15 29 is_stmt 0 view .LVU28
+ 128 0016 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 129              		.loc 1 15 23 view .LVU29
+ 130 0018 0133     		adds	r3, r3, #1
+ 131 001a B4F80520 		ldrh	r2, [r4, #5]	@ unaligned
+ 132              		.loc 1 15 5 view .LVU30
+ 133 001e EA52     		strh	r2, [r5, r3]	@ unaligned
+  16:Core/HAL/lib/datatypes.c **** }
+ 134              		.loc 1 16 1 view .LVU31
+ 135 0020 38BD     		pop	{r3, r4, r5, pc}
+ 136              		.loc 1 16 1 view .LVU32
+ 137              		.cfi_endproc
+ 138              	.LFE1:
+ 140              		.section	.text.BufferToData,"ax",%progbits
+ 141              		.align	1
+ 142              		.global	BufferToData
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 147              	BufferToData:
+ 148              	.LVL12:
+ 149              	.LFB2:
+  17:Core/HAL/lib/datatypes.c **** 
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s 			page 4
+
+
+  18:Core/HAL/lib/datatypes.c **** void BufferToData(uint8_t* buffer, general_data* data) {
+ 150              		.loc 1 18 56 is_stmt 1 view -0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 0
+ 153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 154              		.loc 1 18 56 is_stmt 0 view .LVU34
+ 155 0000 38B5     		push	{r3, r4, r5, lr}
+ 156              	.LCFI2:
+ 157              		.cfi_def_cfa_offset 16
+ 158              		.cfi_offset 3, -16
+ 159              		.cfi_offset 4, -12
+ 160              		.cfi_offset 5, -8
+ 161              		.cfi_offset 14, -4
+ 162 0002 0546     		mov	r5, r0
+ 163 0004 0C46     		mov	r4, r1
+  19:Core/HAL/lib/datatypes.c ****     data->len = buffer[0];
+ 164              		.loc 1 19 5 is_stmt 1 view .LVU35
+ 165              		.loc 1 19 23 is_stmt 0 view .LVU36
+ 166 0006 0146     		mov	r1, r0
+ 167              	.LVL13:
+ 168              		.loc 1 19 23 view .LVU37
+ 169 0008 11F8012B 		ldrb	r2, [r1], #1	@ zero_extendqisi2
+ 170              		.loc 1 19 15 view .LVU38
+ 171 000c 2270     		strb	r2, [r4]
+  20:Core/HAL/lib/datatypes.c ****     memcpy(data->data, buffer + 1, data->len);
+ 172              		.loc 1 20 5 is_stmt 1 view .LVU39
+ 173 000e D4F80100 		ldr	r0, [r4, #1]	@ unaligned
+ 174              	.LVL14:
+ 175              		.loc 1 20 5 is_stmt 0 view .LVU40
+ 176 0012 FFF7FEFF 		bl	memcpy
+ 177              	.LVL15:
+  21:Core/HAL/lib/datatypes.c ****     memcpy(&data->crc16, buffer + 1 + data->len, 2);
+ 178              		.loc 1 21 5 is_stmt 1 view .LVU41
+ 179              		.loc 1 21 43 is_stmt 0 view .LVU42
+ 180 0016 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 181              		.loc 1 21 37 view .LVU43
+ 182 0018 0133     		adds	r3, r3, #1
+ 183 001a EB5A     		ldrh	r3, [r5, r3]	@ unaligned
+ 184              		.loc 1 21 5 view .LVU44
+ 185 001c A4F80530 		strh	r3, [r4, #5]	@ unaligned
+  22:Core/HAL/lib/datatypes.c **** }
+ 186              		.loc 1 22 1 view .LVU45
+ 187 0020 38BD     		pop	{r3, r4, r5, pc}
+ 188              		.loc 1 22 1 view .LVU46
+ 189              		.cfi_endproc
+ 190              	.LFE2:
+ 192              		.section	.text.BufferToData_Check,"ax",%progbits
+ 193              		.align	1
+ 194              		.global	BufferToData_Check
+ 195              		.syntax unified
+ 196              		.thumb
+ 197              		.thumb_func
+ 199              	BufferToData_Check:
+ 200              	.LVL16:
+ 201              	.LFB3:
+  23:Core/HAL/lib/datatypes.c **** 
+  24:Core/HAL/lib/datatypes.c **** uint8_t BufferToData_Check(uint8_t* buffer, uint32_t len, general_data* data) {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s 			page 5
+
+
+ 202              		.loc 1 24 79 is_stmt 1 view -0
+ 203              		.cfi_startproc
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206              		.loc 1 24 79 is_stmt 0 view .LVU48
+ 207 0000 70B5     		push	{r4, r5, r6, lr}
+ 208              	.LCFI3:
+ 209              		.cfi_def_cfa_offset 16
+ 210              		.cfi_offset 4, -16
+ 211              		.cfi_offset 5, -12
+ 212              		.cfi_offset 6, -8
+ 213              		.cfi_offset 14, -4
+ 214 0002 0446     		mov	r4, r0
+ 215 0004 1546     		mov	r5, r2
+  25:Core/HAL/lib/datatypes.c ****     uint8_t valid = CheckVaild(buffer, len);
+ 216              		.loc 1 25 5 is_stmt 1 view .LVU49
+ 217              		.loc 1 25 21 is_stmt 0 view .LVU50
+ 218 0006 FFF7FEFF 		bl	CheckVaild
+ 219              	.LVL17:
+  26:Core/HAL/lib/datatypes.c ****     if (!valid) return valid;
+ 220              		.loc 1 26 5 is_stmt 1 view .LVU51
+ 221              		.loc 1 26 8 is_stmt 0 view .LVU52
+ 222 000a 0646     		mov	r6, r0
+ 223 000c 08B9     		cbnz	r0, .L18
+ 224              	.LVL18:
+ 225              	.L16:
+  27:Core/HAL/lib/datatypes.c ****     BufferToData(buffer, data);
+  28:Core/HAL/lib/datatypes.c ****     return valid;
+  29:Core/HAL/lib/datatypes.c **** }...
+ 226              		.loc 1 29 1 view .LVU53
+ 227 000e 3046     		mov	r0, r6
+ 228 0010 70BD     		pop	{r4, r5, r6, pc}
+ 229              	.LVL19:
+ 230              	.L18:
+  27:Core/HAL/lib/datatypes.c ****     BufferToData(buffer, data);
+ 231              		.loc 1 27 5 is_stmt 1 view .LVU54
+ 232 0012 2946     		mov	r1, r5
+ 233 0014 2046     		mov	r0, r4
+ 234              	.LVL20:
+  27:Core/HAL/lib/datatypes.c ****     BufferToData(buffer, data);
+ 235              		.loc 1 27 5 is_stmt 0 view .LVU55
+ 236 0016 FFF7FEFF 		bl	BufferToData
+ 237              	.LVL21:
+  28:Core/HAL/lib/datatypes.c ****     return valid;
+ 238              		.loc 1 28 5 is_stmt 1 view .LVU56
+  28:Core/HAL/lib/datatypes.c ****     return valid;
+ 239              		.loc 1 28 12 is_stmt 0 view .LVU57
+ 240 001a F8E7     		b	.L16
+ 241              		.cfi_endproc
+ 242              	.LFE3:
+ 244              		.text
+ 245              	.Letext0:
+ 246              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 247              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 248              		.file 4 "Core/HAL/lib/soft_crc.h"
+ 249              		.file 5 "Core/HAL/lib/datatypes.h"
+ 250              		.file 6 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s 			page 6
+
+
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 datatypes.c
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:20     .text.CheckVaild:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:26     .text.CheckVaild:00000000 CheckVaild
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:84     .text.CheckVaild:00000024 $d
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:89     .text.DataToBuffer:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:95     .text.DataToBuffer:00000000 DataToBuffer
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:141    .text.BufferToData:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:147    .text.BufferToData:00000000 BufferToData
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:193    .text.BufferToData_Check:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccPk3vWF.s:199    .text.BufferToData_Check:00000000 BufferToData_Check
+
+UNDEFINED SYMBOLS
+CRC16_Modbus_calc
+crc16_default
+memcpy

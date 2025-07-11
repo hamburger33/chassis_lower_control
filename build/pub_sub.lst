@@ -1,0 +1,683 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"pub_sub.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.sub_get,"ax",%progbits
+  20              		.align	1
+  21              		.global	sub_get
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	sub_get:
+  27              	.LVL0:
+  28              	.LFB5:
+  29              		.file 1 "Core/HAL/pub_sub.c"
+   1:Core/HAL/pub_sub.c **** #include "pub_sub.h"
+   2:Core/HAL/pub_sub.c **** 
+   3:Core/HAL/pub_sub.c **** #include "stdlib.h"
+   4:Core/HAL/pub_sub.c **** #include "string.h"
+   5:Core/HAL/pub_sub.c **** 
+   6:Core/HAL/pub_sub.c **** 
+   7:Core/HAL/pub_sub.c **** //话题的pub，sub和名称
+   8:Core/HAL/pub_sub.c **** struct internal_topic {
+   9:Core/HAL/pub_sub.c ****     Publisher* pub;
+  10:Core/HAL/pub_sub.c ****     cvector* subs;
+  11:Core/HAL/pub_sub.c ****     const char* topic_str;
+  12:Core/HAL/pub_sub.c **** };
+  13:Core/HAL/pub_sub.c **** 
+  14:Core/HAL/pub_sub.c **** cvector* topics;
+  15:Core/HAL/pub_sub.c **** 
+  16:Core/HAL/pub_sub.c **** void SubPub_Init() { topics = cvector_create(sizeof(struct internal_topic*)); }
+  17:Core/HAL/pub_sub.c **** 
+  18:Core/HAL/pub_sub.c **** //压入数据
+  19:Core/HAL/pub_sub.c **** void pub_commit(struct publisher_t* pub, publish_data data) {
+  20:Core/HAL/pub_sub.c ****     for (uint32_t i = 0; i < pub->topic->subs->cv_len; ++i) {
+  21:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+  22:Core/HAL/pub_sub.c ****         if (now->queue->cq_len == now->queue->cq_max_len) circular_queue_pop(now->queue);
+  23:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+  24:Core/HAL/pub_sub.c ****     }
+  25:Core/HAL/pub_sub.c **** }
+  26:Core/HAL/pub_sub.c **** 
+  27:Core/HAL/pub_sub.c **** 
+  28:Core/HAL/pub_sub.c **** publish_data sub_get(struct subscriber_t* sub) {
+  30              		.loc 1 28 48 view -0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 2
+
+
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 28 48 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0446     		mov	r4, r0
+  29:Core/HAL/pub_sub.c ****     publish_data now;
+  41              		.loc 1 29 5 is_stmt 1 view .LVU2
+  30:Core/HAL/pub_sub.c ****     now.data = NULL;
+  42              		.loc 1 30 5 view .LVU3
+  43              		.loc 1 30 14 is_stmt 0 view .LVU4
+  44 0004 0023     		movs	r3, #0
+  45 0006 0370     		strb	r3, [r0]
+  46 0008 4370     		strb	r3, [r0, #1]
+  47 000a 8370     		strb	r3, [r0, #2]
+  48 000c C370     		strb	r3, [r0, #3]
+  31:Core/HAL/pub_sub.c ****     now.len = -1;
+  49              		.loc 1 31 5 is_stmt 1 view .LVU5
+  50              		.loc 1 31 13 is_stmt 0 view .LVU6
+  51 000e 4FF0FF33 		mov	r3, #-1
+  52 0012 0371     		strb	r3, [r0, #4]
+  53 0014 4371     		strb	r3, [r0, #5]
+  54 0016 8371     		strb	r3, [r0, #6]
+  55 0018 C371     		strb	r3, [r0, #7]
+  32:Core/HAL/pub_sub.c ****     if (sub->queue->cq_len) {
+  56              		.loc 1 32 5 is_stmt 1 view .LVU7
+  57              		.loc 1 32 12 is_stmt 0 view .LVU8
+  58 001a 4868     		ldr	r0, [r1, #4]	@ unaligned
+  59              	.LVL1:
+  60              		.loc 1 32 19 view .LVU9
+  61 001c 8368     		ldr	r3, [r0, #8]	@ unaligned
+  62              		.loc 1 32 8 view .LVU10
+  63 001e 0BB9     		cbnz	r3, .L4
+  64              	.LVL2:
+  65              	.L1:
+  33:Core/HAL/pub_sub.c ****         now = *(publish_data*)circular_queue_pop(sub->queue);
+  34:Core/HAL/pub_sub.c ****     }
+  35:Core/HAL/pub_sub.c ****     return now;
+  36:Core/HAL/pub_sub.c **** }
+  66              		.loc 1 36 1 view .LVU11
+  67 0020 2046     		mov	r0, r4
+  68 0022 10BD     		pop	{r4, pc}
+  69              	.LVL3:
+  70              	.L4:
+  33:Core/HAL/pub_sub.c ****         now = *(publish_data*)circular_queue_pop(sub->queue);
+  71              		.loc 1 33 9 is_stmt 1 view .LVU12
+  33:Core/HAL/pub_sub.c ****         now = *(publish_data*)circular_queue_pop(sub->queue);
+  72              		.loc 1 33 31 is_stmt 0 view .LVU13
+  73 0024 FFF7FEFF 		bl	circular_queue_pop
+  74              	.LVL4:
+  33:Core/HAL/pub_sub.c ****         now = *(publish_data*)circular_queue_pop(sub->queue);
+  75              		.loc 1 33 13 view .LVU14
+  76 0028 0268     		ldr	r2, [r0]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 3
+
+
+  77 002a 4368     		ldr	r3, [r0, #4]	@ unaligned
+  78 002c 2260     		str	r2, [r4]	@ unaligned
+  79 002e 6360     		str	r3, [r4, #4]	@ unaligned
+  35:Core/HAL/pub_sub.c **** }
+  80              		.loc 1 35 5 is_stmt 1 view .LVU15
+  35:Core/HAL/pub_sub.c **** }
+  81              		.loc 1 35 12 is_stmt 0 view .LVU16
+  82 0030 F6E7     		b	.L1
+  83              		.cfi_endproc
+  84              	.LFE5:
+  86              		.section	.text.pub_commit,"ax",%progbits
+  87              		.align	1
+  88              		.global	pub_commit
+  89              		.syntax unified
+  90              		.thumb
+  91              		.thumb_func
+  93              	pub_commit:
+  94              	.LVL5:
+  95              	.LFB4:
+  19:Core/HAL/pub_sub.c ****     for (uint32_t i = 0; i < pub->topic->subs->cv_len; ++i) {
+  96              		.loc 1 19 61 is_stmt 1 view -0
+  97              		.cfi_startproc
+  98              		@ args = 0, pretend = 0, frame = 8
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+  19:Core/HAL/pub_sub.c ****     for (uint32_t i = 0; i < pub->topic->subs->cv_len; ++i) {
+ 100              		.loc 1 19 61 is_stmt 0 view .LVU18
+ 101 0000 70B5     		push	{r4, r5, r6, lr}
+ 102              	.LCFI1:
+ 103              		.cfi_def_cfa_offset 16
+ 104              		.cfi_offset 4, -16
+ 105              		.cfi_offset 5, -12
+ 106              		.cfi_offset 6, -8
+ 107              		.cfi_offset 14, -4
+ 108 0002 82B0     		sub	sp, sp, #8
+ 109              	.LCFI2:
+ 110              		.cfi_def_cfa_offset 24
+ 111 0004 0646     		mov	r6, r0
+ 112 0006 02AB     		add	r3, sp, #8
+ 113 0008 03E90600 		stmdb	r3, {r1, r2}
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 114              		.loc 1 20 5 is_stmt 1 view .LVU19
+ 115              	.LBB2:
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 116              		.loc 1 20 10 view .LVU20
+ 117              	.LVL6:
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 118              		.loc 1 20 19 is_stmt 0 view .LVU21
+ 119 000c 0024     		movs	r4, #0
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 120              		.loc 1 20 5 view .LVU22
+ 121 000e 04E0     		b	.L6
+ 122              	.LVL7:
+ 123              	.L7:
+ 124              	.LBB3:
+  23:Core/HAL/pub_sub.c ****     }
+ 125              		.loc 1 23 9 is_stmt 1 discriminator 2 view .LVU23
+ 126 0010 6946     		mov	r1, sp
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 4
+
+
+ 127 0012 6868     		ldr	r0, [r5, #4]	@ unaligned
+ 128 0014 FFF7FEFF 		bl	circular_queue_push
+ 129              	.LVL8:
+ 130              	.LBE3:
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 131              		.loc 1 20 56 discriminator 2 view .LVU24
+ 132 0018 0134     		adds	r4, r4, #1
+ 133              	.LVL9:
+ 134              	.L6:
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 135              		.loc 1 20 26 discriminator 1 view .LVU25
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 136              		.loc 1 20 33 is_stmt 0 discriminator 1 view .LVU26
+ 137 001a 7368     		ldr	r3, [r6, #4]	@ unaligned
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 138              		.loc 1 20 40 discriminator 1 view .LVU27
+ 139 001c 5868     		ldr	r0, [r3, #4]
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 140              		.loc 1 20 46 discriminator 1 view .LVU28
+ 141 001e 4368     		ldr	r3, [r0, #4]	@ unaligned
+  20:Core/HAL/pub_sub.c ****         Subscriber* now = *(Subscriber**)cvector_val_at(pub->topic->subs, i);
+ 142              		.loc 1 20 5 discriminator 1 view .LVU29
+ 143 0020 A342     		cmp	r3, r4
+ 144 0022 0BD9     		bls	.L10
+ 145              	.LBB4:
+  21:Core/HAL/pub_sub.c ****         if (now->queue->cq_len == now->queue->cq_max_len) circular_queue_pop(now->queue);
+ 146              		.loc 1 21 9 is_stmt 1 view .LVU30
+  21:Core/HAL/pub_sub.c ****         if (now->queue->cq_len == now->queue->cq_max_len) circular_queue_pop(now->queue);
+ 147              		.loc 1 21 42 is_stmt 0 view .LVU31
+ 148 0024 2146     		mov	r1, r4
+ 149 0026 FFF7FEFF 		bl	cvector_val_at
+ 150              	.LVL10:
+  21:Core/HAL/pub_sub.c ****         if (now->queue->cq_len == now->queue->cq_max_len) circular_queue_pop(now->queue);
+ 151              		.loc 1 21 21 view .LVU32
+ 152 002a 0568     		ldr	r5, [r0]
+ 153              	.LVL11:
+  22:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+ 154              		.loc 1 22 9 is_stmt 1 view .LVU33
+  22:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+ 155              		.loc 1 22 16 is_stmt 0 view .LVU34
+ 156 002c 6868     		ldr	r0, [r5, #4]	@ unaligned
+  22:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+ 157              		.loc 1 22 23 view .LVU35
+ 158 002e 8268     		ldr	r2, [r0, #8]	@ unaligned
+  22:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+ 159              		.loc 1 22 45 view .LVU36
+ 160 0030 C368     		ldr	r3, [r0, #12]	@ unaligned
+  22:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+ 161              		.loc 1 22 12 view .LVU37
+ 162 0032 9A42     		cmp	r2, r3
+ 163 0034 ECD1     		bne	.L7
+  22:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+ 164              		.loc 1 22 59 is_stmt 1 discriminator 1 view .LVU38
+ 165 0036 FFF7FEFF 		bl	circular_queue_pop
+ 166              	.LVL12:
+ 167 003a E9E7     		b	.L7
+ 168              	.LVL13:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 5
+
+
+ 169              	.L10:
+  22:Core/HAL/pub_sub.c ****         circular_queue_push(now->queue, &data);
+ 170              		.loc 1 22 59 is_stmt 0 discriminator 1 view .LVU39
+ 171              	.LBE4:
+ 172              	.LBE2:
+  25:Core/HAL/pub_sub.c **** 
+ 173              		.loc 1 25 1 view .LVU40
+ 174 003c 02B0     		add	sp, sp, #8
+ 175              	.LCFI3:
+ 176              		.cfi_def_cfa_offset 16
+ 177              		@ sp needed
+ 178 003e 70BD     		pop	{r4, r5, r6, pc}
+  25:Core/HAL/pub_sub.c **** 
+ 179              		.loc 1 25 1 view .LVU41
+ 180              		.cfi_endproc
+ 181              	.LFE4:
+ 183              		.section	.text.SubPub_Init,"ax",%progbits
+ 184              		.align	1
+ 185              		.global	SubPub_Init
+ 186              		.syntax unified
+ 187              		.thumb
+ 188              		.thumb_func
+ 190              	SubPub_Init:
+ 191              	.LFB3:
+  16:Core/HAL/pub_sub.c **** 
+ 192              		.loc 1 16 20 is_stmt 1 view -0
+ 193              		.cfi_startproc
+ 194              		@ args = 0, pretend = 0, frame = 0
+ 195              		@ frame_needed = 0, uses_anonymous_args = 0
+ 196 0000 08B5     		push	{r3, lr}
+ 197              	.LCFI4:
+ 198              		.cfi_def_cfa_offset 8
+ 199              		.cfi_offset 3, -8
+ 200              		.cfi_offset 14, -4
+  16:Core/HAL/pub_sub.c **** 
+ 201              		.loc 1 16 22 view .LVU43
+  16:Core/HAL/pub_sub.c **** 
+ 202              		.loc 1 16 31 is_stmt 0 view .LVU44
+ 203 0002 0420     		movs	r0, #4
+ 204 0004 FFF7FEFF 		bl	cvector_create
+ 205              	.LVL14:
+  16:Core/HAL/pub_sub.c **** 
+ 206              		.loc 1 16 29 view .LVU45
+ 207 0008 014B     		ldr	r3, .L13
+ 208 000a 1860     		str	r0, [r3]
+  16:Core/HAL/pub_sub.c **** 
+ 209              		.loc 1 16 79 view .LVU46
+ 210 000c 08BD     		pop	{r3, pc}
+ 211              	.L14:
+ 212 000e 00BF     		.align	2
+ 213              	.L13:
+ 214 0010 00000000 		.word	.LANCHOR0
+ 215              		.cfi_endproc
+ 216              	.LFE3:
+ 218              		.section	.text.register_topic,"ax",%progbits
+ 219              		.align	1
+ 220              		.global	register_topic
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 6
+
+
+ 221              		.syntax unified
+ 222              		.thumb
+ 223              		.thumb_func
+ 225              	register_topic:
+ 226              	.LVL15:
+ 227              	.LFB6:
+  37:Core/HAL/pub_sub.c **** 
+  38:Core/HAL/pub_sub.c **** struct internal_topic* register_topic(const char* topic) {
+ 228              		.loc 1 38 58 is_stmt 1 view -0
+ 229              		.cfi_startproc
+ 230              		@ args = 0, pretend = 0, frame = 8
+ 231              		@ frame_needed = 0, uses_anonymous_args = 0
+ 232              		.loc 1 38 58 is_stmt 0 view .LVU48
+ 233 0000 70B5     		push	{r4, r5, r6, lr}
+ 234              	.LCFI5:
+ 235              		.cfi_def_cfa_offset 16
+ 236              		.cfi_offset 4, -16
+ 237              		.cfi_offset 5, -12
+ 238              		.cfi_offset 6, -8
+ 239              		.cfi_offset 14, -4
+ 240 0002 82B0     		sub	sp, sp, #8
+ 241              	.LCFI6:
+ 242              		.cfi_def_cfa_offset 24
+ 243 0004 0646     		mov	r6, r0
+  39:Core/HAL/pub_sub.c ****     for (uint32_t i = 0; i < topics->cv_len; ++i) {
+ 244              		.loc 1 39 5 is_stmt 1 view .LVU49
+ 245              	.LBB5:
+ 246              		.loc 1 39 10 view .LVU50
+ 247              	.LVL16:
+ 248              		.loc 1 39 19 is_stmt 0 view .LVU51
+ 249 0006 0024     		movs	r4, #0
+ 250              		.loc 1 39 5 view .LVU52
+ 251 0008 00E0     		b	.L16
+ 252              	.LVL17:
+ 253              	.L21:
+ 254              		.loc 1 39 46 is_stmt 1 discriminator 2 view .LVU53
+ 255 000a 0134     		adds	r4, r4, #1
+ 256              	.LVL18:
+ 257              	.L16:
+ 258              		.loc 1 39 26 discriminator 1 view .LVU54
+ 259              		.loc 1 39 36 is_stmt 0 discriminator 1 view .LVU55
+ 260 000c 124B     		ldr	r3, .L22
+ 261 000e 1868     		ldr	r0, [r3]
+ 262 0010 4368     		ldr	r3, [r0, #4]	@ unaligned
+ 263              		.loc 1 39 5 discriminator 1 view .LVU56
+ 264 0012 A342     		cmp	r3, r4
+ 265 0014 0AD9     		bls	.L20
+ 266              	.LBB6:
+  40:Core/HAL/pub_sub.c ****         struct internal_topic* now = *(struct internal_topic**)cvector_val_at(topics, i);
+ 267              		.loc 1 40 9 is_stmt 1 view .LVU57
+ 268              		.loc 1 40 64 is_stmt 0 view .LVU58
+ 269 0016 2146     		mov	r1, r4
+ 270 0018 FFF7FEFF 		bl	cvector_val_at
+ 271              	.LVL19:
+ 272              		.loc 1 40 32 view .LVU59
+ 273 001c 0568     		ldr	r5, [r0]
+ 274              	.LVL20:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 7
+
+
+  41:Core/HAL/pub_sub.c ****         if (!strcmp(now->topic_str, topic)) {
+ 275              		.loc 1 41 9 is_stmt 1 view .LVU60
+ 276              		.loc 1 41 14 is_stmt 0 view .LVU61
+ 277 001e 3146     		mov	r1, r6
+ 278 0020 A868     		ldr	r0, [r5, #8]
+ 279 0022 FFF7FEFF 		bl	strcmp
+ 280              	.LVL21:
+ 281              		.loc 1 41 12 view .LVU62
+ 282 0026 0028     		cmp	r0, #0
+ 283 0028 EFD1     		bne	.L21
+ 284 002a 12E0     		b	.L15
+ 285              	.LVL22:
+ 286              	.L20:
+ 287              		.loc 1 41 12 view .LVU63
+ 288              	.LBE6:
+ 289              	.LBE5:
+  42:Core/HAL/pub_sub.c ****             return now;
+  43:Core/HAL/pub_sub.c ****         }
+  44:Core/HAL/pub_sub.c ****     }
+  45:Core/HAL/pub_sub.c ****     struct internal_topic* now = malloc(sizeof(struct internal_topic));
+ 290              		.loc 1 45 5 is_stmt 1 view .LVU64
+ 291              		.loc 1 45 34 is_stmt 0 view .LVU65
+ 292 002c 0C20     		movs	r0, #12
+ 293 002e FFF7FEFF 		bl	malloc
+ 294              	.LVL23:
+ 295 0032 0446     		mov	r4, r0
+ 296              	.LVL24:
+ 297              		.loc 1 45 28 view .LVU66
+ 298 0034 0190     		str	r0, [sp, #4]
+  46:Core/HAL/pub_sub.c ****     now->pub = NULL;
+ 299              		.loc 1 46 5 is_stmt 1 view .LVU67
+ 300              		.loc 1 46 14 is_stmt 0 view .LVU68
+ 301 0036 0023     		movs	r3, #0
+ 302 0038 0360     		str	r3, [r0]
+  47:Core/HAL/pub_sub.c ****     now->subs = cvector_create(sizeof(Subscriber*));
+ 303              		.loc 1 47 5 is_stmt 1 view .LVU69
+ 304              		.loc 1 47 17 is_stmt 0 view .LVU70
+ 305 003a 0420     		movs	r0, #4
+ 306 003c FFF7FEFF 		bl	cvector_create
+ 307              	.LVL25:
+ 308              		.loc 1 47 15 view .LVU71
+ 309 0040 6060     		str	r0, [r4, #4]
+  48:Core/HAL/pub_sub.c ****     now->topic_str = topic;
+ 310              		.loc 1 48 5 is_stmt 1 view .LVU72
+ 311              		.loc 1 48 8 is_stmt 0 view .LVU73
+ 312 0042 019B     		ldr	r3, [sp, #4]
+ 313              		.loc 1 48 20 view .LVU74
+ 314 0044 9E60     		str	r6, [r3, #8]
+  49:Core/HAL/pub_sub.c ****     cvector_pushback(topics,&now);
+ 315              		.loc 1 49 5 is_stmt 1 view .LVU75
+ 316 0046 01A9     		add	r1, sp, #4
+ 317 0048 034B     		ldr	r3, .L22
+ 318 004a 1868     		ldr	r0, [r3]
+ 319 004c FFF7FEFF 		bl	cvector_pushback
+ 320              	.LVL26:
+  50:Core/HAL/pub_sub.c ****     return now;
+ 321              		.loc 1 50 5 view .LVU76
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 8
+
+
+ 322              		.loc 1 50 12 is_stmt 0 view .LVU77
+ 323 0050 019D     		ldr	r5, [sp, #4]
+ 324              	.L15:
+  51:Core/HAL/pub_sub.c **** }
+ 325              		.loc 1 51 1 view .LVU78
+ 326 0052 2846     		mov	r0, r5
+ 327 0054 02B0     		add	sp, sp, #8
+ 328              	.LCFI7:
+ 329              		.cfi_def_cfa_offset 16
+ 330              		@ sp needed
+ 331 0056 70BD     		pop	{r4, r5, r6, pc}
+ 332              	.LVL27:
+ 333              	.L23:
+ 334              		.loc 1 51 1 view .LVU79
+ 335              		.align	2
+ 336              	.L22:
+ 337 0058 00000000 		.word	.LANCHOR0
+ 338              		.cfi_endproc
+ 339              	.LFE6:
+ 341              		.section	.text.register_pub,"ax",%progbits
+ 342              		.align	1
+ 343              		.global	register_pub
+ 344              		.syntax unified
+ 345              		.thumb
+ 346              		.thumb_func
+ 348              	register_pub:
+ 349              	.LVL28:
+ 350              	.LFB7:
+  52:Core/HAL/pub_sub.c **** 
+  53:Core/HAL/pub_sub.c **** Publisher* register_pub(const char* topic) {
+ 351              		.loc 1 53 44 is_stmt 1 view -0
+ 352              		.cfi_startproc
+ 353              		@ args = 0, pretend = 0, frame = 0
+ 354              		@ frame_needed = 0, uses_anonymous_args = 0
+ 355              		.loc 1 53 44 is_stmt 0 view .LVU81
+ 356 0000 38B5     		push	{r3, r4, r5, lr}
+ 357              	.LCFI8:
+ 358              		.cfi_def_cfa_offset 16
+ 359              		.cfi_offset 3, -16
+ 360              		.cfi_offset 4, -12
+ 361              		.cfi_offset 5, -8
+ 362              		.cfi_offset 14, -4
+ 363 0002 0546     		mov	r5, r0
+  54:Core/HAL/pub_sub.c ****     struct internal_topic* now_topic = register_topic(topic);
+ 364              		.loc 1 54 5 is_stmt 1 view .LVU82
+ 365              		.loc 1 54 40 is_stmt 0 view .LVU83
+ 366 0004 FFF7FEFF 		bl	register_topic
+ 367              	.LVL29:
+ 368              		.loc 1 54 40 view .LVU84
+ 369 0008 0446     		mov	r4, r0
+ 370              	.LVL30:
+  55:Core/HAL/pub_sub.c ****     if (now_topic->pub != NULL) return now_topic->pub;
+ 371              		.loc 1 55 5 is_stmt 1 view .LVU85
+ 372              		.loc 1 55 18 is_stmt 0 view .LVU86
+ 373 000a 0068     		ldr	r0, [r0]
+ 374              	.LVL31:
+ 375              		.loc 1 55 8 view .LVU87
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 9
+
+
+ 376 000c 00B1     		cbz	r0, .L27
+ 377              	.L24:
+  56:Core/HAL/pub_sub.c ****     Publisher* obj = malloc(sizeof(Publisher));
+  57:Core/HAL/pub_sub.c ****     obj->pub_topic = topic;
+  58:Core/HAL/pub_sub.c ****     obj->topic = now_topic;
+  59:Core/HAL/pub_sub.c ****     obj->publish = pub_commit;
+  60:Core/HAL/pub_sub.c ****     now_topic->pub = obj;
+  61:Core/HAL/pub_sub.c ****     return obj;
+  62:Core/HAL/pub_sub.c **** }
+ 378              		.loc 1 62 1 view .LVU88
+ 379 000e 38BD     		pop	{r3, r4, r5, pc}
+ 380              	.LVL32:
+ 381              	.L27:
+  56:Core/HAL/pub_sub.c ****     Publisher* obj = malloc(sizeof(Publisher));
+ 382              		.loc 1 56 5 is_stmt 1 view .LVU89
+  56:Core/HAL/pub_sub.c ****     Publisher* obj = malloc(sizeof(Publisher));
+ 383              		.loc 1 56 22 is_stmt 0 view .LVU90
+ 384 0010 0C20     		movs	r0, #12
+ 385 0012 FFF7FEFF 		bl	malloc
+ 386              	.LVL33:
+  57:Core/HAL/pub_sub.c ****     obj->topic = now_topic;
+ 387              		.loc 1 57 5 is_stmt 1 view .LVU91
+  57:Core/HAL/pub_sub.c ****     obj->topic = now_topic;
+ 388              		.loc 1 57 20 is_stmt 0 view .LVU92
+ 389 0016 0560     		str	r5, [r0]	@ unaligned
+  58:Core/HAL/pub_sub.c ****     obj->publish = pub_commit;
+ 390              		.loc 1 58 5 is_stmt 1 view .LVU93
+  58:Core/HAL/pub_sub.c ****     obj->publish = pub_commit;
+ 391              		.loc 1 58 16 is_stmt 0 view .LVU94
+ 392 0018 4460     		str	r4, [r0, #4]	@ unaligned
+  59:Core/HAL/pub_sub.c ****     now_topic->pub = obj;
+ 393              		.loc 1 59 5 is_stmt 1 view .LVU95
+  59:Core/HAL/pub_sub.c ****     now_topic->pub = obj;
+ 394              		.loc 1 59 18 is_stmt 0 view .LVU96
+ 395 001a 024B     		ldr	r3, .L28
+ 396 001c 8360     		str	r3, [r0, #8]	@ unaligned
+  60:Core/HAL/pub_sub.c ****     return obj;
+ 397              		.loc 1 60 5 is_stmt 1 view .LVU97
+  60:Core/HAL/pub_sub.c ****     return obj;
+ 398              		.loc 1 60 20 is_stmt 0 view .LVU98
+ 399 001e 2060     		str	r0, [r4]
+  61:Core/HAL/pub_sub.c **** }
+ 400              		.loc 1 61 5 is_stmt 1 view .LVU99
+  61:Core/HAL/pub_sub.c **** }
+ 401              		.loc 1 61 12 is_stmt 0 view .LVU100
+ 402 0020 F5E7     		b	.L24
+ 403              	.L29:
+ 404 0022 00BF     		.align	2
+ 405              	.L28:
+ 406 0024 00000000 		.word	pub_commit
+ 407              		.cfi_endproc
+ 408              	.LFE7:
+ 410              		.section	.text.register_sub,"ax",%progbits
+ 411              		.align	1
+ 412              		.global	register_sub
+ 413              		.syntax unified
+ 414              		.thumb
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 10
+
+
+ 415              		.thumb_func
+ 417              	register_sub:
+ 418              	.LVL34:
+ 419              	.LFB8:
+  63:Core/HAL/pub_sub.c **** 
+  64:Core/HAL/pub_sub.c **** Subscriber* register_sub(const char* topic, uint32_t buffer_len) {
+ 420              		.loc 1 64 66 is_stmt 1 view -0
+ 421              		.cfi_startproc
+ 422              		@ args = 0, pretend = 0, frame = 8
+ 423              		@ frame_needed = 0, uses_anonymous_args = 0
+ 424              		.loc 1 64 66 is_stmt 0 view .LVU102
+ 425 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 426              	.LCFI9:
+ 427              		.cfi_def_cfa_offset 20
+ 428              		.cfi_offset 4, -20
+ 429              		.cfi_offset 5, -16
+ 430              		.cfi_offset 6, -12
+ 431              		.cfi_offset 7, -8
+ 432              		.cfi_offset 14, -4
+ 433 0002 83B0     		sub	sp, sp, #12
+ 434              	.LCFI10:
+ 435              		.cfi_def_cfa_offset 32
+ 436 0004 0546     		mov	r5, r0
+ 437 0006 0F46     		mov	r7, r1
+  65:Core/HAL/pub_sub.c ****     struct internal_topic* now_topic = register_topic(topic);
+ 438              		.loc 1 65 5 is_stmt 1 view .LVU103
+ 439              		.loc 1 65 40 is_stmt 0 view .LVU104
+ 440 0008 FFF7FEFF 		bl	register_topic
+ 441              	.LVL35:
+ 442              		.loc 1 65 40 view .LVU105
+ 443 000c 0646     		mov	r6, r0
+ 444              	.LVL36:
+  66:Core/HAL/pub_sub.c ****     Subscriber* obj = malloc(sizeof(Subscriber));
+ 445              		.loc 1 66 5 is_stmt 1 view .LVU106
+ 446              		.loc 1 66 23 is_stmt 0 view .LVU107
+ 447 000e 0C20     		movs	r0, #12
+ 448              	.LVL37:
+ 449              		.loc 1 66 23 view .LVU108
+ 450 0010 FFF7FEFF 		bl	malloc
+ 451              	.LVL38:
+ 452 0014 0446     		mov	r4, r0
+ 453              		.loc 1 66 17 view .LVU109
+ 454 0016 0190     		str	r0, [sp, #4]
+  67:Core/HAL/pub_sub.c ****     obj->queue = create_circular_queue(sizeof(publish_data), buffer_len);
+ 455              		.loc 1 67 5 is_stmt 1 view .LVU110
+ 456              		.loc 1 67 18 is_stmt 0 view .LVU111
+ 457 0018 3946     		mov	r1, r7
+ 458 001a 0820     		movs	r0, #8
+ 459 001c FFF7FEFF 		bl	create_circular_queue
+ 460              	.LVL39:
+ 461              		.loc 1 67 16 view .LVU112
+ 462 0020 6060     		str	r0, [r4, #4]	@ unaligned
+  68:Core/HAL/pub_sub.c ****     cvector_pushback(now_topic->subs, &obj);
+ 463              		.loc 1 68 5 is_stmt 1 view .LVU113
+ 464 0022 01A9     		add	r1, sp, #4
+ 465 0024 7068     		ldr	r0, [r6, #4]
+ 466 0026 FFF7FEFF 		bl	cvector_pushback
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 11
+
+
+ 467              	.LVL40:
+  69:Core/HAL/pub_sub.c ****     obj->sub_topic = topic;
+ 468              		.loc 1 69 5 view .LVU114
+ 469              		.loc 1 69 8 is_stmt 0 view .LVU115
+ 470 002a 019B     		ldr	r3, [sp, #4]
+ 471              		.loc 1 69 20 view .LVU116
+ 472 002c 1D60     		str	r5, [r3]	@ unaligned
+  70:Core/HAL/pub_sub.c ****     obj->getdata = sub_get;
+ 473              		.loc 1 70 5 is_stmt 1 view .LVU117
+ 474              		.loc 1 70 8 is_stmt 0 view .LVU118
+ 475 002e 0198     		ldr	r0, [sp, #4]
+ 476              		.loc 1 70 18 view .LVU119
+ 477 0030 014B     		ldr	r3, .L32
+ 478 0032 8360     		str	r3, [r0, #8]	@ unaligned
+  71:Core/HAL/pub_sub.c ****     return obj;
+ 479              		.loc 1 71 5 is_stmt 1 view .LVU120
+  72:Core/HAL/pub_sub.c **** }...
+ 480              		.loc 1 72 1 is_stmt 0 view .LVU121
+ 481 0034 03B0     		add	sp, sp, #12
+ 482              	.LCFI11:
+ 483              		.cfi_def_cfa_offset 20
+ 484              		@ sp needed
+ 485 0036 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 486              	.LVL41:
+ 487              	.L33:
+ 488              		.loc 1 72 1 view .LVU122
+ 489              		.align	2
+ 490              	.L32:
+ 491 0038 00000000 		.word	sub_get
+ 492              		.cfi_endproc
+ 493              	.LFE8:
+ 495              		.global	topics
+ 496              		.section	.bss.topics,"aw",%nobits
+ 497              		.align	2
+ 498              		.set	.LANCHOR0,. + 0
+ 501              	topics:
+ 502 0000 00000000 		.space	4
+ 503              		.text
+ 504              	.Letext0:
+ 505              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 506              		.file 3 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 507              		.file 4 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 508              		.file 5 "Core/HAL/lib/cvector.h"
+ 509              		.file 6 "Core/HAL/lib/circular_queue.h"
+ 510              		.file 7 "Core/HAL/pub_sub.h"
+ 511              		.file 8 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 512              		.file 9 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\string.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pub_sub.c
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:20     .text.sub_get:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:26     .text.sub_get:00000000 sub_get
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:87     .text.pub_commit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:93     .text.pub_commit:00000000 pub_commit
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:184    .text.SubPub_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:190    .text.SubPub_Init:00000000 SubPub_Init
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:214    .text.SubPub_Init:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:219    .text.register_topic:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:225    .text.register_topic:00000000 register_topic
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:337    .text.register_topic:00000058 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:342    .text.register_pub:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:348    .text.register_pub:00000000 register_pub
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:406    .text.register_pub:00000024 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:411    .text.register_sub:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:417    .text.register_sub:00000000 register_sub
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:491    .text.register_sub:00000038 $d
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:501    .bss.topics:00000000 topics
+C:\Users\lenovo\AppData\Local\Temp\ccRcy3Yx.s:497    .bss.topics:00000000 $d
+
+UNDEFINED SYMBOLS
+circular_queue_pop
+circular_queue_push
+cvector_val_at
+cvector_create
+strcmp
+malloc
+cvector_pushback
+create_circular_queue

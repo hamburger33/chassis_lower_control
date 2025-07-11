@@ -1,0 +1,241 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"can_pc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.CanPC_Create,"ax",%progbits
+  20              		.align	1
+  21              		.global	CanPC_Create
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	CanPC_Create:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/driver/com/can_pc.c"
+   1:Core/HAL/driver/com/can_pc.c **** #include "can_pc.h"
+   2:Core/HAL/driver/com/can_pc.c **** 
+   3:Core/HAL/driver/com/can_pc.c **** #include <stdlib.h>
+   4:Core/HAL/driver/com/can_pc.c **** #include <string.h>
+   5:Core/HAL/driver/com/can_pc.c **** canpc* CanPC_Create(canpc_config* config) {
+  30              		.loc 1 5 43 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 16
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 5 43 is_stmt 0 view .LVU1
+  35 0000 30B5     		push	{r4, r5, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 12
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  41 0002 85B0     		sub	sp, sp, #20
+  42              	.LCFI1:
+  43              		.cfi_def_cfa_offset 32
+  44 0004 0546     		mov	r5, r0
+   6:Core/HAL/driver/com/can_pc.c ****     canpc* obj = (canpc*)malloc(sizeof(canpc));
+  45              		.loc 1 6 5 is_stmt 1 view .LVU2
+  46              		.loc 1 6 26 is_stmt 0 view .LVU3
+  47 0006 1920     		movs	r0, #25
+  48              	.LVL1:
+  49              		.loc 1 6 26 view .LVU4
+  50 0008 FFF7FEFF 		bl	malloc
+  51              	.LVL2:
+  52 000c 0446     		mov	r4, r0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s 			page 2
+
+
+  53              	.LVL3:
+   7:Core/HAL/driver/com/can_pc.c ****     memset(obj, 0, sizeof(canpc));
+  54              		.loc 1 7 5 is_stmt 1 view .LVU5
+  55 000e 0023     		movs	r3, #0
+  56 0010 0360     		str	r3, [r0]	@ unaligned
+  57 0012 4360     		str	r3, [r0, #4]	@ unaligned
+  58 0014 8360     		str	r3, [r0, #8]	@ unaligned
+  59 0016 C360     		str	r3, [r0, #12]	@ unaligned
+  60 0018 0361     		str	r3, [r0, #16]	@ unaligned
+  61 001a 4361     		str	r3, [r0, #20]	@ unaligned
+  62 001c 0376     		strb	r3, [r0, #24]
+   8:Core/HAL/driver/com/can_pc.c ****     obj->config = *config;
+  63              		.loc 1 8 5 view .LVU6
+  64              		.loc 1 8 17 is_stmt 0 view .LVU7
+  65 001e 2968     		ldr	r1, [r5]	@ unaligned
+  66 0020 6A68     		ldr	r2, [r5, #4]	@ unaligned
+  67 0022 0160     		str	r1, [r0]	@ unaligned
+  68 0024 4260     		str	r2, [r0, #4]	@ unaligned
+  69 0026 2A7A     		ldrb	r2, [r5, #8]	@ zero_extendqisi2
+  70 0028 0272     		strb	r2, [r0, #8]
+   9:Core/HAL/driver/com/can_pc.c ****     can_recv_config recv_config;
+  71              		.loc 1 9 5 is_stmt 1 view .LVU8
+  10:Core/HAL/driver/com/can_pc.c ****     can_send_config send_config;
+  72              		.loc 1 10 5 view .LVU9
+  11:Core/HAL/driver/com/can_pc.c ****     recv_config.bsp_can_index = config->bsp_can_index;
+  73              		.loc 1 11 5 view .LVU10
+  74              		.loc 1 11 39 is_stmt 0 view .LVU11
+  75 002a 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  76              		.loc 1 11 31 view .LVU12
+  77 002c 8DF80420 		strb	r2, [sp, #4]
+  12:Core/HAL/driver/com/can_pc.c ****     recv_config.can_identifier = config->recv_identifer;
+  78              		.loc 1 12 5 is_stmt 1 view .LVU13
+  79              		.loc 1 12 40 is_stmt 0 view .LVU14
+  80 0030 B5F80310 		ldrh	r1, [r5, #3]	@ unaligned
+  81              		.loc 1 12 32 view .LVU15
+  82 0034 ADF80610 		strh	r1, [sp, #6]	@ movhi
+  13:Core/HAL/driver/com/can_pc.c ****     recv_config.data_len = sizeof(pc_recv);
+  83              		.loc 1 13 5 is_stmt 1 view .LVU16
+  84              		.loc 1 13 26 is_stmt 0 view .LVU17
+  85 0038 0D21     		movs	r1, #13
+  86 003a 8DF80510 		strb	r1, [sp, #5]
+  14:Core/HAL/driver/com/can_pc.c ****     recv_config.notify_func = NULL;
+  87              		.loc 1 14 5 is_stmt 1 view .LVU18
+  88              		.loc 1 14 29 is_stmt 0 view .LVU19
+  89 003e 0293     		str	r3, [sp, #8]
+  15:Core/HAL/driver/com/can_pc.c ****     recv_config.lost_callback = config->lost_callback;
+  90              		.loc 1 15 5 is_stmt 1 view .LVU20
+  91              		.loc 1 15 39 is_stmt 0 view .LVU21
+  92 0040 D5F80530 		ldr	r3, [r5, #5]	@ unaligned
+  93              		.loc 1 15 31 view .LVU22
+  94 0044 0393     		str	r3, [sp, #12]
+  16:Core/HAL/driver/com/can_pc.c **** 
+  17:Core/HAL/driver/com/can_pc.c ****     send_config.bsp_can_index = config->bsp_can_index;
+  95              		.loc 1 17 5 is_stmt 1 view .LVU23
+  96              		.loc 1 17 31 is_stmt 0 view .LVU24
+  97 0046 8DF80020 		strb	r2, [sp]
+  18:Core/HAL/driver/com/can_pc.c ****     send_config.can_identifier = config->send_identifer;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s 			page 3
+
+
+  98              		.loc 1 18 5 is_stmt 1 view .LVU25
+  99              		.loc 1 18 40 is_stmt 0 view .LVU26
+ 100 004a B5F80130 		ldrh	r3, [r5, #1]	@ unaligned
+ 101              		.loc 1 18 32 view .LVU27
+ 102 004e ADF80230 		strh	r3, [sp, #2]	@ movhi
+  19:Core/HAL/driver/com/can_pc.c ****     send_config.data_len = sizeof(pc_send);
+ 103              		.loc 1 19 5 is_stmt 1 view .LVU28
+ 104              		.loc 1 19 26 is_stmt 0 view .LVU29
+ 105 0052 1223     		movs	r3, #18
+ 106 0054 8DF80130 		strb	r3, [sp, #1]
+  20:Core/HAL/driver/com/can_pc.c ****     obj->recv = CanRecv_Create(&recv_config);
+ 107              		.loc 1 20 5 is_stmt 1 view .LVU30
+ 108              		.loc 1 20 17 is_stmt 0 view .LVU31
+ 109 0058 01A8     		add	r0, sp, #4
+ 110              	.LVL4:
+ 111              		.loc 1 20 17 view .LVU32
+ 112 005a FFF7FEFF 		bl	CanRecv_Create
+ 113              	.LVL5:
+ 114              		.loc 1 20 15 view .LVU33
+ 115 005e C4F80D00 		str	r0, [r4, #13]	@ unaligned
+  21:Core/HAL/driver/com/can_pc.c ****     obj->send = CanSend_Create(&send_config);
+ 116              		.loc 1 21 5 is_stmt 1 view .LVU34
+ 117              		.loc 1 21 17 is_stmt 0 view .LVU35
+ 118 0062 6846     		mov	r0, sp
+ 119 0064 FFF7FEFF 		bl	CanSend_Create
+ 120              	.LVL6:
+ 121              		.loc 1 21 15 view .LVU36
+ 122 0068 C4F80900 		str	r0, [r4, #9]	@ unaligned
+  22:Core/HAL/driver/com/can_pc.c ****     obj->pc_recv_data = (pc_recv*)obj->recv->data_rx.data;
+ 123              		.loc 1 22 5 is_stmt 1 view .LVU37
+ 124              		.loc 1 22 38 is_stmt 0 view .LVU38
+ 125 006c D4F80D30 		ldr	r3, [r4, #13]	@ unaligned
+ 126              		.loc 1 22 53 view .LVU39
+ 127 0070 D3F80D20 		ldr	r2, [r3, #13]	@ unaligned
+ 128              		.loc 1 22 23 view .LVU40
+ 129 0074 C4F81120 		str	r2, [r4, #17]	@ unaligned
+  23:Core/HAL/driver/com/can_pc.c ****     obj->data_updated = &obj->recv->data_updated;
+ 130              		.loc 1 23 5 is_stmt 1 view .LVU41
+ 131              		.loc 1 23 25 is_stmt 0 view .LVU42
+ 132 0078 1633     		adds	r3, r3, #22
+ 133              		.loc 1 23 23 view .LVU43
+ 134 007a C4F81530 		str	r3, [r4, #21]	@ unaligned
+  24:Core/HAL/driver/com/can_pc.c ****     return obj;
+ 135              		.loc 1 24 5 is_stmt 1 view .LVU44
+  25:Core/HAL/driver/com/can_pc.c **** }
+ 136              		.loc 1 25 1 is_stmt 0 view .LVU45
+ 137 007e 2046     		mov	r0, r4
+ 138 0080 05B0     		add	sp, sp, #20
+ 139              	.LCFI2:
+ 140              		.cfi_def_cfa_offset 12
+ 141              		@ sp needed
+ 142 0082 30BD     		pop	{r4, r5, pc}
+ 143              		.loc 1 25 1 view .LVU46
+ 144              		.cfi_endproc
+ 145              	.LFE0:
+ 147              		.section	.text.CanPC_Send,"ax",%progbits
+ 148              		.align	1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s 			page 4
+
+
+ 149              		.global	CanPC_Send
+ 150              		.syntax unified
+ 151              		.thumb
+ 152              		.thumb_func
+ 154              	CanPC_Send:
+ 155              	.LVL7:
+ 156              	.LFB1:
+  26:Core/HAL/driver/com/can_pc.c **** 
+  27:Core/HAL/driver/com/can_pc.c **** void CanPC_Send(canpc* obj, pc_send* data) {
+ 157              		.loc 1 27 44 is_stmt 1 view -0
+ 158              		.cfi_startproc
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161              		.loc 1 27 44 is_stmt 0 view .LVU48
+ 162 0000 08B5     		push	{r3, lr}
+ 163              	.LCFI3:
+ 164              		.cfi_def_cfa_offset 8
+ 165              		.cfi_offset 3, -8
+ 166              		.cfi_offset 14, -4
+  28:Core/HAL/driver/com/can_pc.c ****     CanSend_Send(obj->send, (uint8_t*)data);
+ 167              		.loc 1 28 5 is_stmt 1 view .LVU49
+ 168 0002 D0F80900 		ldr	r0, [r0, #9]	@ unaligned
+ 169              	.LVL8:
+ 170              		.loc 1 28 5 is_stmt 0 view .LVU50
+ 171 0006 FFF7FEFF 		bl	CanSend_Send
+ 172              	.LVL9:
+  29:Core/HAL/driver/com/can_pc.c **** }...
+ 173              		.loc 1 29 1 view .LVU51
+ 174 000a 08BD     		pop	{r3, pc}
+ 175              		.cfi_endproc
+ 176              	.LFE1:
+ 178              		.text
+ 179              	.Letext0:
+ 180              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 181              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 182              		.file 4 "Core/HAL/lib/datatypes.h"
+ 183              		.file 5 "Core/BSP/bsp_supervise.h"
+ 184              		.file 6 "Core/HAL/monitor/monitor.h"
+ 185              		.file 7 "Core/HAL/driver/com/can_recv.h"
+ 186              		.file 8 "Core/HAL/driver/com/can_send.h"
+ 187              		.file 9 "Core/HAL/driver/com/pc_data.h"
+ 188              		.file 10 "Core/HAL/driver/com/can_pc.h"
+ 189              		.file 11 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 can_pc.c
+C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s:20     .text.CanPC_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s:26     .text.CanPC_Create:00000000 CanPC_Create
+C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s:148    .text.CanPC_Send:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc1KrCQc.s:154    .text.CanPC_Send:00000000 CanPC_Send
+
+UNDEFINED SYMBOLS
+malloc
+CanRecv_Create
+CanSend_Create
+CanSend_Send

@@ -3,9 +3,14 @@
 
 // size: 数组成员的大小
 cvector* cvector_create(const size_t size) {
+    // if(size == 0){
+    //     return NULL;
+    // }
+
     cvector* cv = (cvector*)malloc(sizeof(struct _cvector));
 
     if (!cv) return NULL;
+
 
     cv->cv_pdata = malloc(MIN_LEN * size);
 

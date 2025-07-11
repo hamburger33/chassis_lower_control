@@ -1,0 +1,183 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bsp_delay.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.bsp_delay_us,"ax",%progbits
+  20              		.align	1
+  21              		.global	bsp_delay_us
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	bsp_delay_us:
+  27              	.LVL0:
+  28              	.LFB130:
+  29              		.file 1 "Core/BSP/lib/bsp_delay.c"
+   1:Core/BSP/lib/bsp_delay.c **** #include "bsp_delay.h"
+   2:Core/BSP/lib/bsp_delay.c **** 
+   3:Core/BSP/lib/bsp_delay.c **** #include "bsp_def.h"
+   4:Core/BSP/lib/bsp_delay.c **** #include "tim.h"
+   5:Core/BSP/lib/bsp_delay.c **** 
+   6:Core/BSP/lib/bsp_delay.c **** void bsp_delay_us(uint16_t nus) {
+  30              		.loc 1 6 33 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+   7:Core/BSP/lib/bsp_delay.c ****     __HAL_TIM_SET_COUNTER(DLY_TIM_Handle, 0);
+  35              		.loc 1 7 5 view .LVU1
+  36 0000 0D4B     		ldr	r3, .L4
+  37 0002 1B68     		ldr	r3, [r3]
+  38 0004 0022     		movs	r2, #0
+  39 0006 5A62     		str	r2, [r3, #36]
+   8:Core/BSP/lib/bsp_delay.c ****     __HAL_TIM_ENABLE(DLY_TIM_Handle);
+  40              		.loc 1 8 5 view .LVU2
+  41 0008 1A68     		ldr	r2, [r3]
+  42 000a 42F00102 		orr	r2, r2, #1
+  43 000e 1A60     		str	r2, [r3]
+   9:Core/BSP/lib/bsp_delay.c ****     while (__HAL_TIM_GET_COUNTER(DLY_TIM_Handle) < nus) {
+  44              		.loc 1 9 5 view .LVU3
+  45              	.L2:
+  10:Core/BSP/lib/bsp_delay.c ****     }
+  46              		.loc 1 10 5 discriminator 1 view .LVU4
+   9:Core/BSP/lib/bsp_delay.c ****     while (__HAL_TIM_GET_COUNTER(DLY_TIM_Handle) < nus) {
+  47              		.loc 1 9 11 discriminator 1 view .LVU5
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s 			page 2
+
+
+   9:Core/BSP/lib/bsp_delay.c ****     while (__HAL_TIM_GET_COUNTER(DLY_TIM_Handle) < nus) {
+  48              		.loc 1 9 12 is_stmt 0 discriminator 1 view .LVU6
+  49 0010 094B     		ldr	r3, .L4
+  50 0012 1B68     		ldr	r3, [r3]
+  51 0014 5A6A     		ldr	r2, [r3, #36]
+   9:Core/BSP/lib/bsp_delay.c ****     while (__HAL_TIM_GET_COUNTER(DLY_TIM_Handle) < nus) {
+  52              		.loc 1 9 11 discriminator 1 view .LVU7
+  53 0016 8242     		cmp	r2, r0
+  54 0018 FAD3     		bcc	.L2
+  11:Core/BSP/lib/bsp_delay.c ****     __HAL_TIM_DISABLE(DLY_TIM_Handle);
+  55              		.loc 1 11 5 is_stmt 1 view .LVU8
+  56              		.loc 1 11 5 view .LVU9
+  57 001a 196A     		ldr	r1, [r3, #32]
+  58 001c 41F21112 		movw	r2, #4369
+  59 0020 1142     		tst	r1, r2
+  60 0022 08D1     		bne	.L1
+  61              		.loc 1 11 5 discriminator 1 view .LVU10
+  62 0024 196A     		ldr	r1, [r3, #32]
+  63 0026 40F24442 		movw	r2, #1092
+  64 002a 1142     		tst	r1, r2
+  65 002c 03D1     		bne	.L1
+  66              		.loc 1 11 5 discriminator 3 view .LVU11
+  67 002e 1A68     		ldr	r2, [r3]
+  68 0030 22F00102 		bic	r2, r2, #1
+  69 0034 1A60     		str	r2, [r3]
+  70              		.loc 1 11 5 discriminator 3 view .LVU12
+  71              	.L1:
+  12:Core/BSP/lib/bsp_delay.c **** }
+  72              		.loc 1 12 1 is_stmt 0 view .LVU13
+  73 0036 7047     		bx	lr
+  74              	.L5:
+  75              		.align	2
+  76              	.L4:
+  77 0038 00000000 		.word	htim13
+  78              		.cfi_endproc
+  79              	.LFE130:
+  81              		.section	.text.bsp_delay_ms,"ax",%progbits
+  82              		.align	1
+  83              		.global	bsp_delay_ms
+  84              		.syntax unified
+  85              		.thumb
+  86              		.thumb_func
+  88              	bsp_delay_ms:
+  89              	.LVL1:
+  90              	.LFB131:
+  13:Core/BSP/lib/bsp_delay.c **** 
+  14:Core/BSP/lib/bsp_delay.c **** void bsp_delay_ms(uint16_t nms) {
+  91              		.loc 1 14 33 is_stmt 1 view -0
+  92              		.cfi_startproc
+  93              		@ args = 0, pretend = 0, frame = 0
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95              		.loc 1 14 33 is_stmt 0 view .LVU15
+  96 0000 38B5     		push	{r3, r4, r5, lr}
+  97              	.LCFI0:
+  98              		.cfi_def_cfa_offset 16
+  99              		.cfi_offset 3, -16
+ 100              		.cfi_offset 4, -12
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s 			page 3
+
+
+ 101              		.cfi_offset 5, -8
+ 102              		.cfi_offset 14, -4
+ 103 0002 0546     		mov	r5, r0
+  15:Core/BSP/lib/bsp_delay.c ****     for (int i = 0; i < nms; ++i) {
+ 104              		.loc 1 15 5 is_stmt 1 view .LVU16
+ 105              	.LBB2:
+ 106              		.loc 1 15 10 view .LVU17
+ 107              	.LVL2:
+ 108              		.loc 1 15 14 is_stmt 0 view .LVU18
+ 109 0004 0024     		movs	r4, #0
+ 110              		.loc 1 15 5 view .LVU19
+ 111 0006 04E0     		b	.L7
+ 112              	.LVL3:
+ 113              	.L8:
+  16:Core/BSP/lib/bsp_delay.c ****         bsp_delay_us(1000);
+ 114              		.loc 1 16 9 is_stmt 1 discriminator 3 view .LVU20
+ 115 0008 4FF47A70 		mov	r0, #1000
+ 116 000c FFF7FEFF 		bl	bsp_delay_us
+ 117              	.LVL4:
+  15:Core/BSP/lib/bsp_delay.c ****     for (int i = 0; i < nms; ++i) {
+ 118              		.loc 1 15 30 discriminator 3 view .LVU21
+ 119 0010 0134     		adds	r4, r4, #1
+ 120              	.LVL5:
+ 121              	.L7:
+  15:Core/BSP/lib/bsp_delay.c ****     for (int i = 0; i < nms; ++i) {
+ 122              		.loc 1 15 21 discriminator 1 view .LVU22
+  15:Core/BSP/lib/bsp_delay.c ****     for (int i = 0; i < nms; ++i) {
+ 123              		.loc 1 15 5 is_stmt 0 discriminator 1 view .LVU23
+ 124 0012 A542     		cmp	r5, r4
+ 125 0014 F8DC     		bgt	.L8
+ 126              	.LBE2:
+  17:Core/BSP/lib/bsp_delay.c ****     }
+  18:Core/BSP/lib/bsp_delay.c **** }...
+ 127              		.loc 1 18 1 view .LVU24
+ 128 0016 38BD     		pop	{r3, r4, r5, pc}
+ 129              		.loc 1 18 1 view .LVU25
+ 130              		.cfi_endproc
+ 131              	.LFE131:
+ 133              		.text
+ 134              	.Letext0:
+ 135              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 136              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 137              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 138              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 139              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 140              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 141              		.file 8 "Core/Inc/tim.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp_delay.c
+C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s:20     .text.bsp_delay_us:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s:26     .text.bsp_delay_us:00000000 bsp_delay_us
+C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s:77     .text.bsp_delay_us:00000038 $d
+C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s:82     .text.bsp_delay_ms:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccys8e1x.s:88     .text.bsp_delay_ms:00000000 bsp_delay_ms
+
+UNDEFINED SYMBOLS
+htim13

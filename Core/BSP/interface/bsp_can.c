@@ -14,7 +14,6 @@
  ******************************************************************************
  */
 #include "bsp_can.h"
-
 #include "bsp_def.h"
 #include "bsp_time.h"
 #include "can.h"

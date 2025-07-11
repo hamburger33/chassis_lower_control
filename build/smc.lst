@@ -1,0 +1,793 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"smc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.SMC_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	SMC_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	SMC_Init:
+  27              	.LVL0:
+  28              	.LFB138:
+  29              		.file 1 "Core/HAL/lib/controller/smc.c"
+   1:Core/HAL/lib/controller/smc.c **** #include "smc.h"
+   2:Core/HAL/lib/controller/smc.c **** 
+   3:Core/HAL/lib/controller/smc.c **** #include "arm_math.h"
+   4:Core/HAL/lib/controller/smc.c **** #include "common.h"
+   5:Core/HAL/lib/controller/smc.c **** 
+   6:Core/HAL/lib/controller/smc.c **** // sliding mode control 滑膜控制
+   7:Core/HAL/lib/controller/smc.c **** 
+   8:Core/HAL/lib/controller/smc.c **** void SMC_Init(Smc* smc, Smc_config* config) { smc->config = *config; }
+  30              		.loc 1 8 45 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 8 45 is_stmt 0 view .LVU1
+  35 0000 00B5     		push	{lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 4
+  38              		.cfi_offset 14, -4
+  39              		.loc 1 8 47 is_stmt 1 view .LVU2
+  40              		.loc 1 8 59 is_stmt 0 view .LVU3
+  41 0002 0B68     		ldr	r3, [r1]	@ unaligned
+  42 0004 D1F804E0 		ldr	lr, [r1, #4]	@ unaligned
+  43 0008 D1F808C0 		ldr	ip, [r1, #8]	@ unaligned
+  44 000c CA68     		ldr	r2, [r1, #12]	@ unaligned
+  45 000e 0360     		str	r3, [r0]	@ unaligned
+  46 0010 C0F804E0 		str	lr, [r0, #4]	@ unaligned
+  47 0014 C0F808C0 		str	ip, [r0, #8]	@ unaligned
+  48 0018 C260     		str	r2, [r0, #12]	@ unaligned
+  49 001a 0B69     		ldr	r3, [r1, #16]	@ unaligned
+  50 001c 0361     		str	r3, [r0, #16]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 2
+
+
+  51              		.loc 1 8 70 view .LVU4
+  52 001e 5DF804FB 		ldr	pc, [sp], #4
+  53              		.cfi_endproc
+  54              	.LFE138:
+  56              		.section	.text.SMC_SetConfig,"ax",%progbits
+  57              		.align	1
+  58              		.global	SMC_SetConfig
+  59              		.syntax unified
+  60              		.thumb
+  61              		.thumb_func
+  63              	SMC_SetConfig:
+  64              	.LVL1:
+  65              	.LFB139:
+   9:Core/HAL/lib/controller/smc.c **** 
+  10:Core/HAL/lib/controller/smc.c **** void SMC_SetConfig(Smc_config* config, float kp, float kd, float kmax, ReachingLaw reaching_law, fl
+  66              		.loc 1 10 115 is_stmt 1 view -0
+  67              		.cfi_startproc
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70              		@ link register save eliminated.
+  11:Core/HAL/lib/controller/smc.c ****     config->kp = kp;
+  71              		.loc 1 11 5 view .LVU6
+  72              		.loc 1 11 16 is_stmt 0 view .LVU7
+  73 0000 10EE103A 		vmov	r3, s0
+  74 0004 0360     		str	r3, [r0]	@ unaligned
+  12:Core/HAL/lib/controller/smc.c ****     config->kd = kd;
+  75              		.loc 1 12 5 is_stmt 1 view .LVU8
+  76              		.loc 1 12 16 is_stmt 0 view .LVU9
+  77 0006 10EE903A 		vmov	r3, s1
+  78 000a 4360     		str	r3, [r0, #4]	@ unaligned
+  13:Core/HAL/lib/controller/smc.c ****     config->kmax = kmax;
+  79              		.loc 1 13 5 is_stmt 1 view .LVU10
+  80              		.loc 1 13 18 is_stmt 0 view .LVU11
+  81 000c 11EE103A 		vmov	r3, s2
+  82 0010 8360     		str	r3, [r0, #8]	@ unaligned
+  14:Core/HAL/lib/controller/smc.c ****     config->reaching_law = reaching_law;
+  83              		.loc 1 14 5 is_stmt 1 view .LVU12
+  84              		.loc 1 14 26 is_stmt 0 view .LVU13
+  85 0012 C160     		str	r1, [r0, #12]	@ unaligned
+  15:Core/HAL/lib/controller/smc.c ****     config->outputMax = outputMax;
+  86              		.loc 1 15 5 is_stmt 1 view .LVU14
+  87              		.loc 1 15 23 is_stmt 0 view .LVU15
+  88 0014 11EE903A 		vmov	r3, s3
+  89 0018 0361     		str	r3, [r0, #16]	@ unaligned
+  16:Core/HAL/lib/controller/smc.c **** }
+  90              		.loc 1 16 1 view .LVU16
+  91 001a 7047     		bx	lr
+  92              		.cfi_endproc
+  93              	.LFE139:
+  95              		.section	.text.SMC_Calc,"ax",%progbits
+  96              		.align	1
+  97              		.global	SMC_Calc
+  98              		.syntax unified
+  99              		.thumb
+ 100              		.thumb_func
+ 102              	SMC_Calc:
+ 103              	.LVL2:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 3
+
+
+ 104              	.LFB140:
+  17:Core/HAL/lib/controller/smc.c **** 
+  18:Core/HAL/lib/controller/smc.c **** void SMC_Calc(Smc* smc) {
+ 105              		.loc 1 18 25 is_stmt 1 view -0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 0
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109              		.loc 1 18 25 is_stmt 0 view .LVU18
+ 110 0000 10B5     		push	{r4, lr}
+ 111              	.LCFI1:
+ 112              		.cfi_def_cfa_offset 8
+ 113              		.cfi_offset 4, -8
+ 114              		.cfi_offset 14, -4
+ 115 0002 0446     		mov	r4, r0
+  19:Core/HAL/lib/controller/smc.c ****     smc->error[1] = smc->error[0];
+ 116              		.loc 1 19 5 is_stmt 1 view .LVU19
+ 117              		.loc 1 19 31 is_stmt 0 view .LVU20
+ 118 0004 4369     		ldr	r3, [r0, #20]	@ unaligned
+ 119              		.loc 1 19 19 view .LVU21
+ 120 0006 8361     		str	r3, [r0, #24]	@ unaligned
+  20:Core/HAL/lib/controller/smc.c ****     smc->error[0] = smc->ref - smc->fdb;
+ 121              		.loc 1 20 5 is_stmt 1 view .LVU22
+ 122              		.loc 1 20 24 is_stmt 0 view .LVU23
+ 123 0008 C369     		ldr	r3, [r0, #28]	@ unaligned
+ 124 000a 00EE103A 		vmov	s0, r3	@ int
+ 125              		.loc 1 20 35 view .LVU24
+ 126 000e 036A     		ldr	r3, [r0, #32]	@ unaligned
+ 127              		.loc 1 20 30 view .LVU25
+ 128 0010 07EE903A 		vmov	s15, r3
+ 129 0014 30EE670A 		vsub.f32	s0, s0, s15
+ 130              		.loc 1 20 19 view .LVU26
+ 131 0018 10EE103A 		vmov	r3, s0
+ 132 001c 4361     		str	r3, [r0, #20]	@ unaligned
+  21:Core/HAL/lib/controller/smc.c **** 
+  22:Core/HAL/lib/controller/smc.c ****     float u;
+ 133              		.loc 1 22 5 is_stmt 1 view .LVU27
+  23:Core/HAL/lib/controller/smc.c ****     u = smc->config.reaching_law(smc->error[0]);
+ 134              		.loc 1 23 5 view .LVU28
+ 135              		.loc 1 23 20 is_stmt 0 view .LVU29
+ 136 001e C368     		ldr	r3, [r0, #12]	@ unaligned
+ 137              		.loc 1 23 9 view .LVU30
+ 138 0020 9847     		blx	r3
+ 139              	.LVL3:
+ 140              		.loc 1 23 9 view .LVU31
+ 141 0022 B0EE406A 		vmov.f32	s12, s0
+ 142              	.LVL4:
+  24:Core/HAL/lib/controller/smc.c **** 
+  25:Core/HAL/lib/controller/smc.c ****     smc->output = smc->config.kp * smc->error[0]                      // 经典滑膜面选择
+ 143              		.loc 1 25 5 is_stmt 1 view .LVU32
+ 144              		.loc 1 25 30 is_stmt 0 view .LVU33
+ 145 0026 2368     		ldr	r3, [r4]	@ unaligned
+ 146 0028 07EE903A 		vmov	s15, r3	@ int
+ 147              		.loc 1 25 46 view .LVU34
+ 148 002c 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 149 002e 06EE903A 		vmov	s13, r3	@ int
+ 150              		.loc 1 25 34 view .LVU35
+ 151 0032 27EEA67A 		vmul.f32	s14, s15, s13
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 4
+
+
+  26:Core/HAL/lib/controller/smc.c ****                   + smc->config.kd * (smc->error[0] - smc->error[1])  // kd
+ 152              		.loc 1 26 32 view .LVU36
+ 153 0036 6368     		ldr	r3, [r4, #4]	@ unaligned
+ 154 0038 07EE903A 		vmov	s15, r3	@ int
+ 155              		.loc 1 26 65 view .LVU37
+ 156 003c A369     		ldr	r3, [r4, #24]	@ unaligned
+ 157 003e 00EE103A 		vmov	s0, r3	@ int
+ 158              	.LVL5:
+ 159              		.loc 1 26 53 view .LVU38
+ 160 0042 76EEC06A 		vsub.f32	s13, s13, s0
+ 161              		.loc 1 26 36 view .LVU39
+ 162 0046 67EEA66A 		vmul.f32	s13, s15, s13
+ 163              		.loc 1 26 19 view .LVU40
+ 164 004a 77EE267A 		vadd.f32	s15, s14, s13
+  27:Core/HAL/lib/controller/smc.c ****                   + smc->config.kmax * u;                             // 趋近律 整项要能大�
+ 165              		.loc 1 27 32 view .LVU41
+ 166 004e A368     		ldr	r3, [r4, #8]	@ unaligned
+ 167 0050 00EE103A 		vmov	s0, r3	@ int
+ 168              		.loc 1 27 38 view .LVU42
+ 169 0054 20EE060A 		vmul.f32	s0, s0, s12
+ 170              		.loc 1 27 19 view .LVU43
+ 171 0058 37EE800A 		vadd.f32	s0, s15, s0
+  25:Core/HAL/lib/controller/smc.c ****                   + smc->config.kd * (smc->error[0] - smc->error[1])  // kd
+ 172              		.loc 1 25 17 view .LVU44
+ 173 005c 10EE103A 		vmov	r3, s0
+ 174 0060 6362     		str	r3, [r4, #36]	@ unaligned
+  28:Core/HAL/lib/controller/smc.c ****     if (smc->output < -smc->config.outputMax) smc->output = -smc->config.outputMax;
+ 175              		.loc 1 28 5 is_stmt 1 view .LVU45
+ 176              		.loc 1 28 35 is_stmt 0 view .LVU46
+ 177 0062 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 178 0064 07EE903A 		vmov	s15, r3	@ int
+ 179              		.loc 1 28 23 view .LVU47
+ 180 0068 B1EE677A 		vneg.f32	s14, s15
+ 181              		.loc 1 28 8 view .LVU48
+ 182 006c B4EEC70A 		vcmpe.f32	s0, s14
+ 183 0070 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 184 0074 02D5     		bpl	.L5
+ 185              		.loc 1 28 47 is_stmt 1 discriminator 1 view .LVU49
+ 186              		.loc 1 28 59 is_stmt 0 discriminator 1 view .LVU50
+ 187 0076 17EE103A 		vmov	r3, s14
+ 188 007a 6362     		str	r3, [r4, #36]	@ unaligned
+ 189              	.L5:
+  29:Core/HAL/lib/controller/smc.c ****     if (smc->output > smc->config.outputMax) smc->output = smc->config.outputMax;
+ 190              		.loc 1 29 5 is_stmt 1 view .LVU51
+ 191              		.loc 1 29 12 is_stmt 0 view .LVU52
+ 192 007c 636A     		ldr	r3, [r4, #36]	@ unaligned
+ 193              		.loc 1 29 8 view .LVU53
+ 194 007e 07EE103A 		vmov	s14, r3
+ 195 0082 F4EEC77A 		vcmpe.f32	s15, s14
+ 196 0086 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 197 008a 02D5     		bpl	.L4
+ 198              		.loc 1 29 46 is_stmt 1 discriminator 1 view .LVU54
+ 199              		.loc 1 29 58 is_stmt 0 discriminator 1 view .LVU55
+ 200 008c 17EE903A 		vmov	r3, s15
+ 201 0090 6362     		str	r3, [r4, #36]	@ unaligned
+ 202              	.L4:
+  30:Core/HAL/lib/controller/smc.c **** }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 5
+
+
+ 203              		.loc 1 30 1 view .LVU56
+ 204 0092 10BD     		pop	{r4, pc}
+ 205              		.loc 1 30 1 view .LVU57
+ 206              		.cfi_endproc
+ 207              	.LFE140:
+ 209              		.section	.text.ReachingLaw_sgn,"ax",%progbits
+ 210              		.align	1
+ 211              		.global	ReachingLaw_sgn
+ 212              		.syntax unified
+ 213              		.thumb
+ 214              		.thumb_func
+ 216              	ReachingLaw_sgn:
+ 217              	.LVL6:
+ 218              	.LFB141:
+  31:Core/HAL/lib/controller/smc.c **** 
+  32:Core/HAL/lib/controller/smc.c **** // 最简单的趋近律
+  33:Core/HAL/lib/controller/smc.c **** // 易产生震动
+  34:Core/HAL/lib/controller/smc.c **** float ReachingLaw_sgn(float error) { return fsgn(error); }
+ 219              		.loc 1 34 36 is_stmt 1 view -0
+ 220              		.cfi_startproc
+ 221              		@ args = 0, pretend = 0, frame = 0
+ 222              		@ frame_needed = 0, uses_anonymous_args = 0
+ 223              		.loc 1 34 36 is_stmt 0 view .LVU59
+ 224 0000 08B5     		push	{r3, lr}
+ 225              	.LCFI2:
+ 226              		.cfi_def_cfa_offset 8
+ 227              		.cfi_offset 3, -8
+ 228              		.cfi_offset 14, -4
+ 229              		.loc 1 34 38 is_stmt 1 view .LVU60
+ 230              		.loc 1 34 45 is_stmt 0 view .LVU61
+ 231 0002 FFF7FEFF 		bl	fsgn
+ 232              	.LVL7:
+ 233              		.loc 1 34 45 view .LVU62
+ 234 0006 00EE100A 		vmov	s0, r0	@ int
+ 235              		.loc 1 34 58 view .LVU63
+ 236 000a B8EEC00A 		vcvt.f32.s32	s0, s0
+ 237 000e 08BD     		pop	{r3, pc}
+ 238              		.cfi_endproc
+ 239              	.LFE141:
+ 241              		.section	.text.ReachingLaw_sqrt,"ax",%progbits
+ 242              		.align	1
+ 243              		.global	ReachingLaw_sqrt
+ 244              		.syntax unified
+ 245              		.thumb
+ 246              		.thumb_func
+ 248              	ReachingLaw_sqrt:
+ 249              	.LVL8:
+ 250              	.LFB142:
+  35:Core/HAL/lib/controller/smc.c **** 
+  36:Core/HAL/lib/controller/smc.c **** // 根号趋近
+  37:Core/HAL/lib/controller/smc.c **** // 能有效减小稳态误差
+  38:Core/HAL/lib/controller/smc.c **** float ReachingLaw_sqrt(float error) {
+ 251              		.loc 1 38 37 is_stmt 1 view -0
+ 252              		.cfi_startproc
+ 253              		@ args = 0, pretend = 0, frame = 0
+ 254              		@ frame_needed = 0, uses_anonymous_args = 0
+ 255              		.loc 1 38 37 is_stmt 0 view .LVU65
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 6
+
+
+ 256 0000 08B5     		push	{r3, lr}
+ 257              	.LCFI3:
+ 258              		.cfi_def_cfa_offset 8
+ 259              		.cfi_offset 3, -8
+ 260              		.cfi_offset 14, -4
+  39:Core/HAL/lib/controller/smc.c ****     float u;
+ 261              		.loc 1 39 5 is_stmt 1 view .LVU66
+  40:Core/HAL/lib/controller/smc.c ****     if (error > 0) {
+ 262              		.loc 1 40 5 view .LVU67
+ 263              		.loc 1 40 8 is_stmt 0 view .LVU68
+ 264 0002 B5EEC00A 		vcmpe.f32	s0, #0
+ 265 0006 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 266 000a 09DD     		ble	.L29
+  41:Core/HAL/lib/controller/smc.c ****         arm_sqrt_f32(fabs(error), &u);
+ 267              		.loc 1 41 9 is_stmt 1 view .LVU69
+ 268              		.loc 1 41 22 is_stmt 0 view .LVU70
+ 269 000c B0EEC00A 		vabs.f32	s0, s0
+ 270              	.LVL9:
+ 271              	.LBB6:
+ 272              	.LBI6:
+ 273              		.file 2 "Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h"
+   1:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /******************************************************************************
+   2:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * @file     fast_math_functions.h
+   3:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * @brief    Public header file for CMSIS DSP Library
+   4:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * @version  V1.9.0
+   5:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * @date     23 April 2021
+   6:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * Target Processor: Cortex-M and Cortex-A cores
+   7:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  ******************************************************************************/
+   8:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /*
+   9:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+  10:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  *
+  11:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * SPDX-License-Identifier: Apache-2.0
+  12:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  *
+  13:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  14:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * not use this file except in compliance with the License.
+  15:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * You may obtain a copy of the License at
+  16:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  *
+  17:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * www.apache.org/licenses/LICENSE-2.0
+  18:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  *
+  19:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * Unless required by applicable law or agreed to in writing, software
+  20:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  21:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  22:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * See the License for the specific language governing permissions and
+  23:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * limitations under the License.
+  24:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+  25:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  26:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  
+  27:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #ifndef _FAST_MATH_FUNCTIONS_H_
+  28:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #define _FAST_MATH_FUNCTIONS_H_
+  29:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  30:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #include "arm_math_types.h"
+  31:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #include "arm_math_memory.h"
+  32:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  33:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #include "dsp/none.h"
+  34:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #include "dsp/utils.h"
+  35:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  36:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #ifdef   __cplusplus
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 7
+
+
+  37:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** extern "C"
+  38:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** {
+  39:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #endif
+  40:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  41:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+  42:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @brief Macros required for SINE and COSINE Fast math approximations
+  43:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+  44:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  45:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #define FAST_MATH_TABLE_SIZE  512
+  46:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #define FAST_MATH_Q31_SHIFT   (32 - 10)
+  47:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #define FAST_MATH_Q15_SHIFT   (16 - 10)
+  48:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   
+  49:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #ifndef PI
+  50:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   #define PI               3.14159265358979f
+  51:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #endif
+  52:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  53:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  54:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+  55:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * @defgroup groupFastMath Fast Math Functions
+  56:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * This set of functions provides a fast approximation to sine, cosine, and square root.
+  57:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * As compared to most of the other functions in the CMSIS math library, the fast math functions
+  58:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * operate on individual values and not arrays.
+  59:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  * There are separate functions for Q15, Q31, and floating-point data.
+  60:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  *
+  61:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+  62:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  63:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+  64:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @ingroup groupFastMath
+  65:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+  66:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  67:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  68:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+  69:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @addtogroup sin
+  70:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @{
+  71:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+  72:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  73:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+  74:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric sine function for floating-point data.
+  75:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  input value in radians.
+  76:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @return  sin(x).
+  77:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+  78:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   float32_t arm_sin_f32(
+  79:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   float32_t x);
+  80:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  81:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  82:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+  83:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric sine function for Q31 data.
+  84:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+  85:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @return  sin(x).
+  86:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+  87:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q31_t arm_sin_q31(
+  88:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q31_t x);
+  89:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  90:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  91:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+  92:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric sine function for Q15 data.
+  93:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 8
+
+
+  94:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @return  sin(x).
+  95:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+  96:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q15_t arm_sin_q15(
+  97:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q15_t x);
+  98:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+  99:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+ 100:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @} end of sin group
+ 101:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+ 102:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 103:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+ 104:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @addtogroup cos
+ 105:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @{
+ 106:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+ 107:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 108:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+ 109:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric cosine function for floating-point data.
+ 110:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  input value in radians.
+ 111:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @return  cos(x).
+ 112:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+ 113:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   float32_t arm_cos_f32(
+ 114:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   float32_t x);
+ 115:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 116:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 117:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+ 118:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @brief Fast approximation to the trigonometric cosine function for Q31 data.
+ 119:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+ 120:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @return  cos(x).
+ 121:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+ 122:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q31_t arm_cos_q31(
+ 123:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q31_t x);
+ 124:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 125:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 126:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+ 127:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric cosine function for Q15 data.
+ 128:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+ 129:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @return  cos(x).
+ 130:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+ 131:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q15_t arm_cos_q15(
+ 132:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   q15_t x);
+ 133:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 134:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+ 135:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @} end of cos group
+ 136:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+ 137:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 138:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 139:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+ 140:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point vector of log values.
+ 141:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[in]     pSrc       points to the input vector
+ 142:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pDst       points to the output vector
+ 143:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[in]     blockSize  number of samples in each vector
+ 144:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @return        none
+ 145:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+ 146:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   void arm_vlog_f32(
+ 147:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   const float32_t * pSrc,
+ 148:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****         float32_t * pDst,
+ 149:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****         uint32_t blockSize);
+ 150:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 9
+
+
+ 151:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+ 152:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point vector of exp values.
+ 153:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[in]     pSrc       points to the input vector
+ 154:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pDst       points to the output vector
+ 155:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[in]     blockSize  number of samples in each vector
+ 156:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @return        none
+ 157:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+ 158:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   void arm_vexp_f32(
+ 159:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   const float32_t * pSrc,
+ 160:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****         float32_t * pDst,
+ 161:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****         uint32_t blockSize);
+ 162:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 163:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  /**
+ 164:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @defgroup SQRT Square Root
+ 165:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    *
+ 166:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * Computes the square root of a number.
+ 167:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * There are separate functions for Q15, Q31, and floating-point data types.
+ 168:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * The square root function is computed using the Newton-Raphson algorithm.
+ 169:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * This is an iterative algorithm of the form:
+ 170:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * <pre>
+ 171:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    *      x1 = x0 - f(x0)/f'(x0)
+ 172:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * </pre>
+ 173:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * where <code>x1</code> is the current estimate,
+ 174:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * <code>x0</code> is the previous estimate, and
+ 175:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * <code>f'(x0)</code> is the derivative of <code>f()</code> evaluated at <code>x0</code>.
+ 176:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * For the square root function, the algorithm reduces to:
+ 177:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * <pre>
+ 178:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    *     x0 = in/2                         [initial guess]
+ 179:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    *     x1 = 1/2 * ( x0 + in / x0)        [each iteration]
+ 180:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * </pre>
+ 181:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+ 182:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 183:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 184:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   /**
+ 185:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @addtogroup SQRT
+ 186:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    * @{
+ 187:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****    */
+ 188:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 189:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** /**
+ 190:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point square root function.
+ 191:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[in]     in    input value
+ 192:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pOut  square root of input value
+ 193:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   @return        execution status
+ 194:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****                    - \ref ARM_MATH_SUCCESS        : input value is positive
+ 195:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****                    - \ref ARM_MATH_ARGUMENT_ERROR : input value is negative; *pOut is set to 0
+ 196:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****  */
+ 197:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** __STATIC_FORCEINLINE arm_status arm_sqrt_f32(
+ 274              		.loc 2 197 33 is_stmt 1 view .LVU71
+ 275              	.LBB7:
+ 198:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   float32_t in,
+ 199:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   float32_t * pOut)
+ 200:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   {
+ 201:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****     if (in >= 0.0f)
+ 276              		.loc 2 201 5 view .LVU72
+ 277              		.loc 2 201 8 is_stmt 0 view .LVU73
+ 278 0010 B5EEC00A 		vcmpe.f32	s0, #0
+ 279 0014 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 10
+
+
+ 280 0018 19DB     		blt	.L30
+ 202:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****     {
+ 203:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #if defined ( __CC_ARM )
+ 204:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   #if defined __TARGET_FPU_VFP
+ 205:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****       *pOut = __sqrtf(in);
+ 206:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   #else
+ 207:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 208:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   #endif
+ 209:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 210:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #elif defined ( __ICCARM__ )
+ 211:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   #if defined __ARMVFP__
+ 212:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****       __ASM("VSQRT.F32 %0,%1" : "=t"(*pOut) : "t"(in));
+ 213:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   #else
+ 214:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 215:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   #endif
+ 216:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 217:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #else
+ 218:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 281              		.loc 2 218 7 is_stmt 1 view .LVU74
+ 282              		.loc 2 218 15 is_stmt 0 view .LVU75
+ 283 001a FFF7FEFF 		bl	sqrtf
+ 284              	.LVL10:
+ 219:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #endif
+ 220:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** 
+ 221:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****       return (ARM_MATH_SUCCESS);
+ 285              		.loc 2 221 7 is_stmt 1 view .LVU76
+ 286              	.L14:
+ 287              		.loc 2 221 7 is_stmt 0 view .LVU77
+ 288              	.LBE7:
+ 289              	.LBE6:
+  42:Core/HAL/lib/controller/smc.c ****     } else if (error < 0) {
+  43:Core/HAL/lib/controller/smc.c ****         arm_sqrt_f32(fabs(error), &u);
+  44:Core/HAL/lib/controller/smc.c ****         u *= -1;
+  45:Core/HAL/lib/controller/smc.c ****     } else
+  46:Core/HAL/lib/controller/smc.c ****         u = 0;
+  47:Core/HAL/lib/controller/smc.c **** 
+  48:Core/HAL/lib/controller/smc.c ****     return u;
+  49:Core/HAL/lib/controller/smc.c **** }
+ 290              		.loc 1 49 1 view .LVU78
+ 291 001e 08BD     		pop	{r3, pc}
+ 292              	.LVL11:
+ 293              	.L29:
+  42:Core/HAL/lib/controller/smc.c ****     } else if (error < 0) {
+ 294              		.loc 1 42 12 is_stmt 1 view .LVU79
+  42:Core/HAL/lib/controller/smc.c ****     } else if (error < 0) {
+ 295              		.loc 1 42 15 is_stmt 0 view .LVU80
+ 296 0020 B5EEC00A 		vcmpe.f32	s0, #0
+ 297 0024 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 298 0028 02D4     		bmi	.L34
+  46:Core/HAL/lib/controller/smc.c **** 
+ 299              		.loc 1 46 11 view .LVU81
+ 300 002a 9FED0A0A 		vldr.32	s0, .L35
+ 301              	.LVL12:
+  48:Core/HAL/lib/controller/smc.c **** }
+ 302              		.loc 1 48 5 is_stmt 1 view .LVU82
+  48:Core/HAL/lib/controller/smc.c **** }
+ 303              		.loc 1 48 12 is_stmt 0 view .LVU83
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 11
+
+
+ 304 002e F6E7     		b	.L14
+ 305              	.LVL13:
+ 306              	.L34:
+  43:Core/HAL/lib/controller/smc.c ****         u *= -1;
+ 307              		.loc 1 43 9 is_stmt 1 view .LVU84
+  43:Core/HAL/lib/controller/smc.c ****         u *= -1;
+ 308              		.loc 1 43 22 is_stmt 0 view .LVU85
+ 309 0030 B0EEC00A 		vabs.f32	s0, s0
+ 310              	.LVL14:
+ 311              	.LBB9:
+ 312              	.LBI9:
+ 197:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****   float32_t in,
+ 313              		.loc 2 197 33 is_stmt 1 view .LVU86
+ 314              	.LBB10:
+ 201:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****     {
+ 315              		.loc 2 201 5 view .LVU87
+ 201:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****     {
+ 316              		.loc 2 201 8 is_stmt 0 view .LVU88
+ 317 0034 B5EEC00A 		vcmpe.f32	s0, #0
+ 318 0038 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 319 003c 04DB     		blt	.L32
+ 218:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #endif
+ 320              		.loc 2 218 7 is_stmt 1 view .LVU89
+ 218:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h **** #endif
+ 321              		.loc 2 218 15 is_stmt 0 view .LVU90
+ 322 003e FFF7FEFF 		bl	sqrtf
+ 323              	.LVL15:
+ 324              		.loc 2 221 7 is_stmt 1 view .LVU91
+ 325              	.L20:
+ 326              		.loc 2 221 7 is_stmt 0 view .LVU92
+ 327              	.LBE10:
+ 328              	.LBE9:
+  44:Core/HAL/lib/controller/smc.c ****     } else
+ 329              		.loc 1 44 9 is_stmt 1 view .LVU93
+  44:Core/HAL/lib/controller/smc.c ****     } else
+ 330              		.loc 1 44 11 is_stmt 0 view .LVU94
+ 331 0042 B1EE400A 		vneg.f32	s0, s0
+ 332              	.LVL16:
+  44:Core/HAL/lib/controller/smc.c ****     } else
+ 333              		.loc 1 44 11 view .LVU95
+ 334 0046 EAE7     		b	.L14
+ 335              	.LVL17:
+ 336              	.L32:
+ 337              	.LBB12:
+ 338              	.LBB11:
+ 222:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****     }
+ 223:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****     else
+ 224:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****     {
+ 225:Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/dsp/fast_math_functions.h ****       *pOut = 0.0f;
+ 339              		.loc 2 225 13 view .LVU96
+ 340 0048 9FED020A 		vldr.32	s0, .L35
+ 341              	.LVL18:
+ 342              		.loc 2 225 13 view .LVU97
+ 343 004c F9E7     		b	.L20
+ 344              	.LVL19:
+ 345              	.L30:
+ 346              		.loc 2 225 13 view .LVU98
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 12
+
+
+ 347              	.LBE11:
+ 348              	.LBE12:
+ 349              	.LBB13:
+ 350              	.LBB8:
+ 351 004e 9FED010A 		vldr.32	s0, .L35
+ 352              	.LVL20:
+ 353              		.loc 2 225 13 view .LVU99
+ 354 0052 E4E7     		b	.L14
+ 355              	.L36:
+ 356              		.align	2
+ 357              	.L35:
+ 358 0054 00000000 		.word	0
+ 359              	.LBE8:
+ 360              	.LBE13:
+ 361              		.cfi_endproc
+ 362              	.LFE142:
+ 364              		.global	__aeabi_f2d
+ 365              		.global	__aeabi_dadd
+ 366              		.global	__aeabi_i2d
+ 367              		.global	__aeabi_dmul
+ 368              		.global	__aeabi_d2f
+ 369              		.section	.text.ReachingLaw_square,"ax",%progbits
+ 370              		.align	1
+ 371              		.global	ReachingLaw_square
+ 372              		.syntax unified
+ 373              		.thumb
+ 374              		.thumb_func
+ 376              	ReachingLaw_square:
+ 377              	.LVL21:
+ 378              	.LFB143:
+  50:Core/HAL/lib/controller/smc.c **** 
+  51:Core/HAL/lib/controller/smc.c **** float ReachingLaw_square(float error) { return (error * error + 0.1) * fsgn(error); }...
+ 379              		.loc 1 51 39 is_stmt 1 view -0
+ 380              		.cfi_startproc
+ 381              		@ args = 0, pretend = 0, frame = 0
+ 382              		@ frame_needed = 0, uses_anonymous_args = 0
+ 383              		.loc 1 51 39 is_stmt 0 view .LVU101
+ 384 0000 38B5     		push	{r3, r4, r5, lr}
+ 385              	.LCFI4:
+ 386              		.cfi_def_cfa_offset 16
+ 387              		.cfi_offset 3, -16
+ 388              		.cfi_offset 4, -12
+ 389              		.cfi_offset 5, -8
+ 390              		.cfi_offset 14, -4
+ 391 0002 2DED028B 		vpush.64	{d8}
+ 392              	.LCFI5:
+ 393              		.cfi_def_cfa_offset 24
+ 394              		.cfi_offset 80, -24
+ 395              		.cfi_offset 81, -20
+ 396 0006 B0EE408A 		vmov.f32	s16, s0
+ 397              		.loc 1 51 41 is_stmt 1 view .LVU102
+ 398              		.loc 1 51 55 is_stmt 0 view .LVU103
+ 399 000a 60EE007A 		vmul.f32	s15, s0, s0
+ 400 000e 17EE900A 		vmov	r0, s15
+ 401 0012 FFF7FEFF 		bl	__aeabi_f2d
+ 402              	.LVL22:
+ 403              		.loc 1 51 63 view .LVU104
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 13
+
+
+ 404 0016 0CA3     		adr	r3, .L39
+ 405 0018 D3E90023 		ldrd	r2, [r3]
+ 406 001c FFF7FEFF 		bl	__aeabi_dadd
+ 407              	.LVL23:
+ 408 0020 0446     		mov	r4, r0
+ 409 0022 0D46     		mov	r5, r1
+ 410              		.loc 1 51 72 view .LVU105
+ 411 0024 B0EE480A 		vmov.f32	s0, s16
+ 412 0028 FFF7FEFF 		bl	fsgn
+ 413              	.LVL24:
+ 414              		.loc 1 51 70 view .LVU106
+ 415 002c FFF7FEFF 		bl	__aeabi_i2d
+ 416              	.LVL25:
+ 417 0030 2246     		mov	r2, r4
+ 418 0032 2B46     		mov	r3, r5
+ 419 0034 FFF7FEFF 		bl	__aeabi_dmul
+ 420              	.LVL26:
+ 421 0038 FFF7FEFF 		bl	__aeabi_d2f
+ 422              	.LVL27:
+ 423              		.loc 1 51 85 view .LVU107
+ 424 003c 00EE100A 		vmov	s0, r0
+ 425 0040 BDEC028B 		vldm	sp!, {d8}
+ 426              	.LCFI6:
+ 427              		.cfi_restore 80
+ 428              		.cfi_restore 81
+ 429              		.cfi_def_cfa_offset 16
+ 430              	.LVL28:
+ 431              		.loc 1 51 85 view .LVU108
+ 432 0044 38BD     		pop	{r3, r4, r5, pc}
+ 433              	.L40:
+ 434 0046 00BF     		.align	3
+ 435              	.L39:
+ 436 0048 9A999999 		.word	-1717986918
+ 437 004c 9999B93F 		.word	1069128089
+ 438              		.cfi_endproc
+ 439              	.LFE143:
+ 441              		.text
+ 442              	.Letext0:
+ 443              		.file 3 "Core/HAL/lib/controller/smc.h"
+ 444              		.file 4 "Middlewares/Third_Party/ARM_CMSIS/CMSIS/DSP/Include/arm_math_types.h"
+ 445              		.file 5 "Core/HAL/lib/common.h"
+ 446              		.file 6 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\math.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 smc.c
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:20     .text.SMC_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:26     .text.SMC_Init:00000000 SMC_Init
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:57     .text.SMC_SetConfig:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:63     .text.SMC_SetConfig:00000000 SMC_SetConfig
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:96     .text.SMC_Calc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:102    .text.SMC_Calc:00000000 SMC_Calc
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:210    .text.ReachingLaw_sgn:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:216    .text.ReachingLaw_sgn:00000000 ReachingLaw_sgn
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:242    .text.ReachingLaw_sqrt:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:248    .text.ReachingLaw_sqrt:00000000 ReachingLaw_sqrt
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:358    .text.ReachingLaw_sqrt:00000054 $d
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:370    .text.ReachingLaw_square:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:376    .text.ReachingLaw_square:00000000 ReachingLaw_square
+C:\Users\lenovo\AppData\Local\Temp\ccSpg1DN.s:436    .text.ReachingLaw_square:00000048 $d
+
+UNDEFINED SYMBOLS
+fsgn
+sqrtf
+__aeabi_f2d
+__aeabi_dadd
+__aeabi_i2d
+__aeabi_dmul
+__aeabi_d2f

@@ -1,0 +1,411 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"hal.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.HAL_Layer_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	HAL_Layer_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	HAL_Layer_Init:
+  27              	.LFB133:
+  28              		.file 1 "Core/HAL/hal.c"
+   1:Core/HAL/hal.c **** #include "hal.h"
+   2:Core/HAL/hal.c **** 
+   3:Core/HAL/hal.c **** #include "BMI088.h"
+   4:Core/HAL/hal.c **** #include "DT7_DR16.h"
+   5:Core/HAL/hal.c **** #include "bsp_delay.h"
+   6:Core/HAL/hal.c **** #include "buzzer.h"
+   7:Core/HAL/hal.c **** #include "can_motor.h"
+   8:Core/HAL/hal.c **** #include "can_pc.h"
+   9:Core/HAL/hal.c **** #include "can_recv.h"
+  10:Core/HAL/hal.c **** #include "uart_recv.h"
+  11:Core/HAL/hal.c **** #include "monitor.h"
+  12:Core/HAL/hal.c **** #include "pub_sub.h"
+  13:Core/HAL/hal.c **** #include "referee.h"
+  14:Core/HAL/hal.c **** #include "referee_ui.h"
+  15:Core/HAL/hal.c **** #include "pwm_servo.h"
+  16:Core/HAL/hal.c **** #include "soft_crc.h"
+  17:Core/HAL/hal.c **** #include "super_cap_wuli.h"
+  18:Core/HAL/hal.c **** #include "indicator_led.h"
+  19:Core/HAL/hal.c **** 
+  20:Core/HAL/hal.c **** void HAL_Layer_Init() {
+  29              		.loc 1 20 23 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  21:Core/HAL/hal.c ****     Monitor_Init();
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 2
+
+
+  38              		.loc 1 21 5 view .LVU1
+  39 0002 FFF7FEFF 		bl	Monitor_Init
+  40              	.LVL0:
+  22:Core/HAL/hal.c ****     soft_crc_Init();
+  41              		.loc 1 22 5 view .LVU2
+  42 0006 FFF7FEFF 		bl	soft_crc_Init
+  43              	.LVL1:
+  23:Core/HAL/hal.c ****     Buzzer_Driver_Init();
+  44              		.loc 1 23 5 view .LVU3
+  45 000a FFF7FEFF 		bl	Buzzer_Driver_Init
+  46              	.LVL2:
+  24:Core/HAL/hal.c ****     BMI088_Driver_Init();
+  47              		.loc 1 24 5 view .LVU4
+  48 000e FFF7FEFF 		bl	BMI088_Driver_Init
+  49              	.LVL3:
+  25:Core/HAL/hal.c ****     Can_Motor_Driver_Init();
+  50              		.loc 1 25 5 view .LVU5
+  51 0012 FFF7FEFF 		bl	Can_Motor_Driver_Init
+  52              	.LVL4:
+  26:Core/HAL/hal.c ****     CanRecv_Driver_Init();
+  53              		.loc 1 26 5 view .LVU6
+  54 0016 FFF7FEFF 		bl	CanRecv_Driver_Init
+  55              	.LVL5:
+  27:Core/HAL/hal.c ****     //UartRecv_Driver_Init();
+  28:Core/HAL/hal.c ****     dt7_driver_init();
+  56              		.loc 1 28 5 view .LVU7
+  57 001a FFF7FEFF 		bl	dt7_driver_init
+  58              	.LVL6:
+  29:Core/HAL/hal.c ****     referee_driver_init();
+  59              		.loc 1 29 5 view .LVU8
+  60 001e FFF7FEFF 		bl	referee_driver_init
+  61              	.LVL7:
+  30:Core/HAL/hal.c ****     Referee_UI_driver_Init();
+  62              		.loc 1 30 5 view .LVU9
+  63 0022 FFF7FEFF 		bl	Referee_UI_driver_Init
+  64              	.LVL8:
+  31:Core/HAL/hal.c ****     SubPub_Init();
+  65              		.loc 1 31 5 view .LVU10
+  66 0026 FFF7FEFF 		bl	SubPub_Init
+  67              	.LVL9:
+  32:Core/HAL/hal.c ****     Super_cap_wuli_Driver_Init();
+  68              		.loc 1 32 5 view .LVU11
+  69 002a FFF7FEFF 		bl	Super_cap_wuli_Driver_Init
+  70              	.LVL10:
+  33:Core/HAL/hal.c ****     Servo_Driver_Init();
+  71              		.loc 1 33 5 view .LVU12
+  72 002e FFF7FEFF 		bl	Servo_Driver_Init
+  73              	.LVL11:
+  34:Core/HAL/hal.c ****     indicator_led_Driver_Init();
+  74              		.loc 1 34 5 view .LVU13
+  75 0032 FFF7FEFF 		bl	indicator_led_Driver_Init
+  76              	.LVL12:
+  35:Core/HAL/hal.c **** }
+  77              		.loc 1 35 1 is_stmt 0 view .LVU14
+  78 0036 08BD     		pop	{r3, pc}
+  79              		.cfi_endproc
+  80              	.LFE133:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 3
+
+
+  82              		.section	.text.HAL_Layer_Default_Loop,"ax",%progbits
+  83              		.align	1
+  84              		.global	HAL_Layer_Default_Loop
+  85              		.syntax unified
+  86              		.thumb
+  87              		.thumb_func
+  89              	HAL_Layer_Default_Loop:
+  90              	.LFB134:
+  36:Core/HAL/hal.c **** 
+  37:Core/HAL/hal.c **** void HAL_Layer_Default_Loop() {
+  91              		.loc 1 37 31 is_stmt 1 view -0
+  92              		.cfi_startproc
+  93              		@ args = 0, pretend = 0, frame = 0
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95 0000 08B5     		push	{r3, lr}
+  96              	.LCFI1:
+  97              		.cfi_def_cfa_offset 8
+  98              		.cfi_offset 3, -8
+  99              		.cfi_offset 14, -4
+  38:Core/HAL/hal.c ****     Servo_Update_ALL();
+ 100              		.loc 1 38 5 view .LVU16
+ 101 0002 FFF7FEFF 		bl	Servo_Update_ALL
+ 102              	.LVL13:
+  39:Core/HAL/hal.c ****     indicator_led_Update_ALL();
+ 103              		.loc 1 39 5 view .LVU17
+ 104 0006 FFF7FEFF 		bl	indicator_led_Update_ALL
+ 105              	.LVL14:
+  40:Core/HAL/hal.c **** }
+ 106              		.loc 1 40 1 is_stmt 0 view .LVU18
+ 107 000a 08BD     		pop	{r3, pc}
+ 108              		.cfi_endproc
+ 109              	.LFE134:
+ 111              		.section	.text.HAL_Imu_Loop,"ax",%progbits
+ 112              		.align	1
+ 113              		.global	HAL_Imu_Loop
+ 114              		.syntax unified
+ 115              		.thumb
+ 116              		.thumb_func
+ 118              	HAL_Imu_Loop:
+ 119              	.LFB135:
+  41:Core/HAL/hal.c **** 
+  42:Core/HAL/hal.c **** void HAL_Imu_Loop() { BMI088_Update_All(); }
+ 120              		.loc 1 42 21 is_stmt 1 view -0
+ 121              		.cfi_startproc
+ 122              		@ args = 0, pretend = 0, frame = 0
+ 123              		@ frame_needed = 0, uses_anonymous_args = 0
+ 124 0000 08B5     		push	{r3, lr}
+ 125              	.LCFI2:
+ 126              		.cfi_def_cfa_offset 8
+ 127              		.cfi_offset 3, -8
+ 128              		.cfi_offset 14, -4
+ 129              		.loc 1 42 23 view .LVU20
+ 130 0002 FFF7FEFF 		bl	BMI088_Update_All
+ 131              	.LVL15:
+ 132              		.loc 1 42 44 is_stmt 0 view .LVU21
+ 133 0006 08BD     		pop	{r3, pc}
+ 134              		.cfi_endproc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 4
+
+
+ 135              	.LFE135:
+ 137              		.section	.text.HAL_Motor_Calc_Loop,"ax",%progbits
+ 138              		.align	1
+ 139              		.global	HAL_Motor_Calc_Loop
+ 140              		.syntax unified
+ 141              		.thumb
+ 142              		.thumb_func
+ 144              	HAL_Motor_Calc_Loop:
+ 145              	.LFB136:
+  43:Core/HAL/hal.c **** 
+  44:Core/HAL/hal.c **** void HAL_Motor_Calc_Loop() { Can_Motor_Calc_Send(); }
+ 146              		.loc 1 44 28 is_stmt 1 view -0
+ 147              		.cfi_startproc
+ 148              		@ args = 0, pretend = 0, frame = 0
+ 149              		@ frame_needed = 0, uses_anonymous_args = 0
+ 150 0000 08B5     		push	{r3, lr}
+ 151              	.LCFI3:
+ 152              		.cfi_def_cfa_offset 8
+ 153              		.cfi_offset 3, -8
+ 154              		.cfi_offset 14, -4
+ 155              		.loc 1 44 30 view .LVU23
+ 156 0002 FFF7FEFF 		bl	Can_Motor_Calc_Send
+ 157              	.LVL16:
+ 158              		.loc 1 44 53 is_stmt 0 view .LVU24
+ 159 0006 08BD     		pop	{r3, pc}
+ 160              		.cfi_endproc
+ 161              	.LFE136:
+ 163              		.section	.text.HAL_Super_cap_wuli_Loop,"ax",%progbits
+ 164              		.align	1
+ 165              		.global	HAL_Super_cap_wuli_Loop
+ 166              		.syntax unified
+ 167              		.thumb
+ 168              		.thumb_func
+ 170              	HAL_Super_cap_wuli_Loop:
+ 171              	.LFB137:
+  45:Core/HAL/hal.c **** 
+  46:Core/HAL/hal.c **** void HAL_Super_cap_wuli_Loop() { Super_cap_wuli_Send(); }
+ 172              		.loc 1 46 32 is_stmt 1 view -0
+ 173              		.cfi_startproc
+ 174              		@ args = 0, pretend = 0, frame = 0
+ 175              		@ frame_needed = 0, uses_anonymous_args = 0
+ 176 0000 08B5     		push	{r3, lr}
+ 177              	.LCFI4:
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 3, -8
+ 180              		.cfi_offset 14, -4
+ 181              		.loc 1 46 34 view .LVU26
+ 182 0002 FFF7FEFF 		bl	Super_cap_wuli_Send
+ 183              	.LVL17:
+ 184              		.loc 1 46 57 is_stmt 0 view .LVU27
+ 185 0006 08BD     		pop	{r3, pc}
+ 186              		.cfi_endproc
+ 187              	.LFE137:
+ 189              		.section	.text.HAL_Monitor_Loop,"ax",%progbits
+ 190              		.align	1
+ 191              		.global	HAL_Monitor_Loop
+ 192              		.syntax unified
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 5
+
+
+ 193              		.thumb
+ 194              		.thumb_func
+ 196              	HAL_Monitor_Loop:
+ 197              	.LFB138:
+  47:Core/HAL/hal.c **** 
+  48:Core/HAL/hal.c **** void HAL_Monitor_Loop() { Monitor_Loop(); }
+ 198              		.loc 1 48 25 is_stmt 1 view -0
+ 199              		.cfi_startproc
+ 200              		@ args = 0, pretend = 0, frame = 0
+ 201              		@ frame_needed = 0, uses_anonymous_args = 0
+ 202 0000 08B5     		push	{r3, lr}
+ 203              	.LCFI5:
+ 204              		.cfi_def_cfa_offset 8
+ 205              		.cfi_offset 3, -8
+ 206              		.cfi_offset 14, -4
+ 207              		.loc 1 48 27 view .LVU29
+ 208 0002 FFF7FEFF 		bl	Monitor_Loop
+ 209              	.LVL18:
+ 210              		.loc 1 48 43 is_stmt 0 view .LVU30
+ 211 0006 08BD     		pop	{r3, pc}
+ 212              		.cfi_endproc
+ 213              	.LFE138:
+ 215              		.section	.text.HAL_Buzzer_Loop,"ax",%progbits
+ 216              		.align	1
+ 217              		.global	HAL_Buzzer_Loop
+ 218              		.syntax unified
+ 219              		.thumb
+ 220              		.thumb_func
+ 222              	HAL_Buzzer_Loop:
+ 223              	.LFB139:
+  49:Core/HAL/hal.c **** 
+  50:Core/HAL/hal.c **** void HAL_Buzzer_Loop() { Buzzer_Loop(); }
+ 224              		.loc 1 50 24 is_stmt 1 view -0
+ 225              		.cfi_startproc
+ 226              		@ args = 0, pretend = 0, frame = 0
+ 227              		@ frame_needed = 0, uses_anonymous_args = 0
+ 228 0000 08B5     		push	{r3, lr}
+ 229              	.LCFI6:
+ 230              		.cfi_def_cfa_offset 8
+ 231              		.cfi_offset 3, -8
+ 232              		.cfi_offset 14, -4
+ 233              		.loc 1 50 26 view .LVU32
+ 234 0002 FFF7FEFF 		bl	Buzzer_Loop
+ 235              	.LVL19:
+ 236              		.loc 1 50 41 is_stmt 0 view .LVU33
+ 237 0006 08BD     		pop	{r3, pc}
+ 238              		.cfi_endproc
+ 239              	.LFE139:
+ 241              		.section	.text.HAL_Referee_Recv_Loop,"ax",%progbits
+ 242              		.align	1
+ 243              		.global	HAL_Referee_Recv_Loop
+ 244              		.syntax unified
+ 245              		.thumb
+ 246              		.thumb_func
+ 248              	HAL_Referee_Recv_Loop:
+ 249              	.LFB140:
+  51:Core/HAL/hal.c **** 
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 6
+
+
+  52:Core/HAL/hal.c **** void HAL_Referee_Recv_Loop() { referee_recv_loop(); }
+ 250              		.loc 1 52 30 is_stmt 1 view -0
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 0
+ 253              		@ frame_needed = 0, uses_anonymous_args = 0
+ 254 0000 08B5     		push	{r3, lr}
+ 255              	.LCFI7:
+ 256              		.cfi_def_cfa_offset 8
+ 257              		.cfi_offset 3, -8
+ 258              		.cfi_offset 14, -4
+ 259              		.loc 1 52 32 view .LVU35
+ 260 0002 FFF7FEFF 		bl	referee_recv_loop
+ 261              	.LVL20:
+ 262              		.loc 1 52 53 is_stmt 0 view .LVU36
+ 263 0006 08BD     		pop	{r3, pc}
+ 264              		.cfi_endproc
+ 265              	.LFE140:
+ 267              		.section	.text.HAL_Referee_Send_Loop,"ax",%progbits
+ 268              		.align	1
+ 269              		.global	HAL_Referee_Send_Loop
+ 270              		.syntax unified
+ 271              		.thumb
+ 272              		.thumb_func
+ 274              	HAL_Referee_Send_Loop:
+ 275              	.LFB141:
+  53:Core/HAL/hal.c **** 
+  54:Core/HAL/hal.c **** void HAL_Referee_Send_Loop() { Referee_UI_Loop(); }...
+ 276              		.loc 1 54 30 is_stmt 1 view -0
+ 277              		.cfi_startproc
+ 278              		@ args = 0, pretend = 0, frame = 0
+ 279              		@ frame_needed = 0, uses_anonymous_args = 0
+ 280 0000 08B5     		push	{r3, lr}
+ 281              	.LCFI8:
+ 282              		.cfi_def_cfa_offset 8
+ 283              		.cfi_offset 3, -8
+ 284              		.cfi_offset 14, -4
+ 285              		.loc 1 54 32 view .LVU38
+ 286 0002 FFF7FEFF 		bl	Referee_UI_Loop
+ 287              	.LVL21:
+ 288              		.loc 1 54 51 is_stmt 0 view .LVU39
+ 289 0006 08BD     		pop	{r3, pc}
+ 290              		.cfi_endproc
+ 291              	.LFE141:
+ 293              		.text
+ 294              	.Letext0:
+ 295              		.file 2 "Core/HAL/driver/referee/referee_ui.h"
+ 296              		.file 3 "Core/HAL/driver/referee/referee.h"
+ 297              		.file 4 "Core/HAL/driver/buzzer/buzzer.h"
+ 298              		.file 5 "Core/HAL/monitor/monitor.h"
+ 299              		.file 6 "Core/HAL/driver/super_cap/super_cap_wuli.h"
+ 300              		.file 7 "Core/HAL/driver/motor/can_motor.h"
+ 301              		.file 8 "Core/HAL/driver/imu/BMI088.h"
+ 302              		.file 9 "Core/HAL/driver/servo/pwm_servo.h"
+ 303              		.file 10 "Core/HAL/driver/indicator_led/indicator_led.h"
+ 304              		.file 11 "Core/HAL/lib/soft_crc.h"
+ 305              		.file 12 "Core/HAL/driver/com/can_recv.h"
+ 306              		.file 13 "Core/HAL/driver/remote/DT7_DR16.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 7
+
+
+ 307              		.file 14 "Core/HAL/pub_sub.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 hal.c
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:20     .text.HAL_Layer_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:26     .text.HAL_Layer_Init:00000000 HAL_Layer_Init
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:83     .text.HAL_Layer_Default_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:89     .text.HAL_Layer_Default_Loop:00000000 HAL_Layer_Default_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:112    .text.HAL_Imu_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:118    .text.HAL_Imu_Loop:00000000 HAL_Imu_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:138    .text.HAL_Motor_Calc_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:144    .text.HAL_Motor_Calc_Loop:00000000 HAL_Motor_Calc_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:164    .text.HAL_Super_cap_wuli_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:170    .text.HAL_Super_cap_wuli_Loop:00000000 HAL_Super_cap_wuli_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:190    .text.HAL_Monitor_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:196    .text.HAL_Monitor_Loop:00000000 HAL_Monitor_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:216    .text.HAL_Buzzer_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:222    .text.HAL_Buzzer_Loop:00000000 HAL_Buzzer_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:242    .text.HAL_Referee_Recv_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:248    .text.HAL_Referee_Recv_Loop:00000000 HAL_Referee_Recv_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:268    .text.HAL_Referee_Send_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc5xBmDl.s:274    .text.HAL_Referee_Send_Loop:00000000 HAL_Referee_Send_Loop
+
+UNDEFINED SYMBOLS
+Monitor_Init
+soft_crc_Init
+Buzzer_Driver_Init
+BMI088_Driver_Init
+Can_Motor_Driver_Init
+CanRecv_Driver_Init
+dt7_driver_init
+referee_driver_init
+Referee_UI_driver_Init
+SubPub_Init
+Super_cap_wuli_Driver_Init
+Servo_Driver_Init
+indicator_led_Driver_Init
+Servo_Update_ALL
+indicator_led_Update_ALL
+BMI088_Update_All
+Can_Motor_Calc_Send
+Super_cap_wuli_Send
+Monitor_Loop
+Buzzer_Loop
+referee_recv_loop
+Referee_UI_Loop

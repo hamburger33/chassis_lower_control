@@ -12,7 +12,7 @@ void UartRecv_RxCallBack(uint8_t uart_index, uint8_t* data, uint32_t len);
 
 void UartRecv_Driver_Init() {
     uart_recv_instances = cvector_create(sizeof(uart_recv*));
-    BSP_UART_RegisterRxCallback(0, UartRecv_RxCallBack);
+    BSP_UART_RegisterRxCallback(2, UartRecv_RxCallBack);
 }
 
 uart_recv* UartRecv_Create(uart_recv_config* config) {
@@ -22,8 +22,8 @@ uart_recv* UartRecv_Create(uart_recv_config* config) {
     obj->data_rx.len = obj->config.data_len;
     obj->data_rx.data = (uint8_t*)malloc(obj->config.data_len);
     memset(obj->data_rx.data,0,obj->config.data_len);
-    //identifier 2位，起始s结束e 2位，crc16 2位，len 1位
-    obj->buf_len = obj->config.data_len + 7;
+    //起始s结束e 2位，crc16 2位，len 1位
+    obj->buf_len = obj->config.data_len + 5;
     obj->rxbuf = (uint8_t*) malloc(obj->buf_len);
     obj->recv_len = 0;
     obj->recv_status = 0;
@@ -48,17 +48,9 @@ void UartRecv_RxCallBack(uint8_t uart_index, uint8_t* data, uint32_t len){
                 }
                 memcpy(now->rxbuf + now->recv_len,data,len);
                 now->recv_len += len;
-                if(now->recv_len > 2){
-                    uint16_t data_recv_id = (((uint16_t)now->rxbuf[2]) << 8) | now->rxbuf[1];
-                    if(data_recv_id != now->config.uart_identifier){
-                        now->recv_status = 0;
-                        now->recv_len = 0;
-                        continue;
-                    }
-                }
                 if(now->recv_len == now->buf_len && now->rxbuf[now->recv_len - 1] == 'e'){
-                    if(CheckVaild(now->rxbuf + 3,now->buf_len - 4)){
-                        BufferToData(now->rxbuf + 3,&now->data_rx);
+                    if(CheckVaild(now->rxbuf + 1,now->buf_len - 2)){
+                        BufferToData(now->rxbuf + 1,&now->data_rx);
                         now->recv_status = 0;
                         now->recv_len = 0;
                         now->data_updated = 1;

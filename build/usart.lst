@@ -1,0 +1,1853 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"usart.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.MX_USART1_UART_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MX_USART1_UART_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MX_USART1_UART_Init:
+  27              	.LFB130:
+  28              		.file 1 "Core/Src/usart.c"
+   1:Core/Src/usart.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/usart.c **** /**
+   3:Core/Src/usart.c ****   ******************************************************************************
+   4:Core/Src/usart.c ****   * @file    usart.c
+   5:Core/Src/usart.c ****   * @brief   This file provides code for the configuration
+   6:Core/Src/usart.c ****   *          of the USART instances.
+   7:Core/Src/usart.c ****   ******************************************************************************
+   8:Core/Src/usart.c ****   * @attention
+   9:Core/Src/usart.c ****   *
+  10:Core/Src/usart.c ****   * Copyright (c) 2021 STMicroelectronics.
+  11:Core/Src/usart.c ****   * All rights reserved.
+  12:Core/Src/usart.c ****   *
+  13:Core/Src/usart.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Core/Src/usart.c ****   * in the root directory of this software component.
+  15:Core/Src/usart.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Core/Src/usart.c ****   *
+  17:Core/Src/usart.c ****   ******************************************************************************
+  18:Core/Src/usart.c ****   */
+  19:Core/Src/usart.c **** /* USER CODE END Header */
+  20:Core/Src/usart.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/usart.c **** #include "usart.h"
+  22:Core/Src/usart.c **** 
+  23:Core/Src/usart.c **** /* USER CODE BEGIN 0 */
+  24:Core/Src/usart.c **** 
+  25:Core/Src/usart.c **** /* USER CODE END 0 */
+  26:Core/Src/usart.c **** 
+  27:Core/Src/usart.c **** UART_HandleTypeDef huart1;
+  28:Core/Src/usart.c **** UART_HandleTypeDef huart3;
+  29:Core/Src/usart.c **** UART_HandleTypeDef huart6;
+  30:Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart1_tx;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 2
+
+
+  31:Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart1_rx;
+  32:Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart3_rx;
+  33:Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart6_rx;
+  34:Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart6_tx;
+  35:Core/Src/usart.c **** 
+  36:Core/Src/usart.c **** /* USART1 init function */
+  37:Core/Src/usart.c **** 
+  38:Core/Src/usart.c **** void MX_USART1_UART_Init(void)
+  39:Core/Src/usart.c **** {
+  29              		.loc 1 39 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  40:Core/Src/usart.c **** 
+  41:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_Init 0 */
+  42:Core/Src/usart.c **** 
+  43:Core/Src/usart.c ****   /* USER CODE END USART1_Init 0 */
+  44:Core/Src/usart.c **** 
+  45:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_Init 1 */
+  46:Core/Src/usart.c **** 
+  47:Core/Src/usart.c ****   /* USER CODE END USART1_Init 1 */
+  48:Core/Src/usart.c ****   huart1.Instance = USART1;
+  38              		.loc 1 48 3 view .LVU1
+  39              		.loc 1 48 19 is_stmt 0 view .LVU2
+  40 0002 0A48     		ldr	r0, .L5
+  41 0004 0A4B     		ldr	r3, .L5+4
+  42 0006 0360     		str	r3, [r0]
+  49:Core/Src/usart.c ****   huart1.Init.BaudRate = 1500000;
+  43              		.loc 1 49 3 is_stmt 1 view .LVU3
+  44              		.loc 1 49 24 is_stmt 0 view .LVU4
+  45 0008 0A4B     		ldr	r3, .L5+8
+  46 000a 4360     		str	r3, [r0, #4]
+  50:Core/Src/usart.c ****   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  47              		.loc 1 50 3 is_stmt 1 view .LVU5
+  48              		.loc 1 50 26 is_stmt 0 view .LVU6
+  49 000c 0023     		movs	r3, #0
+  50 000e 8360     		str	r3, [r0, #8]
+  51:Core/Src/usart.c ****   huart1.Init.StopBits = UART_STOPBITS_1;
+  51              		.loc 1 51 3 is_stmt 1 view .LVU7
+  52              		.loc 1 51 24 is_stmt 0 view .LVU8
+  53 0010 C360     		str	r3, [r0, #12]
+  52:Core/Src/usart.c ****   huart1.Init.Parity = UART_PARITY_NONE;
+  54              		.loc 1 52 3 is_stmt 1 view .LVU9
+  55              		.loc 1 52 22 is_stmt 0 view .LVU10
+  56 0012 0361     		str	r3, [r0, #16]
+  53:Core/Src/usart.c ****   huart1.Init.Mode = UART_MODE_TX_RX;
+  57              		.loc 1 53 3 is_stmt 1 view .LVU11
+  58              		.loc 1 53 20 is_stmt 0 view .LVU12
+  59 0014 0C22     		movs	r2, #12
+  60 0016 4261     		str	r2, [r0, #20]
+  54:Core/Src/usart.c ****   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  61              		.loc 1 54 3 is_stmt 1 view .LVU13
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 3
+
+
+  62              		.loc 1 54 25 is_stmt 0 view .LVU14
+  63 0018 8361     		str	r3, [r0, #24]
+  55:Core/Src/usart.c ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  64              		.loc 1 55 3 is_stmt 1 view .LVU15
+  65              		.loc 1 55 28 is_stmt 0 view .LVU16
+  66 001a C361     		str	r3, [r0, #28]
+  56:Core/Src/usart.c ****   if (HAL_UART_Init(&huart1) != HAL_OK)
+  67              		.loc 1 56 3 is_stmt 1 view .LVU17
+  68              		.loc 1 56 7 is_stmt 0 view .LVU18
+  69 001c FFF7FEFF 		bl	HAL_UART_Init
+  70              	.LVL0:
+  71              		.loc 1 56 6 view .LVU19
+  72 0020 00B9     		cbnz	r0, .L4
+  73              	.L1:
+  57:Core/Src/usart.c ****   {
+  58:Core/Src/usart.c ****     Error_Handler();
+  59:Core/Src/usart.c ****   }
+  60:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_Init 2 */
+  61:Core/Src/usart.c **** 
+  62:Core/Src/usart.c ****   /* USER CODE END USART1_Init 2 */
+  63:Core/Src/usart.c **** 
+  64:Core/Src/usart.c **** }
+  74              		.loc 1 64 1 view .LVU20
+  75 0022 08BD     		pop	{r3, pc}
+  76              	.L4:
+  58:Core/Src/usart.c ****   }
+  77              		.loc 1 58 5 is_stmt 1 view .LVU21
+  78 0024 FFF7FEFF 		bl	Error_Handler
+  79              	.LVL1:
+  80              		.loc 1 64 1 is_stmt 0 view .LVU22
+  81 0028 FBE7     		b	.L1
+  82              	.L6:
+  83 002a 00BF     		.align	2
+  84              	.L5:
+  85 002c 00000000 		.word	.LANCHOR0
+  86 0030 00100140 		.word	1073811456
+  87 0034 60E31600 		.word	1500000
+  88              		.cfi_endproc
+  89              	.LFE130:
+  91              		.section	.text.MX_USART3_UART_Init,"ax",%progbits
+  92              		.align	1
+  93              		.global	MX_USART3_UART_Init
+  94              		.syntax unified
+  95              		.thumb
+  96              		.thumb_func
+  98              	MX_USART3_UART_Init:
+  99              	.LFB131:
+  65:Core/Src/usart.c **** /* USART3 init function */
+  66:Core/Src/usart.c **** 
+  67:Core/Src/usart.c **** void MX_USART3_UART_Init(void)
+  68:Core/Src/usart.c **** {
+ 100              		.loc 1 68 1 is_stmt 1 view -0
+ 101              		.cfi_startproc
+ 102              		@ args = 0, pretend = 0, frame = 0
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104 0000 08B5     		push	{r3, lr}
+ 105              	.LCFI1:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 4
+
+
+ 106              		.cfi_def_cfa_offset 8
+ 107              		.cfi_offset 3, -8
+ 108              		.cfi_offset 14, -4
+  69:Core/Src/usart.c **** 
+  70:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_Init 0 */
+  71:Core/Src/usart.c **** 
+  72:Core/Src/usart.c ****   /* USER CODE END USART3_Init 0 */
+  73:Core/Src/usart.c **** 
+  74:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_Init 1 */
+  75:Core/Src/usart.c **** 
+  76:Core/Src/usart.c ****   /* USER CODE END USART3_Init 1 */
+  77:Core/Src/usart.c ****   huart3.Instance = USART3;
+ 109              		.loc 1 77 3 view .LVU24
+ 110              		.loc 1 77 19 is_stmt 0 view .LVU25
+ 111 0002 0C48     		ldr	r0, .L11
+ 112 0004 0C4B     		ldr	r3, .L11+4
+ 113 0006 0360     		str	r3, [r0]
+  78:Core/Src/usart.c ****   huart3.Init.BaudRate = 100000;
+ 114              		.loc 1 78 3 is_stmt 1 view .LVU26
+ 115              		.loc 1 78 24 is_stmt 0 view .LVU27
+ 116 0008 0C4B     		ldr	r3, .L11+8
+ 117 000a 4360     		str	r3, [r0, #4]
+  79:Core/Src/usart.c ****   huart3.Init.WordLength = UART_WORDLENGTH_9B;
+ 118              		.loc 1 79 3 is_stmt 1 view .LVU28
+ 119              		.loc 1 79 26 is_stmt 0 view .LVU29
+ 120 000c 4FF48053 		mov	r3, #4096
+ 121 0010 8360     		str	r3, [r0, #8]
+  80:Core/Src/usart.c ****   huart3.Init.StopBits = UART_STOPBITS_1;
+ 122              		.loc 1 80 3 is_stmt 1 view .LVU30
+ 123              		.loc 1 80 24 is_stmt 0 view .LVU31
+ 124 0012 0023     		movs	r3, #0
+ 125 0014 C360     		str	r3, [r0, #12]
+  81:Core/Src/usart.c ****   huart3.Init.Parity = UART_PARITY_EVEN;
+ 126              		.loc 1 81 3 is_stmt 1 view .LVU32
+ 127              		.loc 1 81 22 is_stmt 0 view .LVU33
+ 128 0016 4FF48062 		mov	r2, #1024
+ 129 001a 0261     		str	r2, [r0, #16]
+  82:Core/Src/usart.c ****   huart3.Init.Mode = UART_MODE_TX_RX;
+ 130              		.loc 1 82 3 is_stmt 1 view .LVU34
+ 131              		.loc 1 82 20 is_stmt 0 view .LVU35
+ 132 001c 0C22     		movs	r2, #12
+ 133 001e 4261     		str	r2, [r0, #20]
+  83:Core/Src/usart.c ****   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 134              		.loc 1 83 3 is_stmt 1 view .LVU36
+ 135              		.loc 1 83 25 is_stmt 0 view .LVU37
+ 136 0020 8361     		str	r3, [r0, #24]
+  84:Core/Src/usart.c ****   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+ 137              		.loc 1 84 3 is_stmt 1 view .LVU38
+ 138              		.loc 1 84 28 is_stmt 0 view .LVU39
+ 139 0022 C361     		str	r3, [r0, #28]
+  85:Core/Src/usart.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
+ 140              		.loc 1 85 3 is_stmt 1 view .LVU40
+ 141              		.loc 1 85 7 is_stmt 0 view .LVU41
+ 142 0024 FFF7FEFF 		bl	HAL_UART_Init
+ 143              	.LVL2:
+ 144              		.loc 1 85 6 view .LVU42
+ 145 0028 00B9     		cbnz	r0, .L10
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 5
+
+
+ 146              	.L7:
+  86:Core/Src/usart.c ****   {
+  87:Core/Src/usart.c ****     Error_Handler();
+  88:Core/Src/usart.c ****   }
+  89:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_Init 2 */
+  90:Core/Src/usart.c **** 
+  91:Core/Src/usart.c ****   /* USER CODE END USART3_Init 2 */
+  92:Core/Src/usart.c **** 
+  93:Core/Src/usart.c **** }
+ 147              		.loc 1 93 1 view .LVU43
+ 148 002a 08BD     		pop	{r3, pc}
+ 149              	.L10:
+  87:Core/Src/usart.c ****   }
+ 150              		.loc 1 87 5 is_stmt 1 view .LVU44
+ 151 002c FFF7FEFF 		bl	Error_Handler
+ 152              	.LVL3:
+ 153              		.loc 1 93 1 is_stmt 0 view .LVU45
+ 154 0030 FBE7     		b	.L7
+ 155              	.L12:
+ 156 0032 00BF     		.align	2
+ 157              	.L11:
+ 158 0034 00000000 		.word	.LANCHOR1
+ 159 0038 00480040 		.word	1073760256
+ 160 003c A0860100 		.word	100000
+ 161              		.cfi_endproc
+ 162              	.LFE131:
+ 164              		.section	.text.MX_USART6_UART_Init,"ax",%progbits
+ 165              		.align	1
+ 166              		.global	MX_USART6_UART_Init
+ 167              		.syntax unified
+ 168              		.thumb
+ 169              		.thumb_func
+ 171              	MX_USART6_UART_Init:
+ 172              	.LFB132:
+  94:Core/Src/usart.c **** /* USART6 init function */
+  95:Core/Src/usart.c **** 
+  96:Core/Src/usart.c **** void MX_USART6_UART_Init(void)
+  97:Core/Src/usart.c **** {
+ 173              		.loc 1 97 1 is_stmt 1 view -0
+ 174              		.cfi_startproc
+ 175              		@ args = 0, pretend = 0, frame = 0
+ 176              		@ frame_needed = 0, uses_anonymous_args = 0
+ 177 0000 08B5     		push	{r3, lr}
+ 178              	.LCFI2:
+ 179              		.cfi_def_cfa_offset 8
+ 180              		.cfi_offset 3, -8
+ 181              		.cfi_offset 14, -4
+  98:Core/Src/usart.c **** 
+  99:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_Init 0 */
+ 100:Core/Src/usart.c **** 
+ 101:Core/Src/usart.c ****   /* USER CODE END USART6_Init 0 */
+ 102:Core/Src/usart.c **** 
+ 103:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_Init 1 */
+ 104:Core/Src/usart.c **** 
+ 105:Core/Src/usart.c ****   /* USER CODE END USART6_Init 1 */
+ 106:Core/Src/usart.c ****   huart6.Instance = USART6;
+ 182              		.loc 1 106 3 view .LVU47
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 6
+
+
+ 183              		.loc 1 106 19 is_stmt 0 view .LVU48
+ 184 0002 0A48     		ldr	r0, .L17
+ 185 0004 0A4B     		ldr	r3, .L17+4
+ 186 0006 0360     		str	r3, [r0]
+ 107:Core/Src/usart.c ****   huart6.Init.BaudRate = 115200;
+ 187              		.loc 1 107 3 is_stmt 1 view .LVU49
+ 188              		.loc 1 107 24 is_stmt 0 view .LVU50
+ 189 0008 4FF4E133 		mov	r3, #115200
+ 190 000c 4360     		str	r3, [r0, #4]
+ 108:Core/Src/usart.c ****   huart6.Init.WordLength = UART_WORDLENGTH_8B;
+ 191              		.loc 1 108 3 is_stmt 1 view .LVU51
+ 192              		.loc 1 108 26 is_stmt 0 view .LVU52
+ 193 000e 0023     		movs	r3, #0
+ 194 0010 8360     		str	r3, [r0, #8]
+ 109:Core/Src/usart.c ****   huart6.Init.StopBits = UART_STOPBITS_1;
+ 195              		.loc 1 109 3 is_stmt 1 view .LVU53
+ 196              		.loc 1 109 24 is_stmt 0 view .LVU54
+ 197 0012 C360     		str	r3, [r0, #12]
+ 110:Core/Src/usart.c ****   huart6.Init.Parity = UART_PARITY_NONE;
+ 198              		.loc 1 110 3 is_stmt 1 view .LVU55
+ 199              		.loc 1 110 22 is_stmt 0 view .LVU56
+ 200 0014 0361     		str	r3, [r0, #16]
+ 111:Core/Src/usart.c ****   huart6.Init.Mode = UART_MODE_TX_RX;
+ 201              		.loc 1 111 3 is_stmt 1 view .LVU57
+ 202              		.loc 1 111 20 is_stmt 0 view .LVU58
+ 203 0016 0C22     		movs	r2, #12
+ 204 0018 4261     		str	r2, [r0, #20]
+ 112:Core/Src/usart.c ****   huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 205              		.loc 1 112 3 is_stmt 1 view .LVU59
+ 206              		.loc 1 112 25 is_stmt 0 view .LVU60
+ 207 001a 8361     		str	r3, [r0, #24]
+ 113:Core/Src/usart.c ****   huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+ 208              		.loc 1 113 3 is_stmt 1 view .LVU61
+ 209              		.loc 1 113 28 is_stmt 0 view .LVU62
+ 210 001c C361     		str	r3, [r0, #28]
+ 114:Core/Src/usart.c ****   if (HAL_UART_Init(&huart6) != HAL_OK)
+ 211              		.loc 1 114 3 is_stmt 1 view .LVU63
+ 212              		.loc 1 114 7 is_stmt 0 view .LVU64
+ 213 001e FFF7FEFF 		bl	HAL_UART_Init
+ 214              	.LVL4:
+ 215              		.loc 1 114 6 view .LVU65
+ 216 0022 00B9     		cbnz	r0, .L16
+ 217              	.L13:
+ 115:Core/Src/usart.c ****   {
+ 116:Core/Src/usart.c ****     Error_Handler();
+ 117:Core/Src/usart.c ****   }
+ 118:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_Init 2 */
+ 119:Core/Src/usart.c **** 
+ 120:Core/Src/usart.c ****   /* USER CODE END USART6_Init 2 */
+ 121:Core/Src/usart.c **** 
+ 122:Core/Src/usart.c **** }
+ 218              		.loc 1 122 1 view .LVU66
+ 219 0024 08BD     		pop	{r3, pc}
+ 220              	.L16:
+ 116:Core/Src/usart.c ****   }
+ 221              		.loc 1 116 5 is_stmt 1 view .LVU67
+ 222 0026 FFF7FEFF 		bl	Error_Handler
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 7
+
+
+ 223              	.LVL5:
+ 224              		.loc 1 122 1 is_stmt 0 view .LVU68
+ 225 002a FBE7     		b	.L13
+ 226              	.L18:
+ 227              		.align	2
+ 228              	.L17:
+ 229 002c 00000000 		.word	.LANCHOR2
+ 230 0030 00140140 		.word	1073812480
+ 231              		.cfi_endproc
+ 232              	.LFE132:
+ 234              		.section	.text.HAL_UART_MspInit,"ax",%progbits
+ 235              		.align	1
+ 236              		.global	HAL_UART_MspInit
+ 237              		.syntax unified
+ 238              		.thumb
+ 239              		.thumb_func
+ 241              	HAL_UART_MspInit:
+ 242              	.LVL6:
+ 243              	.LFB133:
+ 123:Core/Src/usart.c **** 
+ 124:Core/Src/usart.c **** void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
+ 125:Core/Src/usart.c **** {
+ 244              		.loc 1 125 1 is_stmt 1 view -0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 48
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248              		.loc 1 125 1 is_stmt 0 view .LVU70
+ 249 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 250              	.LCFI3:
+ 251              		.cfi_def_cfa_offset 28
+ 252              		.cfi_offset 4, -28
+ 253              		.cfi_offset 5, -24
+ 254              		.cfi_offset 6, -20
+ 255              		.cfi_offset 7, -16
+ 256              		.cfi_offset 8, -12
+ 257              		.cfi_offset 9, -8
+ 258              		.cfi_offset 14, -4
+ 259 0004 8DB0     		sub	sp, sp, #52
+ 260              	.LCFI4:
+ 261              		.cfi_def_cfa_offset 80
+ 262 0006 0446     		mov	r4, r0
+ 126:Core/Src/usart.c **** 
+ 127:Core/Src/usart.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 263              		.loc 1 127 3 is_stmt 1 view .LVU71
+ 264              		.loc 1 127 20 is_stmt 0 view .LVU72
+ 265 0008 0023     		movs	r3, #0
+ 266 000a 0793     		str	r3, [sp, #28]
+ 267 000c 0893     		str	r3, [sp, #32]
+ 268 000e 0993     		str	r3, [sp, #36]
+ 269 0010 0A93     		str	r3, [sp, #40]
+ 270 0012 0B93     		str	r3, [sp, #44]
+ 128:Core/Src/usart.c ****   if(uartHandle->Instance==USART1)
+ 271              		.loc 1 128 3 is_stmt 1 view .LVU73
+ 272              		.loc 1 128 16 is_stmt 0 view .LVU74
+ 273 0014 0368     		ldr	r3, [r0]
+ 274              		.loc 1 128 5 view .LVU75
+ 275 0016 9D4A     		ldr	r2, .L37
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 8
+
+
+ 276 0018 9342     		cmp	r3, r2
+ 277 001a 0AD0     		beq	.L29
+ 129:Core/Src/usart.c ****   {
+ 130:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspInit 0 */
+ 131:Core/Src/usart.c **** 
+ 132:Core/Src/usart.c ****   /* USER CODE END USART1_MspInit 0 */
+ 133:Core/Src/usart.c ****     /* USART1 clock enable */
+ 134:Core/Src/usart.c ****     __HAL_RCC_USART1_CLK_ENABLE();
+ 135:Core/Src/usart.c **** 
+ 136:Core/Src/usart.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+ 137:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 138:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 139:Core/Src/usart.c ****     PB7     ------> USART1_RX
+ 140:Core/Src/usart.c ****     PA9     ------> USART1_TX
+ 141:Core/Src/usart.c ****     */
+ 142:Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_7;
+ 143:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 144:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 145:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 146:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 147:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 148:Core/Src/usart.c **** 
+ 149:Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_9;
+ 150:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 151:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 152:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 153:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 154:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 155:Core/Src/usart.c **** 
+ 156:Core/Src/usart.c ****     /* USART1 DMA Init */
+ 157:Core/Src/usart.c ****     /* USART1_TX Init */
+ 158:Core/Src/usart.c ****     hdma_usart1_tx.Instance = DMA2_Stream7;
+ 159:Core/Src/usart.c ****     hdma_usart1_tx.Init.Channel = DMA_CHANNEL_4;
+ 160:Core/Src/usart.c ****     hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 161:Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 162:Core/Src/usart.c ****     hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 163:Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 164:Core/Src/usart.c ****     hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 165:Core/Src/usart.c ****     hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+ 166:Core/Src/usart.c ****     hdma_usart1_tx.Init.Priority = DMA_PRIORITY_HIGH;
+ 167:Core/Src/usart.c ****     hdma_usart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 168:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
+ 169:Core/Src/usart.c ****     {
+ 170:Core/Src/usart.c ****       Error_Handler();
+ 171:Core/Src/usart.c ****     }
+ 172:Core/Src/usart.c **** 
+ 173:Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart1_tx);
+ 174:Core/Src/usart.c **** 
+ 175:Core/Src/usart.c ****     /* USART1_RX Init */
+ 176:Core/Src/usart.c ****     hdma_usart1_rx.Instance = DMA2_Stream2;
+ 177:Core/Src/usart.c ****     hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
+ 178:Core/Src/usart.c ****     hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 179:Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 180:Core/Src/usart.c ****     hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 181:Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 182:Core/Src/usart.c ****     hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 183:Core/Src/usart.c ****     hdma_usart1_rx.Init.Mode = DMA_NORMAL;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 9
+
+
+ 184:Core/Src/usart.c ****     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_HIGH;
+ 185:Core/Src/usart.c ****     hdma_usart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 186:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+ 187:Core/Src/usart.c ****     {
+ 188:Core/Src/usart.c ****       Error_Handler();
+ 189:Core/Src/usart.c ****     }
+ 190:Core/Src/usart.c **** 
+ 191:Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart1_rx);
+ 192:Core/Src/usart.c **** 
+ 193:Core/Src/usart.c ****     /* USART1 interrupt Init */
+ 194:Core/Src/usart.c ****     HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
+ 195:Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART1_IRQn);
+ 196:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspInit 1 */
+ 197:Core/Src/usart.c **** 
+ 198:Core/Src/usart.c ****   /* USER CODE END USART1_MspInit 1 */
+ 199:Core/Src/usart.c ****   }
+ 200:Core/Src/usart.c ****   else if(uartHandle->Instance==USART3)
+ 278              		.loc 1 200 8 is_stmt 1 view .LVU76
+ 279              		.loc 1 200 10 is_stmt 0 view .LVU77
+ 280 001c 9C4A     		ldr	r2, .L37+4
+ 281 001e 9342     		cmp	r3, r2
+ 282 0020 00F08780 		beq	.L30
+ 201:Core/Src/usart.c ****   {
+ 202:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspInit 0 */
+ 203:Core/Src/usart.c **** 
+ 204:Core/Src/usart.c ****   /* USER CODE END USART3_MspInit 0 */
+ 205:Core/Src/usart.c ****     /* USART3 clock enable */
+ 206:Core/Src/usart.c ****     __HAL_RCC_USART3_CLK_ENABLE();
+ 207:Core/Src/usart.c **** 
+ 208:Core/Src/usart.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+ 209:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 210:Core/Src/usart.c ****     PC11     ------> USART3_RX
+ 211:Core/Src/usart.c ****     PC10     ------> USART3_TX
+ 212:Core/Src/usart.c ****     */
+ 213:Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_10;
+ 214:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 215:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 216:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 217:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+ 218:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 219:Core/Src/usart.c **** 
+ 220:Core/Src/usart.c ****     /* USART3 DMA Init */
+ 221:Core/Src/usart.c ****     /* USART3_RX Init */
+ 222:Core/Src/usart.c ****     hdma_usart3_rx.Instance = DMA1_Stream1;
+ 223:Core/Src/usart.c ****     hdma_usart3_rx.Init.Channel = DMA_CHANNEL_4;
+ 224:Core/Src/usart.c ****     hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 225:Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 226:Core/Src/usart.c ****     hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 227:Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 228:Core/Src/usart.c ****     hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 229:Core/Src/usart.c ****     hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+ 230:Core/Src/usart.c ****     hdma_usart3_rx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+ 231:Core/Src/usart.c ****     hdma_usart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 232:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
+ 233:Core/Src/usart.c ****     {
+ 234:Core/Src/usart.c ****       Error_Handler();
+ 235:Core/Src/usart.c ****     }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 10
+
+
+ 236:Core/Src/usart.c **** 
+ 237:Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart3_rx);
+ 238:Core/Src/usart.c **** 
+ 239:Core/Src/usart.c ****     /* USART3 interrupt Init */
+ 240:Core/Src/usart.c ****     HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
+ 241:Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART3_IRQn);
+ 242:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspInit 1 */
+ 243:Core/Src/usart.c **** 
+ 244:Core/Src/usart.c ****   /* USER CODE END USART3_MspInit 1 */
+ 245:Core/Src/usart.c ****   }
+ 246:Core/Src/usart.c ****   else if(uartHandle->Instance==USART6)
+ 283              		.loc 1 246 8 is_stmt 1 view .LVU78
+ 284              		.loc 1 246 10 is_stmt 0 view .LVU79
+ 285 0024 9B4A     		ldr	r2, .L37+8
+ 286 0026 9342     		cmp	r3, r2
+ 287 0028 00F0CA80 		beq	.L31
+ 288              	.LVL7:
+ 289              	.L19:
+ 247:Core/Src/usart.c ****   {
+ 248:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_MspInit 0 */
+ 249:Core/Src/usart.c **** 
+ 250:Core/Src/usart.c ****   /* USER CODE END USART6_MspInit 0 */
+ 251:Core/Src/usart.c ****     /* USART6 clock enable */
+ 252:Core/Src/usart.c ****     __HAL_RCC_USART6_CLK_ENABLE();
+ 253:Core/Src/usart.c **** 
+ 254:Core/Src/usart.c ****     __HAL_RCC_GPIOG_CLK_ENABLE();
+ 255:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ 256:Core/Src/usart.c ****     PG14     ------> USART6_TX
+ 257:Core/Src/usart.c ****     PG9     ------> USART6_RX
+ 258:Core/Src/usart.c ****     */
+ 259:Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_14|GPIO_PIN_9;
+ 260:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 261:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 262:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 263:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
+ 264:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+ 265:Core/Src/usart.c **** 
+ 266:Core/Src/usart.c ****     /* USART6 DMA Init */
+ 267:Core/Src/usart.c ****     /* USART6_RX Init */
+ 268:Core/Src/usart.c ****     hdma_usart6_rx.Instance = DMA2_Stream1;
+ 269:Core/Src/usart.c ****     hdma_usart6_rx.Init.Channel = DMA_CHANNEL_5;
+ 270:Core/Src/usart.c ****     hdma_usart6_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 271:Core/Src/usart.c ****     hdma_usart6_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 272:Core/Src/usart.c ****     hdma_usart6_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 273:Core/Src/usart.c ****     hdma_usart6_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 274:Core/Src/usart.c ****     hdma_usart6_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 275:Core/Src/usart.c ****     hdma_usart6_rx.Init.Mode = DMA_CIRCULAR;
+ 276:Core/Src/usart.c ****     hdma_usart6_rx.Init.Priority = DMA_PRIORITY_HIGH;
+ 277:Core/Src/usart.c ****     hdma_usart6_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 278:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart6_rx) != HAL_OK)
+ 279:Core/Src/usart.c ****     {
+ 280:Core/Src/usart.c ****       Error_Handler();
+ 281:Core/Src/usart.c ****     }
+ 282:Core/Src/usart.c **** 
+ 283:Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart6_rx);
+ 284:Core/Src/usart.c **** 
+ 285:Core/Src/usart.c ****     /* USART6_TX Init */
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 11
+
+
+ 286:Core/Src/usart.c ****     hdma_usart6_tx.Instance = DMA2_Stream6;
+ 287:Core/Src/usart.c ****     hdma_usart6_tx.Init.Channel = DMA_CHANNEL_5;
+ 288:Core/Src/usart.c ****     hdma_usart6_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 289:Core/Src/usart.c ****     hdma_usart6_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 290:Core/Src/usart.c ****     hdma_usart6_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 291:Core/Src/usart.c ****     hdma_usart6_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 292:Core/Src/usart.c ****     hdma_usart6_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 293:Core/Src/usart.c ****     hdma_usart6_tx.Init.Mode = DMA_NORMAL;
+ 294:Core/Src/usart.c ****     hdma_usart6_tx.Init.Priority = DMA_PRIORITY_HIGH;
+ 295:Core/Src/usart.c ****     hdma_usart6_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 296:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart6_tx) != HAL_OK)
+ 297:Core/Src/usart.c ****     {
+ 298:Core/Src/usart.c ****       Error_Handler();
+ 299:Core/Src/usart.c ****     }
+ 300:Core/Src/usart.c **** 
+ 301:Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart6_tx);
+ 302:Core/Src/usart.c **** 
+ 303:Core/Src/usart.c ****     /* USART6 interrupt Init */
+ 304:Core/Src/usart.c ****     HAL_NVIC_SetPriority(USART6_IRQn, 5, 0);
+ 305:Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART6_IRQn);
+ 306:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_MspInit 1 */
+ 307:Core/Src/usart.c **** 
+ 308:Core/Src/usart.c ****   /* USER CODE END USART6_MspInit 1 */
+ 309:Core/Src/usart.c ****   }
+ 310:Core/Src/usart.c **** }
+ 290              		.loc 1 310 1 view .LVU80
+ 291 002c 0DB0     		add	sp, sp, #52
+ 292              	.LCFI5:
+ 293              		.cfi_remember_state
+ 294              		.cfi_def_cfa_offset 28
+ 295              		@ sp needed
+ 296 002e BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 297              	.LVL8:
+ 298              	.L29:
+ 299              	.LCFI6:
+ 300              		.cfi_restore_state
+ 134:Core/Src/usart.c **** 
+ 301              		.loc 1 134 5 is_stmt 1 view .LVU81
+ 302              	.LBB2:
+ 134:Core/Src/usart.c **** 
+ 303              		.loc 1 134 5 view .LVU82
+ 304 0032 0025     		movs	r5, #0
+ 305 0034 0095     		str	r5, [sp]
+ 134:Core/Src/usart.c **** 
+ 306              		.loc 1 134 5 view .LVU83
+ 307 0036 984B     		ldr	r3, .L37+12
+ 308 0038 5A6C     		ldr	r2, [r3, #68]
+ 309 003a 42F01002 		orr	r2, r2, #16
+ 310 003e 5A64     		str	r2, [r3, #68]
+ 134:Core/Src/usart.c **** 
+ 311              		.loc 1 134 5 view .LVU84
+ 312 0040 5A6C     		ldr	r2, [r3, #68]
+ 313 0042 02F01002 		and	r2, r2, #16
+ 314 0046 0092     		str	r2, [sp]
+ 134:Core/Src/usart.c **** 
+ 315              		.loc 1 134 5 view .LVU85
+ 316 0048 009A     		ldr	r2, [sp]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 12
+
+
+ 317              	.LBE2:
+ 134:Core/Src/usart.c **** 
+ 318              		.loc 1 134 5 view .LVU86
+ 136:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 319              		.loc 1 136 5 view .LVU87
+ 320              	.LBB3:
+ 136:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 321              		.loc 1 136 5 view .LVU88
+ 322 004a 0195     		str	r5, [sp, #4]
+ 136:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 323              		.loc 1 136 5 view .LVU89
+ 324 004c 1A6B     		ldr	r2, [r3, #48]
+ 325 004e 42F00202 		orr	r2, r2, #2
+ 326 0052 1A63     		str	r2, [r3, #48]
+ 136:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 327              		.loc 1 136 5 view .LVU90
+ 328 0054 1A6B     		ldr	r2, [r3, #48]
+ 329 0056 02F00202 		and	r2, r2, #2
+ 330 005a 0192     		str	r2, [sp, #4]
+ 136:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 331              		.loc 1 136 5 view .LVU91
+ 332 005c 019A     		ldr	r2, [sp, #4]
+ 333              	.LBE3:
+ 136:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 334              		.loc 1 136 5 view .LVU92
+ 137:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 335              		.loc 1 137 5 view .LVU93
+ 336              	.LBB4:
+ 137:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 337              		.loc 1 137 5 view .LVU94
+ 338 005e 0295     		str	r5, [sp, #8]
+ 137:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 339              		.loc 1 137 5 view .LVU95
+ 340 0060 1A6B     		ldr	r2, [r3, #48]
+ 341 0062 42F00102 		orr	r2, r2, #1
+ 342 0066 1A63     		str	r2, [r3, #48]
+ 137:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 343              		.loc 1 137 5 view .LVU96
+ 344 0068 1B6B     		ldr	r3, [r3, #48]
+ 345 006a 03F00103 		and	r3, r3, #1
+ 346 006e 0293     		str	r3, [sp, #8]
+ 137:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 347              		.loc 1 137 5 view .LVU97
+ 348 0070 029B     		ldr	r3, [sp, #8]
+ 349              	.LBE4:
+ 137:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 350              		.loc 1 137 5 view .LVU98
+ 142:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 351              		.loc 1 142 5 view .LVU99
+ 142:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 352              		.loc 1 142 25 is_stmt 0 view .LVU100
+ 353 0072 8023     		movs	r3, #128
+ 354 0074 0793     		str	r3, [sp, #28]
+ 143:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 355              		.loc 1 143 5 is_stmt 1 view .LVU101
+ 143:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 356              		.loc 1 143 26 is_stmt 0 view .LVU102
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 13
+
+
+ 357 0076 4FF00209 		mov	r9, #2
+ 358 007a CDF82090 		str	r9, [sp, #32]
+ 144:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 359              		.loc 1 144 5 is_stmt 1 view .LVU103
+ 144:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 360              		.loc 1 144 26 is_stmt 0 view .LVU104
+ 361 007e 4FF00108 		mov	r8, #1
+ 362 0082 CDF82480 		str	r8, [sp, #36]
+ 145:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 363              		.loc 1 145 5 is_stmt 1 view .LVU105
+ 145:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 364              		.loc 1 145 27 is_stmt 0 view .LVU106
+ 365 0086 0327     		movs	r7, #3
+ 366 0088 0A97     		str	r7, [sp, #40]
+ 146:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 367              		.loc 1 146 5 is_stmt 1 view .LVU107
+ 146:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 368              		.loc 1 146 31 is_stmt 0 view .LVU108
+ 369 008a 0726     		movs	r6, #7
+ 370 008c 0B96     		str	r6, [sp, #44]
+ 147:Core/Src/usart.c **** 
+ 371              		.loc 1 147 5 is_stmt 1 view .LVU109
+ 372 008e 07A9     		add	r1, sp, #28
+ 373 0090 8248     		ldr	r0, .L37+16
+ 374              	.LVL9:
+ 147:Core/Src/usart.c **** 
+ 375              		.loc 1 147 5 is_stmt 0 view .LVU110
+ 376 0092 FFF7FEFF 		bl	HAL_GPIO_Init
+ 377              	.LVL10:
+ 149:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 378              		.loc 1 149 5 is_stmt 1 view .LVU111
+ 149:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 379              		.loc 1 149 25 is_stmt 0 view .LVU112
+ 380 0096 4FF40073 		mov	r3, #512
+ 381 009a 0793     		str	r3, [sp, #28]
+ 150:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 382              		.loc 1 150 5 is_stmt 1 view .LVU113
+ 150:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 383              		.loc 1 150 26 is_stmt 0 view .LVU114
+ 384 009c CDF82090 		str	r9, [sp, #32]
+ 151:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 385              		.loc 1 151 5 is_stmt 1 view .LVU115
+ 151:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 386              		.loc 1 151 26 is_stmt 0 view .LVU116
+ 387 00a0 CDF82480 		str	r8, [sp, #36]
+ 152:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 388              		.loc 1 152 5 is_stmt 1 view .LVU117
+ 152:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 389              		.loc 1 152 27 is_stmt 0 view .LVU118
+ 390 00a4 0A97     		str	r7, [sp, #40]
+ 153:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 391              		.loc 1 153 5 is_stmt 1 view .LVU119
+ 153:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 392              		.loc 1 153 31 is_stmt 0 view .LVU120
+ 393 00a6 0B96     		str	r6, [sp, #44]
+ 154:Core/Src/usart.c **** 
+ 394              		.loc 1 154 5 is_stmt 1 view .LVU121
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 14
+
+
+ 395 00a8 07A9     		add	r1, sp, #28
+ 396 00aa 7D48     		ldr	r0, .L37+20
+ 397 00ac FFF7FEFF 		bl	HAL_GPIO_Init
+ 398              	.LVL11:
+ 158:Core/Src/usart.c ****     hdma_usart1_tx.Init.Channel = DMA_CHANNEL_4;
+ 399              		.loc 1 158 5 view .LVU122
+ 158:Core/Src/usart.c ****     hdma_usart1_tx.Init.Channel = DMA_CHANNEL_4;
+ 400              		.loc 1 158 29 is_stmt 0 view .LVU123
+ 401 00b0 7C48     		ldr	r0, .L37+24
+ 402 00b2 7D4B     		ldr	r3, .L37+28
+ 403 00b4 0360     		str	r3, [r0]
+ 159:Core/Src/usart.c ****     hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 404              		.loc 1 159 5 is_stmt 1 view .LVU124
+ 159:Core/Src/usart.c ****     hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 405              		.loc 1 159 33 is_stmt 0 view .LVU125
+ 406 00b6 4FF00063 		mov	r3, #134217728
+ 407 00ba 4360     		str	r3, [r0, #4]
+ 160:Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 408              		.loc 1 160 5 is_stmt 1 view .LVU126
+ 160:Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 409              		.loc 1 160 35 is_stmt 0 view .LVU127
+ 410 00bc 4023     		movs	r3, #64
+ 411 00be 8360     		str	r3, [r0, #8]
+ 161:Core/Src/usart.c ****     hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 412              		.loc 1 161 5 is_stmt 1 view .LVU128
+ 161:Core/Src/usart.c ****     hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 413              		.loc 1 161 35 is_stmt 0 view .LVU129
+ 414 00c0 C560     		str	r5, [r0, #12]
+ 162:Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 415              		.loc 1 162 5 is_stmt 1 view .LVU130
+ 162:Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 416              		.loc 1 162 32 is_stmt 0 view .LVU131
+ 417 00c2 4FF48063 		mov	r3, #1024
+ 418 00c6 0361     		str	r3, [r0, #16]
+ 163:Core/Src/usart.c ****     hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 419              		.loc 1 163 5 is_stmt 1 view .LVU132
+ 163:Core/Src/usart.c ****     hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 420              		.loc 1 163 45 is_stmt 0 view .LVU133
+ 421 00c8 4561     		str	r5, [r0, #20]
+ 164:Core/Src/usart.c ****     hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+ 422              		.loc 1 164 5 is_stmt 1 view .LVU134
+ 164:Core/Src/usart.c ****     hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+ 423              		.loc 1 164 42 is_stmt 0 view .LVU135
+ 424 00ca 8561     		str	r5, [r0, #24]
+ 165:Core/Src/usart.c ****     hdma_usart1_tx.Init.Priority = DMA_PRIORITY_HIGH;
+ 425              		.loc 1 165 5 is_stmt 1 view .LVU136
+ 165:Core/Src/usart.c ****     hdma_usart1_tx.Init.Priority = DMA_PRIORITY_HIGH;
+ 426              		.loc 1 165 30 is_stmt 0 view .LVU137
+ 427 00cc C561     		str	r5, [r0, #28]
+ 166:Core/Src/usart.c ****     hdma_usart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 428              		.loc 1 166 5 is_stmt 1 view .LVU138
+ 166:Core/Src/usart.c ****     hdma_usart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 429              		.loc 1 166 34 is_stmt 0 view .LVU139
+ 430 00ce 4FF40033 		mov	r3, #131072
+ 431 00d2 0362     		str	r3, [r0, #32]
+ 167:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
+ 432              		.loc 1 167 5 is_stmt 1 view .LVU140
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 15
+
+
+ 167:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
+ 433              		.loc 1 167 34 is_stmt 0 view .LVU141
+ 434 00d4 4562     		str	r5, [r0, #36]
+ 168:Core/Src/usart.c ****     {
+ 435              		.loc 1 168 5 is_stmt 1 view .LVU142
+ 168:Core/Src/usart.c ****     {
+ 436              		.loc 1 168 9 is_stmt 0 view .LVU143
+ 437 00d6 FFF7FEFF 		bl	HAL_DMA_Init
+ 438              	.LVL12:
+ 168:Core/Src/usart.c ****     {
+ 439              		.loc 1 168 8 view .LVU144
+ 440 00da 20BB     		cbnz	r0, .L32
+ 441              	.L21:
+ 173:Core/Src/usart.c **** 
+ 442              		.loc 1 173 5 is_stmt 1 view .LVU145
+ 173:Core/Src/usart.c **** 
+ 443              		.loc 1 173 5 view .LVU146
+ 444 00dc 714B     		ldr	r3, .L37+24
+ 445 00de 6363     		str	r3, [r4, #52]
+ 173:Core/Src/usart.c **** 
+ 446              		.loc 1 173 5 view .LVU147
+ 447 00e0 9C63     		str	r4, [r3, #56]
+ 173:Core/Src/usart.c **** 
+ 448              		.loc 1 173 5 view .LVU148
+ 176:Core/Src/usart.c ****     hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
+ 449              		.loc 1 176 5 view .LVU149
+ 176:Core/Src/usart.c ****     hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
+ 450              		.loc 1 176 29 is_stmt 0 view .LVU150
+ 451 00e2 7248     		ldr	r0, .L37+32
+ 452 00e4 724B     		ldr	r3, .L37+36
+ 453 00e6 0360     		str	r3, [r0]
+ 177:Core/Src/usart.c ****     hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 454              		.loc 1 177 5 is_stmt 1 view .LVU151
+ 177:Core/Src/usart.c ****     hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 455              		.loc 1 177 33 is_stmt 0 view .LVU152
+ 456 00e8 4FF00063 		mov	r3, #134217728
+ 457 00ec 4360     		str	r3, [r0, #4]
+ 178:Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 458              		.loc 1 178 5 is_stmt 1 view .LVU153
+ 178:Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 459              		.loc 1 178 35 is_stmt 0 view .LVU154
+ 460 00ee 0023     		movs	r3, #0
+ 461 00f0 8360     		str	r3, [r0, #8]
+ 179:Core/Src/usart.c ****     hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 462              		.loc 1 179 5 is_stmt 1 view .LVU155
+ 179:Core/Src/usart.c ****     hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 463              		.loc 1 179 35 is_stmt 0 view .LVU156
+ 464 00f2 C360     		str	r3, [r0, #12]
+ 180:Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 465              		.loc 1 180 5 is_stmt 1 view .LVU157
+ 180:Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 466              		.loc 1 180 32 is_stmt 0 view .LVU158
+ 467 00f4 4FF48062 		mov	r2, #1024
+ 468 00f8 0261     		str	r2, [r0, #16]
+ 181:Core/Src/usart.c ****     hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 469              		.loc 1 181 5 is_stmt 1 view .LVU159
+ 181:Core/Src/usart.c ****     hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 16
+
+
+ 470              		.loc 1 181 45 is_stmt 0 view .LVU160
+ 471 00fa 4361     		str	r3, [r0, #20]
+ 182:Core/Src/usart.c ****     hdma_usart1_rx.Init.Mode = DMA_NORMAL;
+ 472              		.loc 1 182 5 is_stmt 1 view .LVU161
+ 182:Core/Src/usart.c ****     hdma_usart1_rx.Init.Mode = DMA_NORMAL;
+ 473              		.loc 1 182 42 is_stmt 0 view .LVU162
+ 474 00fc 8361     		str	r3, [r0, #24]
+ 183:Core/Src/usart.c ****     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_HIGH;
+ 475              		.loc 1 183 5 is_stmt 1 view .LVU163
+ 183:Core/Src/usart.c ****     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_HIGH;
+ 476              		.loc 1 183 30 is_stmt 0 view .LVU164
+ 477 00fe C361     		str	r3, [r0, #28]
+ 184:Core/Src/usart.c ****     hdma_usart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 478              		.loc 1 184 5 is_stmt 1 view .LVU165
+ 184:Core/Src/usart.c ****     hdma_usart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 479              		.loc 1 184 34 is_stmt 0 view .LVU166
+ 480 0100 4FF40032 		mov	r2, #131072
+ 481 0104 0262     		str	r2, [r0, #32]
+ 185:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+ 482              		.loc 1 185 5 is_stmt 1 view .LVU167
+ 185:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+ 483              		.loc 1 185 34 is_stmt 0 view .LVU168
+ 484 0106 4362     		str	r3, [r0, #36]
+ 186:Core/Src/usart.c ****     {
+ 485              		.loc 1 186 5 is_stmt 1 view .LVU169
+ 186:Core/Src/usart.c ****     {
+ 486              		.loc 1 186 9 is_stmt 0 view .LVU170
+ 487 0108 FFF7FEFF 		bl	HAL_DMA_Init
+ 488              	.LVL13:
+ 186:Core/Src/usart.c ****     {
+ 489              		.loc 1 186 8 view .LVU171
+ 490 010c 70B9     		cbnz	r0, .L33
+ 491              	.L22:
+ 191:Core/Src/usart.c **** 
+ 492              		.loc 1 191 5 is_stmt 1 view .LVU172
+ 191:Core/Src/usart.c **** 
+ 493              		.loc 1 191 5 view .LVU173
+ 494 010e 674B     		ldr	r3, .L37+32
+ 495 0110 A363     		str	r3, [r4, #56]
+ 191:Core/Src/usart.c **** 
+ 496              		.loc 1 191 5 view .LVU174
+ 497 0112 9C63     		str	r4, [r3, #56]
+ 191:Core/Src/usart.c **** 
+ 498              		.loc 1 191 5 view .LVU175
+ 194:Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART1_IRQn);
+ 499              		.loc 1 194 5 view .LVU176
+ 500 0114 0022     		movs	r2, #0
+ 501 0116 0521     		movs	r1, #5
+ 502 0118 2520     		movs	r0, #37
+ 503 011a FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 504              	.LVL14:
+ 195:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspInit 1 */
+ 505              		.loc 1 195 5 view .LVU177
+ 506 011e 2520     		movs	r0, #37
+ 507 0120 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 508              	.LVL15:
+ 509 0124 82E7     		b	.L19
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 17
+
+
+ 510              	.L32:
+ 170:Core/Src/usart.c ****     }
+ 511              		.loc 1 170 7 view .LVU178
+ 512 0126 FFF7FEFF 		bl	Error_Handler
+ 513              	.LVL16:
+ 514 012a D7E7     		b	.L21
+ 515              	.L33:
+ 188:Core/Src/usart.c ****     }
+ 516              		.loc 1 188 7 view .LVU179
+ 517 012c FFF7FEFF 		bl	Error_Handler
+ 518              	.LVL17:
+ 519 0130 EDE7     		b	.L22
+ 520              	.LVL18:
+ 521              	.L30:
+ 206:Core/Src/usart.c **** 
+ 522              		.loc 1 206 5 view .LVU180
+ 523              	.LBB5:
+ 206:Core/Src/usart.c **** 
+ 524              		.loc 1 206 5 view .LVU181
+ 525 0132 0025     		movs	r5, #0
+ 526 0134 0395     		str	r5, [sp, #12]
+ 206:Core/Src/usart.c **** 
+ 527              		.loc 1 206 5 view .LVU182
+ 528 0136 584B     		ldr	r3, .L37+12
+ 529 0138 1A6C     		ldr	r2, [r3, #64]
+ 530 013a 42F48022 		orr	r2, r2, #262144
+ 531 013e 1A64     		str	r2, [r3, #64]
+ 206:Core/Src/usart.c **** 
+ 532              		.loc 1 206 5 view .LVU183
+ 533 0140 1A6C     		ldr	r2, [r3, #64]
+ 534 0142 02F48022 		and	r2, r2, #262144
+ 535 0146 0392     		str	r2, [sp, #12]
+ 206:Core/Src/usart.c **** 
+ 536              		.loc 1 206 5 view .LVU184
+ 537 0148 039A     		ldr	r2, [sp, #12]
+ 538              	.LBE5:
+ 206:Core/Src/usart.c **** 
+ 539              		.loc 1 206 5 view .LVU185
+ 208:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 540              		.loc 1 208 5 view .LVU186
+ 541              	.LBB6:
+ 208:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 542              		.loc 1 208 5 view .LVU187
+ 543 014a 0495     		str	r5, [sp, #16]
+ 208:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 544              		.loc 1 208 5 view .LVU188
+ 545 014c 1A6B     		ldr	r2, [r3, #48]
+ 546 014e 42F00402 		orr	r2, r2, #4
+ 547 0152 1A63     		str	r2, [r3, #48]
+ 208:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 548              		.loc 1 208 5 view .LVU189
+ 549 0154 1B6B     		ldr	r3, [r3, #48]
+ 550 0156 03F00403 		and	r3, r3, #4
+ 551 015a 0493     		str	r3, [sp, #16]
+ 208:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 552              		.loc 1 208 5 view .LVU190
+ 553 015c 049B     		ldr	r3, [sp, #16]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 18
+
+
+ 554              	.LBE6:
+ 208:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 555              		.loc 1 208 5 view .LVU191
+ 213:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 556              		.loc 1 213 5 view .LVU192
+ 213:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 557              		.loc 1 213 25 is_stmt 0 view .LVU193
+ 558 015e 4FF44063 		mov	r3, #3072
+ 559 0162 0793     		str	r3, [sp, #28]
+ 214:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 560              		.loc 1 214 5 is_stmt 1 view .LVU194
+ 214:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 561              		.loc 1 214 26 is_stmt 0 view .LVU195
+ 562 0164 0223     		movs	r3, #2
+ 563 0166 0893     		str	r3, [sp, #32]
+ 215:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 564              		.loc 1 215 5 is_stmt 1 view .LVU196
+ 216:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+ 565              		.loc 1 216 5 view .LVU197
+ 216:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+ 566              		.loc 1 216 27 is_stmt 0 view .LVU198
+ 567 0168 0323     		movs	r3, #3
+ 568 016a 0A93     		str	r3, [sp, #40]
+ 217:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 569              		.loc 1 217 5 is_stmt 1 view .LVU199
+ 217:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 570              		.loc 1 217 31 is_stmt 0 view .LVU200
+ 571 016c 0723     		movs	r3, #7
+ 572 016e 0B93     		str	r3, [sp, #44]
+ 218:Core/Src/usart.c **** 
+ 573              		.loc 1 218 5 is_stmt 1 view .LVU201
+ 574 0170 07A9     		add	r1, sp, #28
+ 575 0172 5048     		ldr	r0, .L37+40
+ 576              	.LVL19:
+ 218:Core/Src/usart.c **** 
+ 577              		.loc 1 218 5 is_stmt 0 view .LVU202
+ 578 0174 FFF7FEFF 		bl	HAL_GPIO_Init
+ 579              	.LVL20:
+ 222:Core/Src/usart.c ****     hdma_usart3_rx.Init.Channel = DMA_CHANNEL_4;
+ 580              		.loc 1 222 5 is_stmt 1 view .LVU203
+ 222:Core/Src/usart.c ****     hdma_usart3_rx.Init.Channel = DMA_CHANNEL_4;
+ 581              		.loc 1 222 29 is_stmt 0 view .LVU204
+ 582 0178 4F48     		ldr	r0, .L37+44
+ 583 017a 504B     		ldr	r3, .L37+48
+ 584 017c 0360     		str	r3, [r0]
+ 223:Core/Src/usart.c ****     hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 585              		.loc 1 223 5 is_stmt 1 view .LVU205
+ 223:Core/Src/usart.c ****     hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 586              		.loc 1 223 33 is_stmt 0 view .LVU206
+ 587 017e 4FF00063 		mov	r3, #134217728
+ 588 0182 4360     		str	r3, [r0, #4]
+ 224:Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 589              		.loc 1 224 5 is_stmt 1 view .LVU207
+ 224:Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 590              		.loc 1 224 35 is_stmt 0 view .LVU208
+ 591 0184 8560     		str	r5, [r0, #8]
+ 225:Core/Src/usart.c ****     hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 19
+
+
+ 592              		.loc 1 225 5 is_stmt 1 view .LVU209
+ 225:Core/Src/usart.c ****     hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 593              		.loc 1 225 35 is_stmt 0 view .LVU210
+ 594 0186 C560     		str	r5, [r0, #12]
+ 226:Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 595              		.loc 1 226 5 is_stmt 1 view .LVU211
+ 226:Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 596              		.loc 1 226 32 is_stmt 0 view .LVU212
+ 597 0188 4FF48063 		mov	r3, #1024
+ 598 018c 0361     		str	r3, [r0, #16]
+ 227:Core/Src/usart.c ****     hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 599              		.loc 1 227 5 is_stmt 1 view .LVU213
+ 227:Core/Src/usart.c ****     hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 600              		.loc 1 227 45 is_stmt 0 view .LVU214
+ 601 018e 4561     		str	r5, [r0, #20]
+ 228:Core/Src/usart.c ****     hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+ 602              		.loc 1 228 5 is_stmt 1 view .LVU215
+ 228:Core/Src/usart.c ****     hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+ 603              		.loc 1 228 42 is_stmt 0 view .LVU216
+ 604 0190 8561     		str	r5, [r0, #24]
+ 229:Core/Src/usart.c ****     hdma_usart3_rx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+ 605              		.loc 1 229 5 is_stmt 1 view .LVU217
+ 229:Core/Src/usart.c ****     hdma_usart3_rx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+ 606              		.loc 1 229 30 is_stmt 0 view .LVU218
+ 607 0192 C561     		str	r5, [r0, #28]
+ 230:Core/Src/usart.c ****     hdma_usart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 608              		.loc 1 230 5 is_stmt 1 view .LVU219
+ 230:Core/Src/usart.c ****     hdma_usart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 609              		.loc 1 230 34 is_stmt 0 view .LVU220
+ 610 0194 4FF44033 		mov	r3, #196608
+ 611 0198 0362     		str	r3, [r0, #32]
+ 231:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
+ 612              		.loc 1 231 5 is_stmt 1 view .LVU221
+ 231:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
+ 613              		.loc 1 231 34 is_stmt 0 view .LVU222
+ 614 019a 4562     		str	r5, [r0, #36]
+ 232:Core/Src/usart.c ****     {
+ 615              		.loc 1 232 5 is_stmt 1 view .LVU223
+ 232:Core/Src/usart.c ****     {
+ 616              		.loc 1 232 9 is_stmt 0 view .LVU224
+ 617 019c FFF7FEFF 		bl	HAL_DMA_Init
+ 618              	.LVL21:
+ 232:Core/Src/usart.c ****     {
+ 619              		.loc 1 232 8 view .LVU225
+ 620 01a0 58B9     		cbnz	r0, .L34
+ 621              	.L25:
+ 237:Core/Src/usart.c **** 
+ 622              		.loc 1 237 5 is_stmt 1 view .LVU226
+ 237:Core/Src/usart.c **** 
+ 623              		.loc 1 237 5 view .LVU227
+ 624 01a2 454B     		ldr	r3, .L37+44
+ 625 01a4 A363     		str	r3, [r4, #56]
+ 237:Core/Src/usart.c **** 
+ 626              		.loc 1 237 5 view .LVU228
+ 627 01a6 9C63     		str	r4, [r3, #56]
+ 237:Core/Src/usart.c **** 
+ 628              		.loc 1 237 5 view .LVU229
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 20
+
+
+ 240:Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART3_IRQn);
+ 629              		.loc 1 240 5 view .LVU230
+ 630 01a8 0022     		movs	r2, #0
+ 631 01aa 0521     		movs	r1, #5
+ 632 01ac 2720     		movs	r0, #39
+ 633 01ae FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 634              	.LVL22:
+ 241:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspInit 1 */
+ 635              		.loc 1 241 5 view .LVU231
+ 636 01b2 2720     		movs	r0, #39
+ 637 01b4 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 638              	.LVL23:
+ 639 01b8 38E7     		b	.L19
+ 640              	.L34:
+ 234:Core/Src/usart.c ****     }
+ 641              		.loc 1 234 7 view .LVU232
+ 642 01ba FFF7FEFF 		bl	Error_Handler
+ 643              	.LVL24:
+ 644 01be F0E7     		b	.L25
+ 645              	.LVL25:
+ 646              	.L31:
+ 252:Core/Src/usart.c **** 
+ 647              		.loc 1 252 5 view .LVU233
+ 648              	.LBB7:
+ 252:Core/Src/usart.c **** 
+ 649              		.loc 1 252 5 view .LVU234
+ 650 01c0 0025     		movs	r5, #0
+ 651 01c2 0595     		str	r5, [sp, #20]
+ 252:Core/Src/usart.c **** 
+ 652              		.loc 1 252 5 view .LVU235
+ 653 01c4 344B     		ldr	r3, .L37+12
+ 654 01c6 5A6C     		ldr	r2, [r3, #68]
+ 655 01c8 42F02002 		orr	r2, r2, #32
+ 656 01cc 5A64     		str	r2, [r3, #68]
+ 252:Core/Src/usart.c **** 
+ 657              		.loc 1 252 5 view .LVU236
+ 658 01ce 5A6C     		ldr	r2, [r3, #68]
+ 659 01d0 02F02002 		and	r2, r2, #32
+ 660 01d4 0592     		str	r2, [sp, #20]
+ 252:Core/Src/usart.c **** 
+ 661              		.loc 1 252 5 view .LVU237
+ 662 01d6 059A     		ldr	r2, [sp, #20]
+ 663              	.LBE7:
+ 252:Core/Src/usart.c **** 
+ 664              		.loc 1 252 5 view .LVU238
+ 254:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ 665              		.loc 1 254 5 view .LVU239
+ 666              	.LBB8:
+ 254:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ 667              		.loc 1 254 5 view .LVU240
+ 668 01d8 0695     		str	r5, [sp, #24]
+ 254:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ 669              		.loc 1 254 5 view .LVU241
+ 670 01da 1A6B     		ldr	r2, [r3, #48]
+ 671 01dc 42F04002 		orr	r2, r2, #64
+ 672 01e0 1A63     		str	r2, [r3, #48]
+ 254:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 21
+
+
+ 673              		.loc 1 254 5 view .LVU242
+ 674 01e2 1B6B     		ldr	r3, [r3, #48]
+ 675 01e4 03F04003 		and	r3, r3, #64
+ 676 01e8 0693     		str	r3, [sp, #24]
+ 254:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ 677              		.loc 1 254 5 view .LVU243
+ 678 01ea 069B     		ldr	r3, [sp, #24]
+ 679              	.LBE8:
+ 254:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ 680              		.loc 1 254 5 view .LVU244
+ 259:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 681              		.loc 1 259 5 view .LVU245
+ 259:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 682              		.loc 1 259 25 is_stmt 0 view .LVU246
+ 683 01ec 4FF48443 		mov	r3, #16896
+ 684 01f0 0793     		str	r3, [sp, #28]
+ 260:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 685              		.loc 1 260 5 is_stmt 1 view .LVU247
+ 260:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 686              		.loc 1 260 26 is_stmt 0 view .LVU248
+ 687 01f2 0223     		movs	r3, #2
+ 688 01f4 0893     		str	r3, [sp, #32]
+ 261:Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 689              		.loc 1 261 5 is_stmt 1 view .LVU249
+ 262:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
+ 690              		.loc 1 262 5 view .LVU250
+ 262:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
+ 691              		.loc 1 262 27 is_stmt 0 view .LVU251
+ 692 01f6 0323     		movs	r3, #3
+ 693 01f8 0A93     		str	r3, [sp, #40]
+ 263:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+ 694              		.loc 1 263 5 is_stmt 1 view .LVU252
+ 263:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+ 695              		.loc 1 263 31 is_stmt 0 view .LVU253
+ 696 01fa 0823     		movs	r3, #8
+ 697 01fc 0B93     		str	r3, [sp, #44]
+ 264:Core/Src/usart.c **** 
+ 698              		.loc 1 264 5 is_stmt 1 view .LVU254
+ 699 01fe 07A9     		add	r1, sp, #28
+ 700 0200 2F48     		ldr	r0, .L37+52
+ 701              	.LVL26:
+ 264:Core/Src/usart.c **** 
+ 702              		.loc 1 264 5 is_stmt 0 view .LVU255
+ 703 0202 FFF7FEFF 		bl	HAL_GPIO_Init
+ 704              	.LVL27:
+ 268:Core/Src/usart.c ****     hdma_usart6_rx.Init.Channel = DMA_CHANNEL_5;
+ 705              		.loc 1 268 5 is_stmt 1 view .LVU256
+ 268:Core/Src/usart.c ****     hdma_usart6_rx.Init.Channel = DMA_CHANNEL_5;
+ 706              		.loc 1 268 29 is_stmt 0 view .LVU257
+ 707 0206 2F48     		ldr	r0, .L37+56
+ 708 0208 2F4B     		ldr	r3, .L37+60
+ 709 020a 0360     		str	r3, [r0]
+ 269:Core/Src/usart.c ****     hdma_usart6_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 710              		.loc 1 269 5 is_stmt 1 view .LVU258
+ 269:Core/Src/usart.c ****     hdma_usart6_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 711              		.loc 1 269 33 is_stmt 0 view .LVU259
+ 712 020c 4FF02063 		mov	r3, #167772160
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 22
+
+
+ 713 0210 4360     		str	r3, [r0, #4]
+ 270:Core/Src/usart.c ****     hdma_usart6_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 714              		.loc 1 270 5 is_stmt 1 view .LVU260
+ 270:Core/Src/usart.c ****     hdma_usart6_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 715              		.loc 1 270 35 is_stmt 0 view .LVU261
+ 716 0212 8560     		str	r5, [r0, #8]
+ 271:Core/Src/usart.c ****     hdma_usart6_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 717              		.loc 1 271 5 is_stmt 1 view .LVU262
+ 271:Core/Src/usart.c ****     hdma_usart6_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 718              		.loc 1 271 35 is_stmt 0 view .LVU263
+ 719 0214 C560     		str	r5, [r0, #12]
+ 272:Core/Src/usart.c ****     hdma_usart6_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 720              		.loc 1 272 5 is_stmt 1 view .LVU264
+ 272:Core/Src/usart.c ****     hdma_usart6_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 721              		.loc 1 272 32 is_stmt 0 view .LVU265
+ 722 0216 4FF48063 		mov	r3, #1024
+ 723 021a 0361     		str	r3, [r0, #16]
+ 273:Core/Src/usart.c ****     hdma_usart6_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 724              		.loc 1 273 5 is_stmt 1 view .LVU266
+ 273:Core/Src/usart.c ****     hdma_usart6_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 725              		.loc 1 273 45 is_stmt 0 view .LVU267
+ 726 021c 4561     		str	r5, [r0, #20]
+ 274:Core/Src/usart.c ****     hdma_usart6_rx.Init.Mode = DMA_CIRCULAR;
+ 727              		.loc 1 274 5 is_stmt 1 view .LVU268
+ 274:Core/Src/usart.c ****     hdma_usart6_rx.Init.Mode = DMA_CIRCULAR;
+ 728              		.loc 1 274 42 is_stmt 0 view .LVU269
+ 729 021e 8561     		str	r5, [r0, #24]
+ 275:Core/Src/usart.c ****     hdma_usart6_rx.Init.Priority = DMA_PRIORITY_HIGH;
+ 730              		.loc 1 275 5 is_stmt 1 view .LVU270
+ 275:Core/Src/usart.c ****     hdma_usart6_rx.Init.Priority = DMA_PRIORITY_HIGH;
+ 731              		.loc 1 275 30 is_stmt 0 view .LVU271
+ 732 0220 4FF48073 		mov	r3, #256
+ 733 0224 C361     		str	r3, [r0, #28]
+ 276:Core/Src/usart.c ****     hdma_usart6_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 734              		.loc 1 276 5 is_stmt 1 view .LVU272
+ 276:Core/Src/usart.c ****     hdma_usart6_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 735              		.loc 1 276 34 is_stmt 0 view .LVU273
+ 736 0226 4FF40033 		mov	r3, #131072
+ 737 022a 0362     		str	r3, [r0, #32]
+ 277:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart6_rx) != HAL_OK)
+ 738              		.loc 1 277 5 is_stmt 1 view .LVU274
+ 277:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart6_rx) != HAL_OK)
+ 739              		.loc 1 277 34 is_stmt 0 view .LVU275
+ 740 022c 4562     		str	r5, [r0, #36]
+ 278:Core/Src/usart.c ****     {
+ 741              		.loc 1 278 5 is_stmt 1 view .LVU276
+ 278:Core/Src/usart.c ****     {
+ 742              		.loc 1 278 9 is_stmt 0 view .LVU277
+ 743 022e FFF7FEFF 		bl	HAL_DMA_Init
+ 744              	.LVL28:
+ 278:Core/Src/usart.c ****     {
+ 745              		.loc 1 278 8 view .LVU278
+ 746 0232 28BB     		cbnz	r0, .L35
+ 747              	.L26:
+ 283:Core/Src/usart.c **** 
+ 748              		.loc 1 283 5 is_stmt 1 view .LVU279
+ 283:Core/Src/usart.c **** 
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 23
+
+
+ 749              		.loc 1 283 5 view .LVU280
+ 750 0234 234B     		ldr	r3, .L37+56
+ 751 0236 A363     		str	r3, [r4, #56]
+ 283:Core/Src/usart.c **** 
+ 752              		.loc 1 283 5 view .LVU281
+ 753 0238 9C63     		str	r4, [r3, #56]
+ 283:Core/Src/usart.c **** 
+ 754              		.loc 1 283 5 view .LVU282
+ 286:Core/Src/usart.c ****     hdma_usart6_tx.Init.Channel = DMA_CHANNEL_5;
+ 755              		.loc 1 286 5 view .LVU283
+ 286:Core/Src/usart.c ****     hdma_usart6_tx.Init.Channel = DMA_CHANNEL_5;
+ 756              		.loc 1 286 29 is_stmt 0 view .LVU284
+ 757 023a 2448     		ldr	r0, .L37+64
+ 758 023c 244B     		ldr	r3, .L37+68
+ 759 023e 0360     		str	r3, [r0]
+ 287:Core/Src/usart.c ****     hdma_usart6_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 760              		.loc 1 287 5 is_stmt 1 view .LVU285
+ 287:Core/Src/usart.c ****     hdma_usart6_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 761              		.loc 1 287 33 is_stmt 0 view .LVU286
+ 762 0240 4FF02063 		mov	r3, #167772160
+ 763 0244 4360     		str	r3, [r0, #4]
+ 288:Core/Src/usart.c ****     hdma_usart6_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 764              		.loc 1 288 5 is_stmt 1 view .LVU287
+ 288:Core/Src/usart.c ****     hdma_usart6_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 765              		.loc 1 288 35 is_stmt 0 view .LVU288
+ 766 0246 4023     		movs	r3, #64
+ 767 0248 8360     		str	r3, [r0, #8]
+ 289:Core/Src/usart.c ****     hdma_usart6_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 768              		.loc 1 289 5 is_stmt 1 view .LVU289
+ 289:Core/Src/usart.c ****     hdma_usart6_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 769              		.loc 1 289 35 is_stmt 0 view .LVU290
+ 770 024a 0023     		movs	r3, #0
+ 771 024c C360     		str	r3, [r0, #12]
+ 290:Core/Src/usart.c ****     hdma_usart6_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 772              		.loc 1 290 5 is_stmt 1 view .LVU291
+ 290:Core/Src/usart.c ****     hdma_usart6_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 773              		.loc 1 290 32 is_stmt 0 view .LVU292
+ 774 024e 4FF48062 		mov	r2, #1024
+ 775 0252 0261     		str	r2, [r0, #16]
+ 291:Core/Src/usart.c ****     hdma_usart6_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 776              		.loc 1 291 5 is_stmt 1 view .LVU293
+ 291:Core/Src/usart.c ****     hdma_usart6_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 777              		.loc 1 291 45 is_stmt 0 view .LVU294
+ 778 0254 4361     		str	r3, [r0, #20]
+ 292:Core/Src/usart.c ****     hdma_usart6_tx.Init.Mode = DMA_NORMAL;
+ 779              		.loc 1 292 5 is_stmt 1 view .LVU295
+ 292:Core/Src/usart.c ****     hdma_usart6_tx.Init.Mode = DMA_NORMAL;
+ 780              		.loc 1 292 42 is_stmt 0 view .LVU296
+ 781 0256 8361     		str	r3, [r0, #24]
+ 293:Core/Src/usart.c ****     hdma_usart6_tx.Init.Priority = DMA_PRIORITY_HIGH;
+ 782              		.loc 1 293 5 is_stmt 1 view .LVU297
+ 293:Core/Src/usart.c ****     hdma_usart6_tx.Init.Priority = DMA_PRIORITY_HIGH;
+ 783              		.loc 1 293 30 is_stmt 0 view .LVU298
+ 784 0258 C361     		str	r3, [r0, #28]
+ 294:Core/Src/usart.c ****     hdma_usart6_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 785              		.loc 1 294 5 is_stmt 1 view .LVU299
+ 294:Core/Src/usart.c ****     hdma_usart6_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 24
+
+
+ 786              		.loc 1 294 34 is_stmt 0 view .LVU300
+ 787 025a 4FF40032 		mov	r2, #131072
+ 788 025e 0262     		str	r2, [r0, #32]
+ 295:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart6_tx) != HAL_OK)
+ 789              		.loc 1 295 5 is_stmt 1 view .LVU301
+ 295:Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart6_tx) != HAL_OK)
+ 790              		.loc 1 295 34 is_stmt 0 view .LVU302
+ 791 0260 4362     		str	r3, [r0, #36]
+ 296:Core/Src/usart.c ****     {
+ 792              		.loc 1 296 5 is_stmt 1 view .LVU303
+ 296:Core/Src/usart.c ****     {
+ 793              		.loc 1 296 9 is_stmt 0 view .LVU304
+ 794 0262 FFF7FEFF 		bl	HAL_DMA_Init
+ 795              	.LVL29:
+ 296:Core/Src/usart.c ****     {
+ 796              		.loc 1 296 8 view .LVU305
+ 797 0266 70B9     		cbnz	r0, .L36
+ 798              	.L27:
+ 301:Core/Src/usart.c **** 
+ 799              		.loc 1 301 5 is_stmt 1 view .LVU306
+ 301:Core/Src/usart.c **** 
+ 800              		.loc 1 301 5 view .LVU307
+ 801 0268 184B     		ldr	r3, .L37+64
+ 802 026a 6363     		str	r3, [r4, #52]
+ 301:Core/Src/usart.c **** 
+ 803              		.loc 1 301 5 view .LVU308
+ 804 026c 9C63     		str	r4, [r3, #56]
+ 301:Core/Src/usart.c **** 
+ 805              		.loc 1 301 5 view .LVU309
+ 304:Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART6_IRQn);
+ 806              		.loc 1 304 5 view .LVU310
+ 807 026e 0022     		movs	r2, #0
+ 808 0270 0521     		movs	r1, #5
+ 809 0272 4720     		movs	r0, #71
+ 810 0274 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 811              	.LVL30:
+ 305:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_MspInit 1 */
+ 812              		.loc 1 305 5 view .LVU311
+ 813 0278 4720     		movs	r0, #71
+ 814 027a FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 815              	.LVL31:
+ 816              		.loc 1 310 1 is_stmt 0 view .LVU312
+ 817 027e D5E6     		b	.L19
+ 818              	.L35:
+ 280:Core/Src/usart.c ****     }
+ 819              		.loc 1 280 7 is_stmt 1 view .LVU313
+ 820 0280 FFF7FEFF 		bl	Error_Handler
+ 821              	.LVL32:
+ 822 0284 D6E7     		b	.L26
+ 823              	.L36:
+ 298:Core/Src/usart.c ****     }
+ 824              		.loc 1 298 7 view .LVU314
+ 825 0286 FFF7FEFF 		bl	Error_Handler
+ 826              	.LVL33:
+ 827 028a EDE7     		b	.L27
+ 828              	.L38:
+ 829              		.align	2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 25
+
+
+ 830              	.L37:
+ 831 028c 00100140 		.word	1073811456
+ 832 0290 00480040 		.word	1073760256
+ 833 0294 00140140 		.word	1073812480
+ 834 0298 00380240 		.word	1073887232
+ 835 029c 00040240 		.word	1073873920
+ 836 02a0 00000240 		.word	1073872896
+ 837 02a4 00000000 		.word	.LANCHOR3
+ 838 02a8 B8640240 		.word	1073898680
+ 839 02ac 00000000 		.word	.LANCHOR4
+ 840 02b0 40640240 		.word	1073898560
+ 841 02b4 00080240 		.word	1073874944
+ 842 02b8 00000000 		.word	.LANCHOR5
+ 843 02bc 28600240 		.word	1073897512
+ 844 02c0 00180240 		.word	1073879040
+ 845 02c4 00000000 		.word	.LANCHOR6
+ 846 02c8 28640240 		.word	1073898536
+ 847 02cc 00000000 		.word	.LANCHOR7
+ 848 02d0 A0640240 		.word	1073898656
+ 849              		.cfi_endproc
+ 850              	.LFE133:
+ 852              		.section	.text.HAL_UART_MspDeInit,"ax",%progbits
+ 853              		.align	1
+ 854              		.global	HAL_UART_MspDeInit
+ 855              		.syntax unified
+ 856              		.thumb
+ 857              		.thumb_func
+ 859              	HAL_UART_MspDeInit:
+ 860              	.LVL34:
+ 861              	.LFB134:
+ 311:Core/Src/usart.c **** 
+ 312:Core/Src/usart.c **** void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
+ 313:Core/Src/usart.c **** {
+ 862              		.loc 1 313 1 view -0
+ 863              		.cfi_startproc
+ 864              		@ args = 0, pretend = 0, frame = 0
+ 865              		@ frame_needed = 0, uses_anonymous_args = 0
+ 866              		.loc 1 313 1 is_stmt 0 view .LVU316
+ 867 0000 10B5     		push	{r4, lr}
+ 868              	.LCFI7:
+ 869              		.cfi_def_cfa_offset 8
+ 870              		.cfi_offset 4, -8
+ 871              		.cfi_offset 14, -4
+ 872 0002 0446     		mov	r4, r0
+ 314:Core/Src/usart.c **** 
+ 315:Core/Src/usart.c ****   if(uartHandle->Instance==USART1)
+ 873              		.loc 1 315 3 is_stmt 1 view .LVU317
+ 874              		.loc 1 315 16 is_stmt 0 view .LVU318
+ 875 0004 0368     		ldr	r3, [r0]
+ 876              		.loc 1 315 5 view .LVU319
+ 877 0006 254A     		ldr	r2, .L47
+ 878 0008 9342     		cmp	r3, r2
+ 879 000a 06D0     		beq	.L44
+ 316:Core/Src/usart.c ****   {
+ 317:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspDeInit 0 */
+ 318:Core/Src/usart.c **** 
+ 319:Core/Src/usart.c ****   /* USER CODE END USART1_MspDeInit 0 */
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 26
+
+
+ 320:Core/Src/usart.c ****     /* Peripheral clock disable */
+ 321:Core/Src/usart.c ****     __HAL_RCC_USART1_CLK_DISABLE();
+ 322:Core/Src/usart.c **** 
+ 323:Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 324:Core/Src/usart.c ****     PB7     ------> USART1_RX
+ 325:Core/Src/usart.c ****     PA9     ------> USART1_TX
+ 326:Core/Src/usart.c ****     */
+ 327:Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_7);
+ 328:Core/Src/usart.c **** 
+ 329:Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9);
+ 330:Core/Src/usart.c **** 
+ 331:Core/Src/usart.c ****     /* USART1 DMA DeInit */
+ 332:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmatx);
+ 333:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmarx);
+ 334:Core/Src/usart.c **** 
+ 335:Core/Src/usart.c ****     /* USART1 interrupt Deinit */
+ 336:Core/Src/usart.c ****     HAL_NVIC_DisableIRQ(USART1_IRQn);
+ 337:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspDeInit 1 */
+ 338:Core/Src/usart.c **** 
+ 339:Core/Src/usart.c ****   /* USER CODE END USART1_MspDeInit 1 */
+ 340:Core/Src/usart.c ****   }
+ 341:Core/Src/usart.c ****   else if(uartHandle->Instance==USART3)
+ 880              		.loc 1 341 8 is_stmt 1 view .LVU320
+ 881              		.loc 1 341 10 is_stmt 0 view .LVU321
+ 882 000c 244A     		ldr	r2, .L47+4
+ 883 000e 9342     		cmp	r3, r2
+ 884 0010 1CD0     		beq	.L45
+ 342:Core/Src/usart.c ****   {
+ 343:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspDeInit 0 */
+ 344:Core/Src/usart.c **** 
+ 345:Core/Src/usart.c ****   /* USER CODE END USART3_MspDeInit 0 */
+ 346:Core/Src/usart.c ****     /* Peripheral clock disable */
+ 347:Core/Src/usart.c ****     __HAL_RCC_USART3_CLK_DISABLE();
+ 348:Core/Src/usart.c **** 
+ 349:Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 350:Core/Src/usart.c ****     PC11     ------> USART3_RX
+ 351:Core/Src/usart.c ****     PC10     ------> USART3_TX
+ 352:Core/Src/usart.c ****     */
+ 353:Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_11|GPIO_PIN_10);
+ 354:Core/Src/usart.c **** 
+ 355:Core/Src/usart.c ****     /* USART3 DMA DeInit */
+ 356:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmarx);
+ 357:Core/Src/usart.c **** 
+ 358:Core/Src/usart.c ****     /* USART3 interrupt Deinit */
+ 359:Core/Src/usart.c ****     HAL_NVIC_DisableIRQ(USART3_IRQn);
+ 360:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspDeInit 1 */
+ 361:Core/Src/usart.c **** 
+ 362:Core/Src/usart.c ****   /* USER CODE END USART3_MspDeInit 1 */
+ 363:Core/Src/usart.c ****   }
+ 364:Core/Src/usart.c ****   else if(uartHandle->Instance==USART6)
+ 885              		.loc 1 364 8 is_stmt 1 view .LVU322
+ 886              		.loc 1 364 10 is_stmt 0 view .LVU323
+ 887 0012 244A     		ldr	r2, .L47+8
+ 888 0014 9342     		cmp	r3, r2
+ 889 0016 2BD0     		beq	.L46
+ 890              	.LVL35:
+ 891              	.L39:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 27
+
+
+ 365:Core/Src/usart.c ****   {
+ 366:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_MspDeInit 0 */
+ 367:Core/Src/usart.c **** 
+ 368:Core/Src/usart.c ****   /* USER CODE END USART6_MspDeInit 0 */
+ 369:Core/Src/usart.c ****     /* Peripheral clock disable */
+ 370:Core/Src/usart.c ****     __HAL_RCC_USART6_CLK_DISABLE();
+ 371:Core/Src/usart.c **** 
+ 372:Core/Src/usart.c ****     /**USART6 GPIO Configuration
+ 373:Core/Src/usart.c ****     PG14     ------> USART6_TX
+ 374:Core/Src/usart.c ****     PG9     ------> USART6_RX
+ 375:Core/Src/usart.c ****     */
+ 376:Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOG, GPIO_PIN_14|GPIO_PIN_9);
+ 377:Core/Src/usart.c **** 
+ 378:Core/Src/usart.c ****     /* USART6 DMA DeInit */
+ 379:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmarx);
+ 380:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmatx);
+ 381:Core/Src/usart.c **** 
+ 382:Core/Src/usart.c ****     /* USART6 interrupt Deinit */
+ 383:Core/Src/usart.c ****     HAL_NVIC_DisableIRQ(USART6_IRQn);
+ 384:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_MspDeInit 1 */
+ 385:Core/Src/usart.c **** 
+ 386:Core/Src/usart.c ****   /* USER CODE END USART6_MspDeInit 1 */
+ 387:Core/Src/usart.c ****   }
+ 388:Core/Src/usart.c **** }
+ 892              		.loc 1 388 1 view .LVU324
+ 893 0018 10BD     		pop	{r4, pc}
+ 894              	.LVL36:
+ 895              	.L44:
+ 321:Core/Src/usart.c **** 
+ 896              		.loc 1 321 5 is_stmt 1 view .LVU325
+ 897 001a 02F59432 		add	r2, r2, #75776
+ 898 001e 536C     		ldr	r3, [r2, #68]
+ 899 0020 23F01003 		bic	r3, r3, #16
+ 900 0024 5364     		str	r3, [r2, #68]
+ 327:Core/Src/usart.c **** 
+ 901              		.loc 1 327 5 view .LVU326
+ 902 0026 8021     		movs	r1, #128
+ 903 0028 1F48     		ldr	r0, .L47+12
+ 904              	.LVL37:
+ 327:Core/Src/usart.c **** 
+ 905              		.loc 1 327 5 is_stmt 0 view .LVU327
+ 906 002a FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 907              	.LVL38:
+ 329:Core/Src/usart.c **** 
+ 908              		.loc 1 329 5 is_stmt 1 view .LVU328
+ 909 002e 4FF40071 		mov	r1, #512
+ 910 0032 1E48     		ldr	r0, .L47+16
+ 911 0034 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 912              	.LVL39:
+ 332:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmarx);
+ 913              		.loc 1 332 5 view .LVU329
+ 914 0038 606B     		ldr	r0, [r4, #52]
+ 915 003a FFF7FEFF 		bl	HAL_DMA_DeInit
+ 916              	.LVL40:
+ 333:Core/Src/usart.c **** 
+ 917              		.loc 1 333 5 view .LVU330
+ 918 003e A06B     		ldr	r0, [r4, #56]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 28
+
+
+ 919 0040 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 920              	.LVL41:
+ 336:Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspDeInit 1 */
+ 921              		.loc 1 336 5 view .LVU331
+ 922 0044 2520     		movs	r0, #37
+ 923 0046 FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
+ 924              	.LVL42:
+ 925 004a E5E7     		b	.L39
+ 926              	.LVL43:
+ 927              	.L45:
+ 347:Core/Src/usart.c **** 
+ 928              		.loc 1 347 5 view .LVU332
+ 929 004c 02F5F832 		add	r2, r2, #126976
+ 930 0050 136C     		ldr	r3, [r2, #64]
+ 931 0052 23F48023 		bic	r3, r3, #262144
+ 932 0056 1364     		str	r3, [r2, #64]
+ 353:Core/Src/usart.c **** 
+ 933              		.loc 1 353 5 view .LVU333
+ 934 0058 4FF44061 		mov	r1, #3072
+ 935 005c 1448     		ldr	r0, .L47+20
+ 936              	.LVL44:
+ 353:Core/Src/usart.c **** 
+ 937              		.loc 1 353 5 is_stmt 0 view .LVU334
+ 938 005e FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 939              	.LVL45:
+ 356:Core/Src/usart.c **** 
+ 940              		.loc 1 356 5 is_stmt 1 view .LVU335
+ 941 0062 A06B     		ldr	r0, [r4, #56]
+ 942 0064 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 943              	.LVL46:
+ 359:Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspDeInit 1 */
+ 944              		.loc 1 359 5 view .LVU336
+ 945 0068 2720     		movs	r0, #39
+ 946 006a FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
+ 947              	.LVL47:
+ 948 006e D3E7     		b	.L39
+ 949              	.LVL48:
+ 950              	.L46:
+ 370:Core/Src/usart.c **** 
+ 951              		.loc 1 370 5 view .LVU337
+ 952 0070 02F59232 		add	r2, r2, #74752
+ 953 0074 536C     		ldr	r3, [r2, #68]
+ 954 0076 23F02003 		bic	r3, r3, #32
+ 955 007a 5364     		str	r3, [r2, #68]
+ 376:Core/Src/usart.c **** 
+ 956              		.loc 1 376 5 view .LVU338
+ 957 007c 4FF48441 		mov	r1, #16896
+ 958 0080 0C48     		ldr	r0, .L47+24
+ 959              	.LVL49:
+ 376:Core/Src/usart.c **** 
+ 960              		.loc 1 376 5 is_stmt 0 view .LVU339
+ 961 0082 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 962              	.LVL50:
+ 379:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmatx);
+ 963              		.loc 1 379 5 is_stmt 1 view .LVU340
+ 964 0086 A06B     		ldr	r0, [r4, #56]
+ 965 0088 FFF7FEFF 		bl	HAL_DMA_DeInit
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 29
+
+
+ 966              	.LVL51:
+ 380:Core/Src/usart.c **** 
+ 967              		.loc 1 380 5 view .LVU341
+ 968 008c 606B     		ldr	r0, [r4, #52]
+ 969 008e FFF7FEFF 		bl	HAL_DMA_DeInit
+ 970              	.LVL52:
+ 383:Core/Src/usart.c ****   /* USER CODE BEGIN USART6_MspDeInit 1 */
+ 971              		.loc 1 383 5 view .LVU342
+ 972 0092 4720     		movs	r0, #71
+ 973 0094 FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
+ 974              	.LVL53:
+ 975              		.loc 1 388 1 is_stmt 0 view .LVU343
+ 976 0098 BEE7     		b	.L39
+ 977              	.L48:
+ 978 009a 00BF     		.align	2
+ 979              	.L47:
+ 980 009c 00100140 		.word	1073811456
+ 981 00a0 00480040 		.word	1073760256
+ 982 00a4 00140140 		.word	1073812480
+ 983 00a8 00040240 		.word	1073873920
+ 984 00ac 00000240 		.word	1073872896
+ 985 00b0 00080240 		.word	1073874944
+ 986 00b4 00180240 		.word	1073879040
+ 987              		.cfi_endproc
+ 988              	.LFE134:
+ 990              		.global	hdma_usart6_tx
+ 991              		.global	hdma_usart6_rx
+ 992              		.global	hdma_usart3_rx
+ 993              		.global	hdma_usart1_rx
+ 994              		.global	hdma_usart1_tx
+ 995              		.global	huart6
+ 996              		.global	huart3
+ 997              		.global	huart1
+ 998              		.section	.bss.hdma_usart1_rx,"aw",%nobits
+ 999              		.align	2
+ 1000              		.set	.LANCHOR4,. + 0
+ 1003              	hdma_usart1_rx:
+ 1004 0000 00000000 		.space	96
+ 1004      00000000 
+ 1004      00000000 
+ 1004      00000000 
+ 1004      00000000 
+ 1005              		.section	.bss.hdma_usart1_tx,"aw",%nobits
+ 1006              		.align	2
+ 1007              		.set	.LANCHOR3,. + 0
+ 1010              	hdma_usart1_tx:
+ 1011 0000 00000000 		.space	96
+ 1011      00000000 
+ 1011      00000000 
+ 1011      00000000 
+ 1011      00000000 
+ 1012              		.section	.bss.hdma_usart3_rx,"aw",%nobits
+ 1013              		.align	2
+ 1014              		.set	.LANCHOR5,. + 0
+ 1017              	hdma_usart3_rx:
+ 1018 0000 00000000 		.space	96
+ 1018      00000000 
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 30
+
+
+ 1018      00000000 
+ 1018      00000000 
+ 1018      00000000 
+ 1019              		.section	.bss.hdma_usart6_rx,"aw",%nobits
+ 1020              		.align	2
+ 1021              		.set	.LANCHOR6,. + 0
+ 1024              	hdma_usart6_rx:
+ 1025 0000 00000000 		.space	96
+ 1025      00000000 
+ 1025      00000000 
+ 1025      00000000 
+ 1025      00000000 
+ 1026              		.section	.bss.hdma_usart6_tx,"aw",%nobits
+ 1027              		.align	2
+ 1028              		.set	.LANCHOR7,. + 0
+ 1031              	hdma_usart6_tx:
+ 1032 0000 00000000 		.space	96
+ 1032      00000000 
+ 1032      00000000 
+ 1032      00000000 
+ 1032      00000000 
+ 1033              		.section	.bss.huart1,"aw",%nobits
+ 1034              		.align	2
+ 1035              		.set	.LANCHOR0,. + 0
+ 1038              	huart1:
+ 1039 0000 00000000 		.space	68
+ 1039      00000000 
+ 1039      00000000 
+ 1039      00000000 
+ 1039      00000000 
+ 1040              		.section	.bss.huart3,"aw",%nobits
+ 1041              		.align	2
+ 1042              		.set	.LANCHOR1,. + 0
+ 1045              	huart3:
+ 1046 0000 00000000 		.space	68
+ 1046      00000000 
+ 1046      00000000 
+ 1046      00000000 
+ 1046      00000000 
+ 1047              		.section	.bss.huart6,"aw",%nobits
+ 1048              		.align	2
+ 1049              		.set	.LANCHOR2,. + 0
+ 1052              	huart6:
+ 1053 0000 00000000 		.space	68
+ 1053      00000000 
+ 1053      00000000 
+ 1053      00000000 
+ 1053      00000000 
+ 1054              		.text
+ 1055              	.Letext0:
+ 1056              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1057              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1058              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 1059              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1060              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 1061              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1062              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 31
+
+
+ 1063              		.file 9 "Core/Inc/usart.h"
+ 1064              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h"
+ 1065              		.file 11 "Core/Inc/main.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s 			page 32
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usart.c
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:20     .text.MX_USART1_UART_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:26     .text.MX_USART1_UART_Init:00000000 MX_USART1_UART_Init
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:85     .text.MX_USART1_UART_Init:0000002c $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:92     .text.MX_USART3_UART_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:98     .text.MX_USART3_UART_Init:00000000 MX_USART3_UART_Init
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:158    .text.MX_USART3_UART_Init:00000034 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:165    .text.MX_USART6_UART_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:171    .text.MX_USART6_UART_Init:00000000 MX_USART6_UART_Init
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:229    .text.MX_USART6_UART_Init:0000002c $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:235    .text.HAL_UART_MspInit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:241    .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:831    .text.HAL_UART_MspInit:0000028c $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:853    .text.HAL_UART_MspDeInit:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:859    .text.HAL_UART_MspDeInit:00000000 HAL_UART_MspDeInit
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:980    .text.HAL_UART_MspDeInit:0000009c $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1031   .bss.hdma_usart6_tx:00000000 hdma_usart6_tx
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1024   .bss.hdma_usart6_rx:00000000 hdma_usart6_rx
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1017   .bss.hdma_usart3_rx:00000000 hdma_usart3_rx
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1003   .bss.hdma_usart1_rx:00000000 hdma_usart1_rx
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1010   .bss.hdma_usart1_tx:00000000 hdma_usart1_tx
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1052   .bss.huart6:00000000 huart6
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1045   .bss.huart3:00000000 huart3
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1038   .bss.huart1:00000000 huart1
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:999    .bss.hdma_usart1_rx:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1006   .bss.hdma_usart1_tx:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1013   .bss.hdma_usart3_rx:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1020   .bss.hdma_usart6_rx:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1027   .bss.hdma_usart6_tx:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1034   .bss.huart1:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1041   .bss.huart3:00000000 $d
+C:\Users\lenovo\AppData\Local\Temp\ccyX9FaG.s:1048   .bss.huart6:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Init
+Error_Handler
+HAL_GPIO_Init
+HAL_DMA_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+HAL_GPIO_DeInit
+HAL_DMA_DeInit
+HAL_NVIC_DisableIRQ

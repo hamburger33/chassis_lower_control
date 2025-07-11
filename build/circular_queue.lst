@@ -1,0 +1,341 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"circular_queue.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.create_circular_queue,"ax",%progbits
+  20              		.align	1
+  21              		.global	create_circular_queue
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	create_circular_queue:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/lib/circular_queue.c"
+   1:Core/HAL/lib/circular_queue.c **** #include "circular_queue.h"
+   2:Core/HAL/lib/circular_queue.c **** 
+   3:Core/HAL/lib/circular_queue.c **** circular_queue* create_circular_queue(size_t cq_size, size_t max_len) {
+  30              		.loc 1 3 71 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 3 71 is_stmt 0 view .LVU1
+  35 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 24
+  38              		.cfi_offset 3, -24
+  39              		.cfi_offset 4, -20
+  40              		.cfi_offset 5, -16
+  41              		.cfi_offset 6, -12
+  42              		.cfi_offset 7, -8
+  43              		.cfi_offset 14, -4
+  44 0002 0646     		mov	r6, r0
+  45 0004 0F46     		mov	r7, r1
+   4:Core/HAL/lib/circular_queue.c ****     circular_queue* obj = malloc(sizeof(circular_queue));
+  46              		.loc 1 4 5 is_stmt 1 view .LVU2
+  47              		.loc 1 4 27 is_stmt 0 view .LVU3
+  48 0006 1820     		movs	r0, #24
+  49              	.LVL1:
+  50              		.loc 1 4 27 view .LVU4
+  51 0008 FFF7FEFF 		bl	malloc
+  52              	.LVL2:
+  53              		.loc 1 4 27 view .LVU5
+  54 000c 0446     		mov	r4, r0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s 			page 2
+
+
+  55              	.LVL3:
+   5:Core/HAL/lib/circular_queue.c ****     obj->cq_size = cq_size;
+  56              		.loc 1 5 5 is_stmt 1 view .LVU6
+  57              		.loc 1 5 18 is_stmt 0 view .LVU7
+  58 000e 4660     		str	r6, [r0, #4]	@ unaligned
+   6:Core/HAL/lib/circular_queue.c ****     obj->cq_len = 0;
+  59              		.loc 1 6 5 is_stmt 1 view .LVU8
+  60              		.loc 1 6 17 is_stmt 0 view .LVU9
+  61 0010 0025     		movs	r5, #0
+  62 0012 0572     		strb	r5, [r0, #8]
+  63 0014 4572     		strb	r5, [r0, #9]
+  64 0016 8572     		strb	r5, [r0, #10]
+  65 0018 C572     		strb	r5, [r0, #11]
+   7:Core/HAL/lib/circular_queue.c ****     obj->cq_max_len = max_len;
+  66              		.loc 1 7 5 is_stmt 1 view .LVU10
+  67              		.loc 1 7 21 is_stmt 0 view .LVU11
+  68 001a C760     		str	r7, [r0, #12]	@ unaligned
+   8:Core/HAL/lib/circular_queue.c ****     obj->cq_pdata = malloc(cq_size * max_len);
+  69              		.loc 1 8 5 is_stmt 1 view .LVU12
+  70              		.loc 1 8 21 is_stmt 0 view .LVU13
+  71 001c 07FB06F0 		mul	r0, r7, r6
+  72              	.LVL4:
+  73              		.loc 1 8 21 view .LVU14
+  74 0020 FFF7FEFF 		bl	malloc
+  75              	.LVL5:
+  76              		.loc 1 8 19 view .LVU15
+  77 0024 2060     		str	r0, [r4]	@ unaligned
+   9:Core/HAL/lib/circular_queue.c ****     obj->head = obj->tail = 0;
+  78              		.loc 1 9 5 is_stmt 1 view .LVU16
+  79              		.loc 1 9 27 is_stmt 0 view .LVU17
+  80 0026 2575     		strb	r5, [r4, #20]
+  81 0028 6575     		strb	r5, [r4, #21]
+  82 002a A575     		strb	r5, [r4, #22]
+  83 002c E575     		strb	r5, [r4, #23]
+  84              		.loc 1 9 15 view .LVU18
+  85 002e 2574     		strb	r5, [r4, #16]
+  86 0030 6574     		strb	r5, [r4, #17]
+  87 0032 A574     		strb	r5, [r4, #18]
+  88 0034 E574     		strb	r5, [r4, #19]
+  10:Core/HAL/lib/circular_queue.c ****     return obj;
+  89              		.loc 1 10 5 is_stmt 1 view .LVU19
+  11:Core/HAL/lib/circular_queue.c **** }
+  90              		.loc 1 11 1 is_stmt 0 view .LVU20
+  91 0036 2046     		mov	r0, r4
+  92 0038 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  93              		.loc 1 11 1 view .LVU21
+  94              		.cfi_endproc
+  95              	.LFE0:
+  97              		.section	.text.circular_queue_push,"ax",%progbits
+  98              		.align	1
+  99              		.global	circular_queue_push
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 104              	circular_queue_push:
+ 105              	.LVL6:
+ 106              	.LFB1:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s 			page 3
+
+
+  12:Core/HAL/lib/circular_queue.c **** 
+  13:Core/HAL/lib/circular_queue.c **** void circular_queue_push(circular_queue* obj, void* memb) {
+ 107              		.loc 1 13 59 is_stmt 1 view -0
+ 108              		.cfi_startproc
+ 109              		@ args = 0, pretend = 0, frame = 0
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+  14:Core/HAL/lib/circular_queue.c ****     if (obj->cq_len + 1 > obj->cq_max_len) return;
+ 111              		.loc 1 14 5 view .LVU23
+ 112              		.loc 1 14 12 is_stmt 0 view .LVU24
+ 113 0000 8368     		ldr	r3, [r0, #8]	@ unaligned
+ 114              		.loc 1 14 21 view .LVU25
+ 115 0002 0133     		adds	r3, r3, #1
+ 116              		.loc 1 14 30 view .LVU26
+ 117 0004 C268     		ldr	r2, [r0, #12]	@ unaligned
+ 118              		.loc 1 14 8 view .LVU27
+ 119 0006 9342     		cmp	r3, r2
+ 120 0008 00D9     		bls	.L9
+ 121 000a 7047     		bx	lr
+ 122              	.L9:
+  13:Core/HAL/lib/circular_queue.c ****     if (obj->cq_len + 1 > obj->cq_max_len) return;
+ 123              		.loc 1 13 59 view .LVU28
+ 124 000c 10B5     		push	{r4, lr}
+ 125              	.LCFI1:
+ 126              		.cfi_def_cfa_offset 8
+ 127              		.cfi_offset 4, -8
+ 128              		.cfi_offset 14, -4
+ 129 000e 0446     		mov	r4, r0
+  15:Core/HAL/lib/circular_queue.c ****     void* tail_pointer = obj->cq_pdata + obj->tail * obj->cq_size;
+ 130              		.loc 1 15 5 is_stmt 1 view .LVU29
+ 131              		.loc 1 15 29 is_stmt 0 view .LVU30
+ 132 0010 0368     		ldr	r3, [r0]	@ unaligned
+ 133              		.loc 1 15 45 view .LVU31
+ 134 0012 4069     		ldr	r0, [r0, #20]	@ unaligned
+ 135              	.LVL7:
+ 136              		.loc 1 15 57 view .LVU32
+ 137 0014 6268     		ldr	r2, [r4, #4]	@ unaligned
+ 138              	.LVL8:
+  16:Core/HAL/lib/circular_queue.c ****     memcpy(tail_pointer, memb, obj->cq_size);
+ 139              		.loc 1 16 5 is_stmt 1 view .LVU33
+ 140 0016 02FB0030 		mla	r0, r2, r0, r3
+ 141              	.LVL9:
+ 142              		.loc 1 16 5 is_stmt 0 view .LVU34
+ 143 001a FFF7FEFF 		bl	memcpy
+ 144              	.LVL10:
+  17:Core/HAL/lib/circular_queue.c ****     obj->tail = (obj->tail + 1) % (obj->cq_max_len);
+ 145              		.loc 1 17 5 is_stmt 1 view .LVU35
+ 146              		.loc 1 17 21 is_stmt 0 view .LVU36
+ 147 001e 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 148              		.loc 1 17 28 view .LVU37
+ 149 0020 0133     		adds	r3, r3, #1
+ 150              		.loc 1 17 39 view .LVU38
+ 151 0022 E268     		ldr	r2, [r4, #12]	@ unaligned
+ 152              		.loc 1 17 33 view .LVU39
+ 153 0024 B3FBF2F1 		udiv	r1, r3, r2
+ 154 0028 02FB1133 		mls	r3, r2, r1, r3
+ 155              		.loc 1 17 15 view .LVU40
+ 156 002c 6361     		str	r3, [r4, #20]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s 			page 4
+
+
+  18:Core/HAL/lib/circular_queue.c ****     obj->cq_len++;
+ 157              		.loc 1 18 5 is_stmt 1 view .LVU41
+ 158              		.loc 1 18 8 is_stmt 0 view .LVU42
+ 159 002e A368     		ldr	r3, [r4, #8]	@ unaligned
+ 160              		.loc 1 18 16 view .LVU43
+ 161 0030 0133     		adds	r3, r3, #1
+ 162 0032 A360     		str	r3, [r4, #8]	@ unaligned
+  19:Core/HAL/lib/circular_queue.c **** }
+ 163              		.loc 1 19 1 view .LVU44
+ 164 0034 10BD     		pop	{r4, pc}
+ 165              		.loc 1 19 1 view .LVU45
+ 166              		.cfi_endproc
+ 167              	.LFE1:
+ 169              		.section	.text.circular_queue_pop,"ax",%progbits
+ 170              		.align	1
+ 171              		.global	circular_queue_pop
+ 172              		.syntax unified
+ 173              		.thumb
+ 174              		.thumb_func
+ 176              	circular_queue_pop:
+ 177              	.LVL11:
+ 178              	.LFB2:
+  20:Core/HAL/lib/circular_queue.c **** 
+  21:Core/HAL/lib/circular_queue.c **** void* circular_queue_pop(circular_queue* obj) {
+ 179              		.loc 1 21 47 is_stmt 1 view -0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183              		@ link register save eliminated.
+ 184              		.loc 1 21 47 is_stmt 0 view .LVU47
+ 185 0000 0346     		mov	r3, r0
+  22:Core/HAL/lib/circular_queue.c ****     if (obj->cq_len == 0) return NULL;
+ 186              		.loc 1 22 5 is_stmt 1 view .LVU48
+ 187              		.loc 1 22 12 is_stmt 0 view .LVU49
+ 188 0002 8268     		ldr	r2, [r0, #8]	@ unaligned
+ 189              		.loc 1 22 8 view .LVU50
+ 190 0004 72B1     		cbz	r2, .L12
+  23:Core/HAL/lib/circular_queue.c ****     obj->cq_len--;
+ 191              		.loc 1 23 5 is_stmt 1 view .LVU51
+ 192              		.loc 1 23 16 is_stmt 0 view .LVU52
+ 193 0006 013A     		subs	r2, r2, #1
+ 194 0008 8260     		str	r2, [r0, #8]	@ unaligned
+  24:Core/HAL/lib/circular_queue.c ****     void* head_pointer = obj->cq_pdata + obj->head * obj->cq_size;
+ 195              		.loc 1 24 5 is_stmt 1 view .LVU53
+ 196              		.loc 1 24 29 is_stmt 0 view .LVU54
+ 197 000a 0068     		ldr	r0, [r0]	@ unaligned
+ 198              	.LVL12:
+ 199              		.loc 1 24 45 view .LVU55
+ 200 000c 1A69     		ldr	r2, [r3, #16]	@ unaligned
+ 201              		.loc 1 24 57 view .LVU56
+ 202 000e 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 203              		.loc 1 24 11 view .LVU57
+ 204 0010 01FB0200 		mla	r0, r1, r2, r0
+ 205              	.LVL13:
+  25:Core/HAL/lib/circular_queue.c ****     obj->head = (obj->head + 1) % (obj->cq_max_len);
+ 206              		.loc 1 25 5 is_stmt 1 view .LVU58
+ 207              		.loc 1 25 28 is_stmt 0 view .LVU59
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s 			page 5
+
+
+ 208 0014 0132     		adds	r2, r2, #1
+ 209              		.loc 1 25 39 view .LVU60
+ 210 0016 D968     		ldr	r1, [r3, #12]	@ unaligned
+ 211              		.loc 1 25 33 view .LVU61
+ 212 0018 B2FBF1FC 		udiv	ip, r2, r1
+ 213 001c 01FB1C22 		mls	r2, r1, ip, r2
+ 214              		.loc 1 25 15 view .LVU62
+ 215 0020 1A61     		str	r2, [r3, #16]	@ unaligned
+  26:Core/HAL/lib/circular_queue.c ****     return head_pointer;
+ 216              		.loc 1 26 5 is_stmt 1 view .LVU63
+ 217              		.loc 1 26 12 is_stmt 0 view .LVU64
+ 218 0022 7047     		bx	lr
+ 219              	.LVL14:
+ 220              	.L12:
+  22:Core/HAL/lib/circular_queue.c ****     obj->cq_len--;
+ 221              		.loc 1 22 34 view .LVU65
+ 222 0024 0020     		movs	r0, #0
+ 223              	.LVL15:
+  27:Core/HAL/lib/circular_queue.c **** }
+ 224              		.loc 1 27 1 view .LVU66
+ 225 0026 7047     		bx	lr
+ 226              		.cfi_endproc
+ 227              	.LFE2:
+ 229              		.section	.text.circular_queue_front,"ax",%progbits
+ 230              		.align	1
+ 231              		.global	circular_queue_front
+ 232              		.syntax unified
+ 233              		.thumb
+ 234              		.thumb_func
+ 236              	circular_queue_front:
+ 237              	.LVL16:
+ 238              	.LFB3:
+  28:Core/HAL/lib/circular_queue.c **** 
+  29:Core/HAL/lib/circular_queue.c **** void* circular_queue_front(circular_queue* obj) {
+ 239              		.loc 1 29 49 is_stmt 1 view -0
+ 240              		.cfi_startproc
+ 241              		@ args = 0, pretend = 0, frame = 0
+ 242              		@ frame_needed = 0, uses_anonymous_args = 0
+ 243              		@ link register save eliminated.
+  30:Core/HAL/lib/circular_queue.c ****     if (obj->cq_len == 0) return NULL;
+ 244              		.loc 1 30 5 view .LVU68
+ 245              		.loc 1 30 12 is_stmt 0 view .LVU69
+ 246 0000 8368     		ldr	r3, [r0, #8]	@ unaligned
+ 247              		.loc 1 30 8 view .LVU70
+ 248 0002 2BB1     		cbz	r3, .L15
+  31:Core/HAL/lib/circular_queue.c ****     void* head_pointer = obj->cq_pdata + obj->head * obj->cq_size;
+ 249              		.loc 1 31 5 is_stmt 1 view .LVU71
+ 250              		.loc 1 31 29 is_stmt 0 view .LVU72
+ 251 0004 0368     		ldr	r3, [r0]	@ unaligned
+ 252              		.loc 1 31 45 view .LVU73
+ 253 0006 0269     		ldr	r2, [r0, #16]	@ unaligned
+ 254              		.loc 1 31 57 view .LVU74
+ 255 0008 4068     		ldr	r0, [r0, #4]	@ unaligned
+ 256              	.LVL17:
+ 257              		.loc 1 31 11 view .LVU75
+ 258 000a 00FB0230 		mla	r0, r0, r2, r3
+ 259              	.LVL18:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s 			page 6
+
+
+  32:Core/HAL/lib/circular_queue.c ****     return head_pointer;
+ 260              		.loc 1 32 5 is_stmt 1 view .LVU76
+ 261              		.loc 1 32 12 is_stmt 0 view .LVU77
+ 262 000e 7047     		bx	lr
+ 263              	.LVL19:
+ 264              	.L15:
+  30:Core/HAL/lib/circular_queue.c ****     if (obj->cq_len == 0) return NULL;
+ 265              		.loc 1 30 34 view .LVU78
+ 266 0010 0020     		movs	r0, #0
+ 267              	.LVL20:
+  33:Core/HAL/lib/circular_queue.c **** }...
+ 268              		.loc 1 33 1 view .LVU79
+ 269 0012 7047     		bx	lr
+ 270              		.cfi_endproc
+ 271              	.LFE3:
+ 273              		.text
+ 274              	.Letext0:
+ 275              		.file 2 "Core/HAL/lib/circular_queue.h"
+ 276              		.file 3 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 277              		.file 4 "<built-in>"
+ 278              		.file 5 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 circular_queue.c
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:20     .text.create_circular_queue:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:26     .text.create_circular_queue:00000000 create_circular_queue
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:98     .text.circular_queue_push:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:104    .text.circular_queue_push:00000000 circular_queue_push
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:170    .text.circular_queue_pop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:176    .text.circular_queue_pop:00000000 circular_queue_pop
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:230    .text.circular_queue_front:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccbS7PvQ.s:236    .text.circular_queue_front:00000000 circular_queue_front
+
+UNDEFINED SYMBOLS
+malloc
+memcpy

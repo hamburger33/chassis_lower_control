@@ -6,7 +6,6 @@
 
 #define SUPER_CAP_WULI_RX_ID 0x211  //雾列超级电容控制板
 #define SUPER_CAP_WULI_TX_ID 0x210
-
 #pragma pack(1)
 typedef struct super_cap_wuli_config_t {
     uint8_t bsp_can_index;

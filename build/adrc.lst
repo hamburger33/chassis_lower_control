@@ -1,0 +1,1187 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"adrc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.ConstrainFloat,"ax",%progbits
+  20              		.align	1
+  21              		.global	ConstrainFloat
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	ConstrainFloat:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/lib/controller/adrc.c"
+   1:Core/HAL/lib/controller/adrc.c **** /**
+   2:Core/HAL/lib/controller/adrc.c ****  * @file           : adrc.c
+   3:Core/HAL/lib/controller/adrc.c ****  * @brief          : ADRC算法实现
+   4:Core/HAL/lib/controller/adrc.c ****  * @Author         : 李鸣航
+   5:Core/HAL/lib/controller/adrc.c ****  * @Date           : 2022-04-09 14:48
+   6:Core/HAL/lib/controller/adrc.c ****  * @LastEditTime   : 2022-05-06 21:57
+   7:Core/HAL/lib/controller/adrc.c ****  * @Note           : 使用该算法之前请务必阅读说明文档，禁止随意调参
+   8:Core/HAL/lib/controller/adrc.c ****  * @Copyright(c)   : 哈尔滨工业大学（深圳）南工骁鹰机器人队版权所有 Critical
+   9:Core/HAL/lib/controller/adrc.c ****  */
+  10:Core/HAL/lib/controller/adrc.c **** 
+  11:Core/HAL/lib/controller/adrc.c **** #include "adrc.h"
+  12:Core/HAL/lib/controller/adrc.c **** #include <common.h>
+  13:Core/HAL/lib/controller/adrc.c **** #include <string.h>
+  14:Core/HAL/lib/controller/adrc.c **** #include "math.h"
+  15:Core/HAL/lib/controller/adrc.c **** 
+  16:Core/HAL/lib/controller/adrc.c **** float ConstrainFloat(float amt, float low, float high);
+  17:Core/HAL/lib/controller/adrc.c **** int fsg(float x, float d);
+  18:Core/HAL/lib/controller/adrc.c **** float fst(float x1_delta, float x2, float r, float h0);
+  19:Core/HAL/lib/controller/adrc.c **** float fal(float e, float a, float delta);
+  20:Core/HAL/lib/controller/adrc.c **** void TDFunction(ADRC_t* adrc_data);
+  21:Core/HAL/lib/controller/adrc.c **** void NLSEFFunction(ADRC_t* adrc_data);
+  22:Core/HAL/lib/controller/adrc.c **** void ESOFunction(ADRC_t* adrc_data);
+  23:Core/HAL/lib/controller/adrc.c **** void ADRCFunction(ADRC_t* adrc_data);
+  24:Core/HAL/lib/controller/adrc.c **** 
+  25:Core/HAL/lib/controller/adrc.c **** /**
+  26:Core/HAL/lib/controller/adrc.c ****  * @brief      :浮点数限幅函数
+  27:Core/HAL/lib/controller/adrc.c ****  * @attention  :无
+  28:Core/HAL/lib/controller/adrc.c ****  * @param {float} amt 要比较的值
+  29:Core/HAL/lib/controller/adrc.c ****  * @param {float} low 下限
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 2
+
+
+  30:Core/HAL/lib/controller/adrc.c ****  * @param {float} high 上限
+  31:Core/HAL/lib/controller/adrc.c ****  */
+  32:Core/HAL/lib/controller/adrc.c **** float ConstrainFloat(float amt, float low, float high) {
+  30              		.loc 1 32 56 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              		.loc 1 32 56 is_stmt 0 view .LVU1
+  36 0000 F0EE407A 		vmov.f32	s15, s0
+  37 0004 B0EE600A 		vmov.f32	s0, s1
+  38              	.LVL1:
+  33:Core/HAL/lib/controller/adrc.c ****     return ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)));
+  39              		.loc 1 33 5 is_stmt 1 view .LVU2
+  40              		.loc 1 33 35 is_stmt 0 view .LVU3
+  41 0008 F4EEE07A 		vcmpe.f32	s15, s1
+  42 000c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  43 0010 09D4     		bmi	.L2
+  44              		.loc 1 33 62 discriminator 2 view .LVU4
+  45 0012 F4EEC17A 		vcmpe.f32	s15, s2
+  46 0016 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  47 001a 02DD     		ble	.L6
+  48              		.loc 1 33 62 view .LVU5
+  49 001c B0EE410A 		vmov.f32	s0, s2
+  50 0020 7047     		bx	lr
+  51              	.LVL2:
+  52              	.L6:
+  53              		.loc 1 33 62 view .LVU6
+  54 0022 B0EE670A 		vmov.f32	s0, s15
+  55              	.LVL3:
+  56              	.L2:
+  34:Core/HAL/lib/controller/adrc.c **** }
+  57              		.loc 1 34 1 discriminator 8 view .LVU7
+  58 0026 7047     		bx	lr
+  59              		.cfi_endproc
+  60              	.LFE0:
+  62              		.section	.text.fsg,"ax",%progbits
+  63              		.align	1
+  64              		.global	fsg
+  65              		.syntax unified
+  66              		.thumb
+  67              		.thumb_func
+  69              	fsg:
+  70              	.LVL4:
+  71              	.LFB1:
+  35:Core/HAL/lib/controller/adrc.c **** 
+  36:Core/HAL/lib/controller/adrc.c **** /**
+  37:Core/HAL/lib/controller/adrc.c ****  * @brief      :二维符号函数
+  38:Core/HAL/lib/controller/adrc.c ****  * @attention  :无
+  39:Core/HAL/lib/controller/adrc.c ****  * @param {float} x 输入1
+  40:Core/HAL/lib/controller/adrc.c ****  * @param {float} d 输入2
+  41:Core/HAL/lib/controller/adrc.c ****  */
+  42:Core/HAL/lib/controller/adrc.c **** int fsg(float x, float d) {
+  72              		.loc 1 42 27 is_stmt 1 view -0
+  73              		.cfi_startproc
+  74              		@ args = 0, pretend = 0, frame = 0
+  75              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 3
+
+
+  76              		.loc 1 42 27 is_stmt 0 view .LVU9
+  77 0000 10B5     		push	{r4, lr}
+  78              	.LCFI0:
+  79              		.cfi_def_cfa_offset 8
+  80              		.cfi_offset 4, -8
+  81              		.cfi_offset 14, -4
+  82 0002 2DED028B 		vpush.64	{d8}
+  83              	.LCFI1:
+  84              		.cfi_def_cfa_offset 16
+  85              		.cfi_offset 80, -16
+  86              		.cfi_offset 81, -12
+  87 0006 F0EE408A 		vmov.f32	s17, s0
+  88 000a B0EE608A 		vmov.f32	s16, s1
+  43:Core/HAL/lib/controller/adrc.c ****     return ((fsgn(x + d) - fsgn(x - d)) / 2);
+  89              		.loc 1 43 5 is_stmt 1 view .LVU10
+  90              		.loc 1 43 14 is_stmt 0 view .LVU11
+  91 000e 30EE200A 		vadd.f32	s0, s0, s1
+  92              	.LVL5:
+  93              		.loc 1 43 14 view .LVU12
+  94 0012 FFF7FEFF 		bl	fsgn
+  95              	.LVL6:
+  96              		.loc 1 43 14 view .LVU13
+  97 0016 0446     		mov	r4, r0
+  98              		.loc 1 43 28 view .LVU14
+  99 0018 38EEC80A 		vsub.f32	s0, s17, s16
+ 100 001c FFF7FEFF 		bl	fsgn
+ 101              	.LVL7:
+ 102              		.loc 1 43 26 view .LVU15
+ 103 0020 201A     		subs	r0, r4, r0
+ 104              		.loc 1 43 41 view .LVU16
+ 105 0022 00EBD070 		add	r0, r0, r0, lsr #31
+  44:Core/HAL/lib/controller/adrc.c **** }
+ 106              		.loc 1 44 1 view .LVU17
+ 107 0026 4010     		asrs	r0, r0, #1
+ 108 0028 BDEC028B 		vldm	sp!, {d8}
+ 109              	.LCFI2:
+ 110              		.cfi_restore 80
+ 111              		.cfi_restore 81
+ 112              		.cfi_def_cfa_offset 8
+ 113              	.LVL8:
+ 114              		.loc 1 44 1 view .LVU18
+ 115 002c 10BD     		pop	{r4, pc}
+ 116              		.cfi_endproc
+ 117              	.LFE1:
+ 119              		.section	.text.fal,"ax",%progbits
+ 120              		.align	1
+ 121              		.global	fal
+ 122              		.syntax unified
+ 123              		.thumb
+ 124              		.thumb_func
+ 126              	fal:
+ 127              	.LVL9:
+ 128              	.LFB2:
+  45:Core/HAL/lib/controller/adrc.c **** 
+  46:Core/HAL/lib/controller/adrc.c **** /**
+  47:Core/HAL/lib/controller/adrc.c ****  * @brief      :fal是一种工业上运用很广的非线性结构函数，其可用于观测器�
+  48:Core/HAL/lib/controller/adrc.c ****  * @attention  :
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 4
+
+
+  49:Core/HAL/lib/controller/adrc.c ****  *  调参说明：
+  50:Core/HAL/lib/controller/adrc.c ****  *  1.a为非线性因子，合理选择可以极大地改变控制效果，对于比例误差（�
+  51:Core/HAL/lib/controller/adrc.c ****  *                                               对于微分误差，我们需要在小误差时�
+  52:Core/HAL/lib/controller/adrc.c ****  *      同时，对于a来说，a越小，跟踪效果越好，但滤波效果会变差，反之�
+  53:Core/HAL/lib/controller/adrc.c ****  *  2.delta为滤波因子，一般取5T≤delta≤10T，其中T为采样周期，在代码中体�
+  54:Core/HAL/lib/controller/adrc.c ****  *      同时，对于delta来说，delta越大，滤波效果越好，但跟踪效果会越延迟
+  55:Core/HAL/lib/controller/adrc.c ****  * @return  {float} 经过滤波后的误差输出信号
+  56:Core/HAL/lib/controller/adrc.c ****  * @param {float} e 带有噪声的误差输入信号
+  57:Core/HAL/lib/controller/adrc.c ****  * @param {float} a 非线性因子
+  58:Core/HAL/lib/controller/adrc.c ****  * @param {float} delta 滤波因子
+  59:Core/HAL/lib/controller/adrc.c ****  */
+  60:Core/HAL/lib/controller/adrc.c **** float fal(float e, float a, float delta) {
+ 129              		.loc 1 60 42 is_stmt 1 view -0
+ 130              		.cfi_startproc
+ 131              		@ args = 0, pretend = 0, frame = 0
+ 132              		@ frame_needed = 0, uses_anonymous_args = 0
+ 133              		.loc 1 60 42 is_stmt 0 view .LVU20
+ 134 0000 10B5     		push	{r4, lr}
+ 135              	.LCFI3:
+ 136              		.cfi_def_cfa_offset 8
+ 137              		.cfi_offset 4, -8
+ 138              		.cfi_offset 14, -4
+ 139 0002 2DED068B 		vpush.64	{d8, d9, d10}
+ 140              	.LCFI4:
+ 141              		.cfi_def_cfa_offset 32
+ 142              		.cfi_offset 80, -32
+ 143              		.cfi_offset 81, -28
+ 144              		.cfi_offset 82, -24
+ 145              		.cfi_offset 83, -20
+ 146              		.cfi_offset 84, -16
+ 147              		.cfi_offset 85, -12
+ 148 0006 B0EE408A 		vmov.f32	s16, s0
+ 149 000a B0EE609A 		vmov.f32	s18, s1
+ 150 000e F0EE418A 		vmov.f32	s17, s2
+  61:Core/HAL/lib/controller/adrc.c ****     int s = 0;
+ 151              		.loc 1 61 5 is_stmt 1 view .LVU21
+ 152              	.LVL10:
+  62:Core/HAL/lib/controller/adrc.c ****     s = (fsgn(e + delta) - fsgn(e - delta)) / 2;
+ 153              		.loc 1 62 5 view .LVU22
+ 154              		.loc 1 62 10 is_stmt 0 view .LVU23
+ 155 0012 30EE010A 		vadd.f32	s0, s0, s2
+ 156              	.LVL11:
+ 157              		.loc 1 62 10 view .LVU24
+ 158 0016 FFF7FEFF 		bl	fsgn
+ 159              	.LVL12:
+ 160              		.loc 1 62 10 view .LVU25
+ 161 001a 0446     		mov	r4, r0
+ 162              		.loc 1 62 28 view .LVU26
+ 163 001c 38EE680A 		vsub.f32	s0, s16, s17
+ 164 0020 FFF7FEFF 		bl	fsgn
+ 165              	.LVL13:
+ 166              		.loc 1 62 26 view .LVU27
+ 167 0024 201A     		subs	r0, r4, r0
+ 168              		.loc 1 62 7 view .LVU28
+ 169 0026 00EBD070 		add	r0, r0, r0, lsr #31
+ 170 002a 4410     		asrs	r4, r0, #1
+ 171              	.LVL14:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 5
+
+
+  63:Core/HAL/lib/controller/adrc.c ****     return (e * s / (powf(delta, 1 - a)) + powf(fabs(e), a) * fsgn(e) * (1 - s));
+ 172              		.loc 1 63 5 is_stmt 1 view .LVU29
+ 173              		.loc 1 63 15 is_stmt 0 view .LVU30
+ 174 002c 07EE904A 		vmov	s15, r4	@ int
+ 175 0030 F8EEE79A 		vcvt.f32.s32	s19, s15
+ 176 0034 69EE889A 		vmul.f32	s19, s19, s16
+ 177              		.loc 1 63 22 view .LVU31
+ 178 0038 F7EE000A 		vmov.f32	s1, #1.0e+0
+ 179 003c 70EEC90A 		vsub.f32	s1, s1, s18
+ 180 0040 B0EE680A 		vmov.f32	s0, s17
+ 181 0044 FFF7FEFF 		bl	powf
+ 182              	.LVL15:
+ 183              		.loc 1 63 19 view .LVU32
+ 184 0048 89EE80AA 		vdiv.f32	s20, s19, s0
+ 185              		.loc 1 63 44 view .LVU33
+ 186 004c F0EE490A 		vmov.f32	s1, s18
+ 187 0050 B0EEC80A 		vabs.f32	s0, s16
+ 188 0054 FFF7FEFF 		bl	powf
+ 189              	.LVL16:
+ 190 0058 F0EE408A 		vmov.f32	s17, s0
+ 191              	.LVL17:
+ 192              		.loc 1 63 63 view .LVU34
+ 193 005c B0EE480A 		vmov.f32	s0, s16
+ 194 0060 FFF7FEFF 		bl	fsgn
+ 195              	.LVL18:
+ 196 0064 07EE900A 		vmov	s15, r0	@ int
+ 197              		.loc 1 63 61 view .LVU35
+ 198 0068 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 199 006c 67EEA87A 		vmul.f32	s15, s15, s17
+ 200              		.loc 1 63 76 view .LVU36
+ 201 0070 C4F10103 		rsb	r3, r4, #1
+ 202 0074 00EE103A 		vmov	s0, r3	@ int
+ 203              		.loc 1 63 71 view .LVU37
+ 204 0078 B8EEC00A 		vcvt.f32.s32	s0, s0
+ 205 007c 20EE270A 		vmul.f32	s0, s0, s15
+  64:Core/HAL/lib/controller/adrc.c **** }
+ 206              		.loc 1 64 1 view .LVU38
+ 207 0080 3AEE000A 		vadd.f32	s0, s20, s0
+ 208 0084 BDEC068B 		vldm	sp!, {d8-d10}
+ 209              	.LCFI5:
+ 210              		.cfi_restore 84
+ 211              		.cfi_restore 85
+ 212              		.cfi_restore 82
+ 213              		.cfi_restore 83
+ 214              		.cfi_restore 80
+ 215              		.cfi_restore 81
+ 216              		.cfi_def_cfa_offset 8
+ 217              	.LVL19:
+ 218              		.loc 1 64 1 view .LVU39
+ 219 0088 10BD     		pop	{r4, pc}
+ 220              		.loc 1 64 1 view .LVU40
+ 221              		.cfi_endproc
+ 222              	.LFE2:
+ 224              		.global	__aeabi_f2d
+ 225              		.global	__aeabi_dmul
+ 226              		.global	__aeabi_dadd
+ 227              		.global	__aeabi_d2f
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 6
+
+
+ 228              		.section	.text.fst,"ax",%progbits
+ 229              		.align	1
+ 230              		.global	fst
+ 231              		.syntax unified
+ 232              		.thumb
+ 233              		.thumb_func
+ 235              	fst:
+ 236              	.LVL20:
+ 237              	.LFB3:
+  65:Core/HAL/lib/controller/adrc.c **** 
+  66:Core/HAL/lib/controller/adrc.c **** /**
+  67:Core/HAL/lib/controller/adrc.c ****  * @brief      :fst是一种最速跟踪函数，可以快速有效的跟踪信号，其物理意�
+  68:Core/HAL/lib/controller/adrc.c ****  * @attention  :
+  69:Core/HAL/lib/controller/adrc.c ****  *  调参说明：
+  70:Core/HAL/lib/controller/adrc.c ****  *  1. 需要配合跟踪微分器一起使用，按照跟踪微分器的传参和迭代方式进�
+  71:Core/HAL/lib/controller/adrc.c ****  *  2. r为速度因子，决定跟踪速度，r越大，快速性越好，但大的r容易引起�
+  72:Core/HAL/lib/controller/adrc.c ****  *  3. h为滤波因子，h越大，静态误差越小，刚开始带来的“超调”越小，初
+  73:Core/HAL/lib/controller/adrc.c ****  * @return  {float} 输出跟踪的微分信号
+  74:Core/HAL/lib/controller/adrc.c ****  * @param {float} x1_delta 误差输入信号
+  75:Core/HAL/lib/controller/adrc.c ****  * @param {float} x2 误差的微分信号
+  76:Core/HAL/lib/controller/adrc.c ****  * @param {float} r 速度因子
+  77:Core/HAL/lib/controller/adrc.c ****  * @param {float} h0 滤波因子
+  78:Core/HAL/lib/controller/adrc.c ****  */
+  79:Core/HAL/lib/controller/adrc.c **** float fst(float x1_delta, float x2, float r, float h0) {
+ 238              		.loc 1 79 56 is_stmt 1 view -0
+ 239              		.cfi_startproc
+ 240              		@ args = 0, pretend = 0, frame = 0
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+ 242              		.loc 1 79 56 is_stmt 0 view .LVU42
+ 243 0000 38B5     		push	{r3, r4, r5, lr}
+ 244              	.LCFI6:
+ 245              		.cfi_def_cfa_offset 16
+ 246              		.cfi_offset 3, -16
+ 247              		.cfi_offset 4, -12
+ 248              		.cfi_offset 5, -8
+ 249              		.cfi_offset 14, -4
+ 250 0002 2DED068B 		vpush.64	{d8, d9, d10}
+ 251              	.LCFI7:
+ 252              		.cfi_def_cfa_offset 40
+ 253              		.cfi_offset 80, -40
+ 254              		.cfi_offset 81, -36
+ 255              		.cfi_offset 82, -32
+ 256              		.cfi_offset 83, -28
+ 257              		.cfi_offset 84, -24
+ 258              		.cfi_offset 85, -20
+ 259 0006 F0EE419A 		vmov.f32	s19, s2
+  80:Core/HAL/lib/controller/adrc.c ****     float d, y, a0, a, a1, a2;
+ 260              		.loc 1 80 5 is_stmt 1 view .LVU43
+  81:Core/HAL/lib/controller/adrc.c ****     d = r * h0 * h0;
+ 261              		.loc 1 81 5 view .LVU44
+ 262              		.loc 1 81 11 is_stmt 0 view .LVU45
+ 263 000a 61EE218A 		vmul.f32	s17, s2, s3
+ 264              		.loc 1 81 7 view .LVU46
+ 265 000e 68EEA18A 		vmul.f32	s17, s17, s3
+ 266              	.LVL21:
+  82:Core/HAL/lib/controller/adrc.c ****     a0 = h0 * x2;
+ 267              		.loc 1 82 5 is_stmt 1 view .LVU47
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 7
+
+
+ 268              		.loc 1 82 8 is_stmt 0 view .LVU48
+ 269 0012 21EEA08A 		vmul.f32	s16, s3, s1
+ 270              	.LVL22:
+  83:Core/HAL/lib/controller/adrc.c ****     y = x1_delta + a0;
+ 271              		.loc 1 83 5 is_stmt 1 view .LVU49
+ 272              		.loc 1 83 7 is_stmt 0 view .LVU50
+ 273 0016 78EE00AA 		vadd.f32	s21, s16, s0
+ 274              	.LVL23:
+  84:Core/HAL/lib/controller/adrc.c ****     a1 = sqrt(d * (d + 8 * fabs(y)));
+ 275              		.loc 1 84 5 is_stmt 1 view .LVU51
+ 276              		.loc 1 84 10 is_stmt 0 view .LVU52
+ 277 001a 18EE900A 		vmov	r0, s17
+ 278 001e FFF7FEFF 		bl	__aeabi_f2d
+ 279              	.LVL24:
+ 280              		.loc 1 84 10 view .LVU53
+ 281 0022 0446     		mov	r4, r0
+ 282 0024 0D46     		mov	r5, r1
+ 283              		.loc 1 84 28 view .LVU54
+ 284 0026 F0EEEA7A 		vabs.f32	s15, s21
+ 285 002a 17EE900A 		vmov	r0, s15
+ 286 002e FFF7FEFF 		bl	__aeabi_f2d
+ 287              	.LVL25:
+ 288              		.loc 1 84 26 view .LVU55
+ 289 0032 0022     		movs	r2, #0
+ 290 0034 3A4B     		ldr	r3, .L13
+ 291 0036 FFF7FEFF 		bl	__aeabi_dmul
+ 292              	.LVL26:
+ 293 003a 0246     		mov	r2, r0
+ 294 003c 0B46     		mov	r3, r1
+ 295              		.loc 1 84 22 view .LVU56
+ 296 003e 2046     		mov	r0, r4
+ 297 0040 2946     		mov	r1, r5
+ 298 0042 FFF7FEFF 		bl	__aeabi_dadd
+ 299              	.LVL27:
+ 300 0046 0246     		mov	r2, r0
+ 301 0048 0B46     		mov	r3, r1
+ 302              		.loc 1 84 10 view .LVU57
+ 303 004a 2046     		mov	r0, r4
+ 304 004c 2946     		mov	r1, r5
+ 305 004e FFF7FEFF 		bl	__aeabi_dmul
+ 306              	.LVL28:
+ 307 0052 41EC100B 		vmov	d0, r0, r1
+ 308 0056 FFF7FEFF 		bl	sqrt
+ 309              	.LVL29:
+ 310 005a 51EC100B 		vmov	r0, r1, d0
+ 311              		.loc 1 84 8 view .LVU58
+ 312 005e FFF7FEFF 		bl	__aeabi_d2f
+ 313              	.LVL30:
+ 314 0062 0AEE100A 		vmov	s20, r0
+ 315              	.LVL31:
+  85:Core/HAL/lib/controller/adrc.c ****     a2 = a0 + fsgn(y) * (a1 - d) / 2;
+ 316              		.loc 1 85 5 is_stmt 1 view .LVU59
+ 317              		.loc 1 85 15 is_stmt 0 view .LVU60
+ 318 0066 B0EE6A0A 		vmov.f32	s0, s21
+ 319 006a FFF7FEFF 		bl	fsgn
+ 320              	.LVL32:
+ 321              		.loc 1 85 15 view .LVU61
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 8
+
+
+ 322 006e 09EE100A 		vmov	s18, r0	@ int
+ 323              		.loc 1 85 29 view .LVU62
+ 324 0072 3AEE68AA 		vsub.f32	s20, s20, s17
+ 325              	.LVL33:
+ 326              		.loc 1 85 23 view .LVU63
+ 327 0076 B8EEC99A 		vcvt.f32.s32	s18, s18
+ 328 007a 29EE0A9A 		vmul.f32	s18, s18, s20
+ 329              		.loc 1 85 34 view .LVU64
+ 330 007e F6EE007A 		vmov.f32	s15, #5.0e-1
+ 331 0082 29EE279A 		vmul.f32	s18, s18, s15
+ 332              		.loc 1 85 8 view .LVU65
+ 333 0086 39EE089A 		vadd.f32	s18, s18, s16
+ 334              	.LVL34:
+  86:Core/HAL/lib/controller/adrc.c ****     a = (a0 + y) * fsg(y, d) + a2 * (1 - fsg(y, d));
+ 335              		.loc 1 86 5 is_stmt 1 view .LVU66
+ 336              		.loc 1 86 13 is_stmt 0 view .LVU67
+ 337 008a 38EE2AAA 		vadd.f32	s20, s16, s21
+ 338              		.loc 1 86 20 view .LVU68
+ 339 008e F0EE680A 		vmov.f32	s1, s17
+ 340 0092 B0EE6A0A 		vmov.f32	s0, s21
+ 341 0096 FFF7FEFF 		bl	fsg
+ 342              	.LVL35:
+ 343 009a 08EE100A 		vmov	s16, r0	@ int
+ 344              	.LVL36:
+ 345              		.loc 1 86 18 view .LVU69
+ 346 009e B8EEC88A 		vcvt.f32.s32	s16, s16
+ 347 00a2 28EE0A8A 		vmul.f32	s16, s16, s20
+ 348              		.loc 1 86 42 view .LVU70
+ 349 00a6 F0EE680A 		vmov.f32	s1, s17
+ 350 00aa B0EE6A0A 		vmov.f32	s0, s21
+ 351 00ae FFF7FEFF 		bl	fsg
+ 352              	.LVL37:
+ 353              		.loc 1 86 40 view .LVU71
+ 354 00b2 C0F10100 		rsb	r0, r0, #1
+ 355              		.loc 1 86 35 view .LVU72
+ 356 00b6 07EE900A 		vmov	s15, r0	@ int
+ 357 00ba F8EEE77A 		vcvt.f32.s32	s15, s15
+ 358 00be 27EE899A 		vmul.f32	s18, s15, s18
+ 359              	.LVL38:
+ 360              		.loc 1 86 7 view .LVU73
+ 361 00c2 38EE098A 		vadd.f32	s16, s16, s18
+ 362              	.LVL39:
+  87:Core/HAL/lib/controller/adrc.c ****     return (-r * (a / d) * fsg(a, d) - r * fsgn(a) * (1 - fsg(a, d)));
+ 363              		.loc 1 87 5 is_stmt 1 view .LVU74
+ 364              		.loc 1 87 21 is_stmt 0 view .LVU75
+ 365 00c6 88EE289A 		vdiv.f32	s18, s16, s17
+ 366              		.loc 1 87 16 view .LVU76
+ 367 00ca 29EEC9AA 		vnmul.f32	s20, s19, s18
+ 368              		.loc 1 87 28 view .LVU77
+ 369 00ce F0EE680A 		vmov.f32	s1, s17
+ 370 00d2 B0EE480A 		vmov.f32	s0, s16
+ 371 00d6 FFF7FEFF 		bl	fsg
+ 372              	.LVL40:
+ 373 00da 09EE100A 		vmov	s18, r0	@ int
+ 374              		.loc 1 87 26 view .LVU78
+ 375 00de B8EEC99A 		vcvt.f32.s32	s18, s18
+ 376 00e2 29EE0A9A 		vmul.f32	s18, s18, s20
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 9
+
+
+ 377              		.loc 1 87 44 view .LVU79
+ 378 00e6 B0EE480A 		vmov.f32	s0, s16
+ 379 00ea FFF7FEFF 		bl	fsgn
+ 380              	.LVL41:
+ 381 00ee 00EE100A 		vmov	s0, r0	@ int
+ 382              		.loc 1 87 42 view .LVU80
+ 383 00f2 B8EEC00A 		vcvt.f32.s32	s0, s0
+ 384 00f6 60EE299A 		vmul.f32	s19, s0, s19
+ 385              	.LVL42:
+ 386              		.loc 1 87 59 view .LVU81
+ 387 00fa F0EE680A 		vmov.f32	s1, s17
+ 388 00fe B0EE480A 		vmov.f32	s0, s16
+ 389 0102 FFF7FEFF 		bl	fsg
+ 390              	.LVL43:
+ 391              		.loc 1 87 57 view .LVU82
+ 392 0106 C0F10103 		rsb	r3, r0, #1
+ 393 010a 00EE103A 		vmov	s0, r3	@ int
+ 394              		.loc 1 87 52 view .LVU83
+ 395 010e B8EEC00A 		vcvt.f32.s32	s0, s0
+ 396 0112 20EE290A 		vmul.f32	s0, s0, s19
+  88:Core/HAL/lib/controller/adrc.c **** }
+ 397              		.loc 1 88 1 view .LVU84
+ 398 0116 39EE400A 		vsub.f32	s0, s18, s0
+ 399 011a BDEC068B 		vldm	sp!, {d8-d10}
+ 400              	.LCFI8:
+ 401              		.cfi_restore 84
+ 402              		.cfi_restore 85
+ 403              		.cfi_restore 82
+ 404              		.cfi_restore 83
+ 405              		.cfi_restore 80
+ 406              		.cfi_restore 81
+ 407              		.cfi_def_cfa_offset 16
+ 408              	.LVL44:
+ 409              		.loc 1 88 1 view .LVU85
+ 410 011e 38BD     		pop	{r3, r4, r5, pc}
+ 411              	.L14:
+ 412              		.align	2
+ 413              	.L13:
+ 414 0120 00002040 		.word	1075838976
+ 415              		.cfi_endproc
+ 416              	.LFE3:
+ 418              		.section	.text.TDFunction,"ax",%progbits
+ 419              		.align	1
+ 420              		.global	TDFunction
+ 421              		.syntax unified
+ 422              		.thumb
+ 423              		.thumb_func
+ 425              	TDFunction:
+ 426              	.LVL45:
+ 427              	.LFB4:
+  89:Core/HAL/lib/controller/adrc.c **** 
+  90:Core/HAL/lib/controller/adrc.c **** /**
+  91:Core/HAL/lib/controller/adrc.c ****  * @brief      : 跟踪微分器
+  92:Core/HAL/lib/controller/adrc.c ****  * @attention  : 无
+  93:Core/HAL/lib/controller/adrc.c ****  * @return  {*}
+  94:Core/HAL/lib/controller/adrc.c ****  * @param {ADRC_t*} adrc_data adrc数据结构体
+  95:Core/HAL/lib/controller/adrc.c ****  */
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 10
+
+
+  96:Core/HAL/lib/controller/adrc.c **** void TDFunction(ADRC_t* adrc_data) {
+ 428              		.loc 1 96 36 is_stmt 1 view -0
+ 429              		.cfi_startproc
+ 430              		@ args = 0, pretend = 0, frame = 0
+ 431              		@ frame_needed = 0, uses_anonymous_args = 0
+ 432              		.loc 1 96 36 is_stmt 0 view .LVU87
+ 433 0000 10B5     		push	{r4, lr}
+ 434              	.LCFI9:
+ 435              		.cfi_def_cfa_offset 8
+ 436              		.cfi_offset 4, -8
+ 437              		.cfi_offset 14, -4
+ 438 0002 2DED028B 		vpush.64	{d8}
+ 439              	.LCFI10:
+ 440              		.cfi_def_cfa_offset 16
+ 441              		.cfi_offset 80, -16
+ 442              		.cfi_offset 81, -12
+ 443 0006 0446     		mov	r4, r0
+  97:Core/HAL/lib/controller/adrc.c ****     float last_v1, last_v2;
+ 444              		.loc 1 97 5 is_stmt 1 view .LVU88
+  98:Core/HAL/lib/controller/adrc.c ****     last_v1 = adrc_data->prog.v1;
+ 445              		.loc 1 98 5 view .LVU89
+ 446              		.loc 1 98 13 is_stmt 0 view .LVU90
+ 447 0008 90ED017A 		vldr.32	s14, [r0, #4]
+ 448              	.LVL46:
+  99:Core/HAL/lib/controller/adrc.c ****     last_v2 = adrc_data->prog.v2;
+ 449              		.loc 1 99 5 is_stmt 1 view .LVU91
+ 450              		.loc 1 99 13 is_stmt 0 view .LVU92
+ 451 000c D0ED028A 		vldr.32	s17, [r0, #8]
+ 452              	.LVL47:
+ 100:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.v1 = last_v1 + adrc_data->adrc_config.td.h * last_v2;
+ 453              		.loc 1 100 5 is_stmt 1 view .LVU93
+ 454              		.loc 1 100 61 is_stmt 0 view .LVU94
+ 455 0010 90ED0C8A 		vldr.32	s16, [r0, #48]
+ 456              		.loc 1 100 64 view .LVU95
+ 457 0014 68EE287A 		vmul.f32	s15, s16, s17
+ 458              		.loc 1 100 34 view .LVU96
+ 459 0018 77EE877A 		vadd.f32	s15, s15, s14
+ 460              		.loc 1 100 24 view .LVU97
+ 461 001c C0ED017A 		vstr.32	s15, [r0, #4]
+ 101:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.v2 = last_v2 + adrc_data->adrc_config.td.h *
+ 462              		.loc 1 101 5 is_stmt 1 view .LVU98
+ 102:Core/HAL/lib/controller/adrc.c ****                                        fst(last_v1 - adrc_data->prog.ref, last_v2,
+ 463              		.loc 1 102 69 is_stmt 0 view .LVU99
+ 464 0020 90ED000A 		vldr.32	s0, [r0]
+ 465              		.loc 1 102 40 view .LVU100
+ 466 0024 D0ED0D1A 		vldr.32	s3, [r0, #52]
+ 467 0028 90ED0B1A 		vldr.32	s2, [r0, #44]
+ 468 002c F0EE680A 		vmov.f32	s1, s17
+ 469 0030 37EE400A 		vsub.f32	s0, s14, s0
+ 470 0034 FFF7FEFF 		bl	fst
+ 471              	.LVL48:
+ 101:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.v2 = last_v2 + adrc_data->adrc_config.td.h *
+ 472              		.loc 1 101 64 view .LVU101
+ 473 0038 28EE008A 		vmul.f32	s16, s16, s0
+ 101:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.v2 = last_v2 + adrc_data->adrc_config.td.h *
+ 474              		.loc 1 101 34 view .LVU102
+ 475 003c 38EE288A 		vadd.f32	s16, s16, s17
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 11
+
+
+ 101:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.v2 = last_v2 + adrc_data->adrc_config.td.h *
+ 476              		.loc 1 101 24 view .LVU103
+ 477 0040 84ED028A 		vstr.32	s16, [r4, #8]
+ 103:Core/HAL/lib/controller/adrc.c ****                                            adrc_data->adrc_config.td.r, adrc_data->adrc_config.td.h
+ 104:Core/HAL/lib/controller/adrc.c **** }
+ 478              		.loc 1 104 1 view .LVU104
+ 479 0044 BDEC028B 		vldm	sp!, {d8}
+ 480              	.LCFI11:
+ 481              		.cfi_restore 80
+ 482              		.cfi_restore 81
+ 483              		.cfi_def_cfa_offset 8
+ 484 0048 10BD     		pop	{r4, pc}
+ 485              		.loc 1 104 1 view .LVU105
+ 486              		.cfi_endproc
+ 487              	.LFE4:
+ 489              		.section	.text.NLSEFFunction,"ax",%progbits
+ 490              		.align	1
+ 491              		.global	NLSEFFunction
+ 492              		.syntax unified
+ 493              		.thumb
+ 494              		.thumb_func
+ 496              	NLSEFFunction:
+ 497              	.LVL49:
+ 498              	.LFB5:
+ 105:Core/HAL/lib/controller/adrc.c **** /**
+ 106:Core/HAL/lib/controller/adrc.c ****  * @brief      : 非线性反馈
+ 107:Core/HAL/lib/controller/adrc.c ****  * @attention  : 无
+ 108:Core/HAL/lib/controller/adrc.c ****  * @return  {*}
+ 109:Core/HAL/lib/controller/adrc.c ****  * @param {ADRC_t*} adrc_data adrc数据结构体
+ 110:Core/HAL/lib/controller/adrc.c ****  */
+ 111:Core/HAL/lib/controller/adrc.c **** void NLSEFFunction(ADRC_t* adrc_data) {
+ 499              		.loc 1 111 39 is_stmt 1 view -0
+ 500              		.cfi_startproc
+ 501              		@ args = 0, pretend = 0, frame = 0
+ 502              		@ frame_needed = 0, uses_anonymous_args = 0
+ 503              		.loc 1 111 39 is_stmt 0 view .LVU107
+ 504 0000 10B5     		push	{r4, lr}
+ 505              	.LCFI12:
+ 506              		.cfi_def_cfa_offset 8
+ 507              		.cfi_offset 4, -8
+ 508              		.cfi_offset 14, -4
+ 509 0002 2DED028B 		vpush.64	{d8}
+ 510              	.LCFI13:
+ 511              		.cfi_def_cfa_offset 16
+ 512              		.cfi_offset 80, -16
+ 513              		.cfi_offset 81, -12
+ 514 0006 0446     		mov	r4, r0
+ 112:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.e2 = ConstrainFloat(adrc_data->prog.e2, -3000, 3000);
+ 515              		.loc 1 112 5 is_stmt 1 view .LVU108
+ 516              		.loc 1 112 26 is_stmt 0 view .LVU109
+ 517 0008 9FED141A 		vldr.32	s2, .L19
+ 518 000c DFED140A 		vldr.32	s1, .L19+4
+ 519 0010 90ED040A 		vldr.32	s0, [r0, #16]
+ 520 0014 FFF7FEFF 		bl	ConstrainFloat
+ 521              	.LVL50:
+ 522              		.loc 1 112 24 view .LVU110
+ 523 0018 84ED040A 		vstr.32	s0, [r4, #16]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 12
+
+
+ 113:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.u0 = adrc_data->adrc_config.nlsef.Kp *
+ 524              		.loc 1 113 5 is_stmt 1 view .LVU111
+ 525              		.loc 1 113 54 is_stmt 0 view .LVU112
+ 526 001c 94ED0E8A 		vldr.32	s16, [r4, #56]
+ 114:Core/HAL/lib/controller/adrc.c ****                              fal(adrc_data->prog.e1, adrc_data->adrc_config.nlsef.alpha1, adrc_data
+ 527              		.loc 1 114 30 view .LVU113
+ 528 0020 94ED121A 		vldr.32	s2, [r4, #72]
+ 529 0024 D4ED100A 		vldr.32	s1, [r4, #64]
+ 530 0028 94ED030A 		vldr.32	s0, [r4, #12]
+ 531 002c FFF7FEFF 		bl	fal
+ 532              	.LVL51:
+ 113:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.u0 = adrc_data->adrc_config.nlsef.Kp *
+ 533              		.loc 1 113 58 view .LVU114
+ 534 0030 28EE008A 		vmul.f32	s16, s16, s0
+ 115:Core/HAL/lib/controller/adrc.c ****                          adrc_data->adrc_config.nlsef.Kd *
+ 535              		.loc 1 115 54 view .LVU115
+ 536 0034 D4ED0F8A 		vldr.32	s17, [r4, #60]
+ 116:Core/HAL/lib/controller/adrc.c ****                              fal(adrc_data->prog.e2, adrc_data->adrc_config.nlsef.alpha2, adrc_data
+ 537              		.loc 1 116 30 view .LVU116
+ 538 0038 94ED121A 		vldr.32	s2, [r4, #72]
+ 539 003c D4ED110A 		vldr.32	s1, [r4, #68]
+ 540 0040 94ED040A 		vldr.32	s0, [r4, #16]
+ 541 0044 FFF7FEFF 		bl	fal
+ 542              	.LVL52:
+ 115:Core/HAL/lib/controller/adrc.c ****                          adrc_data->adrc_config.nlsef.Kd *
+ 543              		.loc 1 115 58 view .LVU117
+ 544 0048 68EE808A 		vmul.f32	s17, s17, s0
+ 114:Core/HAL/lib/controller/adrc.c ****                              fal(adrc_data->prog.e1, adrc_data->adrc_config.nlsef.alpha1, adrc_data
+ 545              		.loc 1 114 127 view .LVU118
+ 546 004c 38EE288A 		vadd.f32	s16, s16, s17
+ 113:Core/HAL/lib/controller/adrc.c ****                              fal(adrc_data->prog.e1, adrc_data->adrc_config.nlsef.alpha1, adrc_data
+ 547              		.loc 1 113 24 view .LVU119
+ 548 0050 84ED058A 		vstr.32	s16, [r4, #20]
+ 117:Core/HAL/lib/controller/adrc.c **** }
+ 549              		.loc 1 117 1 view .LVU120
+ 550 0054 BDEC028B 		vldm	sp!, {d8}
+ 551              	.LCFI14:
+ 552              		.cfi_restore 80
+ 553              		.cfi_restore 81
+ 554              		.cfi_def_cfa_offset 8
+ 555 0058 10BD     		pop	{r4, pc}
+ 556              	.LVL53:
+ 557              	.L20:
+ 558              		.loc 1 117 1 view .LVU121
+ 559 005a 00BF     		.align	2
+ 560              	.L19:
+ 561 005c 00803B45 		.word	1161527296
+ 562 0060 00803BC5 		.word	-985956352
+ 563              		.cfi_endproc
+ 564              	.LFE5:
+ 566              		.section	.text.ESOFunction,"ax",%progbits
+ 567              		.align	1
+ 568              		.global	ESOFunction
+ 569              		.syntax unified
+ 570              		.thumb
+ 571              		.thumb_func
+ 573              	ESOFunction:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 13
+
+
+ 574              	.LVL54:
+ 575              	.LFB6:
+ 118:Core/HAL/lib/controller/adrc.c **** 
+ 119:Core/HAL/lib/controller/adrc.c **** /**
+ 120:Core/HAL/lib/controller/adrc.c ****  * @brief      : 扩张观测器
+ 121:Core/HAL/lib/controller/adrc.c ****  * @attention  : 实际测试中，低成本硬件很容易导致z3发散，所以要对z3进行限
+ 122:Core/HAL/lib/controller/adrc.c ****  * @return  {*}
+ 123:Core/HAL/lib/controller/adrc.c ****  * @param {ADRC_t*} adrc_data adrc数据结构体
+ 124:Core/HAL/lib/controller/adrc.c ****  */
+ 125:Core/HAL/lib/controller/adrc.c **** void ESOFunction(ADRC_t* adrc_data) {
+ 576              		.loc 1 125 37 is_stmt 1 view -0
+ 577              		.cfi_startproc
+ 578              		@ args = 0, pretend = 0, frame = 0
+ 579              		@ frame_needed = 0, uses_anonymous_args = 0
+ 580              		.loc 1 125 37 is_stmt 0 view .LVU123
+ 581 0000 10B5     		push	{r4, lr}
+ 582              	.LCFI15:
+ 583              		.cfi_def_cfa_offset 8
+ 584              		.cfi_offset 4, -8
+ 585              		.cfi_offset 14, -4
+ 586 0002 2DED068B 		vpush.64	{d8, d9, d10}
+ 587              	.LCFI16:
+ 588              		.cfi_def_cfa_offset 32
+ 589              		.cfi_offset 80, -32
+ 590              		.cfi_offset 81, -28
+ 591              		.cfi_offset 82, -24
+ 592              		.cfi_offset 83, -20
+ 593              		.cfi_offset 84, -16
+ 594              		.cfi_offset 85, -12
+ 595 0006 0446     		mov	r4, r0
+ 126:Core/HAL/lib/controller/adrc.c ****     float error, last_z1, last_z2, last_z3;
+ 596              		.loc 1 126 5 is_stmt 1 view .LVU124
+ 127:Core/HAL/lib/controller/adrc.c ****     last_z1 = adrc_data->prog.z1;
+ 597              		.loc 1 127 5 view .LVU125
+ 598              		.loc 1 127 13 is_stmt 0 view .LVU126
+ 599 0008 90ED077A 		vldr.32	s14, [r0, #28]
+ 600              	.LVL55:
+ 128:Core/HAL/lib/controller/adrc.c ****     last_z2 = adrc_data->prog.z2;
+ 601              		.loc 1 128 5 is_stmt 1 view .LVU127
+ 602              		.loc 1 128 13 is_stmt 0 view .LVU128
+ 603 000c 90ED08AA 		vldr.32	s20, [r0, #32]
+ 604              	.LVL56:
+ 129:Core/HAL/lib/controller/adrc.c ****     last_z3 = adrc_data->prog.z3;
+ 605              		.loc 1 129 5 is_stmt 1 view .LVU129
+ 606              		.loc 1 129 13 is_stmt 0 view .LVU130
+ 607 0010 90ED099A 		vldr.32	s18, [r0, #36]
+ 608              	.LVL57:
+ 130:Core/HAL/lib/controller/adrc.c ****     error = last_z1 - adrc_data->prog.fdb;
+ 609              		.loc 1 130 5 is_stmt 1 view .LVU131
+ 610              		.loc 1 130 38 is_stmt 0 view .LVU132
+ 611 0014 D0ED0A9A 		vldr.32	s19, [r0, #40]
+ 612              		.loc 1 130 11 view .LVU133
+ 613 0018 77EE699A 		vsub.f32	s19, s14, s19
+ 614              	.LVL58:
+ 131:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z1 = last_z1 + adrc_data->adrc_config.td.h *
+ 615              		.loc 1 131 5 is_stmt 1 view .LVU134
+ 616              		.loc 1 131 61 is_stmt 0 view .LVU135
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 14
+
+
+ 617 001c D0ED0C8A 		vldr.32	s17, [r0, #48]
+ 132:Core/HAL/lib/controller/adrc.c ****                                        (last_z2 - adrc_data->adrc_config.eso.beta1 * error);
+ 618              		.loc 1 132 77 view .LVU136
+ 619 0020 D0ED137A 		vldr.32	s15, [r0, #76]
+ 620              		.loc 1 132 84 view .LVU137
+ 621 0024 67EEA97A 		vmul.f32	s15, s15, s19
+ 622              		.loc 1 132 49 view .LVU138
+ 623 0028 7AEE677A 		vsub.f32	s15, s20, s15
+ 131:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z1 = last_z1 + adrc_data->adrc_config.td.h *
+ 624              		.loc 1 131 64 view .LVU139
+ 625 002c 68EEA77A 		vmul.f32	s15, s17, s15
+ 131:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z1 = last_z1 + adrc_data->adrc_config.td.h *
+ 626              		.loc 1 131 34 view .LVU140
+ 627 0030 77EE877A 		vadd.f32	s15, s15, s14
+ 131:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z1 = last_z1 + adrc_data->adrc_config.td.h *
+ 628              		.loc 1 131 24 view .LVU141
+ 629 0034 C0ED077A 		vstr.32	s15, [r0, #28]
+ 133:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z2 = last_z2 + adrc_data->adrc_config.td.h *
+ 630              		.loc 1 133 5 is_stmt 1 view .LVU142
+ 134:Core/HAL/lib/controller/adrc.c ****                                        (last_z3 - adrc_data->adrc_config.eso.beta2 * fal(error, adr
+ 631              		.loc 1 134 77 is_stmt 0 view .LVU143
+ 632 0038 90ED148A 		vldr.32	s16, [r0, #80]
+ 633              		.loc 1 134 86 view .LVU144
+ 634 003c 90ED121A 		vldr.32	s2, [r0, #72]
+ 635 0040 D0ED100A 		vldr.32	s1, [r0, #64]
+ 636 0044 B0EE690A 		vmov.f32	s0, s19
+ 637 0048 FFF7FEFF 		bl	fal
+ 638              	.LVL59:
+ 639              		.loc 1 134 84 view .LVU145
+ 640 004c 28EE008A 		vmul.f32	s16, s16, s0
+ 641              		.loc 1 134 49 view .LVU146
+ 642 0050 39EE488A 		vsub.f32	s16, s18, s16
+ 135:Core/HAL/lib/controller/adrc.c ****                                         adrc_data->adrc_config.eso.b * adrc_data->prog.output);
+ 643              		.loc 1 135 67 view .LVU147
+ 644 0054 94ED160A 		vldr.32	s0, [r4, #88]
+ 645              		.loc 1 135 87 view .LVU148
+ 646 0058 D4ED067A 		vldr.32	s15, [r4, #24]
+ 647              		.loc 1 135 70 view .LVU149
+ 648 005c 20EE270A 		vmul.f32	s0, s0, s15
+ 134:Core/HAL/lib/controller/adrc.c ****                                        (last_z3 - adrc_data->adrc_config.eso.beta2 * fal(error, adr
+ 649              		.loc 1 134 170 view .LVU150
+ 650 0060 38EE008A 		vadd.f32	s16, s16, s0
+ 133:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z2 = last_z2 + adrc_data->adrc_config.td.h *
+ 651              		.loc 1 133 64 view .LVU151
+ 652 0064 28EE888A 		vmul.f32	s16, s17, s16
+ 133:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z2 = last_z2 + adrc_data->adrc_config.td.h *
+ 653              		.loc 1 133 34 view .LVU152
+ 654 0068 38EE0A8A 		vadd.f32	s16, s16, s20
+ 133:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z2 = last_z2 + adrc_data->adrc_config.td.h *
+ 655              		.loc 1 133 24 view .LVU153
+ 656 006c 84ED088A 		vstr.32	s16, [r4, #32]
+ 136:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z3 = last_z3 + adrc_data->adrc_config.td.h *
+ 657              		.loc 1 136 5 is_stmt 1 view .LVU154
+ 658              		.loc 1 136 61 is_stmt 0 view .LVU155
+ 659 0070 94ED0C8A 		vldr.32	s16, [r4, #48]
+ 137:Core/HAL/lib/controller/adrc.c ****                                        (-adrc_data->adrc_config.eso.beta3 * fal(error, adrc_data->a
+ 660              		.loc 1 137 68 view .LVU156
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 15
+
+
+ 661 0074 D4ED158A 		vldr.32	s17, [r4, #84]
+ 662              		.loc 1 137 41 view .LVU157
+ 663 0078 F1EE688A 		vneg.f32	s17, s17
+ 664              		.loc 1 137 77 view .LVU158
+ 665 007c 94ED121A 		vldr.32	s2, [r4, #72]
+ 666 0080 D4ED110A 		vldr.32	s1, [r4, #68]
+ 667 0084 B0EE690A 		vmov.f32	s0, s19
+ 668 0088 FFF7FEFF 		bl	fal
+ 669              	.LVL60:
+ 670              		.loc 1 137 75 view .LVU159
+ 671 008c 28EE800A 		vmul.f32	s0, s17, s0
+ 136:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z3 = last_z3 + adrc_data->adrc_config.td.h *
+ 672              		.loc 1 136 64 view .LVU160
+ 673 0090 28EE000A 		vmul.f32	s0, s16, s0
+ 136:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z3 = last_z3 + adrc_data->adrc_config.td.h *
+ 674              		.loc 1 136 34 view .LVU161
+ 675 0094 30EE090A 		vadd.f32	s0, s0, s18
+ 136:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z3 = last_z3 + adrc_data->adrc_config.td.h *
+ 676              		.loc 1 136 24 view .LVU162
+ 677 0098 84ED090A 		vstr.32	s0, [r4, #36]
+ 138:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.z3 = ConstrainFloat(adrc_data->prog.z3, -200, 200);
+ 678              		.loc 1 138 5 is_stmt 1 view .LVU163
+ 679              		.loc 1 138 26 is_stmt 0 view .LVU164
+ 680 009c 9FED051A 		vldr.32	s2, .L23
+ 681 00a0 DFED050A 		vldr.32	s1, .L23+4
+ 682 00a4 FFF7FEFF 		bl	ConstrainFloat
+ 683              	.LVL61:
+ 684              		.loc 1 138 24 view .LVU165
+ 685 00a8 84ED090A 		vstr.32	s0, [r4, #36]
+ 139:Core/HAL/lib/controller/adrc.c **** }
+ 686              		.loc 1 139 1 view .LVU166
+ 687 00ac BDEC068B 		vldm	sp!, {d8-d10}
+ 688              	.LCFI17:
+ 689              		.cfi_restore 84
+ 690              		.cfi_restore 85
+ 691              		.cfi_restore 82
+ 692              		.cfi_restore 83
+ 693              		.cfi_restore 80
+ 694              		.cfi_restore 81
+ 695              		.cfi_def_cfa_offset 8
+ 696              	.LVL62:
+ 697              		.loc 1 139 1 view .LVU167
+ 698 00b0 10BD     		pop	{r4, pc}
+ 699              	.LVL63:
+ 700              	.L24:
+ 701              		.loc 1 139 1 view .LVU168
+ 702 00b2 00BF     		.align	2
+ 703              	.L23:
+ 704 00b4 00004843 		.word	1128792064
+ 705 00b8 000048C3 		.word	-1018691584
+ 706              		.cfi_endproc
+ 707              	.LFE6:
+ 709              		.section	.text.ADRCFunction,"ax",%progbits
+ 710              		.align	1
+ 711              		.global	ADRCFunction
+ 712              		.syntax unified
+ 713              		.thumb
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 16
+
+
+ 714              		.thumb_func
+ 716              	ADRCFunction:
+ 717              	.LVL64:
+ 718              	.LFB7:
+ 140:Core/HAL/lib/controller/adrc.c **** 
+ 141:Core/HAL/lib/controller/adrc.c **** /**
+ 142:Core/HAL/lib/controller/adrc.c ****  * @brief      : ADRC总函数
+ 143:Core/HAL/lib/controller/adrc.c ****  * @attention  : 无
+ 144:Core/HAL/lib/controller/adrc.c ****  * @return  {*}
+ 145:Core/HAL/lib/controller/adrc.c ****  * @param {ADRC_t*} adrc_data adrc数据结构体
+ 146:Core/HAL/lib/controller/adrc.c ****  */
+ 147:Core/HAL/lib/controller/adrc.c **** void ADRCFunction(ADRC_t* adrc_data) {
+ 719              		.loc 1 147 38 is_stmt 1 view -0
+ 720              		.cfi_startproc
+ 721              		@ args = 0, pretend = 0, frame = 0
+ 722              		@ frame_needed = 0, uses_anonymous_args = 0
+ 723              		.loc 1 147 38 is_stmt 0 view .LVU170
+ 724 0000 10B5     		push	{r4, lr}
+ 725              	.LCFI18:
+ 726              		.cfi_def_cfa_offset 8
+ 727              		.cfi_offset 4, -8
+ 728              		.cfi_offset 14, -4
+ 729 0002 0446     		mov	r4, r0
+ 148:Core/HAL/lib/controller/adrc.c ****     TDFunction(adrc_data);
+ 730              		.loc 1 148 5 is_stmt 1 view .LVU171
+ 731 0004 FFF7FEFF 		bl	TDFunction
+ 732              	.LVL65:
+ 149:Core/HAL/lib/controller/adrc.c ****     ESOFunction(adrc_data);
+ 733              		.loc 1 149 5 view .LVU172
+ 734 0008 2046     		mov	r0, r4
+ 735 000a FFF7FEFF 		bl	ESOFunction
+ 736              	.LVL66:
+ 150:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.e1 = adrc_data->prog.v1 - adrc_data->prog.z1;
+ 737              		.loc 1 150 5 view .LVU173
+ 738              		.loc 1 150 41 is_stmt 0 view .LVU174
+ 739 000e D4ED017A 		vldr.32	s15, [r4, #4]
+ 740              		.loc 1 150 62 view .LVU175
+ 741 0012 94ED077A 		vldr.32	s14, [r4, #28]
+ 742              		.loc 1 150 45 view .LVU176
+ 743 0016 77EEC77A 		vsub.f32	s15, s15, s14
+ 744              		.loc 1 150 24 view .LVU177
+ 745 001a C4ED037A 		vstr.32	s15, [r4, #12]
+ 151:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.e2 = adrc_data->prog.v2 - adrc_data->prog.z2;
+ 746              		.loc 1 151 5 is_stmt 1 view .LVU178
+ 747              		.loc 1 151 41 is_stmt 0 view .LVU179
+ 748 001e D4ED027A 		vldr.32	s15, [r4, #8]
+ 749              		.loc 1 151 62 view .LVU180
+ 750 0022 94ED087A 		vldr.32	s14, [r4, #32]
+ 751              		.loc 1 151 45 view .LVU181
+ 752 0026 77EEC77A 		vsub.f32	s15, s15, s14
+ 753              		.loc 1 151 24 view .LVU182
+ 754 002a C4ED047A 		vstr.32	s15, [r4, #16]
+ 152:Core/HAL/lib/controller/adrc.c ****     NLSEFFunction(adrc_data);
+ 755              		.loc 1 152 5 is_stmt 1 view .LVU183
+ 756 002e 2046     		mov	r0, r4
+ 757 0030 FFF7FEFF 		bl	NLSEFFunction
+ 758              	.LVL67:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 17
+
+
+ 153:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.output = adrc_data->prog.u0 - adrc_data->prog.z3 / adrc_data->adrc_config.eso.b
+ 759              		.loc 1 153 5 view .LVU184
+ 760              		.loc 1 153 45 is_stmt 0 view .LVU185
+ 761 0034 94ED050A 		vldr.32	s0, [r4, #20]
+ 762              		.loc 1 153 66 view .LVU186
+ 763 0038 D4ED096A 		vldr.32	s13, [r4, #36]
+ 764              		.loc 1 153 98 view .LVU187
+ 765 003c 94ED167A 		vldr.32	s14, [r4, #88]
+ 766              		.loc 1 153 70 view .LVU188
+ 767 0040 C6EE877A 		vdiv.f32	s15, s13, s14
+ 768              		.loc 1 153 49 view .LVU189
+ 769 0044 30EE670A 		vsub.f32	s0, s0, s15
+ 770              		.loc 1 153 28 view .LVU190
+ 771 0048 84ED060A 		vstr.32	s0, [r4, #24]
+ 154:Core/HAL/lib/controller/adrc.c ****     adrc_data->prog.output = ConstrainFloat(adrc_data->prog.output, -adrc_data->adrc_config.output_
+ 772              		.loc 1 154 5 is_stmt 1 view .LVU191
+ 773              		.loc 1 154 92 is_stmt 0 view .LVU192
+ 774 004c 94ED171A 		vldr.32	s2, [r4, #92]
+ 775              		.loc 1 154 30 view .LVU193
+ 776 0050 F1EE410A 		vneg.f32	s1, s2
+ 777 0054 FFF7FEFF 		bl	ConstrainFloat
+ 778              	.LVL68:
+ 779              		.loc 1 154 28 view .LVU194
+ 780 0058 84ED060A 		vstr.32	s0, [r4, #24]
+ 155:Core/HAL/lib/controller/adrc.c **** }
+ 781              		.loc 1 155 1 view .LVU195
+ 782 005c 10BD     		pop	{r4, pc}
+ 783              		.loc 1 155 1 view .LVU196
+ 784              		.cfi_endproc
+ 785              	.LFE7:
+ 787              		.section	.text.ADRC_SetConfig,"ax",%progbits
+ 788              		.align	1
+ 789              		.global	ADRC_SetConfig
+ 790              		.syntax unified
+ 791              		.thumb
+ 792              		.thumb_func
+ 794              	ADRC_SetConfig:
+ 795              	.LVL69:
+ 796              	.LFB8:
+ 156:Core/HAL/lib/controller/adrc.c **** 
+ 157:Core/HAL/lib/controller/adrc.c **** /**
+ 158:Core/HAL/lib/controller/adrc.c ****  * @brief      : ADRC结构体配置初始化
+ 159:Core/HAL/lib/controller/adrc.c ****  * @attention  : 调参说明在adrc.h中，切勿自行更改参数
+ 160:Core/HAL/lib/controller/adrc.c ****  * @return  {*}
+ 161:Core/HAL/lib/controller/adrc.c ****  */
+ 162:Core/HAL/lib/controller/adrc.c **** void ADRC_SetConfig(ADRC_Config_t* adrc_config,
+ 163:Core/HAL/lib/controller/adrc.c ****                     float r, float h, float h0,
+ 164:Core/HAL/lib/controller/adrc.c ****                     float Kp, float Kd, float alpha1, float alpha2, float delta,
+ 165:Core/HAL/lib/controller/adrc.c ****                     float beta1, float beta2, float beta3, float b, float output_max) {
+ 797              		.loc 1 165 87 is_stmt 1 view -0
+ 798              		.cfi_startproc
+ 799              		@ args = 0, pretend = 0, frame = 0
+ 800              		@ frame_needed = 0, uses_anonymous_args = 0
+ 801              		@ link register save eliminated.
+ 166:Core/HAL/lib/controller/adrc.c ****     adrc_config->td.r = r;
+ 802              		.loc 1 166 5 view .LVU198
+ 803              		.loc 1 166 23 is_stmt 0 view .LVU199
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 18
+
+
+ 804 0000 80ED000A 		vstr.32	s0, [r0]
+ 167:Core/HAL/lib/controller/adrc.c ****     adrc_config->td.h = h;
+ 805              		.loc 1 167 5 is_stmt 1 view .LVU200
+ 806              		.loc 1 167 23 is_stmt 0 view .LVU201
+ 807 0004 C0ED010A 		vstr.32	s1, [r0, #4]
+ 168:Core/HAL/lib/controller/adrc.c ****     adrc_config->td.h0 = h0;
+ 808              		.loc 1 168 5 is_stmt 1 view .LVU202
+ 809              		.loc 1 168 24 is_stmt 0 view .LVU203
+ 810 0008 80ED021A 		vstr.32	s2, [r0, #8]
+ 169:Core/HAL/lib/controller/adrc.c ****     adrc_config->nlsef.Kp = Kp;
+ 811              		.loc 1 169 5 is_stmt 1 view .LVU204
+ 812              		.loc 1 169 27 is_stmt 0 view .LVU205
+ 813 000c C0ED031A 		vstr.32	s3, [r0, #12]
+ 170:Core/HAL/lib/controller/adrc.c ****     adrc_config->nlsef.Kd = Kd;
+ 814              		.loc 1 170 5 is_stmt 1 view .LVU206
+ 815              		.loc 1 170 27 is_stmt 0 view .LVU207
+ 816 0010 80ED042A 		vstr.32	s4, [r0, #16]
+ 171:Core/HAL/lib/controller/adrc.c ****     adrc_config->nlsef.alpha1 = alpha1;
+ 817              		.loc 1 171 5 is_stmt 1 view .LVU208
+ 818              		.loc 1 171 31 is_stmt 0 view .LVU209
+ 819 0014 C0ED052A 		vstr.32	s5, [r0, #20]
+ 172:Core/HAL/lib/controller/adrc.c ****     adrc_config->nlsef.alpha2 = alpha2;
+ 820              		.loc 1 172 5 is_stmt 1 view .LVU210
+ 821              		.loc 1 172 31 is_stmt 0 view .LVU211
+ 822 0018 80ED063A 		vstr.32	s6, [r0, #24]
+ 173:Core/HAL/lib/controller/adrc.c ****     adrc_config->nlsef.delta = delta;
+ 823              		.loc 1 173 5 is_stmt 1 view .LVU212
+ 824              		.loc 1 173 30 is_stmt 0 view .LVU213
+ 825 001c C0ED073A 		vstr.32	s7, [r0, #28]
+ 174:Core/HAL/lib/controller/adrc.c ****     adrc_config->eso.beta1 = beta1;
+ 826              		.loc 1 174 5 is_stmt 1 view .LVU214
+ 827              		.loc 1 174 28 is_stmt 0 view .LVU215
+ 828 0020 80ED084A 		vstr.32	s8, [r0, #32]
+ 175:Core/HAL/lib/controller/adrc.c ****     adrc_config->eso.beta2 = beta2;
+ 829              		.loc 1 175 5 is_stmt 1 view .LVU216
+ 830              		.loc 1 175 28 is_stmt 0 view .LVU217
+ 831 0024 C0ED094A 		vstr.32	s9, [r0, #36]
+ 176:Core/HAL/lib/controller/adrc.c ****     adrc_config->eso.beta3 = beta3;
+ 832              		.loc 1 176 5 is_stmt 1 view .LVU218
+ 833              		.loc 1 176 28 is_stmt 0 view .LVU219
+ 834 0028 80ED0A5A 		vstr.32	s10, [r0, #40]
+ 177:Core/HAL/lib/controller/adrc.c ****     adrc_config->eso.b = b;
+ 835              		.loc 1 177 5 is_stmt 1 view .LVU220
+ 836              		.loc 1 177 24 is_stmt 0 view .LVU221
+ 837 002c C0ED0B5A 		vstr.32	s11, [r0, #44]
+ 178:Core/HAL/lib/controller/adrc.c ****     adrc_config->output_max = output_max;
+ 838              		.loc 1 178 5 is_stmt 1 view .LVU222
+ 839              		.loc 1 178 29 is_stmt 0 view .LVU223
+ 840 0030 80ED0C6A 		vstr.32	s12, [r0, #48]
+ 179:Core/HAL/lib/controller/adrc.c **** }
+ 841              		.loc 1 179 1 view .LVU224
+ 842 0034 7047     		bx	lr
+ 843              		.cfi_endproc
+ 844              	.LFE8:
+ 846              		.section	.text.ADRC_Init,"ax",%progbits
+ 847              		.align	1
+ 848              		.global	ADRC_Init
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 19
+
+
+ 849              		.syntax unified
+ 850              		.thumb
+ 851              		.thumb_func
+ 853              	ADRC_Init:
+ 854              	.LVL70:
+ 855              	.LFB9:
+ 180:Core/HAL/lib/controller/adrc.c **** 
+ 181:Core/HAL/lib/controller/adrc.c **** /**
+ 182:Core/HAL/lib/controller/adrc.c ****  * @brief      :ADRC结构体初始化
+ 183:Core/HAL/lib/controller/adrc.c ****  * @attention  :无
+ 184:Core/HAL/lib/controller/adrc.c ****  * @param {ADRC_t*} adrc_data
+ 185:Core/HAL/lib/controller/adrc.c ****  * @param {ADRC_Config_t*} adrc_config
+ 186:Core/HAL/lib/controller/adrc.c ****  */
+ 187:Core/HAL/lib/controller/adrc.c **** void ADRC_Init(ADRC_t* adrc_data, ADRC_Config_t* adrc_config) {
+ 856              		.loc 1 187 63 is_stmt 1 view -0
+ 857              		.cfi_startproc
+ 858              		@ args = 0, pretend = 0, frame = 0
+ 859              		@ frame_needed = 0, uses_anonymous_args = 0
+ 860              		.loc 1 187 63 is_stmt 0 view .LVU226
+ 861 0000 10B5     		push	{r4, lr}
+ 862              	.LCFI19:
+ 863              		.cfi_def_cfa_offset 8
+ 864              		.cfi_offset 4, -8
+ 865              		.cfi_offset 14, -4
+ 866 0002 0446     		mov	r4, r0
+ 188:Core/HAL/lib/controller/adrc.c ****     adrc_data->adrc_config = *adrc_config;
+ 867              		.loc 1 188 5 is_stmt 1 view .LVU227
+ 868              		.loc 1 188 28 is_stmt 0 view .LVU228
+ 869 0004 00F12C0E 		add	lr, r0, #44
+ 870 0008 8C46     		mov	ip, r1
+ 871 000a BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+ 872              	.LVL71:
+ 873              		.loc 1 188 28 view .LVU229
+ 874 000e AEE80F00 		stmia	lr!, {r0, r1, r2, r3}
+ 875 0012 BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+ 876              	.LVL72:
+ 877              		.loc 1 188 28 view .LVU230
+ 878 0016 AEE80F00 		stmia	lr!, {r0, r1, r2, r3}
+ 879 001a BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+ 880              	.LVL73:
+ 881              		.loc 1 188 28 view .LVU231
+ 882 001e AEE80F00 		stmia	lr!, {r0, r1, r2, r3}
+ 883 0022 DCF80030 		ldr	r3, [ip]
+ 884 0026 CEF80030 		str	r3, [lr]
+ 189:Core/HAL/lib/controller/adrc.c ****     memset(&adrc_data->prog, 0, sizeof(adrc_data->prog));
+ 885              		.loc 1 189 5 is_stmt 1 view .LVU232
+ 886 002a 2C22     		movs	r2, #44
+ 887 002c 0021     		movs	r1, #0
+ 888 002e 2046     		mov	r0, r4
+ 889 0030 FFF7FEFF 		bl	memset
+ 890              	.LVL74:
+ 190:Core/HAL/lib/controller/adrc.c **** }...
+ 891              		.loc 1 190 1 is_stmt 0 view .LVU233
+ 892 0034 10BD     		pop	{r4, pc}
+ 893              		.loc 1 190 1 view .LVU234
+ 894              		.cfi_endproc
+ 895              	.LFE9:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 20
+
+
+ 897              		.text
+ 898              	.Letext0:
+ 899              		.file 2 "Core/HAL/lib/controller/adrc.h"
+ 900              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\math.h"
+ 901              		.file 4 "Core/HAL/lib/common.h"
+ 902              		.file 5 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s 			page 21
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 adrc.c
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:20     .text.ConstrainFloat:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:26     .text.ConstrainFloat:00000000 ConstrainFloat
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:63     .text.fsg:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:69     .text.fsg:00000000 fsg
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:120    .text.fal:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:126    .text.fal:00000000 fal
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:229    .text.fst:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:235    .text.fst:00000000 fst
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:414    .text.fst:00000120 $d
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:419    .text.TDFunction:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:425    .text.TDFunction:00000000 TDFunction
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:490    .text.NLSEFFunction:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:496    .text.NLSEFFunction:00000000 NLSEFFunction
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:561    .text.NLSEFFunction:0000005c $d
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:567    .text.ESOFunction:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:573    .text.ESOFunction:00000000 ESOFunction
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:704    .text.ESOFunction:000000b4 $d
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:710    .text.ADRCFunction:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:716    .text.ADRCFunction:00000000 ADRCFunction
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:788    .text.ADRC_SetConfig:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:794    .text.ADRC_SetConfig:00000000 ADRC_SetConfig
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:847    .text.ADRC_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc7JaSR5.s:853    .text.ADRC_Init:00000000 ADRC_Init
+
+UNDEFINED SYMBOLS
+fsgn
+powf
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_dadd
+__aeabi_d2f
+sqrt
+memset

@@ -1,0 +1,401 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"indicator_led.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.indicator_led_Driver_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	indicator_led_Driver_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	indicator_led_Driver_Init:
+  27              	.LFB3:
+  28              		.file 1 "Core/HAL/driver/indicator_led/indicator_led.c"
+   1:Core/HAL/driver/indicator_led/indicator_led.c **** /**
+   2:Core/HAL/driver/indicator_led/indicator_led.c ****   ******************************************************************************
+   3:Core/HAL/driver/indicator_led/indicator_led.c ****   * 文件名          : indicator_led.c
+   4:Core/HAL/driver/indicator_led/indicator_led.c ****   * 创建时间        : 2022.5.21
+   5:Core/HAL/driver/indicator_led/indicator_led.c ****   * 作者            : 余泽恺
+   6:Core/HAL/driver/indicator_led/indicator_led.c ****   * ----------------------------------------------------------------------------
+   7:Core/HAL/driver/indicator_led/indicator_led.c ****   * 最近修改时间    : 
+   8:Core/HAL/driver/indicator_led/indicator_led.c ****   * 修改人          : 
+   9:Core/HAL/driver/indicator_led/indicator_led.c ****   ******************************************************************************
+  10:Core/HAL/driver/indicator_led/indicator_led.c ****   * 1.本代码包含大量中文注释，请以UTF-8编码格式打开
+  11:Core/HAL/driver/indicator_led/indicator_led.c ****   * 2.本代码最终解释权归哈尔滨工业大学（深圳）南工骁鹰战队Critical HIT所
+  12:Core/HAL/driver/indicator_led/indicator_led.c ****   * 3.Copyright (c) 哈尔滨工业大学（深圳）南工骁鹰战队Critical HIT 版权所有
+  13:Core/HAL/driver/indicator_led/indicator_led.c ****   ******************************************************************************
+  14:Core/HAL/driver/indicator_led/indicator_led.c ****   * 说明：使用开发板上的LED
+  15:Core/HAL/driver/indicator_led/indicator_led.c ****   * 令LED按时间不断闪烁，以此监测开发板是否正常运行
+  16:Core/HAL/driver/indicator_led/indicator_led.c ****   * 
+  17:Core/HAL/driver/indicator_led/indicator_led.c ****   ******************************************************************************
+  18:Core/HAL/driver/indicator_led/indicator_led.c ****   */
+  19:Core/HAL/driver/indicator_led/indicator_led.c **** #include "indicator_led.h"
+  20:Core/HAL/driver/indicator_led/indicator_led.c **** 
+  21:Core/HAL/driver/indicator_led/indicator_led.c **** #include "bsp_gpio.h"
+  22:Core/HAL/driver/indicator_led/indicator_led.c **** #include "cvector.h"
+  23:Core/HAL/driver/indicator_led/indicator_led.c **** 
+  24:Core/HAL/driver/indicator_led/indicator_led.c **** cvector *indicator_led_instances;
+  25:Core/HAL/driver/indicator_led/indicator_led.c **** 
+  26:Core/HAL/driver/indicator_led/indicator_led.c **** void indicator_led_Driver_Init(void) { indicator_led_instances = cvector_create(sizeof(Indicator_le
+  29              		.loc 1 26 38 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 2
+
+
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  38              		.loc 1 26 40 view .LVU1
+  39              		.loc 1 26 66 is_stmt 0 view .LVU2
+  40 0002 0420     		movs	r0, #4
+  41 0004 FFF7FEFF 		bl	cvector_create
+  42              	.LVL0:
+  43              		.loc 1 26 64 view .LVU3
+  44 0008 014B     		ldr	r3, .L3
+  45 000a 1860     		str	r0, [r3]
+  46              		.loc 1 26 107 view .LVU4
+  47 000c 08BD     		pop	{r3, pc}
+  48              	.L4:
+  49 000e 00BF     		.align	2
+  50              	.L3:
+  51 0010 00000000 		.word	.LANCHOR0
+  52              		.cfi_endproc
+  53              	.LFE3:
+  55              		.section	.text.indicator_led_Create,"ax",%progbits
+  56              		.align	1
+  57              		.global	indicator_led_Create
+  58              		.syntax unified
+  59              		.thumb
+  60              		.thumb_func
+  62              	indicator_led_Create:
+  63              	.LVL1:
+  64              	.LFB4:
+  27:Core/HAL/driver/indicator_led/indicator_led.c **** 
+  28:Core/HAL/driver/indicator_led/indicator_led.c **** Indicator_led *indicator_led_Create(Indicator_led_config *config) {
+  65              		.loc 1 28 67 is_stmt 1 view -0
+  66              		.cfi_startproc
+  67              		@ args = 0, pretend = 0, frame = 8
+  68              		@ frame_needed = 0, uses_anonymous_args = 0
+  69              		.loc 1 28 67 is_stmt 0 view .LVU6
+  70 0000 10B5     		push	{r4, lr}
+  71              	.LCFI1:
+  72              		.cfi_def_cfa_offset 8
+  73              		.cfi_offset 4, -8
+  74              		.cfi_offset 14, -4
+  75 0002 82B0     		sub	sp, sp, #8
+  76              	.LCFI2:
+  77              		.cfi_def_cfa_offset 16
+  78 0004 0446     		mov	r4, r0
+  29:Core/HAL/driver/indicator_led/indicator_led.c ****     Indicator_led *obj = (Indicator_led *)malloc(sizeof(Indicator_led));
+  79              		.loc 1 29 5 is_stmt 1 view .LVU7
+  80              		.loc 1 29 43 is_stmt 0 view .LVU8
+  81 0006 0420     		movs	r0, #4
+  82              	.LVL2:
+  83              		.loc 1 29 43 view .LVU9
+  84 0008 FFF7FEFF 		bl	malloc
+  85              	.LVL3:
+  86              		.loc 1 29 20 view .LVU10
+  87 000c 0190     		str	r0, [sp, #4]
+  30:Core/HAL/driver/indicator_led/indicator_led.c ****     memset(obj, 0, sizeof(Indicator_led));
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 3
+
+
+  88              		.loc 1 30 5 is_stmt 1 view .LVU11
+  89 000e 0023     		movs	r3, #0
+  90 0010 0360     		str	r3, [r0]	@ unaligned
+  31:Core/HAL/driver/indicator_led/indicator_led.c ****     obj->config = *config;
+  91              		.loc 1 31 5 view .LVU12
+  92              		.loc 1 31 17 is_stmt 0 view .LVU13
+  93 0012 2288     		ldrh	r2, [r4]	@ unaligned
+  94 0014 A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+  95 0016 0280     		strh	r2, [r0]	@ unaligned
+  96 0018 8370     		strb	r3, [r0, #2]
+  32:Core/HAL/driver/indicator_led/indicator_led.c ****     cvector_pushback(indicator_led_instances, &obj);
+  97              		.loc 1 32 5 is_stmt 1 view .LVU14
+  98 001a 01A9     		add	r1, sp, #4
+  99 001c 034B     		ldr	r3, .L7
+ 100 001e 1868     		ldr	r0, [r3]
+ 101 0020 FFF7FEFF 		bl	cvector_pushback
+ 102              	.LVL4:
+  33:Core/HAL/driver/indicator_led/indicator_led.c ****     return obj;
+ 103              		.loc 1 33 5 view .LVU15
+  34:Core/HAL/driver/indicator_led/indicator_led.c **** }
+ 104              		.loc 1 34 1 is_stmt 0 view .LVU16
+ 105 0024 0198     		ldr	r0, [sp, #4]
+ 106 0026 02B0     		add	sp, sp, #8
+ 107              	.LCFI3:
+ 108              		.cfi_def_cfa_offset 8
+ 109              		@ sp needed
+ 110 0028 10BD     		pop	{r4, pc}
+ 111              	.LVL5:
+ 112              	.L8:
+ 113              		.loc 1 34 1 view .LVU17
+ 114 002a 00BF     		.align	2
+ 115              	.L7:
+ 116 002c 00000000 		.word	.LANCHOR0
+ 117              		.cfi_endproc
+ 118              	.LFE4:
+ 120              		.section	.text.indicator_led_Update,"ax",%progbits
+ 121              		.align	1
+ 122              		.global	indicator_led_Update
+ 123              		.syntax unified
+ 124              		.thumb
+ 125              		.thumb_func
+ 127              	indicator_led_Update:
+ 128              	.LVL6:
+ 129              	.LFB5:
+  35:Core/HAL/driver/indicator_led/indicator_led.c **** 
+  36:Core/HAL/driver/indicator_led/indicator_led.c **** void indicator_led_Update(Indicator_led *obj) {
+ 130              		.loc 1 36 47 is_stmt 1 view -0
+ 131              		.cfi_startproc
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		.loc 1 36 47 is_stmt 0 view .LVU19
+ 135 0000 10B5     		push	{r4, lr}
+ 136              	.LCFI4:
+ 137              		.cfi_def_cfa_offset 8
+ 138              		.cfi_offset 4, -8
+ 139              		.cfi_offset 14, -4
+ 140 0002 0446     		mov	r4, r0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 4
+
+
+  37:Core/HAL/driver/indicator_led/indicator_led.c ****     switch (obj->led_cnt) {
+ 141              		.loc 1 37 5 is_stmt 1 view .LVU20
+ 142              		.loc 1 37 16 is_stmt 0 view .LVU21
+ 143 0004 C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 144              		.loc 1 37 5 view .LVU22
+ 145 0006 012B     		cmp	r3, #1
+ 146 0008 0CD0     		beq	.L10
+ 147 000a 022B     		cmp	r3, #2
+ 148 000c 0ED0     		beq	.L11
+ 149 000e 2BB1     		cbz	r3, .L16
+ 150              	.LVL7:
+ 151              	.L12:
+  38:Core/HAL/driver/indicator_led/indicator_led.c ****         case 0:
+  39:Core/HAL/driver/indicator_led/indicator_led.c ****             BSP_GPIO_Toggle(obj->config.bsp_gpio_led1_index);
+  40:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+  41:Core/HAL/driver/indicator_led/indicator_led.c ****         case 1:
+  42:Core/HAL/driver/indicator_led/indicator_led.c ****             BSP_GPIO_Toggle(obj->config.bsp_gpio_led2_index);
+  43:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+  44:Core/HAL/driver/indicator_led/indicator_led.c ****         case 2:
+  45:Core/HAL/driver/indicator_led/indicator_led.c ****             BSP_GPIO_Toggle(obj->config.bsp_gpio_led3_index);
+  46:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+  47:Core/HAL/driver/indicator_led/indicator_led.c ****         default:
+  48:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+  49:Core/HAL/driver/indicator_led/indicator_led.c ****     }
+  50:Core/HAL/driver/indicator_led/indicator_led.c ****     if (obj->led_cnt >= 2)
+ 152              		.loc 1 50 5 is_stmt 1 view .LVU23
+ 153              		.loc 1 50 12 is_stmt 0 view .LVU24
+ 154 0010 E378     		ldrb	r3, [r4, #3]	@ zero_extendqisi2
+ 155              		.loc 1 50 8 view .LVU25
+ 156 0012 012B     		cmp	r3, #1
+ 157 0014 0ED9     		bls	.L13
+  51:Core/HAL/driver/indicator_led/indicator_led.c ****         obj->led_cnt = 0;
+ 158              		.loc 1 51 9 is_stmt 1 view .LVU26
+ 159              		.loc 1 51 22 is_stmt 0 view .LVU27
+ 160 0016 0023     		movs	r3, #0
+ 161 0018 E370     		strb	r3, [r4, #3]
+ 162              	.L9:
+  52:Core/HAL/driver/indicator_led/indicator_led.c ****     else
+  53:Core/HAL/driver/indicator_led/indicator_led.c ****         obj->led_cnt++;
+  54:Core/HAL/driver/indicator_led/indicator_led.c **** }
+ 163              		.loc 1 54 1 view .LVU28
+ 164 001a 10BD     		pop	{r4, pc}
+ 165              	.LVL8:
+ 166              	.L16:
+  39:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+ 167              		.loc 1 39 13 is_stmt 1 view .LVU29
+ 168 001c 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 169              	.LVL9:
+  39:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+ 170              		.loc 1 39 13 is_stmt 0 view .LVU30
+ 171 001e FFF7FEFF 		bl	BSP_GPIO_Toggle
+ 172              	.LVL10:
+  40:Core/HAL/driver/indicator_led/indicator_led.c ****         case 1:
+ 173              		.loc 1 40 13 is_stmt 1 view .LVU31
+ 174 0022 F5E7     		b	.L12
+ 175              	.LVL11:
+ 176              	.L10:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 5
+
+
+  42:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+ 177              		.loc 1 42 13 view .LVU32
+ 178 0024 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 179              	.LVL12:
+  42:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+ 180              		.loc 1 42 13 is_stmt 0 view .LVU33
+ 181 0026 FFF7FEFF 		bl	BSP_GPIO_Toggle
+ 182              	.LVL13:
+  43:Core/HAL/driver/indicator_led/indicator_led.c ****         case 2:
+ 183              		.loc 1 43 13 is_stmt 1 view .LVU34
+ 184 002a F1E7     		b	.L12
+ 185              	.LVL14:
+ 186              	.L11:
+  45:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+ 187              		.loc 1 45 13 view .LVU35
+ 188 002c 8078     		ldrb	r0, [r0, #2]	@ zero_extendqisi2
+ 189              	.LVL15:
+  45:Core/HAL/driver/indicator_led/indicator_led.c ****             break;
+ 190              		.loc 1 45 13 is_stmt 0 view .LVU36
+ 191 002e FFF7FEFF 		bl	BSP_GPIO_Toggle
+ 192              	.LVL16:
+  46:Core/HAL/driver/indicator_led/indicator_led.c ****         default:
+ 193              		.loc 1 46 13 is_stmt 1 view .LVU37
+ 194 0032 EDE7     		b	.L12
+ 195              	.L13:
+  53:Core/HAL/driver/indicator_led/indicator_led.c **** }
+ 196              		.loc 1 53 9 view .LVU38
+  53:Core/HAL/driver/indicator_led/indicator_led.c **** }
+ 197              		.loc 1 53 21 is_stmt 0 view .LVU39
+ 198 0034 0133     		adds	r3, r3, #1
+ 199 0036 E370     		strb	r3, [r4, #3]
+ 200              		.loc 1 54 1 view .LVU40
+ 201 0038 EFE7     		b	.L9
+ 202              		.cfi_endproc
+ 203              	.LFE5:
+ 205              		.section	.text.indicator_led_Update_ALL,"ax",%progbits
+ 206              		.align	1
+ 207              		.global	indicator_led_Update_ALL
+ 208              		.syntax unified
+ 209              		.thumb
+ 210              		.thumb_func
+ 212              	indicator_led_Update_ALL:
+ 213              	.LFB6:
+  55:Core/HAL/driver/indicator_led/indicator_led.c **** 
+  56:Core/HAL/driver/indicator_led/indicator_led.c **** void indicator_led_Update_ALL(void) {
+ 214              		.loc 1 56 37 is_stmt 1 view -0
+ 215              		.cfi_startproc
+ 216              		@ args = 0, pretend = 0, frame = 0
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 218 0000 10B5     		push	{r4, lr}
+ 219              	.LCFI5:
+ 220              		.cfi_def_cfa_offset 8
+ 221              		.cfi_offset 4, -8
+ 222              		.cfi_offset 14, -4
+  57:Core/HAL/driver/indicator_led/indicator_led.c ****     for (size_t i = 0; i < indicator_led_instances->cv_len; i++) {
+ 223              		.loc 1 57 5 view .LVU42
+ 224              	.LBB2:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 6
+
+
+ 225              		.loc 1 57 10 view .LVU43
+ 226              	.LVL17:
+ 227              		.loc 1 57 17 is_stmt 0 view .LVU44
+ 228 0002 0024     		movs	r4, #0
+ 229              		.loc 1 57 5 view .LVU45
+ 230 0004 06E0     		b	.L18
+ 231              	.LVL18:
+ 232              	.L19:
+ 233              	.LBB3:
+  58:Core/HAL/driver/indicator_led/indicator_led.c ****         Indicator_led *indicator_led_now = *((Indicator_led **)cvector_val_at(indicator_led_instanc
+ 234              		.loc 1 58 9 is_stmt 1 discriminator 3 view .LVU46
+ 235              		.loc 1 58 64 is_stmt 0 discriminator 3 view .LVU47
+ 236 0006 2146     		mov	r1, r4
+ 237 0008 FFF7FEFF 		bl	cvector_val_at
+ 238              	.LVL19:
+  59:Core/HAL/driver/indicator_led/indicator_led.c ****         indicator_led_Update(indicator_led_now);
+ 239              		.loc 1 59 9 is_stmt 1 discriminator 3 view .LVU48
+ 240 000c 0068     		ldr	r0, [r0]
+ 241              	.LVL20:
+ 242              		.loc 1 59 9 is_stmt 0 discriminator 3 view .LVU49
+ 243 000e FFF7FEFF 		bl	indicator_led_Update
+ 244              	.LVL21:
+ 245              		.loc 1 59 9 discriminator 3 view .LVU50
+ 246              	.LBE3:
+  57:Core/HAL/driver/indicator_led/indicator_led.c ****     for (size_t i = 0; i < indicator_led_instances->cv_len; i++) {
+ 247              		.loc 1 57 61 is_stmt 1 discriminator 3 view .LVU51
+  57:Core/HAL/driver/indicator_led/indicator_led.c ****     for (size_t i = 0; i < indicator_led_instances->cv_len; i++) {
+ 248              		.loc 1 57 62 is_stmt 0 discriminator 3 view .LVU52
+ 249 0012 0134     		adds	r4, r4, #1
+ 250              	.LVL22:
+ 251              	.L18:
+  57:Core/HAL/driver/indicator_led/indicator_led.c ****     for (size_t i = 0; i < indicator_led_instances->cv_len; i++) {
+ 252              		.loc 1 57 24 is_stmt 1 discriminator 1 view .LVU53
+  57:Core/HAL/driver/indicator_led/indicator_led.c ****     for (size_t i = 0; i < indicator_led_instances->cv_len; i++) {
+ 253              		.loc 1 57 51 is_stmt 0 discriminator 1 view .LVU54
+ 254 0014 024B     		ldr	r3, .L21
+ 255 0016 1868     		ldr	r0, [r3]
+ 256 0018 4368     		ldr	r3, [r0, #4]	@ unaligned
+  57:Core/HAL/driver/indicator_led/indicator_led.c ****     for (size_t i = 0; i < indicator_led_instances->cv_len; i++) {
+ 257              		.loc 1 57 5 discriminator 1 view .LVU55
+ 258 001a A342     		cmp	r3, r4
+ 259 001c F3D8     		bhi	.L19
+ 260              	.LBE2:
+  60:Core/HAL/driver/indicator_led/indicator_led.c ****     }
+  61:Core/HAL/driver/indicator_led/indicator_led.c **** }...
+ 261              		.loc 1 61 1 view .LVU56
+ 262 001e 10BD     		pop	{r4, pc}
+ 263              	.LVL23:
+ 264              	.L22:
+ 265              		.loc 1 61 1 view .LVU57
+ 266              		.align	2
+ 267              	.L21:
+ 268 0020 00000000 		.word	.LANCHOR0
+ 269              		.cfi_endproc
+ 270              	.LFE6:
+ 272              		.global	indicator_led_instances
+ 273              		.section	.bss.indicator_led_instances,"aw",%nobits
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 7
+
+
+ 274              		.align	2
+ 275              		.set	.LANCHOR0,. + 0
+ 278              	indicator_led_instances:
+ 279 0000 00000000 		.space	4
+ 280              		.text
+ 281              	.Letext0:
+ 282              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 283              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 284              		.file 4 "Core/HAL/driver/indicator_led/indicator_led.h"
+ 285              		.file 5 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 286              		.file 6 "Core/HAL/lib/cvector.h"
+ 287              		.file 7 "Core/BSP/interface/bsp_gpio.h"
+ 288              		.file 8 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 indicator_led.c
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:20     .text.indicator_led_Driver_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:26     .text.indicator_led_Driver_Init:00000000 indicator_led_Driver_Init
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:51     .text.indicator_led_Driver_Init:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:56     .text.indicator_led_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:62     .text.indicator_led_Create:00000000 indicator_led_Create
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:116    .text.indicator_led_Create:0000002c $d
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:121    .text.indicator_led_Update:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:127    .text.indicator_led_Update:00000000 indicator_led_Update
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:206    .text.indicator_led_Update_ALL:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:212    .text.indicator_led_Update_ALL:00000000 indicator_led_Update_ALL
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:268    .text.indicator_led_Update_ALL:00000020 $d
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:278    .bss.indicator_led_instances:00000000 indicator_led_instances
+C:\Users\lenovo\AppData\Local\Temp\ccgzBqJi.s:274    .bss.indicator_led_instances:00000000 $d
+
+UNDEFINED SYMBOLS
+cvector_create
+malloc
+cvector_pushback
+BSP_GPIO_Toggle
+cvector_val_at

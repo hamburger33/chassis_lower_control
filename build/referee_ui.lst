@@ -1,0 +1,3054 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"referee_ui.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Line,"ax",%progbits
+  20              		.align	1
+  21              		.global	Line
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Line:
+  27              	.LVL0:
+  28              	.LFB133:
+  29              		.file 1 "Core/HAL/driver/referee/referee_ui.c"
+   1:Core/HAL/driver/referee/referee_ui.c **** #include "referee_ui.h"
+   2:Core/HAL/driver/referee/referee_ui.c **** 
+   3:Core/HAL/driver/referee/referee_ui.c **** #include "soft_crc.h"
+   4:Core/HAL/driver/referee/referee_ui.c **** #define FRAMEHEADER_LEN 5
+   5:Core/HAL/driver/referee/referee_ui.c **** #define CMD_LEN 2
+   6:Core/HAL/driver/referee/referee_ui.c **** #define CRC16_LEN 2
+   7:Core/HAL/driver/referee/referee_ui.c **** #define MAXGRAPHIC 40
+   8:Core/HAL/driver/referee/referee_ui.c **** 
+   9:Core/HAL/driver/referee/referee_ui.c **** //创建直线
+  10:Core/HAL/driver/referee/referee_ui.c **** graphic_data Line(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t start_x, uin
+  30              		.loc 1 10 147 view -0
+  31              		.cfi_startproc
+  32              		@ args = 20, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 10 147 is_stmt 0 view .LVU1
+  35 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 28
+  38              		.cfi_offset 4, -28
+  39              		.cfi_offset 5, -24
+  40              		.cfi_offset 6, -20
+  41              		.cfi_offset 7, -16
+  42              		.cfi_offset 8, -12
+  43              		.cfi_offset 9, -8
+  44              		.cfi_offset 14, -4
+  45 0004 DDF81C80 		ldr	r8, [sp, #28]
+  46 0008 089F     		ldr	r7, [sp, #32]
+  47 000a 099E     		ldr	r6, [sp, #36]
+  48 000c 0A9D     		ldr	r5, [sp, #40]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 2
+
+
+  49 000e 0B9C     		ldr	r4, [sp, #44]
+  11:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+  50              		.loc 1 11 5 is_stmt 1 view .LVU2
+  12:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+  51              		.loc 1 12 5 view .LVU3
+  52              		.loc 1 12 24 is_stmt 0 view .LVU4
+  53 0010 4FF0000E 		mov	lr, #0
+  54 0014 80F800E0 		strb	lr, [r0]
+  13:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+  55              		.loc 1 13 5 is_stmt 1 view .LVU5
+  56              		.loc 1 13 24 is_stmt 0 view .LVU6
+  57 0018 80F801E0 		strb	lr, [r0, #1]
+  14:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+  58              		.loc 1 14 5 is_stmt 1 view .LVU7
+  59              		.loc 1 14 24 is_stmt 0 view .LVU8
+  60 001c 8170     		strb	r1, [r0, #2]
+  15:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+  61              		.loc 1 15 5 is_stmt 1 view .LVU9
+  62              		.loc 1 15 14 is_stmt 0 view .LVU10
+  63 001e 02F00309 		and	r9, r2, #3
+  64 0022 C178     		ldrb	r1, [r0, #3]	@ zero_extendqisi2
+  65              	.LVL1:
+  66              		.loc 1 15 14 view .LVU11
+  67 0024 01F03F01 		and	r1, r1, #63
+  68 0028 41EA8911 		orr	r1, r1, r9, lsl #6
+  69 002c C170     		strb	r1, [r0, #3]
+  70              	.LVL2:
+  71              		.loc 1 15 14 view .LVU12
+  72 002e C2F38102 		ubfx	r2, r2, #2, #2
+  73              	.LVL3:
+  74              		.loc 1 15 14 view .LVU13
+  75 0032 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+  76 0034 21F00301 		bic	r1, r1, #3
+  77 0038 0A43     		orrs	r2, r2, r1
+  78 003a 0271     		strb	r2, [r0, #4]
+  16:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+  79              		.loc 1 16 5 is_stmt 1 view .LVU14
+  80              		.loc 1 16 14 is_stmt 0 view .LVU15
+  81 003c D2B2     		uxtb	r2, r2
+  82 003e 63F38502 		bfi	r2, r3, #2, #4
+  83              	.LVL4:
+  84              		.loc 1 16 14 view .LVU16
+  85 0042 0271     		strb	r2, [r0, #4]
+  17:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+  86              		.loc 1 17 5 is_stmt 1 view .LVU17
+  87              		.loc 1 17 14 is_stmt 0 view .LVU18
+  88 0044 80F80780 		strb	r8, [r0, #7]
+  89 0048 C8F30128 		ubfx	r8, r8, #8, #2
+  90 004c 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+  91 004e 23F00303 		bic	r3, r3, #3
+  92 0052 43EA0803 		orr	r3, r3, r8
+  93 0056 0372     		strb	r3, [r0, #8]
+  18:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = line;
+  94              		.loc 1 18 5 is_stmt 1 view .LVU19
+  95              		.loc 1 18 21 is_stmt 0 view .LVU20
+  96 0058 C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+  97 005a 6EF3C503 		bfi	r3, lr, #3, #3
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 3
+
+
+  98 005e C370     		strb	r3, [r0, #3]
+  19:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = start_x;
+  99              		.loc 1 19 5 is_stmt 1 view .LVU21
+ 100              		.loc 1 19 16 is_stmt 0 view .LVU22
+ 101 0060 07F03F02 		and	r2, r7, #63
+ 102 0064 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 103 0066 03F00303 		and	r3, r3, #3
+ 104 006a 43EA8203 		orr	r3, r3, r2, lsl #2
+ 105 006e 0372     		strb	r3, [r0, #8]
+ 106 0070 C7F38417 		ubfx	r7, r7, #6, #5
+ 107 0074 427A     		ldrb	r2, [r0, #9]	@ zero_extendqisi2
+ 108 0076 22F01F02 		bic	r2, r2, #31
+ 109 007a 3A43     		orrs	r2, r2, r7
+ 110 007c 4272     		strb	r2, [r0, #9]
+  20:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = start_y;
+ 111              		.loc 1 20 5 is_stmt 1 view .LVU23
+ 112              		.loc 1 20 16 is_stmt 0 view .LVU24
+ 113 007e 06F00703 		and	r3, r6, #7
+ 114 0082 D2B2     		uxtb	r2, r2
+ 115 0084 02F01F02 		and	r2, r2, #31
+ 116 0088 42EA4312 		orr	r2, r2, r3, lsl #5
+ 117 008c 4272     		strb	r2, [r0, #9]
+ 118 008e C6F3C706 		ubfx	r6, r6, #3, #8
+ 119 0092 8672     		strb	r6, [r0, #10]
+  21:Core/HAL/driver/referee/referee_ui.c ****     gd.end_x = end_x;
+ 120              		.loc 1 21 5 is_stmt 1 view .LVU25
+ 121              		.loc 1 21 14 is_stmt 0 view .LVU26
+ 122 0094 05F03F03 		and	r3, r5, #63
+ 123 0098 027B     		ldrb	r2, [r0, #12]	@ zero_extendqisi2
+ 124 009a 02F00302 		and	r2, r2, #3
+ 125 009e 42EA8302 		orr	r2, r2, r3, lsl #2
+ 126 00a2 0273     		strb	r2, [r0, #12]
+ 127 00a4 C5F38415 		ubfx	r5, r5, #6, #5
+ 128 00a8 437B     		ldrb	r3, [r0, #13]	@ zero_extendqisi2
+ 129 00aa 23F01F03 		bic	r3, r3, #31
+ 130 00ae 2B43     		orrs	r3, r3, r5
+ 131 00b0 4373     		strb	r3, [r0, #13]
+  22:Core/HAL/driver/referee/referee_ui.c ****     gd.end_y = end_y;
+ 132              		.loc 1 22 5 is_stmt 1 view .LVU27
+ 133              		.loc 1 22 14 is_stmt 0 view .LVU28
+ 134 00b2 04F00702 		and	r2, r4, #7
+ 135 00b6 DBB2     		uxtb	r3, r3
+ 136 00b8 03F01F03 		and	r3, r3, #31
+ 137 00bc 43EA4213 		orr	r3, r3, r2, lsl #5
+ 138 00c0 4373     		strb	r3, [r0, #13]
+ 139 00c2 C4F3C704 		ubfx	r4, r4, #3, #8
+ 140 00c6 8473     		strb	r4, [r0, #14]
+  23:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ 141              		.loc 1 23 5 is_stmt 1 view .LVU29
+  24:Core/HAL/driver/referee/referee_ui.c **** }
+ 142              		.loc 1 24 1 is_stmt 0 view .LVU30
+ 143 00c8 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 144              		.cfi_endproc
+ 145              	.LFE133:
+ 147              		.section	.text.Rectangle,"ax",%progbits
+ 148              		.align	1
+ 149              		.global	Rectangle
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 4
+
+
+ 150              		.syntax unified
+ 151              		.thumb
+ 152              		.thumb_func
+ 154              	Rectangle:
+ 155              	.LVL5:
+ 156              	.LFB134:
+  25:Core/HAL/driver/referee/referee_ui.c **** 
+  26:Core/HAL/driver/referee/referee_ui.c **** //创建矩形
+  27:Core/HAL/driver/referee/referee_ui.c **** graphic_data Rectangle(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t start_x
+ 157              		.loc 1 27 152 is_stmt 1 view -0
+ 158              		.cfi_startproc
+ 159              		@ args = 20, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161              		.loc 1 27 152 is_stmt 0 view .LVU32
+ 162 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 163              	.LCFI1:
+ 164              		.cfi_def_cfa_offset 24
+ 165              		.cfi_offset 4, -24
+ 166              		.cfi_offset 5, -20
+ 167              		.cfi_offset 6, -16
+ 168              		.cfi_offset 7, -12
+ 169              		.cfi_offset 8, -8
+ 170              		.cfi_offset 14, -4
+ 171 0004 DDF81880 		ldr	r8, [sp, #24]
+ 172 0008 079F     		ldr	r7, [sp, #28]
+ 173 000a 089E     		ldr	r6, [sp, #32]
+ 174 000c 099D     		ldr	r5, [sp, #36]
+ 175 000e 0A9C     		ldr	r4, [sp, #40]
+  28:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+ 176              		.loc 1 28 5 is_stmt 1 view .LVU33
+  29:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+ 177              		.loc 1 29 5 view .LVU34
+ 178              		.loc 1 29 24 is_stmt 0 view .LVU35
+ 179 0010 4FF0000E 		mov	lr, #0
+ 180 0014 80F800E0 		strb	lr, [r0]
+  30:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+ 181              		.loc 1 30 5 is_stmt 1 view .LVU36
+ 182              		.loc 1 30 24 is_stmt 0 view .LVU37
+ 183 0018 80F801E0 		strb	lr, [r0, #1]
+  31:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+ 184              		.loc 1 31 5 is_stmt 1 view .LVU38
+ 185              		.loc 1 31 24 is_stmt 0 view .LVU39
+ 186 001c 8170     		strb	r1, [r0, #2]
+  32:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+ 187              		.loc 1 32 5 is_stmt 1 view .LVU40
+ 188              		.loc 1 32 14 is_stmt 0 view .LVU41
+ 189 001e 02F00301 		and	r1, r2, #3
+ 190              	.LVL6:
+ 191              		.loc 1 32 14 view .LVU42
+ 192 0022 90F803E0 		ldrb	lr, [r0, #3]	@ zero_extendqisi2
+ 193 0026 0EF03F0E 		and	lr, lr, #63
+ 194 002a 4EEA811E 		orr	lr, lr, r1, lsl #6
+ 195 002e 80F803E0 		strb	lr, [r0, #3]
+ 196              	.LVL7:
+ 197              		.loc 1 32 14 view .LVU43
+ 198 0032 C2F38102 		ubfx	r2, r2, #2, #2
+ 199              	.LVL8:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 5
+
+
+ 200              		.loc 1 32 14 view .LVU44
+ 201 0036 90F804E0 		ldrb	lr, [r0, #4]	@ zero_extendqisi2
+ 202 003a 2EF0030E 		bic	lr, lr, #3
+ 203 003e 4EEA0202 		orr	r2, lr, r2
+ 204 0042 0271     		strb	r2, [r0, #4]
+  33:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+ 205              		.loc 1 33 5 is_stmt 1 view .LVU45
+ 206              		.loc 1 33 14 is_stmt 0 view .LVU46
+ 207 0044 80F80780 		strb	r8, [r0, #7]
+ 208 0048 C8F30128 		ubfx	r8, r8, #8, #2
+ 209 004c 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 210 004e 21F00301 		bic	r1, r1, #3
+ 211 0052 41EA0801 		orr	r1, r1, r8
+ 212 0056 0172     		strb	r1, [r0, #8]
+  34:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+ 213              		.loc 1 34 5 is_stmt 1 view .LVU47
+ 214              		.loc 1 34 14 is_stmt 0 view .LVU48
+ 215 0058 D2B2     		uxtb	r2, r2
+ 216 005a 63F38502 		bfi	r2, r3, #2, #4
+ 217              	.LVL9:
+ 218              		.loc 1 34 14 view .LVU49
+ 219 005e 0271     		strb	r2, [r0, #4]
+  35:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = rectangle;
+ 220              		.loc 1 35 5 is_stmt 1 view .LVU50
+ 221              		.loc 1 35 21 is_stmt 0 view .LVU51
+ 222 0060 C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 223 0062 0122     		movs	r2, #1
+ 224 0064 62F3C503 		bfi	r3, r2, #3, #3
+ 225 0068 C370     		strb	r3, [r0, #3]
+  36:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = start_x;
+ 226              		.loc 1 36 5 is_stmt 1 view .LVU52
+ 227              		.loc 1 36 16 is_stmt 0 view .LVU53
+ 228 006a 07F03F02 		and	r2, r7, #63
+ 229 006e CBB2     		uxtb	r3, r1
+ 230 0070 03F00303 		and	r3, r3, #3
+ 231 0074 43EA8203 		orr	r3, r3, r2, lsl #2
+ 232 0078 0372     		strb	r3, [r0, #8]
+ 233 007a C7F38417 		ubfx	r7, r7, #6, #5
+ 234 007e 427A     		ldrb	r2, [r0, #9]	@ zero_extendqisi2
+ 235 0080 22F01F02 		bic	r2, r2, #31
+ 236 0084 3A43     		orrs	r2, r2, r7
+ 237 0086 4272     		strb	r2, [r0, #9]
+  37:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = start_y;
+ 238              		.loc 1 37 5 is_stmt 1 view .LVU54
+ 239              		.loc 1 37 16 is_stmt 0 view .LVU55
+ 240 0088 06F00703 		and	r3, r6, #7
+ 241 008c D2B2     		uxtb	r2, r2
+ 242 008e 02F01F02 		and	r2, r2, #31
+ 243 0092 42EA4312 		orr	r2, r2, r3, lsl #5
+ 244 0096 4272     		strb	r2, [r0, #9]
+ 245 0098 C6F3C706 		ubfx	r6, r6, #3, #8
+ 246 009c 8672     		strb	r6, [r0, #10]
+  38:Core/HAL/driver/referee/referee_ui.c ****     gd.end_x = end_x;
+ 247              		.loc 1 38 5 is_stmt 1 view .LVU56
+ 248              		.loc 1 38 14 is_stmt 0 view .LVU57
+ 249 009e 05F03F03 		and	r3, r5, #63
+ 250 00a2 027B     		ldrb	r2, [r0, #12]	@ zero_extendqisi2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 6
+
+
+ 251 00a4 02F00302 		and	r2, r2, #3
+ 252 00a8 42EA8302 		orr	r2, r2, r3, lsl #2
+ 253 00ac 0273     		strb	r2, [r0, #12]
+ 254 00ae C5F38415 		ubfx	r5, r5, #6, #5
+ 255 00b2 437B     		ldrb	r3, [r0, #13]	@ zero_extendqisi2
+ 256 00b4 23F01F03 		bic	r3, r3, #31
+ 257 00b8 2B43     		orrs	r3, r3, r5
+ 258 00ba 4373     		strb	r3, [r0, #13]
+  39:Core/HAL/driver/referee/referee_ui.c ****     gd.end_y = end_y;
+ 259              		.loc 1 39 5 is_stmt 1 view .LVU58
+ 260              		.loc 1 39 14 is_stmt 0 view .LVU59
+ 261 00bc 04F00702 		and	r2, r4, #7
+ 262 00c0 DBB2     		uxtb	r3, r3
+ 263 00c2 03F01F03 		and	r3, r3, #31
+ 264 00c6 43EA4213 		orr	r3, r3, r2, lsl #5
+ 265 00ca 4373     		strb	r3, [r0, #13]
+ 266 00cc C4F3C704 		ubfx	r4, r4, #3, #8
+ 267 00d0 8473     		strb	r4, [r0, #14]
+  40:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ 268              		.loc 1 40 5 is_stmt 1 view .LVU60
+  41:Core/HAL/driver/referee/referee_ui.c **** }
+ 269              		.loc 1 41 1 is_stmt 0 view .LVU61
+ 270 00d2 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 271              		.cfi_endproc
+ 272              	.LFE134:
+ 274              		.section	.text.Circle,"ax",%progbits
+ 275              		.align	1
+ 276              		.global	Circle
+ 277              		.syntax unified
+ 278              		.thumb
+ 279              		.thumb_func
+ 281              	Circle:
+ 282              	.LVL10:
+ 283              	.LFB135:
+  42:Core/HAL/driver/referee/referee_ui.c **** 
+  43:Core/HAL/driver/referee/referee_ui.c **** //创建圆形
+  44:Core/HAL/driver/referee/referee_ui.c **** graphic_data Circle(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t x, uint32_
+ 284              		.loc 1 44 122 is_stmt 1 view -0
+ 285              		.cfi_startproc
+ 286              		@ args = 16, pretend = 0, frame = 0
+ 287              		@ frame_needed = 0, uses_anonymous_args = 0
+ 288              		.loc 1 44 122 is_stmt 0 view .LVU63
+ 289 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 290              	.LCFI2:
+ 291              		.cfi_def_cfa_offset 20
+ 292              		.cfi_offset 4, -20
+ 293              		.cfi_offset 5, -16
+ 294              		.cfi_offset 6, -12
+ 295              		.cfi_offset 7, -8
+ 296              		.cfi_offset 14, -4
+ 297 0002 059F     		ldr	r7, [sp, #20]
+ 298 0004 069E     		ldr	r6, [sp, #24]
+ 299 0006 079D     		ldr	r5, [sp, #28]
+ 300 0008 089C     		ldr	r4, [sp, #32]
+  45:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+ 301              		.loc 1 45 5 is_stmt 1 view .LVU64
+  46:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 7
+
+
+ 302              		.loc 1 46 5 view .LVU65
+ 303              		.loc 1 46 24 is_stmt 0 view .LVU66
+ 304 000a 4FF0000E 		mov	lr, #0
+ 305 000e 80F800E0 		strb	lr, [r0]
+  47:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+ 306              		.loc 1 47 5 is_stmt 1 view .LVU67
+ 307              		.loc 1 47 24 is_stmt 0 view .LVU68
+ 308 0012 80F801E0 		strb	lr, [r0, #1]
+  48:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+ 309              		.loc 1 48 5 is_stmt 1 view .LVU69
+ 310              		.loc 1 48 24 is_stmt 0 view .LVU70
+ 311 0016 8170     		strb	r1, [r0, #2]
+  49:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+ 312              		.loc 1 49 5 is_stmt 1 view .LVU71
+ 313              		.loc 1 49 14 is_stmt 0 view .LVU72
+ 314 0018 02F0030E 		and	lr, r2, #3
+ 315 001c C178     		ldrb	r1, [r0, #3]	@ zero_extendqisi2
+ 316              	.LVL11:
+ 317              		.loc 1 49 14 view .LVU73
+ 318 001e 01F03F01 		and	r1, r1, #63
+ 319 0022 41EA8E11 		orr	r1, r1, lr, lsl #6
+ 320 0026 C170     		strb	r1, [r0, #3]
+ 321              	.LVL12:
+ 322              		.loc 1 49 14 view .LVU74
+ 323 0028 C2F38102 		ubfx	r2, r2, #2, #2
+ 324              	.LVL13:
+ 325              		.loc 1 49 14 view .LVU75
+ 326 002c 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 327 002e 21F00301 		bic	r1, r1, #3
+ 328 0032 0A43     		orrs	r2, r2, r1
+ 329 0034 0271     		strb	r2, [r0, #4]
+  50:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+ 330              		.loc 1 50 5 is_stmt 1 view .LVU76
+ 331              		.loc 1 50 14 is_stmt 0 view .LVU77
+ 332 0036 D2B2     		uxtb	r2, r2
+ 333 0038 63F38502 		bfi	r2, r3, #2, #4
+ 334              	.LVL14:
+ 335              		.loc 1 50 14 view .LVU78
+ 336 003c 0271     		strb	r2, [r0, #4]
+  51:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+ 337              		.loc 1 51 5 is_stmt 1 view .LVU79
+ 338              		.loc 1 51 14 is_stmt 0 view .LVU80
+ 339 003e C771     		strb	r7, [r0, #7]
+ 340 0040 C7F30127 		ubfx	r7, r7, #8, #2
+ 341 0044 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 342 0046 23F00303 		bic	r3, r3, #3
+ 343 004a 3B43     		orrs	r3, r3, r7
+ 344 004c 0372     		strb	r3, [r0, #8]
+  52:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = circle;
+ 345              		.loc 1 52 5 is_stmt 1 view .LVU81
+ 346              		.loc 1 52 21 is_stmt 0 view .LVU82
+ 347 004e C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 348 0050 0222     		movs	r2, #2
+ 349 0052 62F3C503 		bfi	r3, r2, #3, #3
+ 350 0056 C370     		strb	r3, [r0, #3]
+  53:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = x;
+ 351              		.loc 1 53 5 is_stmt 1 view .LVU83
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 8
+
+
+ 352              		.loc 1 53 16 is_stmt 0 view .LVU84
+ 353 0058 06F03F03 		and	r3, r6, #63
+ 354 005c 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 355 005e 01F00301 		and	r1, r1, #3
+ 356 0062 41EA8301 		orr	r1, r1, r3, lsl #2
+ 357 0066 0172     		strb	r1, [r0, #8]
+ 358 0068 C6F38416 		ubfx	r6, r6, #6, #5
+ 359 006c 427A     		ldrb	r2, [r0, #9]	@ zero_extendqisi2
+ 360 006e 22F01F02 		bic	r2, r2, #31
+ 361 0072 3243     		orrs	r2, r2, r6
+ 362 0074 4272     		strb	r2, [r0, #9]
+  54:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = y;
+ 363              		.loc 1 54 5 is_stmt 1 view .LVU85
+ 364              		.loc 1 54 16 is_stmt 0 view .LVU86
+ 365 0076 05F00703 		and	r3, r5, #7
+ 366 007a D2B2     		uxtb	r2, r2
+ 367 007c 02F01F02 		and	r2, r2, #31
+ 368 0080 42EA4312 		orr	r2, r2, r3, lsl #5
+ 369 0084 4272     		strb	r2, [r0, #9]
+ 370 0086 C5F3C705 		ubfx	r5, r5, #3, #8
+ 371 008a 8572     		strb	r5, [r0, #10]
+  55:Core/HAL/driver/referee/referee_ui.c ****     gd.radius = radius;
+ 372              		.loc 1 55 5 is_stmt 1 view .LVU87
+ 373              		.loc 1 55 15 is_stmt 0 view .LVU88
+ 374 008c C472     		strb	r4, [r0, #11]
+ 375 008e C4F30124 		ubfx	r4, r4, #8, #2
+ 376 0092 037B     		ldrb	r3, [r0, #12]	@ zero_extendqisi2
+ 377 0094 23F00303 		bic	r3, r3, #3
+ 378 0098 2343     		orrs	r3, r3, r4
+ 379 009a 0373     		strb	r3, [r0, #12]
+  56:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ 380              		.loc 1 56 5 is_stmt 1 view .LVU89
+  57:Core/HAL/driver/referee/referee_ui.c **** }
+ 381              		.loc 1 57 1 is_stmt 0 view .LVU90
+ 382 009c F0BD     		pop	{r4, r5, r6, r7, pc}
+ 383              		.cfi_endproc
+ 384              	.LFE135:
+ 386              		.section	.text.Oval,"ax",%progbits
+ 387              		.align	1
+ 388              		.global	Oval
+ 389              		.syntax unified
+ 390              		.thumb
+ 391              		.thumb_func
+ 393              	Oval:
+ 394              	.LVL15:
+ 395              	.LFB136:
+  58:Core/HAL/driver/referee/referee_ui.c **** 
+  59:Core/HAL/driver/referee/referee_ui.c **** //创建椭圆
+  60:Core/HAL/driver/referee/referee_ui.c **** graphic_data Oval(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t x_center, ui
+ 396              		.loc 1 60 159 is_stmt 1 view -0
+ 397              		.cfi_startproc
+ 398              		@ args = 20, pretend = 0, frame = 0
+ 399              		@ frame_needed = 0, uses_anonymous_args = 0
+ 400              		.loc 1 60 159 is_stmt 0 view .LVU92
+ 401 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 402              	.LCFI3:
+ 403              		.cfi_def_cfa_offset 24
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 9
+
+
+ 404              		.cfi_offset 4, -24
+ 405              		.cfi_offset 5, -20
+ 406              		.cfi_offset 6, -16
+ 407              		.cfi_offset 7, -12
+ 408              		.cfi_offset 8, -8
+ 409              		.cfi_offset 14, -4
+ 410 0004 DDF818E0 		ldr	lr, [sp, #24]
+ 411 0008 079F     		ldr	r7, [sp, #28]
+ 412 000a 089E     		ldr	r6, [sp, #32]
+ 413 000c 099D     		ldr	r5, [sp, #36]
+ 414 000e 0A9C     		ldr	r4, [sp, #40]
+  61:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+ 415              		.loc 1 61 5 is_stmt 1 view .LVU93
+  62:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+ 416              		.loc 1 62 5 view .LVU94
+ 417              		.loc 1 62 24 is_stmt 0 view .LVU95
+ 418 0010 4FF00008 		mov	r8, #0
+ 419 0014 80F80080 		strb	r8, [r0]
+  63:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+ 420              		.loc 1 63 5 is_stmt 1 view .LVU96
+ 421              		.loc 1 63 24 is_stmt 0 view .LVU97
+ 422 0018 80F80180 		strb	r8, [r0, #1]
+  64:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+ 423              		.loc 1 64 5 is_stmt 1 view .LVU98
+ 424              		.loc 1 64 24 is_stmt 0 view .LVU99
+ 425 001c 8170     		strb	r1, [r0, #2]
+  65:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+ 426              		.loc 1 65 5 is_stmt 1 view .LVU100
+ 427              		.loc 1 65 14 is_stmt 0 view .LVU101
+ 428 001e 02F00308 		and	r8, r2, #3
+ 429 0022 C178     		ldrb	r1, [r0, #3]	@ zero_extendqisi2
+ 430              	.LVL16:
+ 431              		.loc 1 65 14 view .LVU102
+ 432 0024 01F03F01 		and	r1, r1, #63
+ 433 0028 41EA8811 		orr	r1, r1, r8, lsl #6
+ 434 002c C170     		strb	r1, [r0, #3]
+ 435              	.LVL17:
+ 436              		.loc 1 65 14 view .LVU103
+ 437 002e C2F38102 		ubfx	r2, r2, #2, #2
+ 438              	.LVL18:
+ 439              		.loc 1 65 14 view .LVU104
+ 440 0032 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 441 0034 21F00301 		bic	r1, r1, #3
+ 442 0038 0A43     		orrs	r2, r2, r1
+ 443 003a 0271     		strb	r2, [r0, #4]
+  66:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+ 444              		.loc 1 66 5 is_stmt 1 view .LVU105
+ 445              		.loc 1 66 14 is_stmt 0 view .LVU106
+ 446 003c D2B2     		uxtb	r2, r2
+ 447 003e 63F38502 		bfi	r2, r3, #2, #4
+ 448              	.LVL19:
+ 449              		.loc 1 66 14 view .LVU107
+ 450 0042 0271     		strb	r2, [r0, #4]
+  67:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+ 451              		.loc 1 67 5 is_stmt 1 view .LVU108
+ 452              		.loc 1 67 14 is_stmt 0 view .LVU109
+ 453 0044 80F807E0 		strb	lr, [r0, #7]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 10
+
+
+ 454 0048 CEF3012E 		ubfx	lr, lr, #8, #2
+ 455 004c 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 456 004e 23F00303 		bic	r3, r3, #3
+ 457 0052 43EA0E03 		orr	r3, r3, lr
+ 458 0056 0372     		strb	r3, [r0, #8]
+  68:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = oval;
+ 459              		.loc 1 68 5 is_stmt 1 view .LVU110
+ 460              		.loc 1 68 21 is_stmt 0 view .LVU111
+ 461 0058 C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 462 005a 0322     		movs	r2, #3
+ 463 005c 62F3C503 		bfi	r3, r2, #3, #3
+ 464 0060 C370     		strb	r3, [r0, #3]
+  69:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = x_center;
+ 465              		.loc 1 69 5 is_stmt 1 view .LVU112
+ 466              		.loc 1 69 16 is_stmt 0 view .LVU113
+ 467 0062 07F03F02 		and	r2, r7, #63
+ 468 0066 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 469 0068 03F00303 		and	r3, r3, #3
+ 470 006c 43EA8203 		orr	r3, r3, r2, lsl #2
+ 471 0070 0372     		strb	r3, [r0, #8]
+ 472 0072 C7F38417 		ubfx	r7, r7, #6, #5
+ 473 0076 427A     		ldrb	r2, [r0, #9]	@ zero_extendqisi2
+ 474 0078 22F01F02 		bic	r2, r2, #31
+ 475 007c 3A43     		orrs	r2, r2, r7
+ 476 007e 4272     		strb	r2, [r0, #9]
+  70:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = y_center;
+ 477              		.loc 1 70 5 is_stmt 1 view .LVU114
+ 478              		.loc 1 70 16 is_stmt 0 view .LVU115
+ 479 0080 06F00703 		and	r3, r6, #7
+ 480 0084 D2B2     		uxtb	r2, r2
+ 481 0086 02F01F02 		and	r2, r2, #31
+ 482 008a 42EA4312 		orr	r2, r2, r3, lsl #5
+ 483 008e 4272     		strb	r2, [r0, #9]
+ 484 0090 C6F3C706 		ubfx	r6, r6, #3, #8
+ 485 0094 8672     		strb	r6, [r0, #10]
+  71:Core/HAL/driver/referee/referee_ui.c ****     gd.end_x = x_halfAxis;
+ 486              		.loc 1 71 5 is_stmt 1 view .LVU116
+ 487              		.loc 1 71 14 is_stmt 0 view .LVU117
+ 488 0096 05F03F03 		and	r3, r5, #63
+ 489 009a 027B     		ldrb	r2, [r0, #12]	@ zero_extendqisi2
+ 490 009c 02F00302 		and	r2, r2, #3
+ 491 00a0 42EA8302 		orr	r2, r2, r3, lsl #2
+ 492 00a4 0273     		strb	r2, [r0, #12]
+ 493 00a6 C5F38415 		ubfx	r5, r5, #6, #5
+ 494 00aa 437B     		ldrb	r3, [r0, #13]	@ zero_extendqisi2
+ 495 00ac 23F01F03 		bic	r3, r3, #31
+ 496 00b0 2B43     		orrs	r3, r3, r5
+ 497 00b2 4373     		strb	r3, [r0, #13]
+  72:Core/HAL/driver/referee/referee_ui.c ****     gd.end_y = y_halfAxis;
+ 498              		.loc 1 72 5 is_stmt 1 view .LVU118
+ 499              		.loc 1 72 14 is_stmt 0 view .LVU119
+ 500 00b4 04F00702 		and	r2, r4, #7
+ 501 00b8 DBB2     		uxtb	r3, r3
+ 502 00ba 03F01F03 		and	r3, r3, #31
+ 503 00be 43EA4213 		orr	r3, r3, r2, lsl #5
+ 504 00c2 4373     		strb	r3, [r0, #13]
+ 505 00c4 C4F3C704 		ubfx	r4, r4, #3, #8
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 11
+
+
+ 506 00c8 8473     		strb	r4, [r0, #14]
+  73:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ 507              		.loc 1 73 5 is_stmt 1 view .LVU120
+  74:Core/HAL/driver/referee/referee_ui.c **** }
+ 508              		.loc 1 74 1 is_stmt 0 view .LVU121
+ 509 00ca BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 510              		.cfi_endproc
+ 511              	.LFE136:
+ 513              		.section	.text.Arc,"ax",%progbits
+ 514              		.align	1
+ 515              		.global	Arc
+ 516              		.syntax unified
+ 517              		.thumb
+ 518              		.thumb_func
+ 520              	Arc:
+ 521              	.LVL20:
+ 522              	.LFB137:
+  75:Core/HAL/driver/referee/referee_ui.c **** 
+  76:Core/HAL/driver/referee/referee_ui.c **** //创建圆弧
+  77:Core/HAL/driver/referee/referee_ui.c **** graphic_data Arc(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t start_angle, 
+ 523              		.loc 1 77 200 is_stmt 1 view -0
+ 524              		.cfi_startproc
+ 525              		@ args = 28, pretend = 0, frame = 0
+ 526              		@ frame_needed = 0, uses_anonymous_args = 0
+ 527              		.loc 1 77 200 is_stmt 0 view .LVU123
+ 528 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 529              	.LCFI4:
+ 530              		.cfi_def_cfa_offset 32
+ 531              		.cfi_offset 4, -32
+ 532              		.cfi_offset 5, -28
+ 533              		.cfi_offset 6, -24
+ 534              		.cfi_offset 7, -20
+ 535              		.cfi_offset 8, -16
+ 536              		.cfi_offset 9, -12
+ 537              		.cfi_offset 10, -8
+ 538              		.cfi_offset 14, -4
+ 539 0004 DDF82090 		ldr	r9, [sp, #32]
+ 540 0008 DDF82480 		ldr	r8, [sp, #36]
+ 541 000c DDF828E0 		ldr	lr, [sp, #40]
+ 542 0010 0B9F     		ldr	r7, [sp, #44]
+ 543 0012 0C9E     		ldr	r6, [sp, #48]
+ 544 0014 0D9D     		ldr	r5, [sp, #52]
+ 545 0016 0E9C     		ldr	r4, [sp, #56]
+  78:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+ 546              		.loc 1 78 5 is_stmt 1 view .LVU124
+  79:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+ 547              		.loc 1 79 5 view .LVU125
+ 548              		.loc 1 79 24 is_stmt 0 view .LVU126
+ 549 0018 4FF0000A 		mov	r10, #0
+ 550 001c 80F800A0 		strb	r10, [r0]
+  80:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+ 551              		.loc 1 80 5 is_stmt 1 view .LVU127
+ 552              		.loc 1 80 24 is_stmt 0 view .LVU128
+ 553 0020 80F801A0 		strb	r10, [r0, #1]
+  81:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+ 554              		.loc 1 81 5 is_stmt 1 view .LVU129
+ 555              		.loc 1 81 24 is_stmt 0 view .LVU130
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 12
+
+
+ 556 0024 8170     		strb	r1, [r0, #2]
+  82:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+ 557              		.loc 1 82 5 is_stmt 1 view .LVU131
+ 558              		.loc 1 82 14 is_stmt 0 view .LVU132
+ 559 0026 02F0030A 		and	r10, r2, #3
+ 560 002a C178     		ldrb	r1, [r0, #3]	@ zero_extendqisi2
+ 561              	.LVL21:
+ 562              		.loc 1 82 14 view .LVU133
+ 563 002c 01F03F01 		and	r1, r1, #63
+ 564 0030 41EA8A11 		orr	r1, r1, r10, lsl #6
+ 565 0034 C170     		strb	r1, [r0, #3]
+ 566              	.LVL22:
+ 567              		.loc 1 82 14 view .LVU134
+ 568 0036 C2F38102 		ubfx	r2, r2, #2, #2
+ 569              	.LVL23:
+ 570              		.loc 1 82 14 view .LVU135
+ 571 003a 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 572 003c 21F00301 		bic	r1, r1, #3
+ 573 0040 0A43     		orrs	r2, r2, r1
+ 574 0042 0271     		strb	r2, [r0, #4]
+  83:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+ 575              		.loc 1 83 5 is_stmt 1 view .LVU136
+ 576              		.loc 1 83 14 is_stmt 0 view .LVU137
+ 577 0044 D2B2     		uxtb	r2, r2
+ 578 0046 63F38502 		bfi	r2, r3, #2, #4
+ 579              	.LVL24:
+ 580              		.loc 1 83 14 view .LVU138
+ 581 004a 0271     		strb	r2, [r0, #4]
+  84:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+ 582              		.loc 1 84 5 is_stmt 1 view .LVU139
+ 583              		.loc 1 84 14 is_stmt 0 view .LVU140
+ 584 004c 80F80790 		strb	r9, [r0, #7]
+ 585 0050 C9F30129 		ubfx	r9, r9, #8, #2
+ 586 0054 027A     		ldrb	r2, [r0, #8]	@ zero_extendqisi2
+ 587 0056 22F00302 		bic	r2, r2, #3
+ 588 005a 42EA0902 		orr	r2, r2, r9
+ 589 005e 0272     		strb	r2, [r0, #8]
+  85:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = arc;
+ 590              		.loc 1 85 5 is_stmt 1 view .LVU141
+ 591              		.loc 1 85 21 is_stmt 0 view .LVU142
+ 592 0060 C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 593 0062 0422     		movs	r2, #4
+ 594 0064 62F3C503 		bfi	r3, r2, #3, #3
+ 595 0068 C370     		strb	r3, [r0, #3]
+  86:Core/HAL/driver/referee/referee_ui.c ****     gd.start_angle = start_angle;
+ 596              		.loc 1 86 5 is_stmt 1 view .LVU143
+ 597              		.loc 1 86 20 is_stmt 0 view .LVU144
+ 598 006a 08F00303 		and	r3, r8, #3
+ 599 006e 0279     		ldrb	r2, [r0, #4]	@ zero_extendqisi2
+ 600 0070 02F03F02 		and	r2, r2, #63
+ 601 0074 42EA8312 		orr	r2, r2, r3, lsl #6
+ 602 0078 0271     		strb	r2, [r0, #4]
+ 603 007a C8F38608 		ubfx	r8, r8, #2, #7
+ 604 007e 4379     		ldrb	r3, [r0, #5]	@ zero_extendqisi2
+ 605 0080 23F07F03 		bic	r3, r3, #127
+ 606 0084 43EA0803 		orr	r3, r3, r8
+ 607 0088 4371     		strb	r3, [r0, #5]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 13
+
+
+  87:Core/HAL/driver/referee/referee_ui.c ****     gd.end_angle = end_angle;
+ 608              		.loc 1 87 5 is_stmt 1 view .LVU145
+ 609              		.loc 1 87 18 is_stmt 0 view .LVU146
+ 610 008a 0EF00102 		and	r2, lr, #1
+ 611 008e DBB2     		uxtb	r3, r3
+ 612 0090 03F07F03 		and	r3, r3, #127
+ 613 0094 43EAC213 		orr	r3, r3, r2, lsl #7
+ 614 0098 4371     		strb	r3, [r0, #5]
+ 615 009a CEF3470E 		ubfx	lr, lr, #1, #8
+ 616 009e 80F806E0 		strb	lr, [r0, #6]
+  88:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = x_center;
+ 617              		.loc 1 88 5 is_stmt 1 view .LVU147
+ 618              		.loc 1 88 16 is_stmt 0 view .LVU148
+ 619 00a2 07F03F02 		and	r2, r7, #63
+ 620 00a6 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 621 00a8 03F00303 		and	r3, r3, #3
+ 622 00ac 43EA8203 		orr	r3, r3, r2, lsl #2
+ 623 00b0 0372     		strb	r3, [r0, #8]
+ 624 00b2 C7F38417 		ubfx	r7, r7, #6, #5
+ 625 00b6 427A     		ldrb	r2, [r0, #9]	@ zero_extendqisi2
+ 626 00b8 22F01F02 		bic	r2, r2, #31
+ 627 00bc 3A43     		orrs	r2, r2, r7
+ 628 00be 4272     		strb	r2, [r0, #9]
+  89:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = y_center;
+ 629              		.loc 1 89 5 is_stmt 1 view .LVU149
+ 630              		.loc 1 89 16 is_stmt 0 view .LVU150
+ 631 00c0 06F00703 		and	r3, r6, #7
+ 632 00c4 D2B2     		uxtb	r2, r2
+ 633 00c6 02F01F02 		and	r2, r2, #31
+ 634 00ca 42EA4312 		orr	r2, r2, r3, lsl #5
+ 635 00ce 4272     		strb	r2, [r0, #9]
+ 636 00d0 C6F3C706 		ubfx	r6, r6, #3, #8
+ 637 00d4 8672     		strb	r6, [r0, #10]
+  90:Core/HAL/driver/referee/referee_ui.c ****     gd.end_x = x_halfAxis;
+ 638              		.loc 1 90 5 is_stmt 1 view .LVU151
+ 639              		.loc 1 90 14 is_stmt 0 view .LVU152
+ 640 00d6 05F03F03 		and	r3, r5, #63
+ 641 00da 027B     		ldrb	r2, [r0, #12]	@ zero_extendqisi2
+ 642 00dc 02F00302 		and	r2, r2, #3
+ 643 00e0 42EA8302 		orr	r2, r2, r3, lsl #2
+ 644 00e4 0273     		strb	r2, [r0, #12]
+ 645 00e6 C5F38415 		ubfx	r5, r5, #6, #5
+ 646 00ea 437B     		ldrb	r3, [r0, #13]	@ zero_extendqisi2
+ 647 00ec 23F01F03 		bic	r3, r3, #31
+ 648 00f0 2B43     		orrs	r3, r3, r5
+ 649 00f2 4373     		strb	r3, [r0, #13]
+  91:Core/HAL/driver/referee/referee_ui.c ****     gd.end_y = y_halfAxis;
+ 650              		.loc 1 91 5 is_stmt 1 view .LVU153
+ 651              		.loc 1 91 14 is_stmt 0 view .LVU154
+ 652 00f4 04F00702 		and	r2, r4, #7
+ 653 00f8 DBB2     		uxtb	r3, r3
+ 654 00fa 03F01F03 		and	r3, r3, #31
+ 655 00fe 43EA4213 		orr	r3, r3, r2, lsl #5
+ 656 0102 4373     		strb	r3, [r0, #13]
+ 657 0104 C4F3C704 		ubfx	r4, r4, #3, #8
+ 658 0108 8473     		strb	r4, [r0, #14]
+  92:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 14
+
+
+ 659              		.loc 1 92 5 is_stmt 1 view .LVU155
+  93:Core/HAL/driver/referee/referee_ui.c **** }
+ 660              		.loc 1 93 1 is_stmt 0 view .LVU156
+ 661 010a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 662              		.cfi_endproc
+ 663              	.LFE137:
+ 665              		.section	.text.Float,"ax",%progbits
+ 666              		.align	1
+ 667              		.global	Float
+ 668              		.syntax unified
+ 669              		.thumb
+ 670              		.thumb_func
+ 672              	Float:
+ 673              	.LVL25:
+ 674              	.LFB138:
+  94:Core/HAL/driver/referee/referee_ui.c **** 
+  95:Core/HAL/driver/referee/referee_ui.c **** //创建浮点数
+  96:Core/HAL/driver/referee/referee_ui.c **** graphic_data Float(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t fontSize, u
+ 675              		.loc 1 96 177 is_stmt 1 view -0
+ 676              		.cfi_startproc
+ 677              		@ args = 20, pretend = 0, frame = 0
+ 678              		@ frame_needed = 0, uses_anonymous_args = 0
+ 679              		.loc 1 96 177 is_stmt 0 view .LVU158
+ 680 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 681              	.LCFI5:
+ 682              		.cfi_def_cfa_offset 20
+ 683              		.cfi_offset 4, -20
+ 684              		.cfi_offset 5, -16
+ 685              		.cfi_offset 6, -12
+ 686              		.cfi_offset 7, -8
+ 687              		.cfi_offset 14, -4
+ 688 0002 059F     		ldr	r7, [sp, #20]
+ 689 0004 069C     		ldr	r4, [sp, #24]
+ 690 0006 089E     		ldr	r6, [sp, #32]
+ 691 0008 099D     		ldr	r5, [sp, #36]
+  97:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+ 692              		.loc 1 97 5 is_stmt 1 view .LVU159
+  98:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+ 693              		.loc 1 98 5 view .LVU160
+ 694              		.loc 1 98 24 is_stmt 0 view .LVU161
+ 695 000a 4FF0000E 		mov	lr, #0
+ 696 000e 80F800E0 		strb	lr, [r0]
+  99:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+ 697              		.loc 1 99 5 is_stmt 1 view .LVU162
+ 698              		.loc 1 99 24 is_stmt 0 view .LVU163
+ 699 0012 80F801E0 		strb	lr, [r0, #1]
+ 100:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+ 700              		.loc 1 100 5 is_stmt 1 view .LVU164
+ 701              		.loc 1 100 24 is_stmt 0 view .LVU165
+ 702 0016 8170     		strb	r1, [r0, #2]
+ 101:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+ 703              		.loc 1 101 5 is_stmt 1 view .LVU166
+ 704              		.loc 1 101 14 is_stmt 0 view .LVU167
+ 705 0018 02F0030E 		and	lr, r2, #3
+ 706 001c C178     		ldrb	r1, [r0, #3]	@ zero_extendqisi2
+ 707              	.LVL26:
+ 708              		.loc 1 101 14 view .LVU168
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 15
+
+
+ 709 001e 01F03F01 		and	r1, r1, #63
+ 710 0022 41EA8E11 		orr	r1, r1, lr, lsl #6
+ 711 0026 C170     		strb	r1, [r0, #3]
+ 712              	.LVL27:
+ 713              		.loc 1 101 14 view .LVU169
+ 714 0028 C2F38102 		ubfx	r2, r2, #2, #2
+ 715              	.LVL28:
+ 716              		.loc 1 101 14 view .LVU170
+ 717 002c 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 718 002e 21F00301 		bic	r1, r1, #3
+ 719 0032 0A43     		orrs	r2, r2, r1
+ 720 0034 0271     		strb	r2, [r0, #4]
+ 102:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+ 721              		.loc 1 102 5 is_stmt 1 view .LVU171
+ 722              		.loc 1 102 14 is_stmt 0 view .LVU172
+ 723 0036 D2B2     		uxtb	r2, r2
+ 724 0038 63F38502 		bfi	r2, r3, #2, #4
+ 725              	.LVL29:
+ 726              		.loc 1 102 14 view .LVU173
+ 727 003c 0271     		strb	r2, [r0, #4]
+ 103:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+ 728              		.loc 1 103 5 is_stmt 1 view .LVU174
+ 729              		.loc 1 103 14 is_stmt 0 view .LVU175
+ 730 003e C771     		strb	r7, [r0, #7]
+ 731 0040 C7F30127 		ubfx	r7, r7, #8, #2
+ 732 0044 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 733 0046 23F00303 		bic	r3, r3, #3
+ 734 004a 3B43     		orrs	r3, r3, r7
+ 735 004c 0372     		strb	r3, [r0, #8]
+ 104:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = Float_t;
+ 736              		.loc 1 104 5 is_stmt 1 view .LVU176
+ 737              		.loc 1 104 21 is_stmt 0 view .LVU177
+ 738 004e C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 739 0050 0522     		movs	r2, #5
+ 740 0052 62F3C503 		bfi	r3, r2, #3, #3
+ 741 0056 C370     		strb	r3, [r0, #3]
+ 105:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = start_x;
+ 742              		.loc 1 105 5 is_stmt 1 view .LVU178
+ 743              		.loc 1 105 16 is_stmt 0 view .LVU179
+ 744 0058 06F03F03 		and	r3, r6, #63
+ 745 005c 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 746 005e 01F00301 		and	r1, r1, #3
+ 747 0062 41EA8301 		orr	r1, r1, r3, lsl #2
+ 748 0066 0172     		strb	r1, [r0, #8]
+ 749 0068 C6F38416 		ubfx	r6, r6, #6, #5
+ 750 006c 427A     		ldrb	r2, [r0, #9]	@ zero_extendqisi2
+ 751 006e 22F01F02 		bic	r2, r2, #31
+ 752 0072 3243     		orrs	r2, r2, r6
+ 753 0074 4272     		strb	r2, [r0, #9]
+ 106:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = start_y;
+ 754              		.loc 1 106 5 is_stmt 1 view .LVU180
+ 755              		.loc 1 106 16 is_stmt 0 view .LVU181
+ 756 0076 05F00703 		and	r3, r5, #7
+ 757 007a D2B2     		uxtb	r2, r2
+ 758 007c 02F01F02 		and	r2, r2, #31
+ 759 0080 42EA4312 		orr	r2, r2, r3, lsl #5
+ 760 0084 4272     		strb	r2, [r0, #9]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 16
+
+
+ 761 0086 C5F3C705 		ubfx	r5, r5, #3, #8
+ 762 008a 8572     		strb	r5, [r0, #10]
+ 107:Core/HAL/driver/referee/referee_ui.c ****     gd.start_angle = fontSize;
+ 763              		.loc 1 107 5 is_stmt 1 view .LVU182
+ 764              		.loc 1 107 20 is_stmt 0 view .LVU183
+ 765 008c 04F00303 		and	r3, r4, #3
+ 766 0090 0279     		ldrb	r2, [r0, #4]	@ zero_extendqisi2
+ 767 0092 02F03F02 		and	r2, r2, #63
+ 768 0096 42EA8312 		orr	r2, r2, r3, lsl #6
+ 769 009a 0271     		strb	r2, [r0, #4]
+ 770 009c C4F38604 		ubfx	r4, r4, #2, #7
+ 771 00a0 4379     		ldrb	r3, [r0, #5]	@ zero_extendqisi2
+ 772 00a2 23F07F03 		bic	r3, r3, #127
+ 773 00a6 2343     		orrs	r3, r3, r4
+ 774 00a8 4371     		strb	r3, [r0, #5]
+ 108:Core/HAL/driver/referee/referee_ui.c ****     int32_t float_num = number * 1000;
+ 775              		.loc 1 108 5 is_stmt 1 view .LVU184
+ 776              		.loc 1 108 32 is_stmt 0 view .LVU185
+ 777 00aa DFED057A 		vldr.32	s15, .L13
+ 778 00ae 20EE270A 		vmul.f32	s0, s0, s15
+ 779              	.LVL30:
+ 780              		.loc 1 108 13 view .LVU186
+ 781 00b2 BDEEC00A 		vcvt.s32.f32	s0, s0
+ 782              	.LVL31:
+ 109:Core/HAL/driver/referee/referee_ui.c ****     memcpy(((uint8_t*)&gd) + 11, &float_num, 4);
+ 783              		.loc 1 109 5 is_stmt 1 view .LVU187
+ 784 00b6 10EE103A 		vmov	r3, s0	@ int
+ 785 00ba C0F80B30 		str	r3, [r0, #11]	@ unaligned
+ 110:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ 786              		.loc 1 110 5 view .LVU188
+ 111:Core/HAL/driver/referee/referee_ui.c **** }
+ 787              		.loc 1 111 1 is_stmt 0 view .LVU189
+ 788 00be F0BD     		pop	{r4, r5, r6, r7, pc}
+ 789              	.L14:
+ 790              		.align	2
+ 791              	.L13:
+ 792 00c0 00007A44 		.word	1148846080
+ 793              		.cfi_endproc
+ 794              	.LFE138:
+ 796              		.section	.text.Int,"ax",%progbits
+ 797              		.align	1
+ 798              		.global	Int
+ 799              		.syntax unified
+ 800              		.thumb
+ 801              		.thumb_func
+ 803              	Int:
+ 804              	.LVL32:
+ 805              	.LFB139:
+ 112:Core/HAL/driver/referee/referee_ui.c **** 
+ 113:Core/HAL/driver/referee/referee_ui.c **** //创建整型数
+ 114:Core/HAL/driver/referee/referee_ui.c **** graphic_data Int(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t fontSize, uin
+ 806              		.loc 1 114 145 is_stmt 1 view -0
+ 807              		.cfi_startproc
+ 808              		@ args = 20, pretend = 0, frame = 0
+ 809              		@ frame_needed = 0, uses_anonymous_args = 0
+ 810              		.loc 1 114 145 is_stmt 0 view .LVU191
+ 811 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 17
+
+
+ 812              	.LCFI6:
+ 813              		.cfi_def_cfa_offset 20
+ 814              		.cfi_offset 4, -20
+ 815              		.cfi_offset 5, -16
+ 816              		.cfi_offset 6, -12
+ 817              		.cfi_offset 7, -8
+ 818              		.cfi_offset 14, -4
+ 819 0002 059F     		ldr	r7, [sp, #20]
+ 820 0004 069E     		ldr	r6, [sp, #24]
+ 821 0006 079D     		ldr	r5, [sp, #28]
+ 822 0008 089C     		ldr	r4, [sp, #32]
+ 115:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+ 823              		.loc 1 115 5 is_stmt 1 view .LVU192
+ 116:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+ 824              		.loc 1 116 5 view .LVU193
+ 825              		.loc 1 116 24 is_stmt 0 view .LVU194
+ 826 000a 4FF0000E 		mov	lr, #0
+ 827 000e 80F800E0 		strb	lr, [r0]
+ 117:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+ 828              		.loc 1 117 5 is_stmt 1 view .LVU195
+ 829              		.loc 1 117 24 is_stmt 0 view .LVU196
+ 830 0012 80F801E0 		strb	lr, [r0, #1]
+ 118:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+ 831              		.loc 1 118 5 is_stmt 1 view .LVU197
+ 832              		.loc 1 118 24 is_stmt 0 view .LVU198
+ 833 0016 8170     		strb	r1, [r0, #2]
+ 119:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+ 834              		.loc 1 119 5 is_stmt 1 view .LVU199
+ 835              		.loc 1 119 14 is_stmt 0 view .LVU200
+ 836 0018 02F0030E 		and	lr, r2, #3
+ 837 001c C178     		ldrb	r1, [r0, #3]	@ zero_extendqisi2
+ 838              	.LVL33:
+ 839              		.loc 1 119 14 view .LVU201
+ 840 001e 01F03F01 		and	r1, r1, #63
+ 841 0022 41EA8E11 		orr	r1, r1, lr, lsl #6
+ 842 0026 C170     		strb	r1, [r0, #3]
+ 843              	.LVL34:
+ 844              		.loc 1 119 14 view .LVU202
+ 845 0028 C2F38102 		ubfx	r2, r2, #2, #2
+ 846              	.LVL35:
+ 847              		.loc 1 119 14 view .LVU203
+ 848 002c 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 849 002e 21F00301 		bic	r1, r1, #3
+ 850 0032 0A43     		orrs	r2, r2, r1
+ 851 0034 0271     		strb	r2, [r0, #4]
+ 120:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+ 852              		.loc 1 120 5 is_stmt 1 view .LVU204
+ 853              		.loc 1 120 14 is_stmt 0 view .LVU205
+ 854 0036 D2B2     		uxtb	r2, r2
+ 855 0038 63F38502 		bfi	r2, r3, #2, #4
+ 856              	.LVL36:
+ 857              		.loc 1 120 14 view .LVU206
+ 858 003c 0271     		strb	r2, [r0, #4]
+ 121:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+ 859              		.loc 1 121 5 is_stmt 1 view .LVU207
+ 860              		.loc 1 121 14 is_stmt 0 view .LVU208
+ 861 003e C771     		strb	r7, [r0, #7]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 18
+
+
+ 862 0040 C7F30127 		ubfx	r7, r7, #8, #2
+ 863 0044 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 864 0046 23F00303 		bic	r3, r3, #3
+ 865 004a 3B43     		orrs	r3, r3, r7
+ 866 004c 0372     		strb	r3, [r0, #8]
+ 122:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = Int_t;
+ 867              		.loc 1 122 5 is_stmt 1 view .LVU209
+ 868              		.loc 1 122 21 is_stmt 0 view .LVU210
+ 869 004e C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 870 0050 0622     		movs	r2, #6
+ 871 0052 62F3C503 		bfi	r3, r2, #3, #3
+ 872 0056 C370     		strb	r3, [r0, #3]
+ 123:Core/HAL/driver/referee/referee_ui.c ****     gd.start_angle = fontSize;
+ 873              		.loc 1 123 5 is_stmt 1 view .LVU211
+ 874              		.loc 1 123 20 is_stmt 0 view .LVU212
+ 875 0058 06F00303 		and	r3, r6, #3
+ 876 005c 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 877 005e 01F03F01 		and	r1, r1, #63
+ 878 0062 41EA8311 		orr	r1, r1, r3, lsl #6
+ 879 0066 0171     		strb	r1, [r0, #4]
+ 880 0068 C6F38606 		ubfx	r6, r6, #2, #7
+ 881 006c 4279     		ldrb	r2, [r0, #5]	@ zero_extendqisi2
+ 882 006e 22F07F02 		bic	r2, r2, #127
+ 883 0072 3243     		orrs	r2, r2, r6
+ 884 0074 4271     		strb	r2, [r0, #5]
+ 124:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = start_x;
+ 885              		.loc 1 124 5 is_stmt 1 view .LVU213
+ 886              		.loc 1 124 16 is_stmt 0 view .LVU214
+ 887 0076 05F03F03 		and	r3, r5, #63
+ 888 007a 027A     		ldrb	r2, [r0, #8]	@ zero_extendqisi2
+ 889 007c 02F00302 		and	r2, r2, #3
+ 890 0080 42EA8302 		orr	r2, r2, r3, lsl #2
+ 891 0084 0272     		strb	r2, [r0, #8]
+ 892 0086 C5F38415 		ubfx	r5, r5, #6, #5
+ 893 008a 437A     		ldrb	r3, [r0, #9]	@ zero_extendqisi2
+ 894 008c 23F01F03 		bic	r3, r3, #31
+ 895 0090 2B43     		orrs	r3, r3, r5
+ 896 0092 4372     		strb	r3, [r0, #9]
+ 125:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = start_y;
+ 897              		.loc 1 125 5 is_stmt 1 view .LVU215
+ 898              		.loc 1 125 16 is_stmt 0 view .LVU216
+ 899 0094 04F00702 		and	r2, r4, #7
+ 900 0098 DBB2     		uxtb	r3, r3
+ 901 009a 03F01F03 		and	r3, r3, #31
+ 902 009e 43EA4213 		orr	r3, r3, r2, lsl #5
+ 903 00a2 4372     		strb	r3, [r0, #9]
+ 904 00a4 C4F3C704 		ubfx	r4, r4, #3, #8
+ 905 00a8 8472     		strb	r4, [r0, #10]
+ 126:Core/HAL/driver/referee/referee_ui.c ****     memcpy(((uint8_t*)&gd) + 11, &number, 4);
+ 906              		.loc 1 126 5 is_stmt 1 view .LVU217
+ 907 00aa 099B     		ldr	r3, [sp, #36]
+ 908 00ac C0F80B30 		str	r3, [r0, #11]	@ unaligned
+ 127:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ 909              		.loc 1 127 5 view .LVU218
+ 128:Core/HAL/driver/referee/referee_ui.c **** }
+ 910              		.loc 1 128 1 is_stmt 0 view .LVU219
+ 911 00b0 F0BD     		pop	{r4, r5, r6, r7, pc}
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 19
+
+
+ 912              		.cfi_endproc
+ 913              	.LFE139:
+ 915              		.section	.text.Char,"ax",%progbits
+ 916              		.align	1
+ 917              		.global	Char
+ 918              		.syntax unified
+ 919              		.thumb
+ 920              		.thumb_func
+ 922              	Char:
+ 923              	.LVL37:
+ 924              	.LFB140:
+ 129:Core/HAL/driver/referee/referee_ui.c **** 
+ 130:Core/HAL/driver/referee/referee_ui.c **** //创建字体流
+ 131:Core/HAL/driver/referee/referee_ui.c **** graphic_data Char(uint8_t id, uint32_t layer, uint32_t color, uint32_t width, uint32_t fontSize, ui
+ 925              		.loc 1 131 153 is_stmt 1 view -0
+ 926              		.cfi_startproc
+ 927              		@ args = 20, pretend = 0, frame = 0
+ 928              		@ frame_needed = 0, uses_anonymous_args = 0
+ 929              		.loc 1 131 153 is_stmt 0 view .LVU221
+ 930 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 931              	.LCFI7:
+ 932              		.cfi_def_cfa_offset 24
+ 933              		.cfi_offset 4, -24
+ 934              		.cfi_offset 5, -20
+ 935              		.cfi_offset 6, -16
+ 936              		.cfi_offset 7, -12
+ 937              		.cfi_offset 8, -8
+ 938              		.cfi_offset 14, -4
+ 939 0004 DDF818E0 		ldr	lr, [sp, #24]
+ 940 0008 079F     		ldr	r7, [sp, #28]
+ 941 000a 089E     		ldr	r6, [sp, #32]
+ 942 000c 099D     		ldr	r5, [sp, #36]
+ 943 000e 0A9C     		ldr	r4, [sp, #40]
+ 132:Core/HAL/driver/referee/referee_ui.c ****     graphic_data gd;
+ 944              		.loc 1 132 5 is_stmt 1 view .LVU222
+ 133:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[0] = 0;
+ 945              		.loc 1 133 5 view .LVU223
+ 946              		.loc 1 133 24 is_stmt 0 view .LVU224
+ 947 0010 4FF00008 		mov	r8, #0
+ 948 0014 80F80080 		strb	r8, [r0]
+ 134:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[1] = 0;
+ 949              		.loc 1 134 5 is_stmt 1 view .LVU225
+ 950              		.loc 1 134 24 is_stmt 0 view .LVU226
+ 951 0018 80F80180 		strb	r8, [r0, #1]
+ 135:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_name[2] = id;
+ 952              		.loc 1 135 5 is_stmt 1 view .LVU227
+ 953              		.loc 1 135 24 is_stmt 0 view .LVU228
+ 954 001c 8170     		strb	r1, [r0, #2]
+ 136:Core/HAL/driver/referee/referee_ui.c ****     gd.layer = layer;
+ 955              		.loc 1 136 5 is_stmt 1 view .LVU229
+ 956              		.loc 1 136 14 is_stmt 0 view .LVU230
+ 957 001e 02F00308 		and	r8, r2, #3
+ 958 0022 C178     		ldrb	r1, [r0, #3]	@ zero_extendqisi2
+ 959              	.LVL38:
+ 960              		.loc 1 136 14 view .LVU231
+ 961 0024 01F03F01 		and	r1, r1, #63
+ 962 0028 41EA8811 		orr	r1, r1, r8, lsl #6
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 20
+
+
+ 963 002c C170     		strb	r1, [r0, #3]
+ 964              	.LVL39:
+ 965              		.loc 1 136 14 view .LVU232
+ 966 002e C2F38102 		ubfx	r2, r2, #2, #2
+ 967              	.LVL40:
+ 968              		.loc 1 136 14 view .LVU233
+ 969 0032 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 970 0034 21F00301 		bic	r1, r1, #3
+ 971 0038 0A43     		orrs	r2, r2, r1
+ 972 003a 0271     		strb	r2, [r0, #4]
+ 137:Core/HAL/driver/referee/referee_ui.c ****     gd.color = color;
+ 973              		.loc 1 137 5 is_stmt 1 view .LVU234
+ 974              		.loc 1 137 14 is_stmt 0 view .LVU235
+ 975 003c D2B2     		uxtb	r2, r2
+ 976 003e 63F38502 		bfi	r2, r3, #2, #4
+ 977              	.LVL41:
+ 978              		.loc 1 137 14 view .LVU236
+ 979 0042 0271     		strb	r2, [r0, #4]
+ 138:Core/HAL/driver/referee/referee_ui.c ****     gd.width = width;
+ 980              		.loc 1 138 5 is_stmt 1 view .LVU237
+ 981              		.loc 1 138 14 is_stmt 0 view .LVU238
+ 982 0044 80F807E0 		strb	lr, [r0, #7]
+ 983 0048 CEF3012E 		ubfx	lr, lr, #8, #2
+ 984 004c 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+ 985 004e 23F00303 		bic	r3, r3, #3
+ 986 0052 43EA0E03 		orr	r3, r3, lr
+ 987 0056 0372     		strb	r3, [r0, #8]
+ 139:Core/HAL/driver/referee/referee_ui.c ****     gd.graphic_tpye = Char_t;
+ 988              		.loc 1 139 5 is_stmt 1 view .LVU239
+ 989              		.loc 1 139 21 is_stmt 0 view .LVU240
+ 990 0058 C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 991 005a 43F03803 		orr	r3, r3, #56
+ 992 005e C370     		strb	r3, [r0, #3]
+ 140:Core/HAL/driver/referee/referee_ui.c ****     gd.start_angle = fontSize;
+ 993              		.loc 1 140 5 is_stmt 1 view .LVU241
+ 994              		.loc 1 140 20 is_stmt 0 view .LVU242
+ 995 0060 07F00302 		and	r2, r7, #3
+ 996 0064 0379     		ldrb	r3, [r0, #4]	@ zero_extendqisi2
+ 997 0066 03F03F03 		and	r3, r3, #63
+ 998 006a 43EA8213 		orr	r3, r3, r2, lsl #6
+ 999 006e 0371     		strb	r3, [r0, #4]
+ 1000 0070 C7F38607 		ubfx	r7, r7, #2, #7
+ 1001 0074 4279     		ldrb	r2, [r0, #5]	@ zero_extendqisi2
+ 1002 0076 22F07F02 		bic	r2, r2, #127
+ 1003 007a 3A43     		orrs	r2, r2, r7
+ 1004 007c 4271     		strb	r2, [r0, #5]
+ 141:Core/HAL/driver/referee/referee_ui.c ****     gd.end_angle = ChLength;
+ 1005              		.loc 1 141 5 is_stmt 1 view .LVU243
+ 1006              		.loc 1 141 18 is_stmt 0 view .LVU244
+ 1007 007e 06F00103 		and	r3, r6, #1
+ 1008 0082 D2B2     		uxtb	r2, r2
+ 1009 0084 02F07F02 		and	r2, r2, #127
+ 1010 0088 42EAC312 		orr	r2, r2, r3, lsl #7
+ 1011 008c 4271     		strb	r2, [r0, #5]
+ 1012 008e C6F34706 		ubfx	r6, r6, #1, #8
+ 1013 0092 8671     		strb	r6, [r0, #6]
+ 142:Core/HAL/driver/referee/referee_ui.c ****     gd.start_x = start_x;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 21
+
+
+ 1014              		.loc 1 142 5 is_stmt 1 view .LVU245
+ 1015              		.loc 1 142 16 is_stmt 0 view .LVU246
+ 1016 0094 05F03F03 		and	r3, r5, #63
+ 1017 0098 027A     		ldrb	r2, [r0, #8]	@ zero_extendqisi2
+ 1018 009a 02F00302 		and	r2, r2, #3
+ 1019 009e 42EA8302 		orr	r2, r2, r3, lsl #2
+ 1020 00a2 0272     		strb	r2, [r0, #8]
+ 1021 00a4 C5F38415 		ubfx	r5, r5, #6, #5
+ 1022 00a8 437A     		ldrb	r3, [r0, #9]	@ zero_extendqisi2
+ 1023 00aa 23F01F03 		bic	r3, r3, #31
+ 1024 00ae 2B43     		orrs	r3, r3, r5
+ 1025 00b0 4372     		strb	r3, [r0, #9]
+ 143:Core/HAL/driver/referee/referee_ui.c ****     gd.start_y = start_y;
+ 1026              		.loc 1 143 5 is_stmt 1 view .LVU247
+ 1027              		.loc 1 143 16 is_stmt 0 view .LVU248
+ 1028 00b2 04F00702 		and	r2, r4, #7
+ 1029 00b6 DBB2     		uxtb	r3, r3
+ 1030 00b8 03F01F03 		and	r3, r3, #31
+ 1031 00bc 43EA4213 		orr	r3, r3, r2, lsl #5
+ 1032 00c0 4372     		strb	r3, [r0, #9]
+ 1033 00c2 C4F3C704 		ubfx	r4, r4, #3, #8
+ 1034 00c6 8472     		strb	r4, [r0, #10]
+ 144:Core/HAL/driver/referee/referee_ui.c ****     return gd;
+ 1035              		.loc 1 144 5 is_stmt 1 view .LVU249
+ 145:Core/HAL/driver/referee/referee_ui.c **** }
+ 1036              		.loc 1 145 1 is_stmt 0 view .LVU250
+ 1037 00c8 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1038              		.cfi_endproc
+ 1039              	.LFE140:
+ 1041              		.section	.text.graphic_float_change,"ax",%progbits
+ 1042              		.align	1
+ 1043              		.global	graphic_float_change
+ 1044              		.syntax unified
+ 1045              		.thumb
+ 1046              		.thumb_func
+ 1048              	graphic_float_change:
+ 1049              	.LVL42:
+ 1050              	.LFB141:
+ 146:Core/HAL/driver/referee/referee_ui.c **** 
+ 147:Core/HAL/driver/referee/referee_ui.c **** void graphic_float_change(graphic_data* graphic, float number) {
+ 1051              		.loc 1 147 64 is_stmt 1 view -0
+ 1052              		.cfi_startproc
+ 1053              		@ args = 0, pretend = 0, frame = 0
+ 1054              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1055              		@ link register save eliminated.
+ 148:Core/HAL/driver/referee/referee_ui.c ****     int32_t float_num = number * 1000;
+ 1056              		.loc 1 148 5 view .LVU252
+ 1057              		.loc 1 148 32 is_stmt 0 view .LVU253
+ 1058 0000 DFED057A 		vldr.32	s15, .L20
+ 1059 0004 20EE270A 		vmul.f32	s0, s0, s15
+ 1060              	.LVL43:
+ 1061              		.loc 1 148 13 view .LVU254
+ 1062 0008 BDEEC00A 		vcvt.s32.f32	s0, s0
+ 1063              	.LVL44:
+ 149:Core/HAL/driver/referee/referee_ui.c ****     memcpy(((uint8_t*)graphic) + 11, &float_num, 4);
+ 1064              		.loc 1 149 5 is_stmt 1 view .LVU255
+ 1065 000c 10EE103A 		vmov	r3, s0	@ int
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 22
+
+
+ 1066 0010 C0F80B30 		str	r3, [r0, #11]	@ unaligned
+ 150:Core/HAL/driver/referee/referee_ui.c **** }
+ 1067              		.loc 1 150 1 is_stmt 0 view .LVU256
+ 1068 0014 7047     		bx	lr
+ 1069              	.L21:
+ 1070 0016 00BF     		.align	2
+ 1071              	.L20:
+ 1072 0018 00007A44 		.word	1148846080
+ 1073              		.cfi_endproc
+ 1074              	.LFE141:
+ 1076              		.section	.text.graphic_int_change,"ax",%progbits
+ 1077              		.align	1
+ 1078              		.global	graphic_int_change
+ 1079              		.syntax unified
+ 1080              		.thumb
+ 1081              		.thumb_func
+ 1083              	graphic_int_change:
+ 1084              	.LVL45:
+ 1085              	.LFB142:
+ 151:Core/HAL/driver/referee/referee_ui.c **** void graphic_int_change(graphic_data* graphic, int number) {
+ 1086              		.loc 1 151 60 is_stmt 1 view -0
+ 1087              		.cfi_startproc
+ 1088              		@ args = 0, pretend = 0, frame = 0
+ 1089              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1090              		@ link register save eliminated.
+ 152:Core/HAL/driver/referee/referee_ui.c ****     memcpy(((uint8_t*)graphic) + 11, &number, 4);
+ 1091              		.loc 1 152 5 view .LVU258
+ 1092 0000 C0F80B10 		str	r1, [r0, #11]	@ unaligned
+ 153:Core/HAL/driver/referee/referee_ui.c **** }
+ 1093              		.loc 1 153 1 is_stmt 0 view .LVU259
+ 1094 0004 7047     		bx	lr
+ 1095              		.cfi_endproc
+ 1096              	.LFE142:
+ 1098              		.section	.text.Robot_Client_ID,"ax",%progbits
+ 1099              		.align	1
+ 1100              		.global	Robot_Client_ID
+ 1101              		.syntax unified
+ 1102              		.thumb
+ 1103              		.thumb_func
+ 1105              	Robot_Client_ID:
+ 1106              	.LVL46:
+ 1107              	.LFB148:
+ 154:Core/HAL/driver/referee/referee_ui.c **** 
+ 155:Core/HAL/driver/referee/referee_ui.c **** // 添加图形命令
+ 156:Core/HAL/driver/referee/referee_ui.c **** void add_graphic(referee_ui* obj, graphic_data* graphic) {
+ 157:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 158:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 159:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 160:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 1;  //添加
+ 161:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 162:Core/HAL/driver/referee/referee_ui.c **** }
+ 163:Core/HAL/driver/referee/referee_ui.c **** 
+ 164:Core/HAL/driver/referee/referee_ui.c **** // 删除图形命令
+ 165:Core/HAL/driver/referee/referee_ui.c **** void del_graphic(referee_ui* obj, graphic_data* graphic) {
+ 166:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 167:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 168:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 1;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 23
+
+
+ 169:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 3;  //删除
+ 170:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 171:Core/HAL/driver/referee/referee_ui.c **** }
+ 172:Core/HAL/driver/referee/referee_ui.c **** // 添加字符串命令
+ 173:Core/HAL/driver/referee/referee_ui.c **** void add_text(referee_ui* obj, graphic_data* graphic, char* s, uint8_t len) {
+ 174:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 175:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 176:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 177:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 1;  //添加
+ 178:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.end_angle = len;
+ 179:Core/HAL/driver/referee/referee_ui.c ****     memset(tmp.textdata, 0, 30);
+ 180:Core/HAL/driver/referee/referee_ui.c ****     memcpy(tmp.textdata, s, len);
+ 181:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 182:Core/HAL/driver/referee/referee_ui.c **** }
+ 183:Core/HAL/driver/referee/referee_ui.c **** 
+ 184:Core/HAL/driver/referee/referee_ui.c **** // 修改图形命令
+ 185:Core/HAL/driver/referee/referee_ui.c **** void modifiy_graphic(referee_ui* obj, graphic_data* graphic) {
+ 186:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 187:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 188:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 189:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 2;  //修改
+ 190:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 191:Core/HAL/driver/referee/referee_ui.c **** }
+ 192:Core/HAL/driver/referee/referee_ui.c **** // 修改字符串命令
+ 193:Core/HAL/driver/referee/referee_ui.c **** void modifiy_text(referee_ui* obj, graphic_data* graphic, char* s, uint8_t len) {
+ 194:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 195:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 196:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 197:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 2;  //修改
+ 198:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.end_angle = len;
+ 199:Core/HAL/driver/referee/referee_ui.c ****     memset(tmp.textdata, 0, 30);
+ 200:Core/HAL/driver/referee/referee_ui.c ****     memcpy(tmp.textdata, s, len);
+ 201:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 202:Core/HAL/driver/referee/referee_ui.c **** }
+ 203:Core/HAL/driver/referee/referee_ui.c **** 
+ 204:Core/HAL/driver/referee/referee_ui.c **** uint16_t Robot_Client_ID(uint16_t robotID) {
+ 1108              		.loc 1 204 44 is_stmt 1 view -0
+ 1109              		.cfi_startproc
+ 1110              		@ args = 0, pretend = 0, frame = 0
+ 1111              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1112              		@ link register save eliminated.
+ 205:Core/HAL/driver/referee/referee_ui.c ****     uint16_t receiverID_client = 0;
+ 1113              		.loc 1 205 5 view .LVU261
+ 206:Core/HAL/driver/referee/referee_ui.c ****     switch (robotID) {
+ 1114              		.loc 1 206 5 view .LVU262
+ 1115 0000 0628     		cmp	r0, #6
+ 1116 0002 0BD9     		bls	.L45
+ 1117 0004 6A28     		cmp	r0, #106
+ 1118 0006 3FD8     		bhi	.L44
+ 1119 0008 6528     		cmp	r0, #101
+ 1120 000a 17D3     		bcc	.L46
+ 1121 000c 6538     		subs	r0, r0, #101
+ 1122              	.LVL47:
+ 1123              		.loc 1 206 5 is_stmt 0 view .LVU263
+ 1124 000e 0528     		cmp	r0, #5
+ 1125 0010 08D8     		bhi	.L27
+ 1126 0012 DFE800F0 		tbb	[pc, r0]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 24
+
+
+ 1127              	.L29:
+ 1128 0016 33       		.byte	(.L42-.L29)/2
+ 1129 0017 24       		.byte	(.L33-.L29)/2
+ 1130 0018 27       		.byte	(.L32-.L29)/2
+ 1131 0019 2A       		.byte	(.L31-.L29)/2
+ 1132 001a 2D       		.byte	(.L30-.L29)/2
+ 1133 001b 30       		.byte	(.L28-.L29)/2
+ 1134              	.LVL48:
+ 1135              		.p2align 1
+ 1136              	.L45:
+ 1137              		.loc 1 206 5 view .LVU264
+ 1138 001c 03B2     		sxth	r3, r0
+ 1139 001e 1BB9     		cbnz	r3, .L25
+ 1140 0020 0020     		movs	r0, #0
+ 1141              	.LVL49:
+ 1142              		.loc 1 206 5 view .LVU265
+ 1143 0022 7047     		bx	lr
+ 1144              	.LVL50:
+ 1145              	.L27:
+ 1146              		.loc 1 206 5 view .LVU266
+ 1147 0024 0020     		movs	r0, #0
+ 1148 0026 7047     		bx	lr
+ 1149              	.LVL51:
+ 1150              	.L25:
+ 1151              		.loc 1 206 5 view .LVU267
+ 1152 0028 0138     		subs	r0, r0, #1
+ 1153              	.LVL52:
+ 1154              		.loc 1 206 5 view .LVU268
+ 1155 002a 0528     		cmp	r0, #5
+ 1156 002c 04D8     		bhi	.L34
+ 1157 002e DFE800F0 		tbb	[pc, r0]
+ 1158              	.LVL53:
+ 1159              	.L36:
+ 1160 0032 28       		.byte	(.L43-.L36)/2
+ 1161 0033 07       		.byte	(.L40-.L36)/2
+ 1162 0034 0A       		.byte	(.L39-.L36)/2
+ 1163 0035 0D       		.byte	(.L38-.L36)/2
+ 1164 0036 10       		.byte	(.L37-.L36)/2
+ 1165 0037 13       		.byte	(.L35-.L36)/2
+ 1166              		.p2align 1
+ 1167              	.L34:
+ 1168              		.loc 1 206 5 view .LVU269
+ 1169 0038 0020     		movs	r0, #0
+ 1170 003a 7047     		bx	lr
+ 1171              	.LVL54:
+ 1172              	.L46:
+ 1173              		.loc 1 206 5 view .LVU270
+ 1174 003c 0020     		movs	r0, #0
+ 1175              	.LVL55:
+ 1176              		.loc 1 206 5 view .LVU271
+ 1177 003e 7047     		bx	lr
+ 1178              	.L40:
+ 207:Core/HAL/driver/referee/referee_ui.c ****         case RED_HERO:
+ 208:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CRED_HERO;
+ 209:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 210:Core/HAL/driver/referee/referee_ui.c ****         case RED_ENGINEER:
+ 211:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CRED_ENGINEER;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 25
+
+
+ 1179              		.loc 1 211 13 is_stmt 1 view .LVU272
+ 1180              	.LVL56:
+ 212:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1181              		.loc 1 212 13 view .LVU273
+ 211:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1182              		.loc 1 211 31 is_stmt 0 view .LVU274
+ 1183 0040 4FF48170 		mov	r0, #258
+ 1184              		.loc 1 212 13 view .LVU275
+ 1185 0044 7047     		bx	lr
+ 1186              	.LVL57:
+ 1187              	.L39:
+ 213:Core/HAL/driver/referee/referee_ui.c ****         case RED_STANDARD_1:
+ 214:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CRED_STANDARD_1;
+ 1188              		.loc 1 214 13 is_stmt 1 view .LVU276
+ 215:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1189              		.loc 1 215 13 view .LVU277
+ 214:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1190              		.loc 1 214 31 is_stmt 0 view .LVU278
+ 1191 0046 40F20310 		movw	r0, #259
+ 1192              		.loc 1 215 13 view .LVU279
+ 1193 004a 7047     		bx	lr
+ 1194              	.LVL58:
+ 1195              	.L38:
+ 216:Core/HAL/driver/referee/referee_ui.c ****         case RED_STANDARD_2:
+ 217:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CRED_STANDARD_2;
+ 1196              		.loc 1 217 13 is_stmt 1 view .LVU280
+ 218:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1197              		.loc 1 218 13 view .LVU281
+ 217:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1198              		.loc 1 217 31 is_stmt 0 view .LVU282
+ 1199 004c 4FF48270 		mov	r0, #260
+ 1200              		.loc 1 218 13 view .LVU283
+ 1201 0050 7047     		bx	lr
+ 1202              	.LVL59:
+ 1203              	.L37:
+ 219:Core/HAL/driver/referee/referee_ui.c ****         case RED_STANDARD_3:
+ 220:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CRED_STANDARD_3;
+ 1204              		.loc 1 220 13 is_stmt 1 view .LVU284
+ 221:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1205              		.loc 1 221 13 view .LVU285
+ 220:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1206              		.loc 1 220 31 is_stmt 0 view .LVU286
+ 1207 0052 40F20510 		movw	r0, #261
+ 1208              		.loc 1 221 13 view .LVU287
+ 1209 0056 7047     		bx	lr
+ 1210              	.LVL60:
+ 1211              	.L35:
+ 222:Core/HAL/driver/referee/referee_ui.c ****         case RED_AERIAL:
+ 223:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CRED_AERIAL;
+ 1212              		.loc 1 223 13 is_stmt 1 view .LVU288
+ 224:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1213              		.loc 1 224 13 view .LVU289
+ 223:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1214              		.loc 1 223 31 is_stmt 0 view .LVU290
+ 1215 0058 4FF48370 		mov	r0, #262
+ 1216              		.loc 1 224 13 view .LVU291
+ 1217 005c 7047     		bx	lr
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 26
+
+
+ 1218              	.LVL61:
+ 1219              	.L33:
+ 225:Core/HAL/driver/referee/referee_ui.c ****         case BLUE_HERO:
+ 226:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CBLUE_HERO;
+ 227:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 228:Core/HAL/driver/referee/referee_ui.c ****         case BLUE_ENGINEER:
+ 229:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CBLUE_ENGINEER;
+ 1220              		.loc 1 229 13 is_stmt 1 view .LVU292
+ 230:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1221              		.loc 1 230 13 view .LVU293
+ 229:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1222              		.loc 1 229 31 is_stmt 0 view .LVU294
+ 1223 005e 4FF4B370 		mov	r0, #358
+ 1224              		.loc 1 230 13 view .LVU295
+ 1225 0062 7047     		bx	lr
+ 1226              	.LVL62:
+ 1227              	.L32:
+ 231:Core/HAL/driver/referee/referee_ui.c ****         case BLUE_STANDARD_1:
+ 232:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CBLUE_STANDARD_1;
+ 1228              		.loc 1 232 13 is_stmt 1 view .LVU296
+ 233:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1229              		.loc 1 233 13 view .LVU297
+ 232:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1230              		.loc 1 232 31 is_stmt 0 view .LVU298
+ 1231 0064 40F26710 		movw	r0, #359
+ 1232              		.loc 1 233 13 view .LVU299
+ 1233 0068 7047     		bx	lr
+ 1234              	.LVL63:
+ 1235              	.L31:
+ 234:Core/HAL/driver/referee/referee_ui.c ****         case BLUE_STANDARD_2:
+ 235:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CBLUE_STANDARD_2;
+ 1236              		.loc 1 235 13 is_stmt 1 view .LVU300
+ 236:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1237              		.loc 1 236 13 view .LVU301
+ 235:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1238              		.loc 1 235 31 is_stmt 0 view .LVU302
+ 1239 006a 4FF4B470 		mov	r0, #360
+ 1240              		.loc 1 236 13 view .LVU303
+ 1241 006e 7047     		bx	lr
+ 1242              	.LVL64:
+ 1243              	.L30:
+ 237:Core/HAL/driver/referee/referee_ui.c ****         case BLUE_STANDARD_3:
+ 238:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CBLUE_STANDARD_3;
+ 1244              		.loc 1 238 13 is_stmt 1 view .LVU304
+ 239:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1245              		.loc 1 239 13 view .LVU305
+ 238:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1246              		.loc 1 238 31 is_stmt 0 view .LVU306
+ 1247 0070 40F26910 		movw	r0, #361
+ 1248              		.loc 1 239 13 view .LVU307
+ 1249 0074 7047     		bx	lr
+ 1250              	.LVL65:
+ 1251              	.L28:
+ 240:Core/HAL/driver/referee/referee_ui.c ****         case BLUE_AERIAL:
+ 241:Core/HAL/driver/referee/referee_ui.c ****             receiverID_client = CBLUE_AERIAL;
+ 1252              		.loc 1 241 13 is_stmt 1 view .LVU308
+ 242:Core/HAL/driver/referee/referee_ui.c ****             break;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 27
+
+
+ 1253              		.loc 1 242 13 view .LVU309
+ 241:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1254              		.loc 1 241 31 is_stmt 0 view .LVU310
+ 1255 0076 4FF4B570 		mov	r0, #362
+ 1256              		.loc 1 242 13 view .LVU311
+ 1257 007a 7047     		bx	lr
+ 1258              	.LVL66:
+ 1259              	.L42:
+ 226:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1260              		.loc 1 226 31 view .LVU312
+ 1261 007c 40F26510 		movw	r0, #357
+ 1262 0080 7047     		bx	lr
+ 1263              	.L43:
+ 208:Core/HAL/driver/referee/referee_ui.c ****             break;
+ 1264              		.loc 1 208 31 view .LVU313
+ 1265 0082 40F20110 		movw	r0, #257
+ 1266 0086 7047     		bx	lr
+ 1267              	.LVL67:
+ 1268              	.L44:
+ 206:Core/HAL/driver/referee/referee_ui.c ****         case RED_HERO:
+ 1269              		.loc 1 206 5 view .LVU314
+ 1270 0088 0020     		movs	r0, #0
+ 1271              	.LVL68:
+ 243:Core/HAL/driver/referee/referee_ui.c ****     }
+ 244:Core/HAL/driver/referee/referee_ui.c ****     return receiverID_client;
+ 1272              		.loc 1 244 5 is_stmt 1 view .LVU315
+ 245:Core/HAL/driver/referee/referee_ui.c **** }
+ 1273              		.loc 1 245 1 is_stmt 0 view .LVU316
+ 1274 008a 7047     		bx	lr
+ 1275              		.cfi_endproc
+ 1276              	.LFE148:
+ 1278              		.section	.text.Referee_UI_driver_Init,"ax",%progbits
+ 1279              		.align	1
+ 1280              		.global	Referee_UI_driver_Init
+ 1281              		.syntax unified
+ 1282              		.thumb
+ 1283              		.thumb_func
+ 1285              	Referee_UI_driver_Init:
+ 1286              	.LFB149:
+ 246:Core/HAL/driver/referee/referee_ui.c **** 
+ 247:Core/HAL/driver/referee/referee_ui.c **** cvector* referee_ui_instances;
+ 248:Core/HAL/driver/referee/referee_ui.c **** void Referee_UI_driver_Init() {
+ 1287              		.loc 1 248 31 is_stmt 1 view -0
+ 1288              		.cfi_startproc
+ 1289              		@ args = 0, pretend = 0, frame = 0
+ 1290              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1291 0000 08B5     		push	{r3, lr}
+ 1292              	.LCFI8:
+ 1293              		.cfi_def_cfa_offset 8
+ 1294              		.cfi_offset 3, -8
+ 1295              		.cfi_offset 14, -4
+ 249:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_instances = cvector_create(sizeof(referee_ui*));
+ 1296              		.loc 1 249 5 view .LVU318
+ 1297              		.loc 1 249 28 is_stmt 0 view .LVU319
+ 1298 0002 0420     		movs	r0, #4
+ 1299 0004 FFF7FEFF 		bl	cvector_create
+ 1300              	.LVL69:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 28
+
+
+ 1301              		.loc 1 249 26 view .LVU320
+ 1302 0008 014B     		ldr	r3, .L49
+ 1303 000a 1860     		str	r0, [r3]
+ 250:Core/HAL/driver/referee/referee_ui.c **** }
+ 1304              		.loc 1 250 1 view .LVU321
+ 1305 000c 08BD     		pop	{r3, pc}
+ 1306              	.L50:
+ 1307 000e 00BF     		.align	2
+ 1308              	.L49:
+ 1309 0010 00000000 		.word	.LANCHOR0
+ 1310              		.cfi_endproc
+ 1311              	.LFE149:
+ 1313              		.section	.text.referee_ui_create,"ax",%progbits
+ 1314              		.align	1
+ 1315              		.global	referee_ui_create
+ 1316              		.syntax unified
+ 1317              		.thumb
+ 1318              		.thumb_func
+ 1320              	referee_ui_create:
+ 1321              	.LVL70:
+ 1322              	.LFB150:
+ 251:Core/HAL/driver/referee/referee_ui.c **** 
+ 252:Core/HAL/driver/referee/referee_ui.c **** referee_ui* referee_ui_create(referee_ui_config* config) {
+ 1323              		.loc 1 252 58 is_stmt 1 view -0
+ 1324              		.cfi_startproc
+ 1325              		@ args = 0, pretend = 0, frame = 8
+ 1326              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1327              		.loc 1 252 58 is_stmt 0 view .LVU323
+ 1328 0000 30B5     		push	{r4, r5, lr}
+ 1329              	.LCFI9:
+ 1330              		.cfi_def_cfa_offset 12
+ 1331              		.cfi_offset 4, -12
+ 1332              		.cfi_offset 5, -8
+ 1333              		.cfi_offset 14, -4
+ 1334 0002 83B0     		sub	sp, sp, #12
+ 1335              	.LCFI10:
+ 1336              		.cfi_def_cfa_offset 24
+ 1337 0004 0546     		mov	r5, r0
+ 253:Core/HAL/driver/referee/referee_ui.c ****     referee_ui* obj = (referee_ui*)malloc(sizeof(referee_ui));
+ 1338              		.loc 1 253 5 is_stmt 1 view .LVU324
+ 1339              		.loc 1 253 36 is_stmt 0 view .LVU325
+ 1340 0006 9820     		movs	r0, #152
+ 1341              	.LVL71:
+ 1342              		.loc 1 253 36 view .LVU326
+ 1343 0008 FFF7FEFF 		bl	malloc
+ 1344              	.LVL72:
+ 1345              		.loc 1 253 17 view .LVU327
+ 1346 000c 0190     		str	r0, [sp, #4]
+ 254:Core/HAL/driver/referee/referee_ui.c ****     memset(obj, 0, sizeof(referee_ui));
+ 1347              		.loc 1 254 5 is_stmt 1 view .LVU328
+ 1348 000e 9822     		movs	r2, #152
+ 1349 0010 0021     		movs	r1, #0
+ 1350 0012 FFF7FEFF 		bl	memset
+ 1351              	.LVL73:
+ 255:Core/HAL/driver/referee/referee_ui.c ****     obj->config = *config;
+ 1352              		.loc 1 255 5 view .LVU329
+ 1353              		.loc 1 255 8 is_stmt 0 view .LVU330
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 29
+
+
+ 1354 0016 019C     		ldr	r4, [sp, #4]
+ 1355              		.loc 1 255 17 view .LVU331
+ 1356 0018 2B68     		ldr	r3, [r5]
+ 1357 001a 6360     		str	r3, [r4, #4]
+ 256:Core/HAL/driver/referee/referee_ui.c ****     obj->elements = create_circular_queue(sizeof(graphic_cmd), 60);  //最多60个待发送的数�
+ 1358              		.loc 1 256 5 is_stmt 1 view .LVU332
+ 1359              		.loc 1 256 21 is_stmt 0 view .LVU333
+ 1360 001c 3C21     		movs	r1, #60
+ 1361 001e 2F20     		movs	r0, #47
+ 1362 0020 FFF7FEFF 		bl	create_circular_queue
+ 1363              	.LVL74:
+ 1364              		.loc 1 256 19 view .LVU334
+ 1365 0024 2060     		str	r0, [r4]
+ 257:Core/HAL/driver/referee/referee_ui.c ****     obj->send_frame.data_header.sender_ID = config->referee->rx_data.game_robot_state.robot_id;
+ 1366              		.loc 1 257 5 is_stmt 1 view .LVU335
+ 1367              		.loc 1 257 51 is_stmt 0 view .LVU336
+ 1368 0026 2B68     		ldr	r3, [r5]
+ 1369              		.loc 1 257 8 view .LVU337
+ 1370 0028 019C     		ldr	r4, [sp, #4]
+ 1371              		.loc 1 257 86 view .LVU338
+ 1372 002a 93F83E30 		ldrb	r3, [r3, #62]	@ zero_extendqisi2
+ 1373              		.loc 1 257 43 view .LVU339
+ 1374 002e A4F81130 		strh	r3, [r4, #17]	@ unaligned
+ 258:Core/HAL/driver/referee/referee_ui.c ****     obj->send_frame.data_header.receiver_ID = Robot_Client_ID(config->referee->rx_data.game_robot_s
+ 1375              		.loc 1 258 5 is_stmt 1 view .LVU340
+ 1376              		.loc 1 258 69 is_stmt 0 view .LVU341
+ 1377 0032 2B68     		ldr	r3, [r5]
+ 1378              		.loc 1 258 47 view .LVU342
+ 1379 0034 93F83E00 		ldrb	r0, [r3, #62]	@ zero_extendqisi2
+ 1380 0038 FFF7FEFF 		bl	Robot_Client_ID
+ 1381              	.LVL75:
+ 1382              		.loc 1 258 45 view .LVU343
+ 1383 003c A4F81300 		strh	r0, [r4, #19]	@ unaligned
+ 259:Core/HAL/driver/referee/referee_ui.c ****     obj->send_frame.header.SOF = 0xA5;
+ 1384              		.loc 1 259 5 is_stmt 1 view .LVU344
+ 1385              		.loc 1 259 32 is_stmt 0 view .LVU345
+ 1386 0040 A523     		movs	r3, #165
+ 1387 0042 2372     		strb	r3, [r4, #8]
+ 260:Core/HAL/driver/referee/referee_ui.c ****     obj->send_frame.header.seq = 0;
+ 1388              		.loc 1 260 5 is_stmt 1 view .LVU346
+ 1389              		.loc 1 260 32 is_stmt 0 view .LVU347
+ 1390 0044 0023     		movs	r3, #0
+ 1391 0046 E372     		strb	r3, [r4, #11]
+ 261:Core/HAL/driver/referee/referee_ui.c ****     obj->send_frame.cmd_id = 0x301;
+ 1392              		.loc 1 261 5 is_stmt 1 view .LVU348
+ 1393              		.loc 1 261 28 is_stmt 0 view .LVU349
+ 1394 0048 0123     		movs	r3, #1
+ 1395 004a 6373     		strb	r3, [r4, #13]
+ 1396 004c 0323     		movs	r3, #3
+ 1397 004e A373     		strb	r3, [r4, #14]
+ 262:Core/HAL/driver/referee/referee_ui.c ****     cvector_pushback(referee_ui_instances, &obj);
+ 1398              		.loc 1 262 5 is_stmt 1 view .LVU350
+ 1399 0050 01A9     		add	r1, sp, #4
+ 1400 0052 034B     		ldr	r3, .L53
+ 1401 0054 1868     		ldr	r0, [r3]
+ 1402 0056 FFF7FEFF 		bl	cvector_pushback
+ 1403              	.LVL76:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 30
+
+
+ 263:Core/HAL/driver/referee/referee_ui.c ****     return obj;
+ 1404              		.loc 1 263 5 view .LVU351
+ 264:Core/HAL/driver/referee/referee_ui.c **** }
+ 1405              		.loc 1 264 1 is_stmt 0 view .LVU352
+ 1406 005a 0198     		ldr	r0, [sp, #4]
+ 1407 005c 03B0     		add	sp, sp, #12
+ 1408              	.LCFI11:
+ 1409              		.cfi_def_cfa_offset 12
+ 1410              		@ sp needed
+ 1411 005e 30BD     		pop	{r4, r5, pc}
+ 1412              	.LVL77:
+ 1413              	.L54:
+ 1414              		.loc 1 264 1 view .LVU353
+ 1415              		.align	2
+ 1416              	.L53:
+ 1417 0060 00000000 		.word	.LANCHOR0
+ 1418              		.cfi_endproc
+ 1419              	.LFE150:
+ 1421              		.section	.text.referee_ui_add_cmd,"ax",%progbits
+ 1422              		.align	1
+ 1423              		.global	referee_ui_add_cmd
+ 1424              		.syntax unified
+ 1425              		.thumb
+ 1426              		.thumb_func
+ 1428              	referee_ui_add_cmd:
+ 1429              	.LVL78:
+ 1430              	.LFB151:
+ 265:Core/HAL/driver/referee/referee_ui.c **** 
+ 266:Core/HAL/driver/referee/referee_ui.c **** void referee_ui_add_cmd(referee_ui* obj, graphic_cmd* element) {
+ 1431              		.loc 1 266 64 is_stmt 1 view -0
+ 1432              		.cfi_startproc
+ 1433              		@ args = 0, pretend = 0, frame = 0
+ 1434              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1435              		.loc 1 266 64 is_stmt 0 view .LVU355
+ 1436 0000 08B5     		push	{r3, lr}
+ 1437              	.LCFI12:
+ 1438              		.cfi_def_cfa_offset 8
+ 1439              		.cfi_offset 3, -8
+ 1440              		.cfi_offset 14, -4
+ 267:Core/HAL/driver/referee/referee_ui.c ****     if (obj->elements->cq_len != obj->elements->cq_max_len) {
+ 1441              		.loc 1 267 5 is_stmt 1 view .LVU356
+ 1442              		.loc 1 267 12 is_stmt 0 view .LVU357
+ 1443 0002 0068     		ldr	r0, [r0]
+ 1444              	.LVL79:
+ 1445              		.loc 1 267 22 view .LVU358
+ 1446 0004 8268     		ldr	r2, [r0, #8]	@ unaligned
+ 1447              		.loc 1 267 47 view .LVU359
+ 1448 0006 C368     		ldr	r3, [r0, #12]	@ unaligned
+ 1449              		.loc 1 267 8 view .LVU360
+ 1450 0008 9A42     		cmp	r2, r3
+ 1451 000a 00D1     		bne	.L58
+ 1452              	.LVL80:
+ 1453              	.L55:
+ 268:Core/HAL/driver/referee/referee_ui.c ****         circular_queue_push(obj->elements, element);
+ 269:Core/HAL/driver/referee/referee_ui.c ****     }
+ 270:Core/HAL/driver/referee/referee_ui.c **** }
+ 1454              		.loc 1 270 1 view .LVU361
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 31
+
+
+ 1455 000c 08BD     		pop	{r3, pc}
+ 1456              	.LVL81:
+ 1457              	.L58:
+ 268:Core/HAL/driver/referee/referee_ui.c ****         circular_queue_push(obj->elements, element);
+ 1458              		.loc 1 268 9 is_stmt 1 view .LVU362
+ 1459 000e FFF7FEFF 		bl	circular_queue_push
+ 1460              	.LVL82:
+ 1461              		.loc 1 270 1 is_stmt 0 view .LVU363
+ 1462 0012 FBE7     		b	.L55
+ 1463              		.cfi_endproc
+ 1464              	.LFE151:
+ 1466              		.section	.text.add_graphic,"ax",%progbits
+ 1467              		.align	1
+ 1468              		.global	add_graphic
+ 1469              		.syntax unified
+ 1470              		.thumb
+ 1471              		.thumb_func
+ 1473              	add_graphic:
+ 1474              	.LVL83:
+ 1475              	.LFB143:
+ 156:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1476              		.loc 1 156 58 is_stmt 1 view -0
+ 1477              		.cfi_startproc
+ 1478              		@ args = 0, pretend = 0, frame = 48
+ 1479              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1480              		.loc 1 156 58 is_stmt 0 view .LVU365
+ 1481 0000 00B5     		push	{lr}
+ 1482              	.LCFI13:
+ 1483              		.cfi_def_cfa_offset 4
+ 1484              		.cfi_offset 14, -4
+ 1485 0002 8DB0     		sub	sp, sp, #52
+ 1486              	.LCFI14:
+ 1487              		.cfi_def_cfa_offset 56
+ 1488 0004 8646     		mov	lr, r0
+ 1489 0006 8C46     		mov	ip, r1
+ 157:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 1490              		.loc 1 157 5 is_stmt 1 view .LVU366
+ 158:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1491              		.loc 1 158 5 view .LVU367
+ 158:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1492              		.loc 1 158 14 is_stmt 0 view .LVU368
+ 1493 0008 6B46     		mov	r3, sp
+ 1494 000a 0868     		ldr	r0, [r1]	@ unaligned
+ 1495              	.LVL84:
+ 158:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1496              		.loc 1 158 14 view .LVU369
+ 1497 000c 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 1498              	.LVL85:
+ 158:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1499              		.loc 1 158 14 view .LVU370
+ 1500 000e DCF80820 		ldr	r2, [ip, #8]	@ unaligned
+ 1501 0012 07C3     		stmia	r3!, {r0, r1, r2}
+ 1502 0014 BCF80C10 		ldrh	r1, [ip, #12]	@ unaligned
+ 1503 0018 9CF80E20 		ldrb	r2, [ip, #14]	@ zero_extendqisi2
+ 1504 001c 1980     		strh	r1, [r3]	@ unaligned
+ 1505 001e 9A70     		strb	r2, [r3, #2]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 32
+
+
+ 159:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 1;  //添加
+ 1506              		.loc 1 159 5 is_stmt 1 view .LVU371
+ 159:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 1;  //添加
+ 1507              		.loc 1 159 21 is_stmt 0 view .LVU372
+ 1508 0020 0023     		movs	r3, #0
+ 1509 0022 8DF82D30 		strb	r3, [sp, #45]
+ 160:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1510              		.loc 1 160 5 is_stmt 1 view .LVU373
+ 160:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1511              		.loc 1 160 27 is_stmt 0 view .LVU374
+ 1512 0026 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 1513 002a 0122     		movs	r2, #1
+ 1514 002c 62F30203 		bfi	r3, r2, #0, #3
+ 1515 0030 8DF80330 		strb	r3, [sp, #3]
+ 161:Core/HAL/driver/referee/referee_ui.c **** }
+ 1516              		.loc 1 161 5 is_stmt 1 view .LVU375
+ 1517 0034 6946     		mov	r1, sp
+ 1518 0036 7046     		mov	r0, lr
+ 1519 0038 FFF7FEFF 		bl	referee_ui_add_cmd
+ 1520              	.LVL86:
+ 162:Core/HAL/driver/referee/referee_ui.c **** 
+ 1521              		.loc 1 162 1 is_stmt 0 view .LVU376
+ 1522 003c 0DB0     		add	sp, sp, #52
+ 1523              	.LCFI15:
+ 1524              		.cfi_def_cfa_offset 4
+ 1525              		@ sp needed
+ 1526 003e 5DF804FB 		ldr	pc, [sp], #4
+ 1527              		.cfi_endproc
+ 1528              	.LFE143:
+ 1530              		.section	.text.del_graphic,"ax",%progbits
+ 1531              		.align	1
+ 1532              		.global	del_graphic
+ 1533              		.syntax unified
+ 1534              		.thumb
+ 1535              		.thumb_func
+ 1537              	del_graphic:
+ 1538              	.LVL87:
+ 1539              	.LFB144:
+ 165:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1540              		.loc 1 165 58 is_stmt 1 view -0
+ 1541              		.cfi_startproc
+ 1542              		@ args = 0, pretend = 0, frame = 48
+ 1543              		@ frame_needed = 0, uses_anonymous_args = 0
+ 165:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1544              		.loc 1 165 58 is_stmt 0 view .LVU378
+ 1545 0000 00B5     		push	{lr}
+ 1546              	.LCFI16:
+ 1547              		.cfi_def_cfa_offset 4
+ 1548              		.cfi_offset 14, -4
+ 1549 0002 8DB0     		sub	sp, sp, #52
+ 1550              	.LCFI17:
+ 1551              		.cfi_def_cfa_offset 56
+ 1552 0004 8646     		mov	lr, r0
+ 1553 0006 8C46     		mov	ip, r1
+ 166:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 1554              		.loc 1 166 5 is_stmt 1 view .LVU379
+ 167:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 1;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 33
+
+
+ 1555              		.loc 1 167 5 view .LVU380
+ 167:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 1;
+ 1556              		.loc 1 167 14 is_stmt 0 view .LVU381
+ 1557 0008 6B46     		mov	r3, sp
+ 1558 000a 0868     		ldr	r0, [r1]	@ unaligned
+ 1559              	.LVL88:
+ 167:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 1;
+ 1560              		.loc 1 167 14 view .LVU382
+ 1561 000c 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 1562              	.LVL89:
+ 167:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 1;
+ 1563              		.loc 1 167 14 view .LVU383
+ 1564 000e DCF80820 		ldr	r2, [ip, #8]	@ unaligned
+ 1565 0012 07C3     		stmia	r3!, {r0, r1, r2}
+ 1566 0014 BCF80C10 		ldrh	r1, [ip, #12]	@ unaligned
+ 1567 0018 9CF80E20 		ldrb	r2, [ip, #14]	@ zero_extendqisi2
+ 1568 001c 1980     		strh	r1, [r3]	@ unaligned
+ 1569 001e 9A70     		strb	r2, [r3, #2]
+ 168:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 3;  //删除
+ 1570              		.loc 1 168 5 is_stmt 1 view .LVU384
+ 168:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 3;  //删除
+ 1571              		.loc 1 168 21 is_stmt 0 view .LVU385
+ 1572 0020 0123     		movs	r3, #1
+ 1573 0022 8DF82D30 		strb	r3, [sp, #45]
+ 169:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1574              		.loc 1 169 5 is_stmt 1 view .LVU386
+ 169:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1575              		.loc 1 169 27 is_stmt 0 view .LVU387
+ 1576 0026 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 1577 002a 0322     		movs	r2, #3
+ 1578 002c 62F30203 		bfi	r3, r2, #0, #3
+ 1579 0030 8DF80330 		strb	r3, [sp, #3]
+ 170:Core/HAL/driver/referee/referee_ui.c **** }
+ 1580              		.loc 1 170 5 is_stmt 1 view .LVU388
+ 1581 0034 6946     		mov	r1, sp
+ 1582 0036 7046     		mov	r0, lr
+ 1583 0038 FFF7FEFF 		bl	referee_ui_add_cmd
+ 1584              	.LVL90:
+ 171:Core/HAL/driver/referee/referee_ui.c **** // 添加字符串命令
+ 1585              		.loc 1 171 1 is_stmt 0 view .LVU389
+ 1586 003c 0DB0     		add	sp, sp, #52
+ 1587              	.LCFI18:
+ 1588              		.cfi_def_cfa_offset 4
+ 1589              		@ sp needed
+ 1590 003e 5DF804FB 		ldr	pc, [sp], #4
+ 1591              		.cfi_endproc
+ 1592              	.LFE144:
+ 1594              		.section	.text.add_text,"ax",%progbits
+ 1595              		.align	1
+ 1596              		.global	add_text
+ 1597              		.syntax unified
+ 1598              		.thumb
+ 1599              		.thumb_func
+ 1601              	add_text:
+ 1602              	.LVL91:
+ 1603              	.LFB145:
+ 173:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 34
+
+
+ 1604              		.loc 1 173 77 is_stmt 1 view -0
+ 1605              		.cfi_startproc
+ 1606              		@ args = 0, pretend = 0, frame = 48
+ 1607              		@ frame_needed = 0, uses_anonymous_args = 0
+ 173:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1608              		.loc 1 173 77 is_stmt 0 view .LVU391
+ 1609 0000 70B5     		push	{r4, r5, r6, lr}
+ 1610              	.LCFI19:
+ 1611              		.cfi_def_cfa_offset 16
+ 1612              		.cfi_offset 4, -16
+ 1613              		.cfi_offset 5, -12
+ 1614              		.cfi_offset 6, -8
+ 1615              		.cfi_offset 14, -4
+ 1616 0002 8CB0     		sub	sp, sp, #48
+ 1617              	.LCFI20:
+ 1618              		.cfi_def_cfa_offset 64
+ 1619 0004 0546     		mov	r5, r0
+ 1620 0006 8E46     		mov	lr, r1
+ 1621 0008 1646     		mov	r6, r2
+ 1622 000a 1C46     		mov	r4, r3
+ 174:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 1623              		.loc 1 174 5 is_stmt 1 view .LVU392
+ 175:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1624              		.loc 1 175 5 view .LVU393
+ 175:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1625              		.loc 1 175 14 is_stmt 0 view .LVU394
+ 1626 000c EC46     		mov	ip, sp
+ 1627 000e 0868     		ldr	r0, [r1]	@ unaligned
+ 1628              	.LVL92:
+ 175:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1629              		.loc 1 175 14 view .LVU395
+ 1630 0010 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 1631              	.LVL93:
+ 175:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1632              		.loc 1 175 14 view .LVU396
+ 1633 0012 DEF80820 		ldr	r2, [lr, #8]	@ unaligned
+ 1634              	.LVL94:
+ 175:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1635              		.loc 1 175 14 view .LVU397
+ 1636 0016 ACE80700 		stmia	ip!, {r0, r1, r2}
+ 1637 001a BEF80C20 		ldrh	r2, [lr, #12]	@ unaligned
+ 1638 001e 9EF80E30 		ldrb	r3, [lr, #14]	@ zero_extendqisi2
+ 1639              	.LVL95:
+ 175:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1640              		.loc 1 175 14 view .LVU398
+ 1641 0022 ACF80020 		strh	r2, [ip]	@ unaligned
+ 1642 0026 8CF80230 		strb	r3, [ip, #2]
+ 176:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 1;  //添加
+ 1643              		.loc 1 176 5 is_stmt 1 view .LVU399
+ 176:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 1;  //添加
+ 1644              		.loc 1 176 21 is_stmt 0 view .LVU400
+ 1645 002a 0021     		movs	r1, #0
+ 1646 002c 8DF82D10 		strb	r1, [sp, #45]
+ 177:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.end_angle = len;
+ 1647              		.loc 1 177 5 is_stmt 1 view .LVU401
+ 177:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.end_angle = len;
+ 1648              		.loc 1 177 27 is_stmt 0 view .LVU402
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 35
+
+
+ 1649 0030 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 1650 0034 0122     		movs	r2, #1
+ 1651 0036 62F30203 		bfi	r3, r2, #0, #3
+ 1652 003a 8DF80330 		strb	r3, [sp, #3]
+ 178:Core/HAL/driver/referee/referee_ui.c ****     memset(tmp.textdata, 0, 30);
+ 1653              		.loc 1 178 5 is_stmt 1 view .LVU403
+ 178:Core/HAL/driver/referee/referee_ui.c ****     memset(tmp.textdata, 0, 30);
+ 1654              		.loc 1 178 24 is_stmt 0 view .LVU404
+ 1655 003e 2240     		ands	r2, r2, r4
+ 1656 0040 9DF805C0 		ldrb	ip, [sp, #5]	@ zero_extendqisi2
+ 1657 0044 0CF07F0C 		and	ip, ip, #127
+ 1658 0048 4CEAC21C 		orr	ip, ip, r2, lsl #7
+ 1659 004c 8DF805C0 		strb	ip, [sp, #5]
+ 1660 0050 6308     		lsrs	r3, r4, #1
+ 1661 0052 8DF80630 		strb	r3, [sp, #6]
+ 179:Core/HAL/driver/referee/referee_ui.c ****     memcpy(tmp.textdata, s, len);
+ 1662              		.loc 1 179 5 is_stmt 1 view .LVU405
+ 1663 0056 1E22     		movs	r2, #30
+ 1664 0058 0DF10F00 		add	r0, sp, #15
+ 1665 005c FFF7FEFF 		bl	memset
+ 1666              	.LVL96:
+ 180:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1667              		.loc 1 180 5 view .LVU406
+ 1668 0060 2246     		mov	r2, r4
+ 1669 0062 3146     		mov	r1, r6
+ 1670 0064 0DF10F00 		add	r0, sp, #15
+ 1671 0068 FFF7FEFF 		bl	memcpy
+ 1672              	.LVL97:
+ 181:Core/HAL/driver/referee/referee_ui.c **** }
+ 1673              		.loc 1 181 5 view .LVU407
+ 1674 006c 6946     		mov	r1, sp
+ 1675 006e 2846     		mov	r0, r5
+ 1676 0070 FFF7FEFF 		bl	referee_ui_add_cmd
+ 1677              	.LVL98:
+ 182:Core/HAL/driver/referee/referee_ui.c **** 
+ 1678              		.loc 1 182 1 is_stmt 0 view .LVU408
+ 1679 0074 0CB0     		add	sp, sp, #48
+ 1680              	.LCFI21:
+ 1681              		.cfi_def_cfa_offset 16
+ 1682              		@ sp needed
+ 1683 0076 70BD     		pop	{r4, r5, r6, pc}
+ 182:Core/HAL/driver/referee/referee_ui.c **** 
+ 1684              		.loc 1 182 1 view .LVU409
+ 1685              		.cfi_endproc
+ 1686              	.LFE145:
+ 1688              		.section	.text.modifiy_graphic,"ax",%progbits
+ 1689              		.align	1
+ 1690              		.global	modifiy_graphic
+ 1691              		.syntax unified
+ 1692              		.thumb
+ 1693              		.thumb_func
+ 1695              	modifiy_graphic:
+ 1696              	.LVL99:
+ 1697              	.LFB146:
+ 185:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1698              		.loc 1 185 62 is_stmt 1 view -0
+ 1699              		.cfi_startproc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 36
+
+
+ 1700              		@ args = 0, pretend = 0, frame = 48
+ 1701              		@ frame_needed = 0, uses_anonymous_args = 0
+ 185:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1702              		.loc 1 185 62 is_stmt 0 view .LVU411
+ 1703 0000 00B5     		push	{lr}
+ 1704              	.LCFI22:
+ 1705              		.cfi_def_cfa_offset 4
+ 1706              		.cfi_offset 14, -4
+ 1707 0002 8DB0     		sub	sp, sp, #52
+ 1708              	.LCFI23:
+ 1709              		.cfi_def_cfa_offset 56
+ 1710 0004 8646     		mov	lr, r0
+ 1711 0006 8C46     		mov	ip, r1
+ 186:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 1712              		.loc 1 186 5 is_stmt 1 view .LVU412
+ 187:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1713              		.loc 1 187 5 view .LVU413
+ 187:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1714              		.loc 1 187 14 is_stmt 0 view .LVU414
+ 1715 0008 6B46     		mov	r3, sp
+ 1716 000a 0868     		ldr	r0, [r1]	@ unaligned
+ 1717              	.LVL100:
+ 187:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1718              		.loc 1 187 14 view .LVU415
+ 1719 000c 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 1720              	.LVL101:
+ 187:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1721              		.loc 1 187 14 view .LVU416
+ 1722 000e DCF80820 		ldr	r2, [ip, #8]	@ unaligned
+ 1723 0012 07C3     		stmia	r3!, {r0, r1, r2}
+ 1724 0014 BCF80C10 		ldrh	r1, [ip, #12]	@ unaligned
+ 1725 0018 9CF80E20 		ldrb	r2, [ip, #14]	@ zero_extendqisi2
+ 1726 001c 1980     		strh	r1, [r3]	@ unaligned
+ 1727 001e 9A70     		strb	r2, [r3, #2]
+ 188:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 2;  //修改
+ 1728              		.loc 1 188 5 is_stmt 1 view .LVU417
+ 188:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 2;  //修改
+ 1729              		.loc 1 188 21 is_stmt 0 view .LVU418
+ 1730 0020 0023     		movs	r3, #0
+ 1731 0022 8DF82D30 		strb	r3, [sp, #45]
+ 189:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1732              		.loc 1 189 5 is_stmt 1 view .LVU419
+ 189:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1733              		.loc 1 189 27 is_stmt 0 view .LVU420
+ 1734 0026 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 1735 002a 0222     		movs	r2, #2
+ 1736 002c 62F30203 		bfi	r3, r2, #0, #3
+ 1737 0030 8DF80330 		strb	r3, [sp, #3]
+ 190:Core/HAL/driver/referee/referee_ui.c **** }
+ 1738              		.loc 1 190 5 is_stmt 1 view .LVU421
+ 1739 0034 6946     		mov	r1, sp
+ 1740 0036 7046     		mov	r0, lr
+ 1741 0038 FFF7FEFF 		bl	referee_ui_add_cmd
+ 1742              	.LVL102:
+ 191:Core/HAL/driver/referee/referee_ui.c **** // 修改字符串命令
+ 1743              		.loc 1 191 1 is_stmt 0 view .LVU422
+ 1744 003c 0DB0     		add	sp, sp, #52
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 37
+
+
+ 1745              	.LCFI24:
+ 1746              		.cfi_def_cfa_offset 4
+ 1747              		@ sp needed
+ 1748 003e 5DF804FB 		ldr	pc, [sp], #4
+ 1749              		.cfi_endproc
+ 1750              	.LFE146:
+ 1752              		.section	.text.modifiy_text,"ax",%progbits
+ 1753              		.align	1
+ 1754              		.global	modifiy_text
+ 1755              		.syntax unified
+ 1756              		.thumb
+ 1757              		.thumb_func
+ 1759              	modifiy_text:
+ 1760              	.LVL103:
+ 1761              	.LFB147:
+ 193:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1762              		.loc 1 193 81 is_stmt 1 view -0
+ 1763              		.cfi_startproc
+ 1764              		@ args = 0, pretend = 0, frame = 48
+ 1765              		@ frame_needed = 0, uses_anonymous_args = 0
+ 193:Core/HAL/driver/referee/referee_ui.c ****     graphic_cmd tmp;
+ 1766              		.loc 1 193 81 is_stmt 0 view .LVU424
+ 1767 0000 70B5     		push	{r4, r5, r6, lr}
+ 1768              	.LCFI25:
+ 1769              		.cfi_def_cfa_offset 16
+ 1770              		.cfi_offset 4, -16
+ 1771              		.cfi_offset 5, -12
+ 1772              		.cfi_offset 6, -8
+ 1773              		.cfi_offset 14, -4
+ 1774 0002 8CB0     		sub	sp, sp, #48
+ 1775              	.LCFI26:
+ 1776              		.cfi_def_cfa_offset 64
+ 1777 0004 0546     		mov	r5, r0
+ 1778 0006 8E46     		mov	lr, r1
+ 1779 0008 1646     		mov	r6, r2
+ 1780 000a 1C46     		mov	r4, r3
+ 194:Core/HAL/driver/referee/referee_ui.c ****     tmp.data = *graphic;
+ 1781              		.loc 1 194 5 is_stmt 1 view .LVU425
+ 195:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1782              		.loc 1 195 5 view .LVU426
+ 195:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1783              		.loc 1 195 14 is_stmt 0 view .LVU427
+ 1784 000c EC46     		mov	ip, sp
+ 1785 000e 0868     		ldr	r0, [r1]	@ unaligned
+ 1786              	.LVL104:
+ 195:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1787              		.loc 1 195 14 view .LVU428
+ 1788 0010 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 1789              	.LVL105:
+ 195:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1790              		.loc 1 195 14 view .LVU429
+ 1791 0012 DEF80820 		ldr	r2, [lr, #8]	@ unaligned
+ 1792              	.LVL106:
+ 195:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1793              		.loc 1 195 14 view .LVU430
+ 1794 0016 ACE80700 		stmia	ip!, {r0, r1, r2}
+ 1795 001a BEF80C20 		ldrh	r2, [lr, #12]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 38
+
+
+ 1796 001e 9EF80E30 		ldrb	r3, [lr, #14]	@ zero_extendqisi2
+ 1797              	.LVL107:
+ 195:Core/HAL/driver/referee/referee_ui.c ****     tmp.delete_type = 0;
+ 1798              		.loc 1 195 14 view .LVU431
+ 1799 0022 ACF80020 		strh	r2, [ip]	@ unaligned
+ 1800 0026 8CF80230 		strb	r3, [ip, #2]
+ 196:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 2;  //修改
+ 1801              		.loc 1 196 5 is_stmt 1 view .LVU432
+ 196:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.operate_tpye = 2;  //修改
+ 1802              		.loc 1 196 21 is_stmt 0 view .LVU433
+ 1803 002a 0021     		movs	r1, #0
+ 1804 002c 8DF82D10 		strb	r1, [sp, #45]
+ 197:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.end_angle = len;
+ 1805              		.loc 1 197 5 is_stmt 1 view .LVU434
+ 197:Core/HAL/driver/referee/referee_ui.c ****     tmp.data.end_angle = len;
+ 1806              		.loc 1 197 27 is_stmt 0 view .LVU435
+ 1807 0030 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 1808 0034 0222     		movs	r2, #2
+ 1809 0036 62F30203 		bfi	r3, r2, #0, #3
+ 1810 003a 8DF80330 		strb	r3, [sp, #3]
+ 198:Core/HAL/driver/referee/referee_ui.c ****     memset(tmp.textdata, 0, 30);
+ 1811              		.loc 1 198 5 is_stmt 1 view .LVU436
+ 198:Core/HAL/driver/referee/referee_ui.c ****     memset(tmp.textdata, 0, 30);
+ 1812              		.loc 1 198 24 is_stmt 0 view .LVU437
+ 1813 003e 04F00102 		and	r2, r4, #1
+ 1814 0042 9DF805C0 		ldrb	ip, [sp, #5]	@ zero_extendqisi2
+ 1815 0046 0CF07F0C 		and	ip, ip, #127
+ 1816 004a 4CEAC21C 		orr	ip, ip, r2, lsl #7
+ 1817 004e 8DF805C0 		strb	ip, [sp, #5]
+ 1818 0052 6308     		lsrs	r3, r4, #1
+ 1819 0054 8DF80630 		strb	r3, [sp, #6]
+ 199:Core/HAL/driver/referee/referee_ui.c ****     memcpy(tmp.textdata, s, len);
+ 1820              		.loc 1 199 5 is_stmt 1 view .LVU438
+ 1821 0058 1E22     		movs	r2, #30
+ 1822 005a 0DF10F00 		add	r0, sp, #15
+ 1823 005e FFF7FEFF 		bl	memset
+ 1824              	.LVL108:
+ 200:Core/HAL/driver/referee/referee_ui.c ****     referee_ui_add_cmd(obj, &tmp);
+ 1825              		.loc 1 200 5 view .LVU439
+ 1826 0062 2246     		mov	r2, r4
+ 1827 0064 3146     		mov	r1, r6
+ 1828 0066 0DF10F00 		add	r0, sp, #15
+ 1829 006a FFF7FEFF 		bl	memcpy
+ 1830              	.LVL109:
+ 201:Core/HAL/driver/referee/referee_ui.c **** }
+ 1831              		.loc 1 201 5 view .LVU440
+ 1832 006e 6946     		mov	r1, sp
+ 1833 0070 2846     		mov	r0, r5
+ 1834 0072 FFF7FEFF 		bl	referee_ui_add_cmd
+ 1835              	.LVL110:
+ 202:Core/HAL/driver/referee/referee_ui.c **** 
+ 1836              		.loc 1 202 1 is_stmt 0 view .LVU441
+ 1837 0076 0CB0     		add	sp, sp, #48
+ 1838              	.LCFI27:
+ 1839              		.cfi_def_cfa_offset 16
+ 1840              		@ sp needed
+ 1841 0078 70BD     		pop	{r4, r5, r6, pc}
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 39
+
+
+ 202:Core/HAL/driver/referee/referee_ui.c **** 
+ 1842              		.loc 1 202 1 view .LVU442
+ 1843              		.cfi_endproc
+ 1844              	.LFE147:
+ 1846              		.section	.text.Referee_UI_Loop,"ax",%progbits
+ 1847              		.align	1
+ 1848              		.global	Referee_UI_Loop
+ 1849              		.syntax unified
+ 1850              		.thumb
+ 1851              		.thumb_func
+ 1853              	Referee_UI_Loop:
+ 1854              	.LFB152:
+ 271:Core/HAL/driver/referee/referee_ui.c **** 
+ 272:Core/HAL/driver/referee/referee_ui.c **** // 30Hz上限
+ 273:Core/HAL/driver/referee/referee_ui.c **** // 测试发现50Hz能较好的解决丢包问题
+ 274:Core/HAL/driver/referee/referee_ui.c **** void Referee_UI_Loop() {
+ 1855              		.loc 1 274 24 is_stmt 1 view -0
+ 1856              		.cfi_startproc
+ 1857              		@ args = 0, pretend = 0, frame = 0
+ 1858              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1859 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 1860              	.LCFI28:
+ 1861              		.cfi_def_cfa_offset 32
+ 1862              		.cfi_offset 3, -32
+ 1863              		.cfi_offset 4, -28
+ 1864              		.cfi_offset 5, -24
+ 1865              		.cfi_offset 6, -20
+ 1866              		.cfi_offset 7, -16
+ 1867              		.cfi_offset 8, -12
+ 1868              		.cfi_offset 9, -8
+ 1869              		.cfi_offset 14, -4
+ 275:Core/HAL/driver/referee/referee_ui.c ****     for (size_t i = 0; i < referee_ui_instances->cv_len; ++i) {
+ 1870              		.loc 1 275 5 view .LVU444
+ 1871              	.LBB2:
+ 1872              		.loc 1 275 10 view .LVU445
+ 1873              	.LVL111:
+ 1874              		.loc 1 275 17 is_stmt 0 view .LVU446
+ 1875 0004 0027     		movs	r7, #0
+ 1876              		.loc 1 275 5 view .LVU447
+ 1877 0006 05E0     		b	.L70
+ 1878              	.LVL112:
+ 1879              	.L86:
+ 1880              	.LBB3:
+ 1881              	.LBB4:
+ 1882              	.LBB5:
+ 276:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 277:Core/HAL/driver/referee/referee_ui.c ****         obj->send_frame.data_header.sender_ID = obj->config.referee->rx_data.game_robot_state.robot
+ 278:Core/HAL/driver/referee/referee_ui.c ****         obj->send_frame.data_header.receiver_ID = Robot_Client_ID(obj->config.referee->rx_data.game
+ 279:Core/HAL/driver/referee/referee_ui.c ****         uint16_t graphic_num = 0;
+ 280:Core/HAL/driver/referee/referee_ui.c ****         while (obj->elements->cq_len > 0) {
+ 281:Core/HAL/driver/referee/referee_ui.c ****             graphic_cmd* now_cmd = circular_queue_front(obj->elements);
+ 282:Core/HAL/driver/referee/referee_ui.c ****             if (now_cmd->delete_type != 0) {  //如果是删除命令，特殊处理
+ 283:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 284:Core/HAL/driver/referee/referee_ui.c ****                 if (graphic_num > 0) break;
+ 1883              		.loc 1 284 17 is_stmt 1 view .LVU448
+ 1884              		.loc 1 284 20 is_stmt 0 view .LVU449
+ 1885 0008 002D     		cmp	r5, #0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 40
+
+
+ 1886 000a 44D0     		beq	.L83
+ 1887              	.LVL113:
+ 1888              	.L73:
+ 1889              		.loc 1 284 20 view .LVU450
+ 1890              	.LBE5:
+ 1891              	.LBE4:
+ 285:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 2;
+ 286:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.CRC8 = CRC8_Modbus_calc(&obj->send_frame.header.SOF, 4, crc8
+ 287:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0100;
+ 288:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data[0] = now_cmd->delete_type;
+ 289:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data[1] = now_cmd->delete_layer;
+ 290:Core/HAL/driver/referee/referee_ui.c ****                 uint16_t crc16_now = CRC16_Modbus_calc(&obj->send_frame.header.SOF, 7 + obj->send_f
+ 291:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 292:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 293:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 294:Core/HAL/driver/referee/referee_ui.c ****                 break;
+ 295:Core/HAL/driver/referee/referee_ui.c ****             } else if (now_cmd->data.graphic_tpye == Char_t) {  //字符特殊处理
+ 296:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 297:Core/HAL/driver/referee/referee_ui.c ****                 if (graphic_num > 0) break;
+ 298:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 45;
+ 299:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.CRC8 = CRC8_Modbus_calc(&obj->send_frame.header.SOF, 4, crc8
+ 300:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0110;
+ 301:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data, &now_cmd->data, sizeof(graphic_data));
+ 302:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + sizeof(graphic_data), now_cmd->textdata, 30);
+ 303:Core/HAL/driver/referee/referee_ui.c ****                 uint16_t crc16_now = CRC16_Modbus_calc(&obj->send_frame.header.SOF, 7 + obj->send_f
+ 304:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 305:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 306:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 307:Core/HAL/driver/referee/referee_ui.c ****                 break;
+ 308:Core/HAL/driver/referee/referee_ui.c ****             } else {
+ 309:Core/HAL/driver/referee/referee_ui.c ****                 //凑够7个或者直到为空
+ 310:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + graphic_num * sizeof(graphic_data), &now_cmd->data, s
+ 311:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 312:Core/HAL/driver/referee/referee_ui.c ****                 ++graphic_num;
+ 313:Core/HAL/driver/referee/referee_ui.c ****                 if (graphic_num == 7) break;
+ 314:Core/HAL/driver/referee/referee_ui.c ****             }
+ 315:Core/HAL/driver/referee/referee_ui.c ****         }
+ 316:Core/HAL/driver/referee/referee_ui.c ****         if (graphic_num > 0) {
+ 1892              		.loc 1 316 9 is_stmt 1 view .LVU451
+ 1893              		.loc 1 316 12 is_stmt 0 view .LVU452
+ 1894 000c 002D     		cmp	r5, #0
+ 1895 000e 40F0C380 		bne	.L84
+ 1896              	.L76:
+ 1897              		.loc 1 316 12 view .LVU453
+ 1898              	.LBE3:
+ 275:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 1899              		.loc 1 275 58 is_stmt 1 discriminator 2 view .LVU454
+ 1900 0012 0137     		adds	r7, r7, #1
+ 1901              	.LVL114:
+ 1902              	.L70:
+ 275:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 1903              		.loc 1 275 24 discriminator 1 view .LVU455
+ 275:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 1904              		.loc 1 275 48 is_stmt 0 discriminator 1 view .LVU456
+ 1905 0014 894B     		ldr	r3, .L88
+ 1906 0016 1868     		ldr	r0, [r3]
+ 1907 0018 4368     		ldr	r3, [r0, #4]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 41
+
+
+ 275:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 1908              		.loc 1 275 5 discriminator 1 view .LVU457
+ 1909 001a BB42     		cmp	r3, r7
+ 1910 001c 40F20B81 		bls	.L85
+ 1911              	.LBB11:
+ 276:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 1912              		.loc 1 276 9 is_stmt 1 view .LVU458
+ 276:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 1913              		.loc 1 276 43 is_stmt 0 view .LVU459
+ 1914 0020 3946     		mov	r1, r7
+ 1915 0022 FFF7FEFF 		bl	cvector_val_at
+ 1916              	.LVL115:
+ 276:Core/HAL/driver/referee/referee_ui.c ****         referee_ui* obj = *((referee_ui**)cvector_val_at(referee_ui_instances, i));
+ 1917              		.loc 1 276 21 view .LVU460
+ 1918 0026 0668     		ldr	r6, [r0]
+ 1919              	.LVL116:
+ 277:Core/HAL/driver/referee/referee_ui.c ****         obj->send_frame.data_header.receiver_ID = Robot_Client_ID(obj->config.referee->rx_data.game
+ 1920              		.loc 1 277 9 is_stmt 1 view .LVU461
+ 277:Core/HAL/driver/referee/referee_ui.c ****         obj->send_frame.data_header.receiver_ID = Robot_Client_ID(obj->config.referee->rx_data.game
+ 1921              		.loc 1 277 60 is_stmt 0 view .LVU462
+ 1922 0028 7368     		ldr	r3, [r6, #4]
+ 277:Core/HAL/driver/referee/referee_ui.c ****         obj->send_frame.data_header.receiver_ID = Robot_Client_ID(obj->config.referee->rx_data.game
+ 1923              		.loc 1 277 94 view .LVU463
+ 1924 002a 93F83E20 		ldrb	r2, [r3, #62]	@ zero_extendqisi2
+ 277:Core/HAL/driver/referee/referee_ui.c ****         obj->send_frame.data_header.receiver_ID = Robot_Client_ID(obj->config.referee->rx_data.game
+ 1925              		.loc 1 277 47 view .LVU464
+ 1926 002e A6F81120 		strh	r2, [r6, #17]	@ unaligned
+ 278:Core/HAL/driver/referee/referee_ui.c ****         uint16_t graphic_num = 0;
+ 1927              		.loc 1 278 9 is_stmt 1 view .LVU465
+ 278:Core/HAL/driver/referee/referee_ui.c ****         uint16_t graphic_num = 0;
+ 1928              		.loc 1 278 51 is_stmt 0 view .LVU466
+ 1929 0032 93F83E00 		ldrb	r0, [r3, #62]	@ zero_extendqisi2
+ 1930 0036 FFF7FEFF 		bl	Robot_Client_ID
+ 1931              	.LVL117:
+ 278:Core/HAL/driver/referee/referee_ui.c ****         uint16_t graphic_num = 0;
+ 1932              		.loc 1 278 49 view .LVU467
+ 1933 003a A6F81300 		strh	r0, [r6, #19]	@ unaligned
+ 279:Core/HAL/driver/referee/referee_ui.c ****         while (obj->elements->cq_len > 0) {
+ 1934              		.loc 1 279 9 is_stmt 1 view .LVU468
+ 1935              	.LVL118:
+ 280:Core/HAL/driver/referee/referee_ui.c ****             graphic_cmd* now_cmd = circular_queue_front(obj->elements);
+ 1936              		.loc 1 280 9 view .LVU469
+ 279:Core/HAL/driver/referee/referee_ui.c ****         while (obj->elements->cq_len > 0) {
+ 1937              		.loc 1 279 18 is_stmt 0 view .LVU470
+ 1938 003e 0025     		movs	r5, #0
+ 1939              	.LVL119:
+ 1940              	.L71:
+ 280:Core/HAL/driver/referee/referee_ui.c ****             graphic_cmd* now_cmd = circular_queue_front(obj->elements);
+ 1941              		.loc 1 280 15 is_stmt 1 view .LVU471
+ 280:Core/HAL/driver/referee/referee_ui.c ****             graphic_cmd* now_cmd = circular_queue_front(obj->elements);
+ 1942              		.loc 1 280 19 is_stmt 0 view .LVU472
+ 1943 0040 3068     		ldr	r0, [r6]
+ 280:Core/HAL/driver/referee/referee_ui.c ****             graphic_cmd* now_cmd = circular_queue_front(obj->elements);
+ 1944              		.loc 1 280 29 view .LVU473
+ 1945 0042 8368     		ldr	r3, [r0, #8]	@ unaligned
+ 280:Core/HAL/driver/referee/referee_ui.c ****             graphic_cmd* now_cmd = circular_queue_front(obj->elements);
+ 1946              		.loc 1 280 15 view .LVU474
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 42
+
+
+ 1947 0044 002B     		cmp	r3, #0
+ 1948 0046 E1D0     		beq	.L73
+ 1949              	.LBB8:
+ 281:Core/HAL/driver/referee/referee_ui.c ****             if (now_cmd->delete_type != 0) {  //如果是删除命令，特殊处理
+ 1950              		.loc 1 281 13 is_stmt 1 view .LVU475
+ 281:Core/HAL/driver/referee/referee_ui.c ****             if (now_cmd->delete_type != 0) {  //如果是删除命令，特殊处理
+ 1951              		.loc 1 281 36 is_stmt 0 view .LVU476
+ 1952 0048 FFF7FEFF 		bl	circular_queue_front
+ 1953              	.LVL120:
+ 1954 004c 0446     		mov	r4, r0
+ 1955              	.LVL121:
+ 282:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 1956              		.loc 1 282 13 is_stmt 1 view .LVU477
+ 282:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 1957              		.loc 1 282 24 is_stmt 0 view .LVU478
+ 1958 004e 90F82D30 		ldrb	r3, [r0, #45]	@ zero_extendqisi2
+ 282:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 1959              		.loc 1 282 16 view .LVU479
+ 1960 0052 002B     		cmp	r3, #0
+ 1961 0054 D8D1     		bne	.L86
+ 295:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 1962              		.loc 1 295 20 is_stmt 1 view .LVU480
+ 295:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 1963              		.loc 1 295 51 is_stmt 0 view .LVU481
+ 1964 0056 C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+ 1965 0058 03F03803 		and	r3, r3, #56
+ 295:Core/HAL/driver/referee/referee_ui.c ****                 //如果之前有已经存入send_frame的图片，那就先发送完图片
+ 1966              		.loc 1 295 23 view .LVU482
+ 1967 005c 382B     		cmp	r3, #56
+ 1968 005e 49D0     		beq	.L87
+ 310:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 1969              		.loc 1 310 17 is_stmt 1 view .LVU483
+ 310:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 1970              		.loc 1 310 24 is_stmt 0 view .LVU484
+ 1971 0060 06F11502 		add	r2, r6, #21
+ 310:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 1972              		.loc 1 310 59 view .LVU485
+ 1973 0064 C5EB0511 		rsb	r1, r5, r5, lsl #4
+ 310:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 1974              		.loc 1 310 17 view .LVU486
+ 1975 0068 5318     		adds	r3, r2, r1
+ 1976 006a D0F800E0 		ldr	lr, [r0]	@ unaligned
+ 1977 006e D0F804C0 		ldr	ip, [r0, #4]	@ unaligned
+ 1978 0072 8068     		ldr	r0, [r0, #8]	@ unaligned
+ 1979              	.LVL122:
+ 310:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 1980              		.loc 1 310 17 view .LVU487
+ 1981 0074 42F801E0 		str	lr, [r2, r1]	@ unaligned
+ 1982 0078 C3F804C0 		str	ip, [r3, #4]	@ unaligned
+ 1983 007c 9860     		str	r0, [r3, #8]	@ unaligned
+ 1984 007e A189     		ldrh	r1, [r4, #12]	@ unaligned
+ 1985 0080 A27B     		ldrb	r2, [r4, #14]	@ zero_extendqisi2
+ 1986 0082 9981     		strh	r1, [r3, #12]	@ unaligned
+ 1987 0084 9A73     		strb	r2, [r3, #14]
+ 311:Core/HAL/driver/referee/referee_ui.c ****                 ++graphic_num;
+ 1988              		.loc 1 311 17 is_stmt 1 view .LVU488
+ 1989 0086 3068     		ldr	r0, [r6]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 43
+
+
+ 1990 0088 FFF7FEFF 		bl	circular_queue_pop
+ 1991              	.LVL123:
+ 312:Core/HAL/driver/referee/referee_ui.c ****                 if (graphic_num == 7) break;
+ 1992              		.loc 1 312 17 view .LVU489
+ 1993 008c 0135     		adds	r5, r5, #1
+ 1994              	.LVL124:
+ 312:Core/HAL/driver/referee/referee_ui.c ****                 if (graphic_num == 7) break;
+ 1995              		.loc 1 312 17 is_stmt 0 view .LVU490
+ 1996 008e ADB2     		uxth	r5, r5
+ 1997              	.LVL125:
+ 313:Core/HAL/driver/referee/referee_ui.c ****             }
+ 1998              		.loc 1 313 17 is_stmt 1 view .LVU491
+ 313:Core/HAL/driver/referee/referee_ui.c ****             }
+ 1999              		.loc 1 313 20 is_stmt 0 view .LVU492
+ 2000 0090 072D     		cmp	r5, #7
+ 2001 0092 D5D1     		bne	.L71
+ 2002              	.LBE8:
+ 2003 0094 BAE7     		b	.L73
+ 2004              	.LVL126:
+ 2005              	.L83:
+ 2006              	.LBB9:
+ 2007              	.LBB6:
+ 285:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.CRC8 = CRC8_Modbus_calc(&obj->send_frame.header.SOF, 4, crc8
+ 2008              		.loc 1 285 17 is_stmt 1 view .LVU493
+ 285:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.CRC8 = CRC8_Modbus_calc(&obj->send_frame.header.SOF, 4, crc8
+ 2009              		.loc 1 285 52 is_stmt 0 view .LVU494
+ 2010 0096 4FF00009 		mov	r9, #0
+ 2011 009a 0823     		movs	r3, #8
+ 2012 009c 7372     		strb	r3, [r6, #9]
+ 2013 009e 86F80A90 		strb	r9, [r6, #10]
+ 286:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0100;
+ 2014              		.loc 1 286 17 is_stmt 1 view .LVU495
+ 286:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0100;
+ 2015              		.loc 1 286 47 is_stmt 0 view .LVU496
+ 2016 00a2 06EB0308 		add	r8, r6, r3
+ 2017 00a6 664B     		ldr	r3, .L88+4
+ 2018 00a8 1A68     		ldr	r2, [r3]
+ 2019 00aa 0421     		movs	r1, #4
+ 2020 00ac 4046     		mov	r0, r8
+ 2021              	.LVL127:
+ 286:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0100;
+ 2022              		.loc 1 286 47 view .LVU497
+ 2023 00ae FFF7FEFF 		bl	CRC8_Modbus_calc
+ 2024              	.LVL128:
+ 286:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0100;
+ 2025              		.loc 1 286 45 view .LVU498
+ 2026 00b2 3073     		strb	r0, [r6, #12]
+ 287:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data[0] = now_cmd->delete_type;
+ 2027              		.loc 1 287 17 is_stmt 1 view .LVU499
+ 287:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data[0] = now_cmd->delete_type;
+ 2028              		.loc 1 287 57 is_stmt 0 view .LVU500
+ 2029 00b4 86F80F90 		strb	r9, [r6, #15]
+ 2030 00b8 0123     		movs	r3, #1
+ 2031 00ba 3374     		strb	r3, [r6, #16]
+ 288:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data[1] = now_cmd->delete_layer;
+ 2032              		.loc 1 288 17 is_stmt 1 view .LVU501
+ 288:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data[1] = now_cmd->delete_layer;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 44
+
+
+ 2033              		.loc 1 288 50 is_stmt 0 view .LVU502
+ 2034 00bc 94F82D30 		ldrb	r3, [r4, #45]	@ zero_extendqisi2
+ 288:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data[1] = now_cmd->delete_layer;
+ 2035              		.loc 1 288 41 view .LVU503
+ 2036 00c0 7375     		strb	r3, [r6, #21]
+ 289:Core/HAL/driver/referee/referee_ui.c ****                 uint16_t crc16_now = CRC16_Modbus_calc(&obj->send_frame.header.SOF, 7 + obj->send_f
+ 2037              		.loc 1 289 17 is_stmt 1 view .LVU504
+ 289:Core/HAL/driver/referee/referee_ui.c ****                 uint16_t crc16_now = CRC16_Modbus_calc(&obj->send_frame.header.SOF, 7 + obj->send_f
+ 2038              		.loc 1 289 50 is_stmt 0 view .LVU505
+ 2039 00c2 94F82E30 		ldrb	r3, [r4, #46]	@ zero_extendqisi2
+ 289:Core/HAL/driver/referee/referee_ui.c ****                 uint16_t crc16_now = CRC16_Modbus_calc(&obj->send_frame.header.SOF, 7 + obj->send_f
+ 2040              		.loc 1 289 41 view .LVU506
+ 2041 00c6 B375     		strb	r3, [r6, #22]
+ 290:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 2042              		.loc 1 290 17 is_stmt 1 view .LVU507
+ 290:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 2043              		.loc 1 290 111 is_stmt 0 view .LVU508
+ 2044 00c8 B6F80910 		ldrh	r1, [r6, #9]	@ unaligned
+ 290:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 2045              		.loc 1 290 38 view .LVU509
+ 2046 00cc 5D4B     		ldr	r3, .L88+8
+ 2047 00ce 1A68     		ldr	r2, [r3]
+ 2048 00d0 0731     		adds	r1, r1, #7
+ 2049 00d2 4046     		mov	r0, r8
+ 2050 00d4 FFF7FEFF 		bl	CRC16_Modbus_calc
+ 2051              	.LVL129:
+ 291:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2052              		.loc 1 291 17 is_stmt 1 view .LVU510
+ 291:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2053              		.loc 1 291 24 is_stmt 0 view .LVU511
+ 2054 00d8 06F11502 		add	r2, r6, #21
+ 291:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2055              		.loc 1 291 69 view .LVU512
+ 2056 00dc B6F80930 		ldrh	r3, [r6, #9]	@ unaligned
+ 291:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2057              		.loc 1 291 82 view .LVU513
+ 2058 00e0 063B     		subs	r3, r3, #6
+ 291:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2059              		.loc 1 291 17 view .LVU514
+ 2060 00e2 D052     		strh	r0, [r2, r3]	@ unaligned
+ 292:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 2061              		.loc 1 292 17 is_stmt 1 view .LVU515
+ 2062 00e4 4146     		mov	r1, r8
+ 2063 00e6 7068     		ldr	r0, [r6, #4]
+ 2064              	.LVL130:
+ 292:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 2065              		.loc 1 292 17 is_stmt 0 view .LVU516
+ 2066 00e8 FFF7FEFF 		bl	referee_send_ext
+ 2067              	.LVL131:
+ 293:Core/HAL/driver/referee/referee_ui.c ****                 break;
+ 2068              		.loc 1 293 17 is_stmt 1 view .LVU517
+ 2069 00ec 3068     		ldr	r0, [r6]
+ 2070 00ee FFF7FEFF 		bl	circular_queue_pop
+ 2071              	.LVL132:
+ 294:Core/HAL/driver/referee/referee_ui.c ****             } else if (now_cmd->data.graphic_tpye == Char_t) {  //字符特殊处理
+ 2072              		.loc 1 294 17 view .LVU518
+ 2073 00f2 8BE7     		b	.L73
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 45
+
+
+ 2074              	.LVL133:
+ 2075              	.L87:
+ 294:Core/HAL/driver/referee/referee_ui.c ****             } else if (now_cmd->data.graphic_tpye == Char_t) {  //字符特殊处理
+ 2076              		.loc 1 294 17 is_stmt 0 view .LVU519
+ 2077              	.LBE6:
+ 2078              	.LBB7:
+ 297:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 45;
+ 2079              		.loc 1 297 17 is_stmt 1 view .LVU520
+ 297:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 45;
+ 2080              		.loc 1 297 20 is_stmt 0 view .LVU521
+ 2081 00f4 002D     		cmp	r5, #0
+ 2082 00f6 89D1     		bne	.L73
+ 298:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.CRC8 = CRC8_Modbus_calc(&obj->send_frame.header.SOF, 4, crc8
+ 2083              		.loc 1 298 17 is_stmt 1 view .LVU522
+ 298:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.CRC8 = CRC8_Modbus_calc(&obj->send_frame.header.SOF, 4, crc8
+ 2084              		.loc 1 298 52 is_stmt 0 view .LVU523
+ 2085 00f8 3323     		movs	r3, #51
+ 2086 00fa 7372     		strb	r3, [r6, #9]
+ 2087 00fc 0023     		movs	r3, #0
+ 2088 00fe B372     		strb	r3, [r6, #10]
+ 299:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0110;
+ 2089              		.loc 1 299 17 is_stmt 1 view .LVU524
+ 299:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0110;
+ 2090              		.loc 1 299 47 is_stmt 0 view .LVU525
+ 2091 0100 06F10808 		add	r8, r6, #8
+ 2092 0104 4E4B     		ldr	r3, .L88+4
+ 2093 0106 1A68     		ldr	r2, [r3]
+ 2094 0108 0421     		movs	r1, #4
+ 2095 010a 4046     		mov	r0, r8
+ 2096              	.LVL134:
+ 299:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0110;
+ 2097              		.loc 1 299 47 view .LVU526
+ 2098 010c FFF7FEFF 		bl	CRC8_Modbus_calc
+ 2099              	.LVL135:
+ 299:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0110;
+ 2100              		.loc 1 299 45 view .LVU527
+ 2101 0110 3073     		strb	r0, [r6, #12]
+ 300:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data, &now_cmd->data, sizeof(graphic_data));
+ 2102              		.loc 1 300 17 is_stmt 1 view .LVU528
+ 300:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data, &now_cmd->data, sizeof(graphic_data));
+ 2103              		.loc 1 300 57 is_stmt 0 view .LVU529
+ 2104 0112 1023     		movs	r3, #16
+ 2105 0114 F373     		strb	r3, [r6, #15]
+ 2106 0116 0123     		movs	r3, #1
+ 2107 0118 3374     		strb	r3, [r6, #16]
+ 301:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + sizeof(graphic_data), now_cmd->textdata, 30);
+ 2108              		.loc 1 301 17 is_stmt 1 view .LVU530
+ 301:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + sizeof(graphic_data), now_cmd->textdata, 30);
+ 2109              		.loc 1 301 39 is_stmt 0 view .LVU531
+ 2110 011a 06F11509 		add	r9, r6, #21
+ 301:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + sizeof(graphic_data), now_cmd->textdata, 30);
+ 2111              		.loc 1 301 17 view .LVU532
+ 2112 011e 2168     		ldr	r1, [r4]	@ unaligned
+ 2113 0120 6268     		ldr	r2, [r4, #4]	@ unaligned
+ 2114 0122 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 2115 0124 C6F81510 		str	r1, [r6, #21]	@ unaligned
+ 2116 0128 C6F81920 		str	r2, [r6, #25]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 46
+
+
+ 2117 012c C6F81D30 		str	r3, [r6, #29]	@ unaligned
+ 2118 0130 A289     		ldrh	r2, [r4, #12]	@ unaligned
+ 2119 0132 A37B     		ldrb	r3, [r4, #14]	@ zero_extendqisi2
+ 2120 0134 A6F82120 		strh	r2, [r6, #33]	@ unaligned
+ 2121 0138 86F82330 		strb	r3, [r6, #35]
+ 302:Core/HAL/driver/referee/referee_ui.c ****                 uint16_t crc16_now = CRC16_Modbus_calc(&obj->send_frame.header.SOF, 7 + obj->send_f
+ 2122              		.loc 1 302 17 is_stmt 1 view .LVU533
+ 2123 013c D4F80F10 		ldr	r1, [r4, #15]	@ unaligned
+ 2124 0140 D4F81320 		ldr	r2, [r4, #19]	@ unaligned
+ 2125 0144 D4F81730 		ldr	r3, [r4, #23]	@ unaligned
+ 2126 0148 D4F81B00 		ldr	r0, [r4, #27]	@ unaligned
+ 2127 014c 7162     		str	r1, [r6, #36]	@ unaligned
+ 2128 014e B262     		str	r2, [r6, #40]	@ unaligned
+ 2129 0150 F362     		str	r3, [r6, #44]	@ unaligned
+ 2130 0152 3063     		str	r0, [r6, #48]	@ unaligned
+ 2131 0154 D4F81F10 		ldr	r1, [r4, #31]	@ unaligned
+ 2132 0158 D4F82320 		ldr	r2, [r4, #35]	@ unaligned
+ 2133 015c D4F82730 		ldr	r3, [r4, #39]	@ unaligned
+ 2134 0160 7163     		str	r1, [r6, #52]	@ unaligned
+ 2135 0162 B263     		str	r2, [r6, #56]	@ unaligned
+ 2136 0164 F363     		str	r3, [r6, #60]	@ unaligned
+ 2137 0166 B4F82B30 		ldrh	r3, [r4, #43]	@ unaligned
+ 2138 016a A6F84030 		strh	r3, [r6, #64]	@ unaligned
+ 303:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 2139              		.loc 1 303 17 view .LVU534
+ 303:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 2140              		.loc 1 303 111 is_stmt 0 view .LVU535
+ 2141 016e B6F80910 		ldrh	r1, [r6, #9]	@ unaligned
+ 303:Core/HAL/driver/referee/referee_ui.c ****                 memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2
+ 2142              		.loc 1 303 38 view .LVU536
+ 2143 0172 344B     		ldr	r3, .L88+8
+ 2144 0174 1A68     		ldr	r2, [r3]
+ 2145 0176 0731     		adds	r1, r1, #7
+ 2146 0178 4046     		mov	r0, r8
+ 2147 017a FFF7FEFF 		bl	CRC16_Modbus_calc
+ 2148              	.LVL136:
+ 304:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2149              		.loc 1 304 17 is_stmt 1 view .LVU537
+ 304:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2150              		.loc 1 304 69 is_stmt 0 view .LVU538
+ 2151 017e B6F80930 		ldrh	r3, [r6, #9]	@ unaligned
+ 304:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2152              		.loc 1 304 82 view .LVU539
+ 2153 0182 063B     		subs	r3, r3, #6
+ 304:Core/HAL/driver/referee/referee_ui.c ****                 referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2154              		.loc 1 304 17 view .LVU540
+ 2155 0184 29F80300 		strh	r0, [r9, r3]	@ unaligned
+ 305:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 2156              		.loc 1 305 17 is_stmt 1 view .LVU541
+ 2157 0188 4146     		mov	r1, r8
+ 2158 018a 7068     		ldr	r0, [r6, #4]
+ 2159              	.LVL137:
+ 305:Core/HAL/driver/referee/referee_ui.c ****                 circular_queue_pop(obj->elements);
+ 2160              		.loc 1 305 17 is_stmt 0 view .LVU542
+ 2161 018c FFF7FEFF 		bl	referee_send_ext
+ 2162              	.LVL138:
+ 306:Core/HAL/driver/referee/referee_ui.c ****                 break;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 47
+
+
+ 2163              		.loc 1 306 17 is_stmt 1 view .LVU543
+ 2164 0190 3068     		ldr	r0, [r6]
+ 2165 0192 FFF7FEFF 		bl	circular_queue_pop
+ 2166              	.LVL139:
+ 307:Core/HAL/driver/referee/referee_ui.c ****             } else {
+ 2167              		.loc 1 307 17 view .LVU544
+ 2168 0196 39E7     		b	.L73
+ 2169              	.LVL140:
+ 2170              	.L84:
+ 307:Core/HAL/driver/referee/referee_ui.c ****             } else {
+ 2171              		.loc 1 307 17 is_stmt 0 view .LVU545
+ 2172              	.LBE7:
+ 2173              	.LBE9:
+ 2174              	.LBB10:
+ 317:Core/HAL/driver/referee/referee_ui.c ****             //没有图片的部分全部设置为0
+ 318:Core/HAL/driver/referee/referee_ui.c ****             memset(obj->send_frame.data + graphic_num * sizeof(graphic_data), 0, sizeof(graphic_dat
+ 2175              		.loc 1 318 13 is_stmt 1 view .LVU546
+ 2176              		.loc 1 318 20 is_stmt 0 view .LVU547
+ 2177 0198 06F11508 		add	r8, r6, #21
+ 2178              		.loc 1 318 55 view .LVU548
+ 2179 019c C5EB0510 		rsb	r0, r5, r5, lsl #4
+ 2180              		.loc 1 318 108 view .LVU549
+ 2181 01a0 C5F10702 		rsb	r2, r5, #7
+ 2182              		.loc 1 318 13 view .LVU550
+ 2183 01a4 C2EB0212 		rsb	r2, r2, r2, lsl #4
+ 2184 01a8 0021     		movs	r1, #0
+ 2185 01aa 4044     		add	r0, r0, r8
+ 2186 01ac FFF7FEFF 		bl	memset
+ 2187              	.LVL141:
+ 319:Core/HAL/driver/referee/referee_ui.c ****             if (graphic_num > 5) {
+ 2188              		.loc 1 319 13 is_stmt 1 view .LVU551
+ 2189              		.loc 1 319 16 is_stmt 0 view .LVU552
+ 2190 01b0 052D     		cmp	r5, #5
+ 2191 01b2 22D9     		bls	.L77
+ 320:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 105;
+ 2192              		.loc 1 320 17 is_stmt 1 view .LVU553
+ 2193              		.loc 1 320 52 is_stmt 0 view .LVU554
+ 2194 01b4 6F23     		movs	r3, #111
+ 2195 01b6 7372     		strb	r3, [r6, #9]
+ 2196 01b8 0023     		movs	r3, #0
+ 2197 01ba B372     		strb	r3, [r6, #10]
+ 321:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0104;
+ 2198              		.loc 1 321 17 is_stmt 1 view .LVU555
+ 2199              		.loc 1 321 57 is_stmt 0 view .LVU556
+ 2200 01bc 0423     		movs	r3, #4
+ 2201 01be F373     		strb	r3, [r6, #15]
+ 2202 01c0 0123     		movs	r3, #1
+ 2203 01c2 3374     		strb	r3, [r6, #16]
+ 2204              	.L78:
+ 322:Core/HAL/driver/referee/referee_ui.c ****             } else if (graphic_num > 2) {
+ 323:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 75;
+ 324:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0103;
+ 325:Core/HAL/driver/referee/referee_ui.c ****             } else if (graphic_num > 1) {
+ 326:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 30;
+ 327:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0102;
+ 328:Core/HAL/driver/referee/referee_ui.c ****             } else {
+ 329:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 15;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 48
+
+
+ 330:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0101;
+ 331:Core/HAL/driver/referee/referee_ui.c ****             }
+ 332:Core/HAL/driver/referee/referee_ui.c ****             obj->send_frame.header.CRC8 = CRC8_Modbus_calc(&obj->send_frame.header.SOF, 4, crc8_def
+ 2205              		.loc 1 332 13 is_stmt 1 view .LVU557
+ 2206              		.loc 1 332 43 is_stmt 0 view .LVU558
+ 2207 01c4 06F10804 		add	r4, r6, #8
+ 2208 01c8 1D4B     		ldr	r3, .L88+4
+ 2209 01ca 1A68     		ldr	r2, [r3]
+ 2210 01cc 0421     		movs	r1, #4
+ 2211 01ce 2046     		mov	r0, r4
+ 2212 01d0 FFF7FEFF 		bl	CRC8_Modbus_calc
+ 2213              	.LVL142:
+ 2214              		.loc 1 332 41 view .LVU559
+ 2215 01d4 3073     		strb	r0, [r6, #12]
+ 333:Core/HAL/driver/referee/referee_ui.c ****             uint16_t crc16_now = CRC16_Modbus_calc(&obj->send_frame.header.SOF, 7 + obj->send_frame
+ 2216              		.loc 1 333 13 is_stmt 1 view .LVU560
+ 2217              		.loc 1 333 107 is_stmt 0 view .LVU561
+ 2218 01d6 B6F80910 		ldrh	r1, [r6, #9]	@ unaligned
+ 2219              		.loc 1 333 34 view .LVU562
+ 2220 01da 1A4B     		ldr	r3, .L88+8
+ 2221 01dc 1A68     		ldr	r2, [r3]
+ 2222 01de 0731     		adds	r1, r1, #7
+ 2223 01e0 2046     		mov	r0, r4
+ 2224 01e2 FFF7FEFF 		bl	CRC16_Modbus_calc
+ 2225              	.LVL143:
+ 334:Core/HAL/driver/referee/referee_ui.c ****             memcpy(obj->send_frame.data + obj->send_frame.header.data_length - 6, &crc16_now, 2);
+ 2226              		.loc 1 334 13 is_stmt 1 view .LVU563
+ 2227              		.loc 1 334 65 is_stmt 0 view .LVU564
+ 2228 01e6 B6F80930 		ldrh	r3, [r6, #9]	@ unaligned
+ 2229              		.loc 1 334 78 view .LVU565
+ 2230 01ea 063B     		subs	r3, r3, #6
+ 2231              		.loc 1 334 13 view .LVU566
+ 2232 01ec 28F80300 		strh	r0, [r8, r3]	@ unaligned
+ 335:Core/HAL/driver/referee/referee_ui.c ****             referee_send_ext(obj->config.referee, &obj->send_frame);
+ 2233              		.loc 1 335 13 is_stmt 1 view .LVU567
+ 2234 01f0 2146     		mov	r1, r4
+ 2235 01f2 7068     		ldr	r0, [r6, #4]
+ 2236              	.LVL144:
+ 2237              		.loc 1 335 13 is_stmt 0 view .LVU568
+ 2238 01f4 FFF7FEFF 		bl	referee_send_ext
+ 2239              	.LVL145:
+ 2240 01f8 0BE7     		b	.L76
+ 2241              	.L77:
+ 322:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 75;
+ 2242              		.loc 1 322 20 is_stmt 1 view .LVU569
+ 322:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 75;
+ 2243              		.loc 1 322 23 is_stmt 0 view .LVU570
+ 2244 01fa 022D     		cmp	r5, #2
+ 2245 01fc 08D9     		bls	.L79
+ 323:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0103;
+ 2246              		.loc 1 323 17 is_stmt 1 view .LVU571
+ 323:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0103;
+ 2247              		.loc 1 323 52 is_stmt 0 view .LVU572
+ 2248 01fe 5123     		movs	r3, #81
+ 2249 0200 7372     		strb	r3, [r6, #9]
+ 2250 0202 0023     		movs	r3, #0
+ 2251 0204 B372     		strb	r3, [r6, #10]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 49
+
+
+ 324:Core/HAL/driver/referee/referee_ui.c ****             } else if (graphic_num > 1) {
+ 2252              		.loc 1 324 17 is_stmt 1 view .LVU573
+ 324:Core/HAL/driver/referee/referee_ui.c ****             } else if (graphic_num > 1) {
+ 2253              		.loc 1 324 57 is_stmt 0 view .LVU574
+ 2254 0206 0323     		movs	r3, #3
+ 2255 0208 F373     		strb	r3, [r6, #15]
+ 2256 020a 0123     		movs	r3, #1
+ 2257 020c 3374     		strb	r3, [r6, #16]
+ 2258 020e D9E7     		b	.L78
+ 2259              	.L79:
+ 325:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 30;
+ 2260              		.loc 1 325 20 is_stmt 1 view .LVU575
+ 325:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.header.data_length = 6 + 30;
+ 2261              		.loc 1 325 23 is_stmt 0 view .LVU576
+ 2262 0210 012D     		cmp	r5, #1
+ 2263 0212 08D9     		bls	.L80
+ 326:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0102;
+ 2264              		.loc 1 326 17 is_stmt 1 view .LVU577
+ 326:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0102;
+ 2265              		.loc 1 326 52 is_stmt 0 view .LVU578
+ 2266 0214 2423     		movs	r3, #36
+ 2267 0216 7372     		strb	r3, [r6, #9]
+ 2268 0218 0023     		movs	r3, #0
+ 2269 021a B372     		strb	r3, [r6, #10]
+ 327:Core/HAL/driver/referee/referee_ui.c ****             } else {
+ 2270              		.loc 1 327 17 is_stmt 1 view .LVU579
+ 327:Core/HAL/driver/referee/referee_ui.c ****             } else {
+ 2271              		.loc 1 327 57 is_stmt 0 view .LVU580
+ 2272 021c 0223     		movs	r3, #2
+ 2273 021e F373     		strb	r3, [r6, #15]
+ 2274 0220 0123     		movs	r3, #1
+ 2275 0222 3374     		strb	r3, [r6, #16]
+ 2276 0224 CEE7     		b	.L78
+ 2277              	.L80:
+ 329:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0101;
+ 2278              		.loc 1 329 17 is_stmt 1 view .LVU581
+ 329:Core/HAL/driver/referee/referee_ui.c ****                 obj->send_frame.data_header.data_cmd_id = 0x0101;
+ 2279              		.loc 1 329 52 is_stmt 0 view .LVU582
+ 2280 0226 1523     		movs	r3, #21
+ 2281 0228 7372     		strb	r3, [r6, #9]
+ 2282 022a 0023     		movs	r3, #0
+ 2283 022c B372     		strb	r3, [r6, #10]
+ 330:Core/HAL/driver/referee/referee_ui.c ****             }
+ 2284              		.loc 1 330 17 is_stmt 1 view .LVU583
+ 330:Core/HAL/driver/referee/referee_ui.c ****             }
+ 2285              		.loc 1 330 57 is_stmt 0 view .LVU584
+ 2286 022e 0123     		movs	r3, #1
+ 2287 0230 F373     		strb	r3, [r6, #15]
+ 2288 0232 3374     		strb	r3, [r6, #16]
+ 2289 0234 C6E7     		b	.L78
+ 2290              	.LVL146:
+ 2291              	.L85:
+ 330:Core/HAL/driver/referee/referee_ui.c ****             }
+ 2292              		.loc 1 330 57 view .LVU585
+ 2293              	.LBE10:
+ 2294              	.LBE11:
+ 2295              	.LBE2:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 50
+
+
+ 336:Core/HAL/driver/referee/referee_ui.c ****         }
+ 337:Core/HAL/driver/referee/referee_ui.c ****     }
+ 338:Core/HAL/driver/referee/referee_ui.c **** }...
+ 2296              		.loc 1 338 1 view .LVU586
+ 2297 0236 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 2298              	.LVL147:
+ 2299              	.L89:
+ 2300              		.loc 1 338 1 view .LVU587
+ 2301 023a 00BF     		.align	2
+ 2302              	.L88:
+ 2303 023c 00000000 		.word	.LANCHOR0
+ 2304 0240 00000000 		.word	crc8_default
+ 2305 0244 00000000 		.word	crc16_default
+ 2306              		.cfi_endproc
+ 2307              	.LFE152:
+ 2309              		.global	referee_ui_instances
+ 2310              		.section	.bss.referee_ui_instances,"aw",%nobits
+ 2311              		.align	2
+ 2312              		.set	.LANCHOR0,. + 0
+ 2315              	referee_ui_instances:
+ 2316 0000 00000000 		.space	4
+ 2317              		.text
+ 2318              	.Letext0:
+ 2319              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 2320              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 2321              		.file 4 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 2322              		.file 5 "Core/HAL/lib/circular_queue.h"
+ 2323              		.file 6 "Core/HAL/lib/cvector.h"
+ 2324              		.file 7 "Core/HAL/monitor/monitor.h"
+ 2325              		.file 8 "Core/HAL/driver/referee/referee_def.h"
+ 2326              		.file 9 "Core/HAL/lib/soft_crc.h"
+ 2327              		.file 10 "Core/HAL/driver/referee/referee.h"
+ 2328              		.file 11 "Core/HAL/driver/referee/referee_ui.h"
+ 2329              		.file 12 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 2330              		.file 13 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 51
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 referee_ui.c
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:20     .text.Line:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:26     .text.Line:00000000 Line
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:148    .text.Rectangle:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:154    .text.Rectangle:00000000 Rectangle
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:275    .text.Circle:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:281    .text.Circle:00000000 Circle
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:387    .text.Oval:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:393    .text.Oval:00000000 Oval
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:514    .text.Arc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:520    .text.Arc:00000000 Arc
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:666    .text.Float:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:672    .text.Float:00000000 Float
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:792    .text.Float:000000c0 $d
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:797    .text.Int:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:803    .text.Int:00000000 Int
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:916    .text.Char:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:922    .text.Char:00000000 Char
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1042   .text.graphic_float_change:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1048   .text.graphic_float_change:00000000 graphic_float_change
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1072   .text.graphic_float_change:00000018 $d
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1077   .text.graphic_int_change:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1083   .text.graphic_int_change:00000000 graphic_int_change
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1099   .text.Robot_Client_ID:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1105   .text.Robot_Client_ID:00000000 Robot_Client_ID
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1128   .text.Robot_Client_ID:00000016 $d
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1135   .text.Robot_Client_ID:0000001c $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1160   .text.Robot_Client_ID:00000032 $d
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1166   .text.Robot_Client_ID:00000038 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1279   .text.Referee_UI_driver_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1285   .text.Referee_UI_driver_Init:00000000 Referee_UI_driver_Init
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1309   .text.Referee_UI_driver_Init:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1314   .text.referee_ui_create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1320   .text.referee_ui_create:00000000 referee_ui_create
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1417   .text.referee_ui_create:00000060 $d
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1422   .text.referee_ui_add_cmd:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1428   .text.referee_ui_add_cmd:00000000 referee_ui_add_cmd
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1467   .text.add_graphic:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1473   .text.add_graphic:00000000 add_graphic
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1531   .text.del_graphic:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1537   .text.del_graphic:00000000 del_graphic
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1595   .text.add_text:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1601   .text.add_text:00000000 add_text
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1689   .text.modifiy_graphic:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1695   .text.modifiy_graphic:00000000 modifiy_graphic
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1753   .text.modifiy_text:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1759   .text.modifiy_text:00000000 modifiy_text
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1847   .text.Referee_UI_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:1853   .text.Referee_UI_Loop:00000000 Referee_UI_Loop
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:2303   .text.Referee_UI_Loop:0000023c $d
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:2315   .bss.referee_ui_instances:00000000 referee_ui_instances
+C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s:2311   .bss.referee_ui_instances:00000000 $d
+
+UNDEFINED SYMBOLS
+cvector_create
+malloc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccnfCuyb.s 			page 52
+
+
+memset
+create_circular_queue
+cvector_pushback
+circular_queue_push
+memcpy
+cvector_val_at
+circular_queue_front
+circular_queue_pop
+CRC8_Modbus_calc
+CRC16_Modbus_calc
+referee_send_ext
+crc8_default
+crc16_default

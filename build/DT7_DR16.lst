@@ -1,0 +1,1724 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"DT7_DR16.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.dt7_driver_init,"ax",%progbits
+  20              		.align	1
+  21              		.global	dt7_driver_init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	dt7_driver_init:
+  27              	.LFB133:
+  28              		.file 1 "Core/HAL/driver/remote/DT7_DR16.c"
+   1:Core/HAL/driver/remote/DT7_DR16.c **** #include "DT7_DR16.h"
+   2:Core/HAL/driver/remote/DT7_DR16.c **** 
+   3:Core/HAL/driver/remote/DT7_DR16.c **** #include "bsp.h"
+   4:Core/HAL/driver/remote/DT7_DR16.c **** #include "cvector.h"
+   5:Core/HAL/driver/remote/DT7_DR16.c **** 
+   6:Core/HAL/driver/remote/DT7_DR16.c **** //键盘对应的通信协议数据
+   7:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_W 0x0001
+   8:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_S 0x0002
+   9:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_D 0x0004
+  10:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_A 0x0008
+  11:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_Shift 0x0010
+  12:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_ECtrl 0x0020
+  13:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_Q 0x0040
+  14:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_E 0x0080
+  15:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_R 0x0100
+  16:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_F 0x0200
+  17:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_G 0x0400
+  18:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_Z 0x0800
+  19:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_X 0x1000
+  20:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_C 0x2000
+  21:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_V 0x4000
+  22:Core/HAL/driver/remote/DT7_DR16.c **** #define Key_B 0x8000
+  23:Core/HAL/driver/remote/DT7_DR16.c **** 
+  24:Core/HAL/driver/remote/DT7_DR16.c **** cvector *dt7_instances;
+  25:Core/HAL/driver/remote/DT7_DR16.c **** 
+  26:Core/HAL/driver/remote/DT7_DR16.c **** void dt7_data_solve(dt7Remote *obj);
+  27:Core/HAL/driver/remote/DT7_DR16.c **** void dt7_Rx_Callback(uint8_t uart_index, uint8_t *data, uint32_t len);
+  28:Core/HAL/driver/remote/DT7_DR16.c **** 
+  29:Core/HAL/driver/remote/DT7_DR16.c **** void dt7_driver_init(void) {
+  29              		.loc 1 29 28 view -0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 2
+
+
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  30:Core/HAL/driver/remote/DT7_DR16.c ****     dt7_instances = cvector_create(sizeof(dt7Remote *));
+  38              		.loc 1 30 5 view .LVU1
+  39              		.loc 1 30 21 is_stmt 0 view .LVU2
+  40 0002 0420     		movs	r0, #4
+  41 0004 FFF7FEFF 		bl	cvector_create
+  42              	.LVL0:
+  43              		.loc 1 30 19 view .LVU3
+  44 0008 034B     		ldr	r3, .L3
+  45 000a 1860     		str	r0, [r3]
+  31:Core/HAL/driver/remote/DT7_DR16.c ****     BSP_UART_RegisterRxCallback(UART_REMOTE_PORT, dt7_Rx_Callback);
+  46              		.loc 1 31 5 is_stmt 1 view .LVU4
+  47 000c 0349     		ldr	r1, .L3+4
+  48 000e 0020     		movs	r0, #0
+  49 0010 FFF7FEFF 		bl	BSP_UART_RegisterRxCallback
+  50              	.LVL1:
+  32:Core/HAL/driver/remote/DT7_DR16.c **** }
+  51              		.loc 1 32 1 is_stmt 0 view .LVU5
+  52 0014 08BD     		pop	{r3, pc}
+  53              	.L4:
+  54 0016 00BF     		.align	2
+  55              	.L3:
+  56 0018 00000000 		.word	.LANCHOR0
+  57 001c 00000000 		.word	dt7_Rx_Callback
+  58              		.cfi_endproc
+  59              	.LFE133:
+  61              		.section	.text.dt7_Create,"ax",%progbits
+  62              		.align	1
+  63              		.global	dt7_Create
+  64              		.syntax unified
+  65              		.thumb
+  66              		.thumb_func
+  68              	dt7_Create:
+  69              	.LVL2:
+  70              	.LFB134:
+  33:Core/HAL/driver/remote/DT7_DR16.c **** 
+  34:Core/HAL/driver/remote/DT7_DR16.c **** // 构造函数
+  35:Core/HAL/driver/remote/DT7_DR16.c **** dt7Remote *dt7_Create(dt7_config *config) {
+  71              		.loc 1 35 43 is_stmt 1 view -0
+  72              		.cfi_startproc
+  73              		@ args = 0, pretend = 0, frame = 8
+  74              		@ frame_needed = 0, uses_anonymous_args = 0
+  75              		.loc 1 35 43 is_stmt 0 view .LVU7
+  76 0000 30B5     		push	{r4, r5, lr}
+  77              	.LCFI1:
+  78              		.cfi_def_cfa_offset 12
+  79              		.cfi_offset 4, -12
+  80              		.cfi_offset 5, -8
+  81              		.cfi_offset 14, -4
+  82 0002 83B0     		sub	sp, sp, #12
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 3
+
+
+  83              	.LCFI2:
+  84              		.cfi_def_cfa_offset 24
+  85 0004 0546     		mov	r5, r0
+  36:Core/HAL/driver/remote/DT7_DR16.c ****     dt7Remote *obj = (dt7Remote *)malloc(sizeof(dt7Remote));
+  86              		.loc 1 36 5 is_stmt 1 view .LVU8
+  87              		.loc 1 36 35 is_stmt 0 view .LVU9
+  88 0006 CD20     		movs	r0, #205
+  89              	.LVL3:
+  90              		.loc 1 36 35 view .LVU10
+  91 0008 FFF7FEFF 		bl	malloc
+  92              	.LVL4:
+  93              		.loc 1 36 16 view .LVU11
+  94 000c 0190     		str	r0, [sp, #4]
+  37:Core/HAL/driver/remote/DT7_DR16.c ****     memset(obj, 0, sizeof(dt7Remote));
+  95              		.loc 1 37 5 is_stmt 1 view .LVU12
+  96 000e CD22     		movs	r2, #205
+  97 0010 0021     		movs	r1, #0
+  98 0012 FFF7FEFF 		bl	memset
+  99              	.LVL5:
+  38:Core/HAL/driver/remote/DT7_DR16.c ****     obj->config = *config;
+ 100              		.loc 1 38 5 view .LVU13
+ 101              		.loc 1 38 8 is_stmt 0 view .LVU14
+ 102 0016 019C     		ldr	r4, [sp, #4]
+ 103              		.loc 1 38 17 view .LVU15
+ 104 0018 2B68     		ldr	r3, [r5]	@ unaligned
+ 105 001a C4F8C430 		str	r3, [r4, #196]	@ unaligned
+ 106 001e 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
+ 107 0020 84F8C830 		strb	r3, [r4, #200]
+  39:Core/HAL/driver/remote/DT7_DR16.c ****     obj->monitor = Monitor_Register(obj->config.lost_callback, 10, obj);
+ 108              		.loc 1 39 5 is_stmt 1 view .LVU16
+ 109              		.loc 1 39 20 is_stmt 0 view .LVU17
+ 110 0024 2246     		mov	r2, r4
+ 111 0026 0A21     		movs	r1, #10
+ 112 0028 D4F8C500 		ldr	r0, [r4, #197]	@ unaligned
+ 113 002c FFF7FEFF 		bl	Monitor_Register
+ 114              	.LVL6:
+ 115              		.loc 1 39 18 view .LVU18
+ 116 0030 C4F8C900 		str	r0, [r4, #201]	@ unaligned
+  40:Core/HAL/driver/remote/DT7_DR16.c ****     cvector_pushback(dt7_instances, &obj);
+ 117              		.loc 1 40 5 is_stmt 1 view .LVU19
+ 118 0034 01A9     		add	r1, sp, #4
+ 119 0036 034B     		ldr	r3, .L7
+ 120 0038 1868     		ldr	r0, [r3]
+ 121 003a FFF7FEFF 		bl	cvector_pushback
+ 122              	.LVL7:
+  41:Core/HAL/driver/remote/DT7_DR16.c ****     return obj;
+ 123              		.loc 1 41 5 view .LVU20
+  42:Core/HAL/driver/remote/DT7_DR16.c **** }
+ 124              		.loc 1 42 1 is_stmt 0 view .LVU21
+ 125 003e 0198     		ldr	r0, [sp, #4]
+ 126 0040 03B0     		add	sp, sp, #12
+ 127              	.LCFI3:
+ 128              		.cfi_def_cfa_offset 12
+ 129              		@ sp needed
+ 130 0042 30BD     		pop	{r4, r5, pc}
+ 131              	.LVL8:
+ 132              	.L8:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 4
+
+
+ 133              		.loc 1 42 1 view .LVU22
+ 134              		.align	2
+ 135              	.L7:
+ 136 0044 00000000 		.word	.LANCHOR0
+ 137              		.cfi_endproc
+ 138              	.LFE134:
+ 140              		.section	.text.dt7_data_solve,"ax",%progbits
+ 141              		.align	1
+ 142              		.global	dt7_data_solve
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 147              	dt7_data_solve:
+ 148              	.LVL9:
+ 149              	.LFB136:
+  43:Core/HAL/driver/remote/DT7_DR16.c **** 
+  44:Core/HAL/driver/remote/DT7_DR16.c **** void dt7_Rx_Callback(uint8_t uart_index, uint8_t *data, uint32_t len) {
+  45:Core/HAL/driver/remote/DT7_DR16.c ****     if (len == DT7_RX_SIZE) {
+  46:Core/HAL/driver/remote/DT7_DR16.c ****         for (size_t i = 0; i < dt7_instances->cv_len; i++) {
+  47:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+  48:Core/HAL/driver/remote/DT7_DR16.c ****             if (uart_index == now->config.bsp_uart_index) {
+  49:Core/HAL/driver/remote/DT7_DR16.c ****                 memcpy(now->primary_data, data, DT7_RX_SIZE);
+  50:Core/HAL/driver/remote/DT7_DR16.c ****                 now->monitor->reset(now->monitor);
+  51:Core/HAL/driver/remote/DT7_DR16.c ****                 dt7_data_solve(now);
+  52:Core/HAL/driver/remote/DT7_DR16.c ****             }
+  53:Core/HAL/driver/remote/DT7_DR16.c ****         }
+  54:Core/HAL/driver/remote/DT7_DR16.c ****     }
+  55:Core/HAL/driver/remote/DT7_DR16.c **** }
+  56:Core/HAL/driver/remote/DT7_DR16.c **** 
+  57:Core/HAL/driver/remote/DT7_DR16.c **** // 遥控器数据解算
+  58:Core/HAL/driver/remote/DT7_DR16.c **** void dt7_data_solve(dt7Remote *obj) {
+ 150              		.loc 1 58 37 is_stmt 1 view -0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 16
+ 153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 154              		.loc 1 58 37 is_stmt 0 view .LVU24
+ 155 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 156              	.LCFI4:
+ 157              		.cfi_def_cfa_offset 36
+ 158              		.cfi_offset 4, -36
+ 159              		.cfi_offset 5, -32
+ 160              		.cfi_offset 6, -28
+ 161              		.cfi_offset 7, -24
+ 162              		.cfi_offset 8, -20
+ 163              		.cfi_offset 9, -16
+ 164              		.cfi_offset 10, -12
+ 165              		.cfi_offset 11, -8
+ 166              		.cfi_offset 14, -4
+ 167 0004 85B0     		sub	sp, sp, #20
+ 168              	.LCFI5:
+ 169              		.cfi_def_cfa_offset 56
+ 170 0006 0446     		mov	r4, r0
+  59:Core/HAL/driver/remote/DT7_DR16.c ****     // last赋值
+  60:Core/HAL/driver/remote/DT7_DR16.c ****     obj->last_data = obj->data;
+ 171              		.loc 1 60 5 is_stmt 1 view .LVU25
+ 172              		.loc 1 60 20 is_stmt 0 view .LVU26
+ 173 0008 5922     		movs	r2, #89
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 5
+
+
+ 174 000a 00F11201 		add	r1, r0, #18
+ 175 000e 6B30     		adds	r0, r0, #107
+ 176              	.LVL10:
+ 177              		.loc 1 60 20 view .LVU27
+ 178 0010 FFF7FEFF 		bl	memcpy
+ 179              	.LVL11:
+  61:Core/HAL/driver/remote/DT7_DR16.c ****     // 拨杆值解算
+  62:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.rc.ch0 = ((int16_t)obj->primary_data[0] | ((int16_t)obj->primary_data[1] << 8)) & 0x0
+ 180              		.loc 1 62 5 is_stmt 1 view .LVU28
+ 181              		.loc 1 62 51 is_stmt 0 view .LVU29
+ 182 0014 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 183              		.loc 1 62 84 view .LVU30
+ 184 0016 6278     		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 185              		.loc 1 62 55 view .LVU31
+ 186 0018 43EA0223 		orr	r3, r3, r2, lsl #8
+ 187              		.loc 1 62 95 view .LVU32
+ 188 001c C3F30A03 		ubfx	r3, r3, #0, #11
+ 189              		.loc 1 62 22 view .LVU33
+ 190 0020 6382     		strh	r3, [r4, #18]	@ unaligned
+  63:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.rc.ch1 = (((int16_t)obj->primary_data[1] >> 3) | ((int16_t)obj->primary_data[2] << 5)
+ 191              		.loc 1 63 5 is_stmt 1 view .LVU34
+ 192              		.loc 1 63 91 is_stmt 0 view .LVU35
+ 193 0022 A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+ 194              		.loc 1 63 62 view .LVU36
+ 195 0024 D208     		lsrs	r2, r2, #3
+ 196 0026 42EA4312 		orr	r2, r2, r3, lsl #5
+ 197              		.loc 1 63 102 view .LVU37
+ 198 002a C2F30A02 		ubfx	r2, r2, #0, #11
+ 199              		.loc 1 63 22 view .LVU38
+ 200 002e A282     		strh	r2, [r4, #20]	@ unaligned
+  64:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.rc.ch2 = (((int16_t)obj->primary_data[2] >> 6) | ((int16_t)obj->primary_data[3] << 2)
+ 201              		.loc 1 64 5 is_stmt 1 view .LVU39
+ 202              		.loc 1 64 91 is_stmt 0 view .LVU40
+ 203 0030 E278     		ldrb	r2, [r4, #3]	@ zero_extendqisi2
+ 204              		.loc 1 64 62 view .LVU41
+ 205 0032 9B09     		lsrs	r3, r3, #6
+ 206 0034 43EA8203 		orr	r3, r3, r2, lsl #2
+ 207              		.loc 1 64 130 view .LVU42
+ 208 0038 2279     		ldrb	r2, [r4, #4]	@ zero_extendqisi2
+ 209              		.loc 1 64 101 view .LVU43
+ 210 003a 43EA8223 		orr	r3, r3, r2, lsl #10
+ 211              		.loc 1 64 142 view .LVU44
+ 212 003e C3F30A03 		ubfx	r3, r3, #0, #11
+ 213              		.loc 1 64 22 view .LVU45
+ 214 0042 E382     		strh	r3, [r4, #22]	@ unaligned
+  65:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.rc.ch3 = (((int16_t)obj->primary_data[4] >> 1) | ((int16_t)obj->primary_data[5] << 7)
+ 215              		.loc 1 65 5 is_stmt 1 view .LVU46
+ 216              		.loc 1 65 91 is_stmt 0 view .LVU47
+ 217 0044 6379     		ldrb	r3, [r4, #5]	@ zero_extendqisi2
+ 218              		.loc 1 65 62 view .LVU48
+ 219 0046 5208     		lsrs	r2, r2, #1
+ 220 0048 42EAC312 		orr	r2, r2, r3, lsl #7
+ 221              		.loc 1 65 102 view .LVU49
+ 222 004c C2F30A02 		ubfx	r2, r2, #0, #11
+ 223              		.loc 1 65 22 view .LVU50
+ 224 0050 2283     		strh	r2, [r4, #24]	@ unaligned
+  66:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.rc.ch4 = ((int16_t)obj->primary_data[16] | ((int16_t)obj->primary_data[17] << 8)) & 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 6
+
+
+ 225              		.loc 1 66 5 is_stmt 1 view .LVU51
+ 226              		.loc 1 66 51 is_stmt 0 view .LVU52
+ 227 0052 227C     		ldrb	r2, [r4, #16]	@ zero_extendqisi2
+ 228              		.loc 1 66 85 view .LVU53
+ 229 0054 617C     		ldrb	r1, [r4, #17]	@ zero_extendqisi2
+ 230              		.loc 1 66 56 view .LVU54
+ 231 0056 42EA0122 		orr	r2, r2, r1, lsl #8
+ 232              		.loc 1 66 97 view .LVU55
+ 233 005a C2F30A02 		ubfx	r2, r2, #0, #11
+ 234              		.loc 1 66 22 view .LVU56
+ 235 005e 6283     		strh	r2, [r4, #26]	@ unaligned
+  67:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.rc.s1 = ((obj->primary_data[5] >> 4) & 0x000C) >> 2;
+ 236              		.loc 1 67 5 is_stmt 1 view .LVU57
+ 237              		.loc 1 67 62 is_stmt 0 view .LVU58
+ 238 0060 9A09     		lsrs	r2, r3, #6
+ 239              		.loc 1 67 21 view .LVU59
+ 240 0062 2277     		strb	r2, [r4, #28]
+  68:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.rc.s2 = ((obj->primary_data[5] >> 4) & 0x0003);
+ 241              		.loc 1 68 5 is_stmt 1 view .LVU60
+ 242              		.loc 1 68 52 is_stmt 0 view .LVU61
+ 243 0064 C3F30113 		ubfx	r3, r3, #4, #2
+ 244              		.loc 1 68 21 view .LVU62
+ 245 0068 6377     		strb	r3, [r4, #29]
+  69:Core/HAL/driver/remote/DT7_DR16.c ****     // 定义统一输入模式
+  70:Core/HAL/driver/remote/DT7_DR16.c ****     if (obj->data.rc.s2 == 2) obj->data.input_mode = RC_Stop;
+ 246              		.loc 1 70 5 is_stmt 1 view .LVU63
+ 247              		.loc 1 70 8 is_stmt 0 view .LVU64
+ 248 006a 022B     		cmp	r3, #2
+ 249 006c 00F00281 		beq	.L59
+ 250              	.L10:
+  71:Core/HAL/driver/remote/DT7_DR16.c ****     if (obj->data.rc.s2 == 3) obj->data.input_mode = RC_Remote;
+ 251              		.loc 1 71 5 is_stmt 1 view .LVU65
+ 252              		.loc 1 71 8 is_stmt 0 view .LVU66
+ 253 0070 032B     		cmp	r3, #3
+ 254 0072 00F00381 		beq	.L60
+ 255              	.L11:
+  72:Core/HAL/driver/remote/DT7_DR16.c ****     if (obj->data.rc.s2 == 1) obj->data.input_mode = RC_MouseKey;
+ 256              		.loc 1 72 5 is_stmt 1 view .LVU67
+ 257              		.loc 1 72 8 is_stmt 0 view .LVU68
+ 258 0076 012B     		cmp	r3, #1
+ 259 0078 00F00481 		beq	.L61
+ 260              	.L12:
+  73:Core/HAL/driver/remote/DT7_DR16.c **** 
+  74:Core/HAL/driver/remote/DT7_DR16.c ****     // 鼠标值解算
+  75:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.x = ((int16_t)obj->primary_data[6]) | ((int16_t)obj->primary_data[7] << 8);
+ 261              		.loc 1 75 5 is_stmt 1 view .LVU69
+ 262              		.loc 1 75 52 is_stmt 0 view .LVU70
+ 263 007c A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 264              		.loc 1 75 86 view .LVU71
+ 265 007e E279     		ldrb	r2, [r4, #7]	@ zero_extendqisi2
+ 266              		.loc 1 75 57 view .LVU72
+ 267 0080 43EA0223 		orr	r3, r3, r2, lsl #8
+ 268              		.loc 1 75 23 view .LVU73
+ 269 0084 E383     		strh	r3, [r4, #30]	@ unaligned
+  76:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.y = ((int16_t)obj->primary_data[8]) | ((int16_t)obj->primary_data[9] << 8);
+ 270              		.loc 1 76 5 is_stmt 1 view .LVU74
+ 271              		.loc 1 76 52 is_stmt 0 view .LVU75
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 7
+
+
+ 272 0086 237A     		ldrb	r3, [r4, #8]	@ zero_extendqisi2
+ 273              		.loc 1 76 86 view .LVU76
+ 274 0088 627A     		ldrb	r2, [r4, #9]	@ zero_extendqisi2
+ 275              		.loc 1 76 57 view .LVU77
+ 276 008a 43EA0223 		orr	r3, r3, r2, lsl #8
+ 277              		.loc 1 76 23 view .LVU78
+ 278 008e 2384     		strh	r3, [r4, #32]	@ unaligned
+  77:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.z = ((int16_t)obj->primary_data[10]) | ((int16_t)obj->primary_data[11] << 8);
+ 279              		.loc 1 77 5 is_stmt 1 view .LVU79
+ 280              		.loc 1 77 52 is_stmt 0 view .LVU80
+ 281 0090 A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
+ 282              		.loc 1 77 87 view .LVU81
+ 283 0092 E27A     		ldrb	r2, [r4, #11]	@ zero_extendqisi2
+ 284              		.loc 1 77 58 view .LVU82
+ 285 0094 43EA0223 		orr	r3, r3, r2, lsl #8
+ 286              		.loc 1 77 23 view .LVU83
+ 287 0098 6384     		strh	r3, [r4, #34]	@ unaligned
+  78:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.press_l = obj->primary_data[12];
+ 288              		.loc 1 78 5 is_stmt 1 view .LVU84
+ 289              		.loc 1 78 48 is_stmt 0 view .LVU85
+ 290 009a 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
+ 291              		.loc 1 78 29 view .LVU86
+ 292 009c 84F82430 		strb	r3, [r4, #36]
+  79:Core/HAL/driver/remote/DT7_DR16.c ****     if(obj->last_data.mouse.press_l && obj->data.mouse.press_l) obj->data.mouse.press_l_cnt = obj->
+ 293              		.loc 1 79 5 is_stmt 1 view .LVU87
+ 294              		.loc 1 79 28 is_stmt 0 view .LVU88
+ 295 00a0 94F87D20 		ldrb	r2, [r4, #125]	@ zero_extendqisi2
+ 296              		.loc 1 79 7 view .LVU89
+ 297 00a4 002A     		cmp	r2, #0
+ 298 00a6 00F0F080 		beq	.L13
+ 299              		.loc 1 79 37 discriminator 1 view .LVU90
+ 300 00aa 002B     		cmp	r3, #0
+ 301 00ac 00F0ED80 		beq	.L13
+ 302              		.loc 1 79 65 is_stmt 1 discriminator 2 view .LVU91
+ 303              		.loc 1 79 115 is_stmt 0 discriminator 2 view .LVU92
+ 304 00b0 D4F87E30 		ldr	r3, [r4, #126]	@ unaligned
+ 305              		.loc 1 79 128 discriminator 2 view .LVU93
+ 306 00b4 0133     		adds	r3, r3, #1
+ 307              		.loc 1 79 93 discriminator 2 view .LVU94
+ 308 00b6 C4F82530 		str	r3, [r4, #37]	@ unaligned
+ 309              	.L14:
+  80:Core/HAL/driver/remote/DT7_DR16.c ****     else if(obj->last_data.mouse.press_l && !obj->data.mouse.press_l) obj->data.mouse.press_l_cnt =
+  81:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.press_r = obj->primary_data[13];
+ 310              		.loc 1 81 5 is_stmt 1 view .LVU95
+ 311              		.loc 1 81 48 is_stmt 0 view .LVU96
+ 312 00ba 637B     		ldrb	r3, [r4, #13]	@ zero_extendqisi2
+ 313              		.loc 1 81 29 view .LVU97
+ 314 00bc 84F82930 		strb	r3, [r4, #41]
+  82:Core/HAL/driver/remote/DT7_DR16.c ****     // 键盘按键解算-是否按下
+  83:Core/HAL/driver/remote/DT7_DR16.c ****     uint16_t keyboard = (int16_t)obj->primary_data[14] | ((int16_t)obj->primary_data[15] << 8);
+ 315              		.loc 1 83 5 is_stmt 1 view .LVU98
+ 316              		.loc 1 83 51 is_stmt 0 view .LVU99
+ 317 00c0 A27B     		ldrb	r2, [r4, #14]	@ zero_extendqisi2
+ 318              		.loc 1 83 85 view .LVU100
+ 319 00c2 E37B     		ldrb	r3, [r4, #15]	@ zero_extendqisi2
+ 320              	.LVL12:
+  84:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.w = (keyboard & Key_W) > 0;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 8
+
+
+ 321              		.loc 1 84 5 is_stmt 1 view .LVU101
+ 322              		.loc 1 84 47 is_stmt 0 view .LVU102
+ 323 00c4 02F0010B 		and	fp, r2, #1
+ 324              		.loc 1 84 26 view .LVU103
+ 325 00c8 84F82AB0 		strb	fp, [r4, #42]
+  85:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.s = (keyboard & Key_S) > 0;
+ 326              		.loc 1 85 5 is_stmt 1 view .LVU104
+ 327              		.loc 1 85 47 is_stmt 0 view .LVU105
+ 328 00cc C2F3400A 		ubfx	r10, r2, #1, #1
+ 329              		.loc 1 85 26 view .LVU106
+ 330 00d0 84F82BA0 		strb	r10, [r4, #43]
+  86:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.d = (keyboard & Key_D) > 0;
+ 331              		.loc 1 86 5 is_stmt 1 view .LVU107
+ 332              		.loc 1 86 47 is_stmt 0 view .LVU108
+ 333 00d4 C2F38009 		ubfx	r9, r2, #2, #1
+ 334              		.loc 1 86 26 view .LVU109
+ 335 00d8 84F82C90 		strb	r9, [r4, #44]
+  87:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.a = (keyboard & Key_A) > 0;
+ 336              		.loc 1 87 5 is_stmt 1 view .LVU110
+ 337              		.loc 1 87 47 is_stmt 0 view .LVU111
+ 338 00dc C2F3C008 		ubfx	r8, r2, #3, #1
+ 339              		.loc 1 87 26 view .LVU112
+ 340 00e0 84F82D80 		strb	r8, [r4, #45]
+  88:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.shift = (keyboard & Key_Shift) > 0;
+ 341              		.loc 1 88 5 is_stmt 1 view .LVU113
+ 342              		.loc 1 88 55 is_stmt 0 view .LVU114
+ 343 00e4 C2F30011 		ubfx	r1, r2, #4, #1
+ 344              		.loc 1 88 30 view .LVU115
+ 345 00e8 84F82E10 		strb	r1, [r4, #46]
+  89:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.ctrl = (keyboard & Key_ECtrl) > 0;
+ 346              		.loc 1 89 5 is_stmt 1 view .LVU116
+ 347              		.loc 1 89 54 is_stmt 0 view .LVU117
+ 348 00ec C2F34010 		ubfx	r0, r2, #5, #1
+ 349              		.loc 1 89 29 view .LVU118
+ 350 00f0 84F82F00 		strb	r0, [r4, #47]
+  90:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.q = (keyboard & Key_Q) > 0;
+ 351              		.loc 1 90 5 is_stmt 1 view .LVU119
+ 352              		.loc 1 90 47 is_stmt 0 view .LVU120
+ 353 00f4 C2F3801E 		ubfx	lr, r2, #6, #1
+ 354              		.loc 1 90 26 view .LVU121
+ 355 00f8 84F830E0 		strb	lr, [r4, #48]
+  91:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.e = (keyboard & Key_E) > 0;
+ 356              		.loc 1 91 5 is_stmt 1 view .LVU122
+ 357              		.loc 1 91 47 is_stmt 0 view .LVU123
+ 358 00fc D209     		lsrs	r2, r2, #7
+ 359              	.LVL13:
+ 360              		.loc 1 91 26 view .LVU124
+ 361 00fe 84F83120 		strb	r2, [r4, #49]
+  92:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.r = (keyboard & Key_R) > 0;
+ 362              		.loc 1 92 5 is_stmt 1 view .LVU125
+ 363              		.loc 1 92 47 is_stmt 0 view .LVU126
+ 364 0102 03F0010C 		and	ip, r3, #1
+ 365              		.loc 1 92 26 view .LVU127
+ 366 0106 84F832C0 		strb	ip, [r4, #50]
+  93:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.f = (keyboard & Key_F) > 0;
+ 367              		.loc 1 93 5 is_stmt 1 view .LVU128
+ 368              		.loc 1 93 47 is_stmt 0 view .LVU129
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 9
+
+
+ 369 010a C3F34007 		ubfx	r7, r3, #1, #1
+ 370              		.loc 1 93 26 view .LVU130
+ 371 010e 84F83370 		strb	r7, [r4, #51]
+  94:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.g = (keyboard & Key_G) > 0;
+ 372              		.loc 1 94 5 is_stmt 1 view .LVU131
+ 373              		.loc 1 94 47 is_stmt 0 view .LVU132
+ 374 0112 C3F38005 		ubfx	r5, r3, #2, #1
+ 375 0116 0195     		str	r5, [sp, #4]
+ 376              		.loc 1 94 26 view .LVU133
+ 377 0118 84F83450 		strb	r5, [r4, #52]
+  95:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.z = (keyboard & Key_Z) > 0;
+ 378              		.loc 1 95 5 is_stmt 1 view .LVU134
+ 379              		.loc 1 95 47 is_stmt 0 view .LVU135
+ 380 011c C3F3C005 		ubfx	r5, r3, #3, #1
+ 381 0120 0295     		str	r5, [sp, #8]
+ 382              		.loc 1 95 26 view .LVU136
+ 383 0122 84F83550 		strb	r5, [r4, #53]
+  96:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.x = (keyboard & Key_X) > 0;
+ 384              		.loc 1 96 5 is_stmt 1 view .LVU137
+ 385              		.loc 1 96 47 is_stmt 0 view .LVU138
+ 386 0126 C3F30015 		ubfx	r5, r3, #4, #1
+ 387 012a 0395     		str	r5, [sp, #12]
+ 388              		.loc 1 96 26 view .LVU139
+ 389 012c 84F83650 		strb	r5, [r4, #54]
+  97:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.c = (keyboard & Key_C) > 0;
+ 390              		.loc 1 97 5 is_stmt 1 view .LVU140
+ 391              		.loc 1 97 47 is_stmt 0 view .LVU141
+ 392 0130 C3F34016 		ubfx	r6, r3, #5, #1
+ 393              		.loc 1 97 26 view .LVU142
+ 394 0134 84F83760 		strb	r6, [r4, #55]
+  98:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.v = (keyboard & Key_V) > 0;
+ 395              		.loc 1 98 5 is_stmt 1 view .LVU143
+ 396              		.loc 1 98 47 is_stmt 0 view .LVU144
+ 397 0138 C3F38015 		ubfx	r5, r3, #6, #1
+ 398              		.loc 1 98 26 view .LVU145
+ 399 013c 84F83850 		strb	r5, [r4, #56]
+  99:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.key_down.b = (keyboard & Key_B) > 0;
+ 400              		.loc 1 99 5 is_stmt 1 view .LVU146
+ 401              		.loc 1 99 47 is_stmt 0 view .LVU147
+ 402 0140 DB09     		lsrs	r3, r3, #7
+ 403              	.LVL14:
+ 404              		.loc 1 99 26 view .LVU148
+ 405 0142 84F83930 		strb	r3, [r4, #57]
+ 100:Core/HAL/driver/remote/DT7_DR16.c **** 
+ 101:Core/HAL/driver/remote/DT7_DR16.c ****     // 排除ctrl shift一起按
+ 102:Core/HAL/driver/remote/DT7_DR16.c ****     if (!(obj->data.key_down.shift && obj->data.key_down.ctrl)) {
+ 406              		.loc 1 102 5 is_stmt 1 view .LVU149
+ 407              		.loc 1 102 8 is_stmt 0 view .LVU150
+ 408 0146 11B1     		cbz	r1, .L15
+ 409              		.loc 1 102 9 discriminator 1 view .LVU151
+ 410 0148 0028     		cmp	r0, #0
+ 411 014a 40F09080 		bne	.L9
+ 412              	.L15:
+ 103:Core/HAL/driver/remote/DT7_DR16.c ****         // 键盘按下次数计数 单按 ctrl+ shift+分开处理 不含shift与ctrl本身
+ 104:Core/HAL/driver/remote/DT7_DR16.c ****         if (obj->data.key_down.shift) {
+ 413              		.loc 1 104 9 is_stmt 1 view .LVU152
+ 414              		.loc 1 104 12 is_stmt 0 view .LVU153
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 10
+
+
+ 415 014e 0029     		cmp	r1, #0
+ 416 0150 00F0AA80 		beq	.L17
+ 105:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.w && !obj->last_data.key_down.w)) obj->data.key_shift_press_cnt
+ 417              		.loc 1 105 13 is_stmt 1 view .LVU154
+ 418              		.loc 1 105 16 is_stmt 0 view .LVU155
+ 419 0154 BBF1000F 		cmp	fp, #0
+ 420 0158 07D0     		beq	.L18
+ 421              		.loc 1 105 66 discriminator 1 view .LVU156
+ 422 015a 94F88310 		ldrb	r1, [r4, #131]	@ zero_extendqisi2
+ 423              		.loc 1 105 39 discriminator 1 view .LVU157
+ 424 015e 21B9     		cbnz	r1, .L18
+ 425              		.loc 1 105 71 is_stmt 1 discriminator 2 view .LVU158
+ 426              		.loc 1 105 100 is_stmt 0 discriminator 2 view .LVU159
+ 427 0160 94F84A10 		ldrb	r1, [r4, #74]	@ zero_extendqisi2
+ 428              		.loc 1 105 102 discriminator 2 view .LVU160
+ 429 0164 0131     		adds	r1, r1, #1
+ 430 0166 84F84A10 		strb	r1, [r4, #74]
+ 431              	.L18:
+ 106:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_shift_press_cnt
+ 432              		.loc 1 106 13 is_stmt 1 view .LVU161
+ 433              		.loc 1 106 16 is_stmt 0 view .LVU162
+ 434 016a BAF1000F 		cmp	r10, #0
+ 435 016e 07D0     		beq	.L19
+ 436              		.loc 1 106 66 discriminator 1 view .LVU163
+ 437 0170 94F88410 		ldrb	r1, [r4, #132]	@ zero_extendqisi2
+ 438              		.loc 1 106 39 discriminator 1 view .LVU164
+ 439 0174 21B9     		cbnz	r1, .L19
+ 440              		.loc 1 106 71 is_stmt 1 discriminator 2 view .LVU165
+ 441              		.loc 1 106 100 is_stmt 0 discriminator 2 view .LVU166
+ 442 0176 94F84B10 		ldrb	r1, [r4, #75]	@ zero_extendqisi2
+ 443              		.loc 1 106 102 discriminator 2 view .LVU167
+ 444 017a 0131     		adds	r1, r1, #1
+ 445 017c 84F84B10 		strb	r1, [r4, #75]
+ 446              	.L19:
+ 107:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_shift_press_cnt
+ 447              		.loc 1 107 13 is_stmt 1 view .LVU168
+ 448              		.loc 1 107 16 is_stmt 0 view .LVU169
+ 449 0180 B9F1000F 		cmp	r9, #0
+ 450 0184 07D0     		beq	.L20
+ 451              		.loc 1 107 66 discriminator 1 view .LVU170
+ 452 0186 94F88510 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 453              		.loc 1 107 39 discriminator 1 view .LVU171
+ 454 018a 21B9     		cbnz	r1, .L20
+ 455              		.loc 1 107 71 is_stmt 1 discriminator 2 view .LVU172
+ 456              		.loc 1 107 100 is_stmt 0 discriminator 2 view .LVU173
+ 457 018c 94F84C10 		ldrb	r1, [r4, #76]	@ zero_extendqisi2
+ 458              		.loc 1 107 102 discriminator 2 view .LVU174
+ 459 0190 0131     		adds	r1, r1, #1
+ 460 0192 84F84C10 		strb	r1, [r4, #76]
+ 461              	.L20:
+ 108:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_shift_press_cnt
+ 462              		.loc 1 108 13 is_stmt 1 view .LVU175
+ 463              		.loc 1 108 16 is_stmt 0 view .LVU176
+ 464 0196 B8F1000F 		cmp	r8, #0
+ 465 019a 07D0     		beq	.L21
+ 466              		.loc 1 108 66 discriminator 1 view .LVU177
+ 467 019c 94F88610 		ldrb	r1, [r4, #134]	@ zero_extendqisi2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 11
+
+
+ 468              		.loc 1 108 39 discriminator 1 view .LVU178
+ 469 01a0 21B9     		cbnz	r1, .L21
+ 470              		.loc 1 108 71 is_stmt 1 discriminator 2 view .LVU179
+ 471              		.loc 1 108 100 is_stmt 0 discriminator 2 view .LVU180
+ 472 01a2 94F84D10 		ldrb	r1, [r4, #77]	@ zero_extendqisi2
+ 473              		.loc 1 108 102 discriminator 2 view .LVU181
+ 474 01a6 0131     		adds	r1, r1, #1
+ 475 01a8 84F84D10 		strb	r1, [r4, #77]
+ 476              	.L21:
+ 109:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_shift_press_cnt
+ 477              		.loc 1 109 13 is_stmt 1 view .LVU182
+ 478              		.loc 1 109 16 is_stmt 0 view .LVU183
+ 479 01ac BEF1000F 		cmp	lr, #0
+ 480 01b0 07D0     		beq	.L22
+ 481              		.loc 1 109 66 discriminator 1 view .LVU184
+ 482 01b2 94F88910 		ldrb	r1, [r4, #137]	@ zero_extendqisi2
+ 483              		.loc 1 109 39 discriminator 1 view .LVU185
+ 484 01b6 21B9     		cbnz	r1, .L22
+ 485              		.loc 1 109 71 is_stmt 1 discriminator 2 view .LVU186
+ 486              		.loc 1 109 100 is_stmt 0 discriminator 2 view .LVU187
+ 487 01b8 94F85010 		ldrb	r1, [r4, #80]	@ zero_extendqisi2
+ 488              		.loc 1 109 102 discriminator 2 view .LVU188
+ 489 01bc 0131     		adds	r1, r1, #1
+ 490 01be 84F85010 		strb	r1, [r4, #80]
+ 491              	.L22:
+ 110:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_shift_press_cnt
+ 492              		.loc 1 110 13 is_stmt 1 view .LVU189
+ 493              		.loc 1 110 16 is_stmt 0 view .LVU190
+ 494 01c2 3AB1     		cbz	r2, .L23
+ 495              		.loc 1 110 66 discriminator 1 view .LVU191
+ 496 01c4 94F88A20 		ldrb	r2, [r4, #138]	@ zero_extendqisi2
+ 497              		.loc 1 110 39 discriminator 1 view .LVU192
+ 498 01c8 22B9     		cbnz	r2, .L23
+ 499              		.loc 1 110 71 is_stmt 1 discriminator 2 view .LVU193
+ 500              		.loc 1 110 100 is_stmt 0 discriminator 2 view .LVU194
+ 501 01ca 94F85120 		ldrb	r2, [r4, #81]	@ zero_extendqisi2
+ 502              		.loc 1 110 102 discriminator 2 view .LVU195
+ 503 01ce 0132     		adds	r2, r2, #1
+ 504 01d0 84F85120 		strb	r2, [r4, #81]
+ 505              	.L23:
+ 111:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_shift_press_cnt
+ 506              		.loc 1 111 13 is_stmt 1 view .LVU196
+ 507              		.loc 1 111 16 is_stmt 0 view .LVU197
+ 508 01d4 BCF1000F 		cmp	ip, #0
+ 509 01d8 07D0     		beq	.L24
+ 510              		.loc 1 111 66 discriminator 1 view .LVU198
+ 511 01da 94F88B20 		ldrb	r2, [r4, #139]	@ zero_extendqisi2
+ 512              		.loc 1 111 39 discriminator 1 view .LVU199
+ 513 01de 22B9     		cbnz	r2, .L24
+ 514              		.loc 1 111 71 is_stmt 1 discriminator 2 view .LVU200
+ 515              		.loc 1 111 100 is_stmt 0 discriminator 2 view .LVU201
+ 516 01e0 94F85220 		ldrb	r2, [r4, #82]	@ zero_extendqisi2
+ 517              		.loc 1 111 102 discriminator 2 view .LVU202
+ 518 01e4 0132     		adds	r2, r2, #1
+ 519 01e6 84F85220 		strb	r2, [r4, #82]
+ 520              	.L24:
+ 112:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_shift_press_cnt
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 12
+
+
+ 521              		.loc 1 112 13 is_stmt 1 view .LVU203
+ 522              		.loc 1 112 16 is_stmt 0 view .LVU204
+ 523 01ea 3FB1     		cbz	r7, .L25
+ 524              		.loc 1 112 66 discriminator 1 view .LVU205
+ 525 01ec 94F88C20 		ldrb	r2, [r4, #140]	@ zero_extendqisi2
+ 526              		.loc 1 112 39 discriminator 1 view .LVU206
+ 527 01f0 22B9     		cbnz	r2, .L25
+ 528              		.loc 1 112 71 is_stmt 1 discriminator 2 view .LVU207
+ 529              		.loc 1 112 100 is_stmt 0 discriminator 2 view .LVU208
+ 530 01f2 94F85320 		ldrb	r2, [r4, #83]	@ zero_extendqisi2
+ 531              		.loc 1 112 102 discriminator 2 view .LVU209
+ 532 01f6 0132     		adds	r2, r2, #1
+ 533 01f8 84F85320 		strb	r2, [r4, #83]
+ 534              	.L25:
+ 113:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_shift_press_cnt
+ 535              		.loc 1 113 13 is_stmt 1 view .LVU210
+ 536              		.loc 1 113 16 is_stmt 0 view .LVU211
+ 537 01fc 019A     		ldr	r2, [sp, #4]
+ 538 01fe 3AB1     		cbz	r2, .L26
+ 539              		.loc 1 113 66 discriminator 1 view .LVU212
+ 540 0200 94F88D20 		ldrb	r2, [r4, #141]	@ zero_extendqisi2
+ 541              		.loc 1 113 39 discriminator 1 view .LVU213
+ 542 0204 22B9     		cbnz	r2, .L26
+ 543              		.loc 1 113 71 is_stmt 1 discriminator 2 view .LVU214
+ 544              		.loc 1 113 100 is_stmt 0 discriminator 2 view .LVU215
+ 545 0206 94F85420 		ldrb	r2, [r4, #84]	@ zero_extendqisi2
+ 546              		.loc 1 113 102 discriminator 2 view .LVU216
+ 547 020a 0132     		adds	r2, r2, #1
+ 548 020c 84F85420 		strb	r2, [r4, #84]
+ 549              	.L26:
+ 114:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_shift_press_cnt
+ 550              		.loc 1 114 13 is_stmt 1 view .LVU217
+ 551              		.loc 1 114 16 is_stmt 0 view .LVU218
+ 552 0210 029A     		ldr	r2, [sp, #8]
+ 553 0212 3AB1     		cbz	r2, .L27
+ 554              		.loc 1 114 66 discriminator 1 view .LVU219
+ 555 0214 94F88E20 		ldrb	r2, [r4, #142]	@ zero_extendqisi2
+ 556              		.loc 1 114 39 discriminator 1 view .LVU220
+ 557 0218 22B9     		cbnz	r2, .L27
+ 558              		.loc 1 114 71 is_stmt 1 discriminator 2 view .LVU221
+ 559              		.loc 1 114 100 is_stmt 0 discriminator 2 view .LVU222
+ 560 021a 94F85520 		ldrb	r2, [r4, #85]	@ zero_extendqisi2
+ 561              		.loc 1 114 102 discriminator 2 view .LVU223
+ 562 021e 0132     		adds	r2, r2, #1
+ 563 0220 84F85520 		strb	r2, [r4, #85]
+ 564              	.L27:
+ 115:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_shift_press_cnt
+ 565              		.loc 1 115 13 is_stmt 1 view .LVU224
+ 566              		.loc 1 115 16 is_stmt 0 view .LVU225
+ 567 0224 039A     		ldr	r2, [sp, #12]
+ 568 0226 3AB1     		cbz	r2, .L28
+ 569              		.loc 1 115 66 discriminator 1 view .LVU226
+ 570 0228 94F88F20 		ldrb	r2, [r4, #143]	@ zero_extendqisi2
+ 571              		.loc 1 115 39 discriminator 1 view .LVU227
+ 572 022c 22B9     		cbnz	r2, .L28
+ 573              		.loc 1 115 71 is_stmt 1 discriminator 2 view .LVU228
+ 574              		.loc 1 115 100 is_stmt 0 discriminator 2 view .LVU229
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 13
+
+
+ 575 022e 94F85620 		ldrb	r2, [r4, #86]	@ zero_extendqisi2
+ 576              		.loc 1 115 102 discriminator 2 view .LVU230
+ 577 0232 0132     		adds	r2, r2, #1
+ 578 0234 84F85620 		strb	r2, [r4, #86]
+ 579              	.L28:
+ 116:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_shift_press_cnt
+ 580              		.loc 1 116 13 is_stmt 1 view .LVU231
+ 581              		.loc 1 116 16 is_stmt 0 view .LVU232
+ 582 0238 3EB1     		cbz	r6, .L29
+ 583              		.loc 1 116 66 discriminator 1 view .LVU233
+ 584 023a 94F89020 		ldrb	r2, [r4, #144]	@ zero_extendqisi2
+ 585              		.loc 1 116 39 discriminator 1 view .LVU234
+ 586 023e 22B9     		cbnz	r2, .L29
+ 587              		.loc 1 116 71 is_stmt 1 discriminator 2 view .LVU235
+ 588              		.loc 1 116 100 is_stmt 0 discriminator 2 view .LVU236
+ 589 0240 94F85720 		ldrb	r2, [r4, #87]	@ zero_extendqisi2
+ 590              		.loc 1 116 102 discriminator 2 view .LVU237
+ 591 0244 0132     		adds	r2, r2, #1
+ 592 0246 84F85720 		strb	r2, [r4, #87]
+ 593              	.L29:
+ 117:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_shift_press_cnt
+ 594              		.loc 1 117 13 is_stmt 1 view .LVU238
+ 595              		.loc 1 117 16 is_stmt 0 view .LVU239
+ 596 024a 3DB1     		cbz	r5, .L30
+ 597              		.loc 1 117 66 discriminator 1 view .LVU240
+ 598 024c 94F89120 		ldrb	r2, [r4, #145]	@ zero_extendqisi2
+ 599              		.loc 1 117 39 discriminator 1 view .LVU241
+ 600 0250 22B9     		cbnz	r2, .L30
+ 601              		.loc 1 117 71 is_stmt 1 discriminator 2 view .LVU242
+ 602              		.loc 1 117 100 is_stmt 0 discriminator 2 view .LVU243
+ 603 0252 94F85820 		ldrb	r2, [r4, #88]	@ zero_extendqisi2
+ 604              		.loc 1 117 102 discriminator 2 view .LVU244
+ 605 0256 0132     		adds	r2, r2, #1
+ 606 0258 84F85820 		strb	r2, [r4, #88]
+ 607              	.L30:
+ 118:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_shift_press_cnt
+ 608              		.loc 1 118 13 is_stmt 1 view .LVU245
+ 609              		.loc 1 118 16 is_stmt 0 view .LVU246
+ 610 025c 3BB1     		cbz	r3, .L9
+ 611              		.loc 1 118 66 discriminator 1 view .LVU247
+ 612 025e 94F89230 		ldrb	r3, [r4, #146]	@ zero_extendqisi2
+ 613              		.loc 1 118 39 discriminator 1 view .LVU248
+ 614 0262 23B9     		cbnz	r3, .L9
+ 615              		.loc 1 118 71 is_stmt 1 discriminator 2 view .LVU249
+ 616              		.loc 1 118 100 is_stmt 0 discriminator 2 view .LVU250
+ 617 0264 94F85930 		ldrb	r3, [r4, #89]	@ zero_extendqisi2
+ 618              		.loc 1 118 102 discriminator 2 view .LVU251
+ 619 0268 0133     		adds	r3, r3, #1
+ 620 026a 84F85930 		strb	r3, [r4, #89]
+ 621              	.L9:
+ 119:Core/HAL/driver/remote/DT7_DR16.c ****         } else if (obj->data.key_down.ctrl) {
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.w && !obj->last_data.key_down.w)) obj->data.key_ctrl_press_cnt.
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 14
+
+
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 134:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.w && !obj->last_data.key_down.w)) obj->data.key_single_press_cn
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 149:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 150:Core/HAL/driver/remote/DT7_DR16.c ****     }
+ 151:Core/HAL/driver/remote/DT7_DR16.c **** }
+ 622              		.loc 1 151 1 view .LVU252
+ 623 026e 05B0     		add	sp, sp, #20
+ 624              	.LCFI6:
+ 625              		.cfi_remember_state
+ 626              		.cfi_def_cfa_offset 36
+ 627              		@ sp needed
+ 628 0270 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 629              	.LVL15:
+ 630              	.L59:
+ 631              	.LCFI7:
+ 632              		.cfi_restore_state
+  70:Core/HAL/driver/remote/DT7_DR16.c ****     if (obj->data.rc.s2 == 3) obj->data.input_mode = RC_Remote;
+ 633              		.loc 1 70 31 is_stmt 1 discriminator 1 view .LVU253
+  70:Core/HAL/driver/remote/DT7_DR16.c ****     if (obj->data.rc.s2 == 3) obj->data.input_mode = RC_Remote;
+ 634              		.loc 1 70 52 is_stmt 0 discriminator 1 view .LVU254
+ 635 0274 0222     		movs	r2, #2
+ 636 0276 84F86A20 		strb	r2, [r4, #106]
+ 637 027a F9E6     		b	.L10
+ 638              	.L60:
+  71:Core/HAL/driver/remote/DT7_DR16.c ****     if (obj->data.rc.s2 == 1) obj->data.input_mode = RC_MouseKey;
+ 639              		.loc 1 71 31 is_stmt 1 discriminator 1 view .LVU255
+  71:Core/HAL/driver/remote/DT7_DR16.c ****     if (obj->data.rc.s2 == 1) obj->data.input_mode = RC_MouseKey;
+ 640              		.loc 1 71 52 is_stmt 0 discriminator 1 view .LVU256
+ 641 027c 0322     		movs	r2, #3
+ 642 027e 84F86A20 		strb	r2, [r4, #106]
+ 643 0282 F8E6     		b	.L11
+ 644              	.L61:
+  72:Core/HAL/driver/remote/DT7_DR16.c **** 
+ 645              		.loc 1 72 31 is_stmt 1 discriminator 1 view .LVU257
+  72:Core/HAL/driver/remote/DT7_DR16.c **** 
+ 646              		.loc 1 72 52 is_stmt 0 discriminator 1 view .LVU258
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 15
+
+
+ 647 0284 84F86A30 		strb	r3, [r4, #106]
+ 648 0288 F8E6     		b	.L12
+ 649              	.L13:
+  80:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.press_r = obj->primary_data[13];
+ 650              		.loc 1 80 10 is_stmt 1 view .LVU259
+  80:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.press_r = obj->primary_data[13];
+ 651              		.loc 1 80 12 is_stmt 0 view .LVU260
+ 652 028a 002A     		cmp	r2, #0
+ 653 028c 3FF415AF 		beq	.L14
+  80:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.press_r = obj->primary_data[13];
+ 654              		.loc 1 80 42 discriminator 1 view .LVU261
+ 655 0290 002B     		cmp	r3, #0
+ 656 0292 7FF412AF 		bne	.L14
+  80:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.press_r = obj->primary_data[13];
+ 657              		.loc 1 80 71 is_stmt 1 discriminator 2 view .LVU262
+  80:Core/HAL/driver/remote/DT7_DR16.c ****     obj->data.mouse.press_r = obj->primary_data[13];
+ 658              		.loc 1 80 99 is_stmt 0 discriminator 2 view .LVU263
+ 659 0296 84F82530 		strb	r3, [r4, #37]
+ 660 029a 84F82630 		strb	r3, [r4, #38]
+ 661 029e 84F82730 		strb	r3, [r4, #39]
+ 662 02a2 84F82830 		strb	r3, [r4, #40]
+ 663 02a6 08E7     		b	.L14
+ 664              	.LVL16:
+ 665              	.L17:
+ 119:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.w && !obj->last_data.key_down.w)) obj->data.key_ctrl_press_cnt.
+ 666              		.loc 1 119 16 is_stmt 1 view .LVU264
+ 119:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.w && !obj->last_data.key_down.w)) obj->data.key_ctrl_press_cnt.
+ 667              		.loc 1 119 19 is_stmt 0 view .LVU265
+ 668 02a8 0028     		cmp	r0, #0
+ 669 02aa 00F09280 		beq	.L31
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 670              		.loc 1 120 13 is_stmt 1 view .LVU266
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 671              		.loc 1 120 16 is_stmt 0 view .LVU267
+ 672 02ae BBF1000F 		cmp	fp, #0
+ 673 02b2 07D0     		beq	.L32
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 674              		.loc 1 120 66 discriminator 1 view .LVU268
+ 675 02b4 94F88310 		ldrb	r1, [r4, #131]	@ zero_extendqisi2
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 676              		.loc 1 120 39 discriminator 1 view .LVU269
+ 677 02b8 21B9     		cbnz	r1, .L32
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 678              		.loc 1 120 71 is_stmt 1 discriminator 2 view .LVU270
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 679              		.loc 1 120 99 is_stmt 0 discriminator 2 view .LVU271
+ 680 02ba 94F85A10 		ldrb	r1, [r4, #90]	@ zero_extendqisi2
+ 120:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_ctrl_press_cnt.
+ 681              		.loc 1 120 101 discriminator 2 view .LVU272
+ 682 02be 0131     		adds	r1, r1, #1
+ 683 02c0 84F85A10 		strb	r1, [r4, #90]
+ 684              	.L32:
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 685              		.loc 1 121 13 is_stmt 1 view .LVU273
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 686              		.loc 1 121 16 is_stmt 0 view .LVU274
+ 687 02c4 BAF1000F 		cmp	r10, #0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 16
+
+
+ 688 02c8 07D0     		beq	.L33
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 689              		.loc 1 121 66 discriminator 1 view .LVU275
+ 690 02ca 94F88410 		ldrb	r1, [r4, #132]	@ zero_extendqisi2
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 691              		.loc 1 121 39 discriminator 1 view .LVU276
+ 692 02ce 21B9     		cbnz	r1, .L33
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 693              		.loc 1 121 71 is_stmt 1 discriminator 2 view .LVU277
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 694              		.loc 1 121 99 is_stmt 0 discriminator 2 view .LVU278
+ 695 02d0 94F85B10 		ldrb	r1, [r4, #91]	@ zero_extendqisi2
+ 121:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_ctrl_press_cnt.
+ 696              		.loc 1 121 101 discriminator 2 view .LVU279
+ 697 02d4 0131     		adds	r1, r1, #1
+ 698 02d6 84F85B10 		strb	r1, [r4, #91]
+ 699              	.L33:
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 700              		.loc 1 122 13 is_stmt 1 view .LVU280
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 701              		.loc 1 122 16 is_stmt 0 view .LVU281
+ 702 02da B9F1000F 		cmp	r9, #0
+ 703 02de 07D0     		beq	.L34
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 704              		.loc 1 122 66 discriminator 1 view .LVU282
+ 705 02e0 94F88510 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 706              		.loc 1 122 39 discriminator 1 view .LVU283
+ 707 02e4 21B9     		cbnz	r1, .L34
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 708              		.loc 1 122 71 is_stmt 1 discriminator 2 view .LVU284
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 709              		.loc 1 122 99 is_stmt 0 discriminator 2 view .LVU285
+ 710 02e6 94F85C10 		ldrb	r1, [r4, #92]	@ zero_extendqisi2
+ 122:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_ctrl_press_cnt.
+ 711              		.loc 1 122 101 discriminator 2 view .LVU286
+ 712 02ea 0131     		adds	r1, r1, #1
+ 713 02ec 84F85C10 		strb	r1, [r4, #92]
+ 714              	.L34:
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ 715              		.loc 1 123 13 is_stmt 1 view .LVU287
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ 716              		.loc 1 123 16 is_stmt 0 view .LVU288
+ 717 02f0 B8F1000F 		cmp	r8, #0
+ 718 02f4 07D0     		beq	.L35
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ 719              		.loc 1 123 66 discriminator 1 view .LVU289
+ 720 02f6 94F88610 		ldrb	r1, [r4, #134]	@ zero_extendqisi2
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ 721              		.loc 1 123 39 discriminator 1 view .LVU290
+ 722 02fa 21B9     		cbnz	r1, .L35
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ 723              		.loc 1 123 71 is_stmt 1 discriminator 2 view .LVU291
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ 724              		.loc 1 123 99 is_stmt 0 discriminator 2 view .LVU292
+ 725 02fc 94F85D10 		ldrb	r1, [r4, #93]	@ zero_extendqisi2
+ 123:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_ctrl_press_cnt.
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 17
+
+
+ 726              		.loc 1 123 101 discriminator 2 view .LVU293
+ 727 0300 0131     		adds	r1, r1, #1
+ 728 0302 84F85D10 		strb	r1, [r4, #93]
+ 729              	.L35:
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ 730              		.loc 1 124 13 is_stmt 1 view .LVU294
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ 731              		.loc 1 124 16 is_stmt 0 view .LVU295
+ 732 0306 BEF1000F 		cmp	lr, #0
+ 733 030a 07D0     		beq	.L36
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ 734              		.loc 1 124 66 discriminator 1 view .LVU296
+ 735 030c 94F88910 		ldrb	r1, [r4, #137]	@ zero_extendqisi2
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ 736              		.loc 1 124 39 discriminator 1 view .LVU297
+ 737 0310 21B9     		cbnz	r1, .L36
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ 738              		.loc 1 124 71 is_stmt 1 discriminator 2 view .LVU298
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ 739              		.loc 1 124 99 is_stmt 0 discriminator 2 view .LVU299
+ 740 0312 94F86010 		ldrb	r1, [r4, #96]	@ zero_extendqisi2
+ 124:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_ctrl_press_cnt.
+ 741              		.loc 1 124 101 discriminator 2 view .LVU300
+ 742 0316 0131     		adds	r1, r1, #1
+ 743 0318 84F86010 		strb	r1, [r4, #96]
+ 744              	.L36:
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 745              		.loc 1 125 13 is_stmt 1 view .LVU301
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 746              		.loc 1 125 16 is_stmt 0 view .LVU302
+ 747 031c 3AB1     		cbz	r2, .L37
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 748              		.loc 1 125 66 discriminator 1 view .LVU303
+ 749 031e 94F88A20 		ldrb	r2, [r4, #138]	@ zero_extendqisi2
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 750              		.loc 1 125 39 discriminator 1 view .LVU304
+ 751 0322 22B9     		cbnz	r2, .L37
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 752              		.loc 1 125 71 is_stmt 1 discriminator 2 view .LVU305
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 753              		.loc 1 125 99 is_stmt 0 discriminator 2 view .LVU306
+ 754 0324 94F86120 		ldrb	r2, [r4, #97]	@ zero_extendqisi2
+ 125:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_ctrl_press_cnt.
+ 755              		.loc 1 125 101 discriminator 2 view .LVU307
+ 756 0328 0132     		adds	r2, r2, #1
+ 757 032a 84F86120 		strb	r2, [r4, #97]
+ 758              	.L37:
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ 759              		.loc 1 126 13 is_stmt 1 view .LVU308
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ 760              		.loc 1 126 16 is_stmt 0 view .LVU309
+ 761 032e BCF1000F 		cmp	ip, #0
+ 762 0332 07D0     		beq	.L38
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ 763              		.loc 1 126 66 discriminator 1 view .LVU310
+ 764 0334 94F88B20 		ldrb	r2, [r4, #139]	@ zero_extendqisi2
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 18
+
+
+ 765              		.loc 1 126 39 discriminator 1 view .LVU311
+ 766 0338 22B9     		cbnz	r2, .L38
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ 767              		.loc 1 126 71 is_stmt 1 discriminator 2 view .LVU312
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ 768              		.loc 1 126 99 is_stmt 0 discriminator 2 view .LVU313
+ 769 033a 94F86220 		ldrb	r2, [r4, #98]	@ zero_extendqisi2
+ 126:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_ctrl_press_cnt.
+ 770              		.loc 1 126 101 discriminator 2 view .LVU314
+ 771 033e 0132     		adds	r2, r2, #1
+ 772 0340 84F86220 		strb	r2, [r4, #98]
+ 773              	.L38:
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 774              		.loc 1 127 13 is_stmt 1 view .LVU315
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 775              		.loc 1 127 16 is_stmt 0 view .LVU316
+ 776 0344 3FB1     		cbz	r7, .L39
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 777              		.loc 1 127 66 discriminator 1 view .LVU317
+ 778 0346 94F88C20 		ldrb	r2, [r4, #140]	@ zero_extendqisi2
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 779              		.loc 1 127 39 discriminator 1 view .LVU318
+ 780 034a 22B9     		cbnz	r2, .L39
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 781              		.loc 1 127 71 is_stmt 1 discriminator 2 view .LVU319
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 782              		.loc 1 127 99 is_stmt 0 discriminator 2 view .LVU320
+ 783 034c 94F86320 		ldrb	r2, [r4, #99]	@ zero_extendqisi2
+ 127:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_ctrl_press_cnt.
+ 784              		.loc 1 127 101 discriminator 2 view .LVU321
+ 785 0350 0132     		adds	r2, r2, #1
+ 786 0352 84F86320 		strb	r2, [r4, #99]
+ 787              	.L39:
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 788              		.loc 1 128 13 is_stmt 1 view .LVU322
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 789              		.loc 1 128 16 is_stmt 0 view .LVU323
+ 790 0356 019A     		ldr	r2, [sp, #4]
+ 791 0358 3AB1     		cbz	r2, .L40
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 792              		.loc 1 128 66 discriminator 1 view .LVU324
+ 793 035a 94F88D20 		ldrb	r2, [r4, #141]	@ zero_extendqisi2
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 794              		.loc 1 128 39 discriminator 1 view .LVU325
+ 795 035e 22B9     		cbnz	r2, .L40
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 796              		.loc 1 128 71 is_stmt 1 discriminator 2 view .LVU326
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 797              		.loc 1 128 99 is_stmt 0 discriminator 2 view .LVU327
+ 798 0360 94F86420 		ldrb	r2, [r4, #100]	@ zero_extendqisi2
+ 128:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_ctrl_press_cnt.
+ 799              		.loc 1 128 101 discriminator 2 view .LVU328
+ 800 0364 0132     		adds	r2, r2, #1
+ 801 0366 84F86420 		strb	r2, [r4, #100]
+ 802              	.L40:
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 803              		.loc 1 129 13 is_stmt 1 view .LVU329
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 19
+
+
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 804              		.loc 1 129 16 is_stmt 0 view .LVU330
+ 805 036a 029A     		ldr	r2, [sp, #8]
+ 806 036c 3AB1     		cbz	r2, .L41
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 807              		.loc 1 129 66 discriminator 1 view .LVU331
+ 808 036e 94F88E20 		ldrb	r2, [r4, #142]	@ zero_extendqisi2
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 809              		.loc 1 129 39 discriminator 1 view .LVU332
+ 810 0372 22B9     		cbnz	r2, .L41
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 811              		.loc 1 129 71 is_stmt 1 discriminator 2 view .LVU333
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 812              		.loc 1 129 99 is_stmt 0 discriminator 2 view .LVU334
+ 813 0374 94F86520 		ldrb	r2, [r4, #101]	@ zero_extendqisi2
+ 129:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_ctrl_press_cnt.
+ 814              		.loc 1 129 101 discriminator 2 view .LVU335
+ 815 0378 0132     		adds	r2, r2, #1
+ 816 037a 84F86520 		strb	r2, [r4, #101]
+ 817              	.L41:
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 818              		.loc 1 130 13 is_stmt 1 view .LVU336
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 819              		.loc 1 130 16 is_stmt 0 view .LVU337
+ 820 037e 039A     		ldr	r2, [sp, #12]
+ 821 0380 3AB1     		cbz	r2, .L42
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 822              		.loc 1 130 66 discriminator 1 view .LVU338
+ 823 0382 94F88F20 		ldrb	r2, [r4, #143]	@ zero_extendqisi2
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 824              		.loc 1 130 39 discriminator 1 view .LVU339
+ 825 0386 22B9     		cbnz	r2, .L42
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 826              		.loc 1 130 71 is_stmt 1 discriminator 2 view .LVU340
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 827              		.loc 1 130 99 is_stmt 0 discriminator 2 view .LVU341
+ 828 0388 94F86620 		ldrb	r2, [r4, #102]	@ zero_extendqisi2
+ 130:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_ctrl_press_cnt.
+ 829              		.loc 1 130 101 discriminator 2 view .LVU342
+ 830 038c 0132     		adds	r2, r2, #1
+ 831 038e 84F86620 		strb	r2, [r4, #102]
+ 832              	.L42:
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 833              		.loc 1 131 13 is_stmt 1 view .LVU343
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 834              		.loc 1 131 16 is_stmt 0 view .LVU344
+ 835 0392 3EB1     		cbz	r6, .L43
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 836              		.loc 1 131 66 discriminator 1 view .LVU345
+ 837 0394 94F89020 		ldrb	r2, [r4, #144]	@ zero_extendqisi2
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 838              		.loc 1 131 39 discriminator 1 view .LVU346
+ 839 0398 22B9     		cbnz	r2, .L43
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 840              		.loc 1 131 71 is_stmt 1 discriminator 2 view .LVU347
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 841              		.loc 1 131 99 is_stmt 0 discriminator 2 view .LVU348
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 20
+
+
+ 842 039a 94F86720 		ldrb	r2, [r4, #103]	@ zero_extendqisi2
+ 131:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_ctrl_press_cnt.
+ 843              		.loc 1 131 101 discriminator 2 view .LVU349
+ 844 039e 0132     		adds	r2, r2, #1
+ 845 03a0 84F86720 		strb	r2, [r4, #103]
+ 846              	.L43:
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 847              		.loc 1 132 13 is_stmt 1 view .LVU350
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 848              		.loc 1 132 16 is_stmt 0 view .LVU351
+ 849 03a4 3DB1     		cbz	r5, .L44
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 850              		.loc 1 132 66 discriminator 1 view .LVU352
+ 851 03a6 94F89120 		ldrb	r2, [r4, #145]	@ zero_extendqisi2
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 852              		.loc 1 132 39 discriminator 1 view .LVU353
+ 853 03aa 22B9     		cbnz	r2, .L44
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 854              		.loc 1 132 71 is_stmt 1 discriminator 2 view .LVU354
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 855              		.loc 1 132 99 is_stmt 0 discriminator 2 view .LVU355
+ 856 03ac 94F86820 		ldrb	r2, [r4, #104]	@ zero_extendqisi2
+ 132:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_ctrl_press_cnt.
+ 857              		.loc 1 132 101 discriminator 2 view .LVU356
+ 858 03b0 0132     		adds	r2, r2, #1
+ 859 03b2 84F86820 		strb	r2, [r4, #104]
+ 860              	.L44:
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 861              		.loc 1 133 13 is_stmt 1 view .LVU357
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 862              		.loc 1 133 16 is_stmt 0 view .LVU358
+ 863 03b6 002B     		cmp	r3, #0
+ 864 03b8 3FF459AF 		beq	.L9
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 865              		.loc 1 133 66 discriminator 1 view .LVU359
+ 866 03bc 94F89230 		ldrb	r3, [r4, #146]	@ zero_extendqisi2
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 867              		.loc 1 133 39 discriminator 1 view .LVU360
+ 868 03c0 002B     		cmp	r3, #0
+ 869 03c2 7FF454AF 		bne	.L9
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 870              		.loc 1 133 71 is_stmt 1 discriminator 2 view .LVU361
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 871              		.loc 1 133 99 is_stmt 0 discriminator 2 view .LVU362
+ 872 03c6 94F86930 		ldrb	r3, [r4, #105]	@ zero_extendqisi2
+ 133:Core/HAL/driver/remote/DT7_DR16.c ****         } else {
+ 873              		.loc 1 133 101 discriminator 2 view .LVU363
+ 874 03ca 0133     		adds	r3, r3, #1
+ 875 03cc 84F86930 		strb	r3, [r4, #105]
+ 876 03d0 4DE7     		b	.L9
+ 877              	.L31:
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 878              		.loc 1 135 13 is_stmt 1 view .LVU364
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 879              		.loc 1 135 16 is_stmt 0 view .LVU365
+ 880 03d2 BBF1000F 		cmp	fp, #0
+ 881 03d6 07D0     		beq	.L45
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 21
+
+
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 882              		.loc 1 135 66 discriminator 1 view .LVU366
+ 883 03d8 94F88310 		ldrb	r1, [r4, #131]	@ zero_extendqisi2
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 884              		.loc 1 135 39 discriminator 1 view .LVU367
+ 885 03dc 21B9     		cbnz	r1, .L45
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 886              		.loc 1 135 71 is_stmt 1 discriminator 2 view .LVU368
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 887              		.loc 1 135 101 is_stmt 0 discriminator 2 view .LVU369
+ 888 03de 94F83A10 		ldrb	r1, [r4, #58]	@ zero_extendqisi2
+ 135:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.s && !obj->last_data.key_down.s)) obj->data.key_single_press_cn
+ 889              		.loc 1 135 103 discriminator 2 view .LVU370
+ 890 03e2 0131     		adds	r1, r1, #1
+ 891 03e4 84F83A10 		strb	r1, [r4, #58]
+ 892              	.L45:
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 893              		.loc 1 136 13 is_stmt 1 view .LVU371
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 894              		.loc 1 136 16 is_stmt 0 view .LVU372
+ 895 03e8 BAF1000F 		cmp	r10, #0
+ 896 03ec 07D0     		beq	.L46
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 897              		.loc 1 136 66 discriminator 1 view .LVU373
+ 898 03ee 94F88410 		ldrb	r1, [r4, #132]	@ zero_extendqisi2
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 899              		.loc 1 136 39 discriminator 1 view .LVU374
+ 900 03f2 21B9     		cbnz	r1, .L46
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 901              		.loc 1 136 71 is_stmt 1 discriminator 2 view .LVU375
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 902              		.loc 1 136 101 is_stmt 0 discriminator 2 view .LVU376
+ 903 03f4 94F83B10 		ldrb	r1, [r4, #59]	@ zero_extendqisi2
+ 136:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.d && !obj->last_data.key_down.d)) obj->data.key_single_press_cn
+ 904              		.loc 1 136 103 discriminator 2 view .LVU377
+ 905 03f8 0131     		adds	r1, r1, #1
+ 906 03fa 84F83B10 		strb	r1, [r4, #59]
+ 907              	.L46:
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 908              		.loc 1 137 13 is_stmt 1 view .LVU378
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 909              		.loc 1 137 16 is_stmt 0 view .LVU379
+ 910 03fe B9F1000F 		cmp	r9, #0
+ 911 0402 07D0     		beq	.L47
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 912              		.loc 1 137 66 discriminator 1 view .LVU380
+ 913 0404 94F88510 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 914              		.loc 1 137 39 discriminator 1 view .LVU381
+ 915 0408 21B9     		cbnz	r1, .L47
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 916              		.loc 1 137 71 is_stmt 1 discriminator 2 view .LVU382
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 917              		.loc 1 137 101 is_stmt 0 discriminator 2 view .LVU383
+ 918 040a 94F83C10 		ldrb	r1, [r4, #60]	@ zero_extendqisi2
+ 137:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.a && !obj->last_data.key_down.a)) obj->data.key_single_press_cn
+ 919              		.loc 1 137 103 discriminator 2 view .LVU384
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 22
+
+
+ 920 040e 0131     		adds	r1, r1, #1
+ 921 0410 84F83C10 		strb	r1, [r4, #60]
+ 922              	.L47:
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 923              		.loc 1 138 13 is_stmt 1 view .LVU385
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 924              		.loc 1 138 16 is_stmt 0 view .LVU386
+ 925 0414 B8F1000F 		cmp	r8, #0
+ 926 0418 07D0     		beq	.L48
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 927              		.loc 1 138 66 discriminator 1 view .LVU387
+ 928 041a 94F88610 		ldrb	r1, [r4, #134]	@ zero_extendqisi2
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 929              		.loc 1 138 39 discriminator 1 view .LVU388
+ 930 041e 21B9     		cbnz	r1, .L48
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 931              		.loc 1 138 71 is_stmt 1 discriminator 2 view .LVU389
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 932              		.loc 1 138 101 is_stmt 0 discriminator 2 view .LVU390
+ 933 0420 94F83D10 		ldrb	r1, [r4, #61]	@ zero_extendqisi2
+ 138:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.q && !obj->last_data.key_down.q)) obj->data.key_single_press_cn
+ 934              		.loc 1 138 103 discriminator 2 view .LVU391
+ 935 0424 0131     		adds	r1, r1, #1
+ 936 0426 84F83D10 		strb	r1, [r4, #61]
+ 937              	.L48:
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 938              		.loc 1 139 13 is_stmt 1 view .LVU392
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 939              		.loc 1 139 16 is_stmt 0 view .LVU393
+ 940 042a BEF1000F 		cmp	lr, #0
+ 941 042e 07D0     		beq	.L49
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 942              		.loc 1 139 66 discriminator 1 view .LVU394
+ 943 0430 94F88910 		ldrb	r1, [r4, #137]	@ zero_extendqisi2
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 944              		.loc 1 139 39 discriminator 1 view .LVU395
+ 945 0434 21B9     		cbnz	r1, .L49
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 946              		.loc 1 139 71 is_stmt 1 discriminator 2 view .LVU396
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 947              		.loc 1 139 101 is_stmt 0 discriminator 2 view .LVU397
+ 948 0436 94F84010 		ldrb	r1, [r4, #64]	@ zero_extendqisi2
+ 139:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.e && !obj->last_data.key_down.e)) obj->data.key_single_press_cn
+ 949              		.loc 1 139 103 discriminator 2 view .LVU398
+ 950 043a 0131     		adds	r1, r1, #1
+ 951 043c 84F84010 		strb	r1, [r4, #64]
+ 952              	.L49:
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 953              		.loc 1 140 13 is_stmt 1 view .LVU399
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 954              		.loc 1 140 16 is_stmt 0 view .LVU400
+ 955 0440 3AB1     		cbz	r2, .L50
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 956              		.loc 1 140 66 discriminator 1 view .LVU401
+ 957 0442 94F88A20 		ldrb	r2, [r4, #138]	@ zero_extendqisi2
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 958              		.loc 1 140 39 discriminator 1 view .LVU402
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 23
+
+
+ 959 0446 22B9     		cbnz	r2, .L50
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 960              		.loc 1 140 71 is_stmt 1 discriminator 2 view .LVU403
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 961              		.loc 1 140 101 is_stmt 0 discriminator 2 view .LVU404
+ 962 0448 94F84120 		ldrb	r2, [r4, #65]	@ zero_extendqisi2
+ 140:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.r && !obj->last_data.key_down.r)) obj->data.key_single_press_cn
+ 963              		.loc 1 140 103 discriminator 2 view .LVU405
+ 964 044c 0132     		adds	r2, r2, #1
+ 965 044e 84F84120 		strb	r2, [r4, #65]
+ 966              	.L50:
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 967              		.loc 1 141 13 is_stmt 1 view .LVU406
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 968              		.loc 1 141 16 is_stmt 0 view .LVU407
+ 969 0452 BCF1000F 		cmp	ip, #0
+ 970 0456 07D0     		beq	.L51
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 971              		.loc 1 141 66 discriminator 1 view .LVU408
+ 972 0458 94F88B20 		ldrb	r2, [r4, #139]	@ zero_extendqisi2
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 973              		.loc 1 141 39 discriminator 1 view .LVU409
+ 974 045c 22B9     		cbnz	r2, .L51
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 975              		.loc 1 141 71 is_stmt 1 discriminator 2 view .LVU410
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 976              		.loc 1 141 101 is_stmt 0 discriminator 2 view .LVU411
+ 977 045e 94F84220 		ldrb	r2, [r4, #66]	@ zero_extendqisi2
+ 141:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.f && !obj->last_data.key_down.f)) obj->data.key_single_press_cn
+ 978              		.loc 1 141 103 discriminator 2 view .LVU412
+ 979 0462 0132     		adds	r2, r2, #1
+ 980 0464 84F84220 		strb	r2, [r4, #66]
+ 981              	.L51:
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 982              		.loc 1 142 13 is_stmt 1 view .LVU413
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 983              		.loc 1 142 16 is_stmt 0 view .LVU414
+ 984 0468 3FB1     		cbz	r7, .L52
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 985              		.loc 1 142 66 discriminator 1 view .LVU415
+ 986 046a 94F88C20 		ldrb	r2, [r4, #140]	@ zero_extendqisi2
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 987              		.loc 1 142 39 discriminator 1 view .LVU416
+ 988 046e 22B9     		cbnz	r2, .L52
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 989              		.loc 1 142 71 is_stmt 1 discriminator 2 view .LVU417
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 990              		.loc 1 142 101 is_stmt 0 discriminator 2 view .LVU418
+ 991 0470 94F84320 		ldrb	r2, [r4, #67]	@ zero_extendqisi2
+ 142:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.g && !obj->last_data.key_down.g)) obj->data.key_single_press_cn
+ 992              		.loc 1 142 103 discriminator 2 view .LVU419
+ 993 0474 0132     		adds	r2, r2, #1
+ 994 0476 84F84320 		strb	r2, [r4, #67]
+ 995              	.L52:
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ 996              		.loc 1 143 13 is_stmt 1 view .LVU420
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 24
+
+
+ 997              		.loc 1 143 16 is_stmt 0 view .LVU421
+ 998 047a 019A     		ldr	r2, [sp, #4]
+ 999 047c 3AB1     		cbz	r2, .L53
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ 1000              		.loc 1 143 66 discriminator 1 view .LVU422
+ 1001 047e 94F88D20 		ldrb	r2, [r4, #141]	@ zero_extendqisi2
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ 1002              		.loc 1 143 39 discriminator 1 view .LVU423
+ 1003 0482 22B9     		cbnz	r2, .L53
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ 1004              		.loc 1 143 71 is_stmt 1 discriminator 2 view .LVU424
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ 1005              		.loc 1 143 101 is_stmt 0 discriminator 2 view .LVU425
+ 1006 0484 94F84420 		ldrb	r2, [r4, #68]	@ zero_extendqisi2
+ 143:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.z && !obj->last_data.key_down.z)) obj->data.key_single_press_cn
+ 1007              		.loc 1 143 103 discriminator 2 view .LVU426
+ 1008 0488 0132     		adds	r2, r2, #1
+ 1009 048a 84F84420 		strb	r2, [r4, #68]
+ 1010              	.L53:
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 1011              		.loc 1 144 13 is_stmt 1 view .LVU427
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 1012              		.loc 1 144 16 is_stmt 0 view .LVU428
+ 1013 048e 029A     		ldr	r2, [sp, #8]
+ 1014 0490 3AB1     		cbz	r2, .L54
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 1015              		.loc 1 144 66 discriminator 1 view .LVU429
+ 1016 0492 94F88E20 		ldrb	r2, [r4, #142]	@ zero_extendqisi2
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 1017              		.loc 1 144 39 discriminator 1 view .LVU430
+ 1018 0496 22B9     		cbnz	r2, .L54
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 1019              		.loc 1 144 71 is_stmt 1 discriminator 2 view .LVU431
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 1020              		.loc 1 144 101 is_stmt 0 discriminator 2 view .LVU432
+ 1021 0498 94F84520 		ldrb	r2, [r4, #69]	@ zero_extendqisi2
+ 144:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.x && !obj->last_data.key_down.x)) obj->data.key_single_press_cn
+ 1022              		.loc 1 144 103 discriminator 2 view .LVU433
+ 1023 049c 0132     		adds	r2, r2, #1
+ 1024 049e 84F84520 		strb	r2, [r4, #69]
+ 1025              	.L54:
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 1026              		.loc 1 145 13 is_stmt 1 view .LVU434
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 1027              		.loc 1 145 16 is_stmt 0 view .LVU435
+ 1028 04a2 039A     		ldr	r2, [sp, #12]
+ 1029 04a4 3AB1     		cbz	r2, .L55
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 1030              		.loc 1 145 66 discriminator 1 view .LVU436
+ 1031 04a6 94F88F20 		ldrb	r2, [r4, #143]	@ zero_extendqisi2
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 1032              		.loc 1 145 39 discriminator 1 view .LVU437
+ 1033 04aa 22B9     		cbnz	r2, .L55
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 1034              		.loc 1 145 71 is_stmt 1 discriminator 2 view .LVU438
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 1035              		.loc 1 145 101 is_stmt 0 discriminator 2 view .LVU439
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 25
+
+
+ 1036 04ac 94F84620 		ldrb	r2, [r4, #70]	@ zero_extendqisi2
+ 145:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.c && !obj->last_data.key_down.c)) obj->data.key_single_press_cn
+ 1037              		.loc 1 145 103 discriminator 2 view .LVU440
+ 1038 04b0 0132     		adds	r2, r2, #1
+ 1039 04b2 84F84620 		strb	r2, [r4, #70]
+ 1040              	.L55:
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 1041              		.loc 1 146 13 is_stmt 1 view .LVU441
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 1042              		.loc 1 146 16 is_stmt 0 view .LVU442
+ 1043 04b6 3EB1     		cbz	r6, .L56
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 1044              		.loc 1 146 66 discriminator 1 view .LVU443
+ 1045 04b8 94F89020 		ldrb	r2, [r4, #144]	@ zero_extendqisi2
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 1046              		.loc 1 146 39 discriminator 1 view .LVU444
+ 1047 04bc 22B9     		cbnz	r2, .L56
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 1048              		.loc 1 146 71 is_stmt 1 discriminator 2 view .LVU445
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 1049              		.loc 1 146 101 is_stmt 0 discriminator 2 view .LVU446
+ 1050 04be 94F84720 		ldrb	r2, [r4, #71]	@ zero_extendqisi2
+ 146:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.v && !obj->last_data.key_down.v)) obj->data.key_single_press_cn
+ 1051              		.loc 1 146 103 discriminator 2 view .LVU447
+ 1052 04c2 0132     		adds	r2, r2, #1
+ 1053 04c4 84F84720 		strb	r2, [r4, #71]
+ 1054              	.L56:
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 1055              		.loc 1 147 13 is_stmt 1 view .LVU448
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 1056              		.loc 1 147 16 is_stmt 0 view .LVU449
+ 1057 04c8 3DB1     		cbz	r5, .L57
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 1058              		.loc 1 147 66 discriminator 1 view .LVU450
+ 1059 04ca 94F89120 		ldrb	r2, [r4, #145]	@ zero_extendqisi2
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 1060              		.loc 1 147 39 discriminator 1 view .LVU451
+ 1061 04ce 22B9     		cbnz	r2, .L57
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 1062              		.loc 1 147 71 is_stmt 1 discriminator 2 view .LVU452
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 1063              		.loc 1 147 101 is_stmt 0 discriminator 2 view .LVU453
+ 1064 04d0 94F84820 		ldrb	r2, [r4, #72]	@ zero_extendqisi2
+ 147:Core/HAL/driver/remote/DT7_DR16.c ****             if ((obj->data.key_down.b && !obj->last_data.key_down.b)) obj->data.key_single_press_cn
+ 1065              		.loc 1 147 103 discriminator 2 view .LVU454
+ 1066 04d4 0132     		adds	r2, r2, #1
+ 1067 04d6 84F84820 		strb	r2, [r4, #72]
+ 1068              	.L57:
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 1069              		.loc 1 148 13 is_stmt 1 view .LVU455
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 1070              		.loc 1 148 16 is_stmt 0 view .LVU456
+ 1071 04da 002B     		cmp	r3, #0
+ 1072 04dc 3FF4C7AE 		beq	.L9
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 1073              		.loc 1 148 66 discriminator 1 view .LVU457
+ 1074 04e0 94F89230 		ldrb	r3, [r4, #146]	@ zero_extendqisi2
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 26
+
+
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 1075              		.loc 1 148 39 discriminator 1 view .LVU458
+ 1076 04e4 002B     		cmp	r3, #0
+ 1077 04e6 7FF4C2AE 		bne	.L9
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 1078              		.loc 1 148 71 is_stmt 1 discriminator 2 view .LVU459
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 1079              		.loc 1 148 101 is_stmt 0 discriminator 2 view .LVU460
+ 1080 04ea 94F84930 		ldrb	r3, [r4, #73]	@ zero_extendqisi2
+ 148:Core/HAL/driver/remote/DT7_DR16.c ****         }
+ 1081              		.loc 1 148 103 discriminator 2 view .LVU461
+ 1082 04ee 0133     		adds	r3, r3, #1
+ 1083 04f0 84F84930 		strb	r3, [r4, #73]
+ 1084              		.loc 1 151 1 discriminator 2 view .LVU462
+ 1085 04f4 BBE6     		b	.L9
+ 1086              		.cfi_endproc
+ 1087              	.LFE136:
+ 1089              		.section	.text.dt7_Rx_Callback,"ax",%progbits
+ 1090              		.align	1
+ 1091              		.global	dt7_Rx_Callback
+ 1092              		.syntax unified
+ 1093              		.thumb
+ 1094              		.thumb_func
+ 1096              	dt7_Rx_Callback:
+ 1097              	.LVL17:
+ 1098              	.LFB135:
+  44:Core/HAL/driver/remote/DT7_DR16.c ****     if (len == DT7_RX_SIZE) {
+ 1099              		.loc 1 44 71 is_stmt 1 view -0
+ 1100              		.cfi_startproc
+ 1101              		@ args = 0, pretend = 0, frame = 0
+ 1102              		@ frame_needed = 0, uses_anonymous_args = 0
+  45:Core/HAL/driver/remote/DT7_DR16.c ****         for (size_t i = 0; i < dt7_instances->cv_len; i++) {
+ 1103              		.loc 1 45 5 view .LVU464
+  45:Core/HAL/driver/remote/DT7_DR16.c ****         for (size_t i = 0; i < dt7_instances->cv_len; i++) {
+ 1104              		.loc 1 45 8 is_stmt 0 view .LVU465
+ 1105 0000 122A     		cmp	r2, #18
+ 1106 0002 20D0     		beq	.L72
+ 1107 0004 7047     		bx	lr
+ 1108              	.LVL18:
+ 1109              	.L65:
+ 1110              	.LCFI8:
+ 1111              		.cfi_def_cfa_offset 24
+ 1112              		.cfi_offset 3, -24
+ 1113              		.cfi_offset 4, -20
+ 1114              		.cfi_offset 5, -16
+ 1115              		.cfi_offset 6, -12
+ 1116              		.cfi_offset 7, -8
+ 1117              		.cfi_offset 14, -4
+ 1118              	.LBB2:
+  46:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+ 1119              		.loc 1 46 55 is_stmt 1 discriminator 2 view .LVU466
+  46:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+ 1120              		.loc 1 46 56 is_stmt 0 discriminator 2 view .LVU467
+ 1121 0006 0134     		adds	r4, r4, #1
+ 1122              	.LVL19:
+ 1123              	.L63:
+  46:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 27
+
+
+ 1124              		.loc 1 46 28 is_stmt 1 discriminator 1 view .LVU468
+  46:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+ 1125              		.loc 1 46 45 is_stmt 0 discriminator 1 view .LVU469
+ 1126 0008 124B     		ldr	r3, .L74
+ 1127 000a 1868     		ldr	r0, [r3]
+ 1128 000c 4368     		ldr	r3, [r0, #4]	@ unaligned
+  46:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+ 1129              		.loc 1 46 9 discriminator 1 view .LVU470
+ 1130 000e A342     		cmp	r3, r4
+ 1131 0010 1ED9     		bls	.L73
+ 1132              	.LBB3:
+  47:Core/HAL/driver/remote/DT7_DR16.c ****             if (uart_index == now->config.bsp_uart_index) {
+ 1133              		.loc 1 47 13 is_stmt 1 view .LVU471
+  47:Core/HAL/driver/remote/DT7_DR16.c ****             if (uart_index == now->config.bsp_uart_index) {
+ 1134              		.loc 1 47 45 is_stmt 0 view .LVU472
+ 1135 0012 2146     		mov	r1, r4
+ 1136 0014 FFF7FEFF 		bl	cvector_val_at
+ 1137              	.LVL20:
+  47:Core/HAL/driver/remote/DT7_DR16.c ****             if (uart_index == now->config.bsp_uart_index) {
+ 1138              		.loc 1 47 24 view .LVU473
+ 1139 0018 0568     		ldr	r5, [r0]
+ 1140              	.LVL21:
+  48:Core/HAL/driver/remote/DT7_DR16.c ****                 memcpy(now->primary_data, data, DT7_RX_SIZE);
+ 1141              		.loc 1 48 13 is_stmt 1 view .LVU474
+  48:Core/HAL/driver/remote/DT7_DR16.c ****                 memcpy(now->primary_data, data, DT7_RX_SIZE);
+ 1142              		.loc 1 48 42 is_stmt 0 view .LVU475
+ 1143 001a 95F8C430 		ldrb	r3, [r5, #196]	@ zero_extendqisi2
+  48:Core/HAL/driver/remote/DT7_DR16.c ****                 memcpy(now->primary_data, data, DT7_RX_SIZE);
+ 1144              		.loc 1 48 16 view .LVU476
+ 1145 001e BB42     		cmp	r3, r7
+ 1146 0020 F1D1     		bne	.L65
+  49:Core/HAL/driver/remote/DT7_DR16.c ****                 now->monitor->reset(now->monitor);
+ 1147              		.loc 1 49 17 is_stmt 1 view .LVU477
+ 1148 0022 3068     		ldr	r0, [r6]	@ unaligned
+ 1149 0024 7168     		ldr	r1, [r6, #4]	@ unaligned
+ 1150 0026 B268     		ldr	r2, [r6, #8]	@ unaligned
+ 1151 0028 F368     		ldr	r3, [r6, #12]	@ unaligned
+ 1152 002a 2860     		str	r0, [r5]	@ unaligned
+ 1153 002c 6960     		str	r1, [r5, #4]	@ unaligned
+ 1154 002e AA60     		str	r2, [r5, #8]	@ unaligned
+ 1155 0030 EB60     		str	r3, [r5, #12]	@ unaligned
+ 1156 0032 338A     		ldrh	r3, [r6, #16]	@ unaligned
+ 1157 0034 2B82     		strh	r3, [r5, #16]	@ unaligned
+  50:Core/HAL/driver/remote/DT7_DR16.c ****                 dt7_data_solve(now);
+ 1158              		.loc 1 50 17 view .LVU478
+  50:Core/HAL/driver/remote/DT7_DR16.c ****                 dt7_data_solve(now);
+ 1159              		.loc 1 50 20 is_stmt 0 view .LVU479
+ 1160 0036 D5F8C900 		ldr	r0, [r5, #201]	@ unaligned
+  50:Core/HAL/driver/remote/DT7_DR16.c ****                 dt7_data_solve(now);
+ 1161              		.loc 1 50 29 view .LVU480
+ 1162 003a C368     		ldr	r3, [r0, #12]	@ unaligned
+  50:Core/HAL/driver/remote/DT7_DR16.c ****                 dt7_data_solve(now);
+ 1163              		.loc 1 50 17 view .LVU481
+ 1164 003c 9847     		blx	r3
+ 1165              	.LVL22:
+  51:Core/HAL/driver/remote/DT7_DR16.c ****             }
+ 1166              		.loc 1 51 17 is_stmt 1 view .LVU482
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 28
+
+
+ 1167 003e 2846     		mov	r0, r5
+ 1168 0040 FFF7FEFF 		bl	dt7_data_solve
+ 1169              	.LVL23:
+ 1170 0044 DFE7     		b	.L65
+ 1171              	.LVL24:
+ 1172              	.L72:
+ 1173              	.LCFI9:
+ 1174              		.cfi_def_cfa_offset 0
+ 1175              		.cfi_restore 3
+ 1176              		.cfi_restore 4
+ 1177              		.cfi_restore 5
+ 1178              		.cfi_restore 6
+ 1179              		.cfi_restore 7
+ 1180              		.cfi_restore 14
+  51:Core/HAL/driver/remote/DT7_DR16.c ****             }
+ 1181              		.loc 1 51 17 is_stmt 0 view .LVU483
+ 1182              	.LBE3:
+ 1183              	.LBE2:
+  44:Core/HAL/driver/remote/DT7_DR16.c ****     if (len == DT7_RX_SIZE) {
+ 1184              		.loc 1 44 71 view .LVU484
+ 1185 0046 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1186              	.LCFI10:
+ 1187              		.cfi_def_cfa_offset 24
+ 1188              		.cfi_offset 3, -24
+ 1189              		.cfi_offset 4, -20
+ 1190              		.cfi_offset 5, -16
+ 1191              		.cfi_offset 6, -12
+ 1192              		.cfi_offset 7, -8
+ 1193              		.cfi_offset 14, -4
+ 1194 0048 0746     		mov	r7, r0
+ 1195 004a 0E46     		mov	r6, r1
+ 1196              	.LBB4:
+  46:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+ 1197              		.loc 1 46 21 view .LVU485
+ 1198 004c 0024     		movs	r4, #0
+ 1199 004e DBE7     		b	.L63
+ 1200              	.LVL25:
+ 1201              	.L73:
+  46:Core/HAL/driver/remote/DT7_DR16.c ****             dt7Remote *now = *(dt7Remote **)cvector_val_at(dt7_instances, i);
+ 1202              		.loc 1 46 21 view .LVU486
+ 1203              	.LBE4:
+  55:Core/HAL/driver/remote/DT7_DR16.c **** 
+ 1204              		.loc 1 55 1 view .LVU487
+ 1205 0050 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1206              	.LVL26:
+ 1207              	.L75:
+  55:Core/HAL/driver/remote/DT7_DR16.c **** 
+ 1208              		.loc 1 55 1 view .LVU488
+ 1209 0052 00BF     		.align	2
+ 1210              	.L74:
+ 1211 0054 00000000 		.word	.LANCHOR0
+ 1212              		.cfi_endproc
+ 1213              	.LFE135:
+ 1215              		.global	dt7_instances
+ 1216              		.section	.bss.dt7_instances,"aw",%nobits
+ 1217              		.align	2
+ 1218              		.set	.LANCHOR0,. + 0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 29
+
+
+ 1221              	dt7_instances:
+ 1222 0000 00000000 		.space	4
+ 1223              		.text
+ 1224              	.Letext0:
+ 1225              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1226              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1227              		.file 4 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 1228              		.file 5 "Core/HAL/monitor/monitor.h"
+ 1229              		.file 6 "Core/HAL/driver/remote/DT7_DR16.h"
+ 1230              		.file 7 "Core/HAL/lib/cvector.h"
+ 1231              		.file 8 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 1232              		.file 9 "<built-in>"
+ 1233              		.file 10 "Core/BSP/interface/bsp_uart.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s 			page 30
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 DT7_DR16.c
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:20     .text.dt7_driver_init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:26     .text.dt7_driver_init:00000000 dt7_driver_init
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:56     .text.dt7_driver_init:00000018 $d
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:1096   .text.dt7_Rx_Callback:00000000 dt7_Rx_Callback
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:62     .text.dt7_Create:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:68     .text.dt7_Create:00000000 dt7_Create
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:136    .text.dt7_Create:00000044 $d
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:141    .text.dt7_data_solve:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:147    .text.dt7_data_solve:00000000 dt7_data_solve
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:1090   .text.dt7_Rx_Callback:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:1211   .text.dt7_Rx_Callback:00000054 $d
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:1221   .bss.dt7_instances:00000000 dt7_instances
+C:\Users\lenovo\AppData\Local\Temp\ccmJBj5G.s:1217   .bss.dt7_instances:00000000 $d
+
+UNDEFINED SYMBOLS
+cvector_create
+BSP_UART_RegisterRxCallback
+malloc
+memset
+Monitor_Register
+cvector_pushback
+memcpy
+cvector_val_at

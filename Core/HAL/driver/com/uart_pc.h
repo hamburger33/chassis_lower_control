@@ -8,8 +8,6 @@
 #pragma pack(1)
 typedef struct uartpc_config_t {
     uint8_t bsp_uart_index;
-    uint16_t send_identifer;
-    uint16_t recv_identifer;
     lost_callback lost_callback;
 } uartpc_config;
 

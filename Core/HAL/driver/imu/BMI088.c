@@ -1,5 +1,5 @@
 #include "BMI088.h"
-
+#include "math.h"
 #include "BMI088def.h"
 #include "BMI088reg.h"
 #include "bsp_delay.h"
@@ -135,6 +135,11 @@ void BMI088_Update(BMI088_imu *obj) {
             obj->gyrobias[1] /= BMI088_BIAS_INIT_COUNT;
             obj->gyrobias[2] /= BMI088_BIAS_INIT_COUNT;
             obj->bias_init_success = 1;
+            float pitch = atan2((float)(0-obj->data.accel[0]),obj->data.accel[2]);
+            obj->mahony_solver.q0 = cos(pitch/2);
+            obj->mahony_solver.q1 = 0;
+            obj->mahony_solver.q2 = sin(pitch/2);
+            obj->mahony_solver.q3 = 0;
         } else {
             init_count = 0;
         }
@@ -246,15 +251,16 @@ void BMI088_heat_init(BMI088_imu *obj) {
     // HAL_TIM_PWM_Start(obj->HEAT_PWM_BASE, obj->HAET_PWM_CHANNEL);
     BSP_PWM_Start(obj->config.bsp_pwm_heat_index);
     memset(&obj->heat_pid, 0, sizeof(struct PID_t));
-    struct PID_config_t bmi088_config;
-    bmi088_config.PID_Mode = PID_POSITION;
-    bmi088_config.KP = HEAT_PID_KP;
-    bmi088_config.KI = HEAT_PID_KI;
-    bmi088_config.KD = HEAT_PID_KD;
-    bmi088_config.error_max = 2048;
-    bmi088_config.outputMax = HEAT_PID_MAX_OUT;
-    bmi088_config.error_max = HEAT_PID_MAX_IOUT;
-    PID_Init(&obj->heat_pid, &bmi088_config);
+    // struct PID_config_t bmi088_config;
+    // bmi088_config.PID_Mode = PID_POSITION;
+    // bmi088_config.KP = HEAT_PID_KP;
+    // bmi088_config.KI = HEAT_PID_KI;
+    // bmi088_config.KD = HEAT_PID_KD;
+    // bmi088_config.error_max = 2048;
+    // bmi088_config.outputMax = HEAT_PID_MAX_OUT;
+    // bmi088_config.error_max = HEAT_PID_MAX_IOUT;
+    PID_SetConfig_Pos(&obj->heat_pid.config,HEAT_PID_KP,HEAT_PID_KI,HEAT_PID_KD,HEAT_PID_MAX_IOUT,HEAT_PID_MAX_OUT);
+    // PID_Init(&obj->heat_pid, &bmi088_config);
     obj->heat_pid.ref = obj->config.temp_target;
 }
 

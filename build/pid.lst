@@ -1,0 +1,801 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"pid.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.PID_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	PID_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	PID_Init:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "Core/HAL/lib/controller/pid.c"
+   1:Core/HAL/lib/controller/pid.c **** /**
+   2:Core/HAL/lib/controller/pid.c ****  ******************************************************************************
+   3:Core/HAL/lib/controller/pid.c ****  * 文件名        : pid.c
+   4:Core/HAL/lib/controller/pid.c ****  * 文件描述      ：PID控制算法
+   5:Core/HAL/lib/controller/pid.c ****  * 创建时间      ：2019.11.9
+   6:Core/HAL/lib/controller/pid.c ****  * 作者          ：刘文熠
+   7:Core/HAL/lib/controller/pid.c ****  *-----------------------------------------------------------------------------
+   8:Core/HAL/lib/controller/pid.c ****  * 最近修改时间  ：2021.5.8
+   9:Core/HAL/lib/controller/pid.c ****  * 修改人        ：刘思宇
+  10:Core/HAL/lib/controller/pid.c ****  * 内容          ：加入PI分离模式
+  11:Core/HAL/lib/controller/pid.c ****  ******************************************************************************
+  12:Core/HAL/lib/controller/pid.c ****  * 1.本代码基于STMF427IIT6开发，编译环境为Keil 5，基于FreeRTOS进行开发。
+  13:Core/HAL/lib/controller/pid.c ****  * 2.本代码只适用于RoboMaster机器人，不建议用于其他用途
+  14:Core/HAL/lib/controller/pid.c ****  * 3.本代码包含大量中文注释，请以UTF-8编码格式打开
+  15:Core/HAL/lib/controller/pid.c ****  * 4.本代码最终解释权归哈尔滨工业大学（深圳）南工骁鹰战队Critical HIT所�
+  16:Core/HAL/lib/controller/pid.c ****  *
+  17:Core/HAL/lib/controller/pid.c ****  * Copyright (c) 哈尔滨工业大学（深圳）南工骁鹰战队Critical HIT 版权所有
+  18:Core/HAL/lib/controller/pid.c ****  ******************************************************************************
+  19:Core/HAL/lib/controller/pid.c ****  */
+  20:Core/HAL/lib/controller/pid.c **** 
+  21:Core/HAL/lib/controller/pid.c **** #include "pid.h"
+  22:Core/HAL/lib/controller/pid.c **** 
+  23:Core/HAL/lib/controller/pid.c **** #include "common.h"
+  24:Core/HAL/lib/controller/pid.c **** #include "math.h"
+  25:Core/HAL/lib/controller/pid.c **** 
+  26:Core/HAL/lib/controller/pid.c **** /**
+  27:Core/HAL/lib/controller/pid.c ****  * @brief 符号函数
+  28:Core/HAL/lib/controller/pid.c ****  * @param input 输入
+  29:Core/HAL/lib/controller/pid.c ****  * @retval 输入的符号，正负1或0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 2
+
+
+  30:Core/HAL/lib/controller/pid.c ****  */
+  31:Core/HAL/lib/controller/pid.c **** 
+  32:Core/HAL/lib/controller/pid.c **** /**
+  33:Core/HAL/lib/controller/pid.c ****  * @brief PID计算函数，位置式和增量式合在一起
+  34:Core/HAL/lib/controller/pid.c ****  * @param PID结构体
+  35:Core/HAL/lib/controller/pid.c ****  * @retval None
+  36:Core/HAL/lib/controller/pid.c ****  */
+  37:Core/HAL/lib/controller/pid.c **** 
+  38:Core/HAL/lib/controller/pid.c **** void PID_Init(struct PID_t* pid, struct PID_config_t* config) { pid->config = *config; }
+  30              		.loc 1 38 63 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 38 63 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  40              		.loc 1 38 65 is_stmt 1 view .LVU2
+  41              		.loc 1 38 77 is_stmt 0 view .LVU3
+  42 0002 01F12003 		add	r3, r1, #32
+  43              	.LVL1:
+  44              	.L2:
+  45              		.loc 1 38 77 view .LVU4
+  46 0006 0C68     		ldr	r4, [r1]	@ unaligned
+  47 0008 D1F804E0 		ldr	lr, [r1, #4]	@ unaligned
+  48 000c D1F808C0 		ldr	ip, [r1, #8]	@ unaligned
+  49 0010 CA68     		ldr	r2, [r1, #12]	@ unaligned
+  50 0012 0460     		str	r4, [r0]	@ unaligned
+  51 0014 C0F804E0 		str	lr, [r0, #4]	@ unaligned
+  52 0018 C0F808C0 		str	ip, [r0, #8]	@ unaligned
+  53 001c C260     		str	r2, [r0, #12]	@ unaligned
+  54 001e 1031     		adds	r1, r1, #16
+  55 0020 1030     		adds	r0, r0, #16
+  56 0022 9942     		cmp	r1, r3
+  57 0024 EFD1     		bne	.L2
+  58 0026 0A68     		ldr	r2, [r1]	@ unaligned
+  59 0028 4B68     		ldr	r3, [r1, #4]	@ unaligned
+  60              	.LVL2:
+  61              		.loc 1 38 77 view .LVU5
+  62 002a 0260     		str	r2, [r0]	@ unaligned
+  63 002c 4360     		str	r3, [r0, #4]	@ unaligned
+  64 002e 0B7A     		ldrb	r3, [r1, #8]	@ zero_extendqisi2
+  65 0030 0372     		strb	r3, [r0, #8]
+  66              		.loc 1 38 88 view .LVU6
+  67 0032 10BD     		pop	{r4, pc}
+  68              		.cfi_endproc
+  69              	.LFE0:
+  71              		.section	.text.PID_Calc,"ax",%progbits
+  72              		.align	1
+  73              		.global	PID_Calc
+  74              		.syntax unified
+  75              		.thumb
+  76              		.thumb_func
+  78              	PID_Calc:
+  79              	.LVL3:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 3
+
+
+  80              	.LFB1:
+  39:Core/HAL/lib/controller/pid.c **** 
+  40:Core/HAL/lib/controller/pid.c **** void PID_Calc(struct PID_t* pid) {
+  81              		.loc 1 40 34 is_stmt 1 view -0
+  82              		.cfi_startproc
+  83              		@ args = 0, pretend = 0, frame = 0
+  84              		@ frame_needed = 0, uses_anonymous_args = 0
+  85              		.loc 1 40 34 is_stmt 0 view .LVU8
+  86 0000 38B5     		push	{r3, r4, r5, lr}
+  87              	.LCFI1:
+  88              		.cfi_def_cfa_offset 16
+  89              		.cfi_offset 3, -16
+  90              		.cfi_offset 4, -12
+  91              		.cfi_offset 5, -8
+  92              		.cfi_offset 14, -4
+  93 0002 2DED028B 		vpush.64	{d8}
+  94              	.LCFI2:
+  95              		.cfi_def_cfa_offset 24
+  96              		.cfi_offset 80, -24
+  97              		.cfi_offset 81, -20
+  98 0006 0446     		mov	r4, r0
+  41:Core/HAL/lib/controller/pid.c ****     pid->error[2] = pid->error[1];        //上上次误差
+  99              		.loc 1 41 5 is_stmt 1 view .LVU9
+ 100              		.loc 1 41 31 is_stmt 0 view .LVU10
+ 101 0008 D0F82D20 		ldr	r2, [r0, #45]	@ unaligned
+ 102              		.loc 1 41 19 view .LVU11
+ 103 000c C0F83120 		str	r2, [r0, #49]	@ unaligned
+  42:Core/HAL/lib/controller/pid.c ****     pid->error[1] = pid->error[0];        //上次误差
+ 104              		.loc 1 42 5 is_stmt 1 view .LVU12
+ 105              		.loc 1 42 31 is_stmt 0 view .LVU13
+ 106 0010 D0F82930 		ldr	r3, [r0, #41]	@ unaligned
+ 107              		.loc 1 42 19 view .LVU14
+ 108 0014 C0F82D30 		str	r3, [r0, #45]	@ unaligned
+  43:Core/HAL/lib/controller/pid.c ****     pid->error[0] = pid->ref - pid->fdb;  //本次误差
+ 109              		.loc 1 43 5 is_stmt 1 view .LVU15
+ 110              		.loc 1 43 24 is_stmt 0 view .LVU16
+ 111 0018 D0F83D10 		ldr	r1, [r0, #61]	@ unaligned
+ 112 001c 08EE101A 		vmov	s16, r1	@ int
+ 113              		.loc 1 43 35 view .LVU17
+ 114 0020 D0F83910 		ldr	r1, [r0, #57]	@ unaligned
+ 115              		.loc 1 43 30 view .LVU18
+ 116 0024 07EE901A 		vmov	s15, r1
+ 117 0028 38EE678A 		vsub.f32	s16, s16, s15
+ 118              		.loc 1 43 19 view .LVU19
+ 119 002c 18EE101A 		vmov	r1, s16
+ 120 0030 C0F82910 		str	r1, [r0, #41]	@ unaligned
+  44:Core/HAL/lib/controller/pid.c **** 
+  45:Core/HAL/lib/controller/pid.c ****     if (pid->config.PID_Mode == PID_POSITION)  //位置式PID
+ 121              		.loc 1 45 5 is_stmt 1 view .LVU20
+ 122              		.loc 1 45 20 is_stmt 0 view .LVU21
+ 123 0034 90F82810 		ldrb	r1, [r0, #40]	@ zero_extendqisi2
+ 124              		.loc 1 45 8 view .LVU22
+ 125 0038 0029     		cmp	r1, #0
+ 126 003a 63D1     		bne	.L5
+  46:Core/HAL/lib/controller/pid.c ****     {
+  47:Core/HAL/lib/controller/pid.c ****         pid->error_sum += pid->error[0];  //积分上限判断
+ 127              		.loc 1 47 9 is_stmt 1 view .LVU23
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 4
+
+
+ 128              		.loc 1 47 24 is_stmt 0 view .LVU24
+ 129 003c D0F83520 		ldr	r2, [r0, #53]	@ unaligned
+ 130 0040 07EE102A 		vmov	s14, r2	@ int
+ 131 0044 38EE077A 		vadd.f32	s14, s16, s14
+ 132 0048 17EE102A 		vmov	r2, s14
+ 133 004c C0F83520 		str	r2, [r0, #53]	@ unaligned
+  48:Core/HAL/lib/controller/pid.c ****         if (pid->error_sum > pid->config.error_max) pid->error_sum = pid->config.error_max;
+ 134              		.loc 1 48 9 is_stmt 1 view .LVU25
+ 135              		.loc 1 48 41 is_stmt 0 view .LVU26
+ 136 0050 8269     		ldr	r2, [r0, #24]	@ unaligned
+ 137 0052 07EE902A 		vmov	s15, r2	@ int
+ 138              		.loc 1 48 12 view .LVU27
+ 139 0056 B4EEE77A 		vcmpe.f32	s14, s15
+ 140 005a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 141 005e 01DD     		ble	.L6
+ 142              		.loc 1 48 53 is_stmt 1 discriminator 1 view .LVU28
+ 143              		.loc 1 48 68 is_stmt 0 discriminator 1 view .LVU29
+ 144 0060 C0F83520 		str	r2, [r0, #53]	@ unaligned
+ 145              	.L6:
+  49:Core/HAL/lib/controller/pid.c ****         if (pid->error_sum < -pid->config.error_max) pid->error_sum = -pid->config.error_max;
+ 146              		.loc 1 49 9 is_stmt 1 view .LVU30
+ 147              		.loc 1 49 16 is_stmt 0 view .LVU31
+ 148 0064 D4F83520 		ldr	r2, [r4, #53]	@ unaligned
+ 149              		.loc 1 49 30 view .LVU32
+ 150 0068 F1EE677A 		vneg.f32	s15, s15
+ 151              		.loc 1 49 12 view .LVU33
+ 152 006c 07EE102A 		vmov	s14, r2
+ 153 0070 B4EEE77A 		vcmpe.f32	s14, s15
+ 154 0074 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 155 0078 03D5     		bpl	.L8
+ 156              		.loc 1 49 54 is_stmt 1 discriminator 1 view .LVU34
+ 157              		.loc 1 49 69 is_stmt 0 discriminator 1 view .LVU35
+ 158 007a 17EE902A 		vmov	r2, s15
+ 159 007e C4F83520 		str	r2, [r4, #53]	@ unaligned
+ 160              	.L8:
+  50:Core/HAL/lib/controller/pid.c **** 
+  51:Core/HAL/lib/controller/pid.c ****         pid->output = pid->config.KP * pid->error[0] + pid->config.KI * pid->error_sum + pid->confi
+ 161              		.loc 1 51 9 is_stmt 1 view .LVU36
+ 162              		.loc 1 51 34 is_stmt 0 view .LVU37
+ 163 0082 2268     		ldr	r2, [r4]	@ unaligned
+ 164 0084 07EE902A 		vmov	s15, r2	@ int
+ 165              		.loc 1 51 38 view .LVU38
+ 166 0088 28EE277A 		vmul.f32	s14, s16, s15
+ 167              		.loc 1 51 67 view .LVU39
+ 168 008c 6268     		ldr	r2, [r4, #4]	@ unaligned
+ 169 008e 07EE902A 		vmov	s15, r2	@ int
+ 170              		.loc 1 51 76 view .LVU40
+ 171 0092 D4F83520 		ldr	r2, [r4, #53]	@ unaligned
+ 172              		.loc 1 51 71 view .LVU41
+ 173 0096 06EE902A 		vmov	s13, r2
+ 174 009a 67EEA67A 		vmul.f32	s15, s15, s13
+ 175              		.loc 1 51 54 view .LVU42
+ 176 009e 77EE277A 		vadd.f32	s15, s14, s15
+ 177              		.loc 1 51 101 view .LVU43
+ 178 00a2 A268     		ldr	r2, [r4, #8]	@ unaligned
+ 179              		.loc 1 51 122 view .LVU44
+ 180 00a4 07EE103A 		vmov	s14, r3
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 5
+
+
+ 181 00a8 38EE478A 		vsub.f32	s16, s16, s14
+ 182              		.loc 1 51 105 view .LVU45
+ 183 00ac 07EE102A 		vmov	s14, r2
+ 184 00b0 27EE088A 		vmul.f32	s16, s14, s16
+ 185              		.loc 1 51 21 view .LVU46
+ 186 00b4 77EE887A 		vadd.f32	s15, s15, s16
+ 187 00b8 17EE903A 		vmov	r3, s15	@ int
+ 188 00bc C4F84130 		str	r3, [r4, #65]	@ unaligned
+ 189              	.LVL4:
+ 190              	.L10:
+  52:Core/HAL/lib/controller/pid.c ****     }
+  53:Core/HAL/lib/controller/pid.c **** 
+  54:Core/HAL/lib/controller/pid.c ****     else if (pid->config.PID_Mode == PID_DELTA)  //增量式PID
+  55:Core/HAL/lib/controller/pid.c ****     {
+  56:Core/HAL/lib/controller/pid.c ****         pid->output += pid->config.KP * (pid->error[0] - pid->error[1]) + pid->config.KI * (pid->er
+  57:Core/HAL/lib/controller/pid.c ****     }
+  58:Core/HAL/lib/controller/pid.c **** 
+  59:Core/HAL/lib/controller/pid.c ****     else if (pid->config.PID_Mode == PID_COMP_POSITION)  // PI分离模式 用于摩擦轮和拨弹
+  60:Core/HAL/lib/controller/pid.c ****     {
+  61:Core/HAL/lib/controller/pid.c ****         pid->error_delta = pid->error[0] - pid->error[1];
+  62:Core/HAL/lib/controller/pid.c ****         if (pid->error[0] > pid->config.range_rough)  // bangbang
+  63:Core/HAL/lib/controller/pid.c ****         {
+  64:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.outputMax;
+  65:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+  66:Core/HAL/lib/controller/pid.c ****         } else if (pid->error[0] < -pid->config.range_rough)  // bangbang
+  67:Core/HAL/lib/controller/pid.c ****         {
+  68:Core/HAL/lib/controller/pid.c ****             pid->output = -pid->config.outputMax;
+  69:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+  70:Core/HAL/lib/controller/pid.c ****         } else if (fabsf(pid->error[0]) < pid->config.range_fine)  //细调
+  71:Core/HAL/lib/controller/pid.c ****         {
+  72:Core/HAL/lib/controller/pid.c ****             pid->error_sum += pid->error[0];  //积分上限判断
+  73:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum > pid->config.error_max) pid->error_sum = pid->config.error_max;
+  74:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum < -pid->config.error_max) pid->error_sum = -pid->config.error_max;
+  75:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP_fine * pid->error[0] + pid->config.KI * pid->error_sum + p
+  76:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+  77:Core/HAL/lib/controller/pid.c ****         {
+  78:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP * (pid->error[0] + fsgn(pid->error[0]) * pid->config.compe
+  79:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+  80:Core/HAL/lib/controller/pid.c ****         }
+  81:Core/HAL/lib/controller/pid.c ****     }
+  82:Core/HAL/lib/controller/pid.c **** 
+  83:Core/HAL/lib/controller/pid.c ****     pid->output_unlimited = pid->output;
+ 191              		.loc 1 83 5 is_stmt 1 view .LVU47
+ 192              		.loc 1 83 32 is_stmt 0 view .LVU48
+ 193 00c0 D4F84130 		ldr	r3, [r4, #65]	@ unaligned
+ 194              		.loc 1 83 27 view .LVU49
+ 195 00c4 C4F84530 		str	r3, [r4, #69]	@ unaligned
+  84:Core/HAL/lib/controller/pid.c ****     /*----- 输出上限 -----*/
+  85:Core/HAL/lib/controller/pid.c ****     if (pid->output > pid->config.outputMax) pid->output = pid->config.outputMax;
+ 196              		.loc 1 85 5 is_stmt 1 view .LVU50
+ 197              		.loc 1 85 34 is_stmt 0 view .LVU51
+ 198 00c8 E269     		ldr	r2, [r4, #28]	@ unaligned
+ 199 00ca 07EE902A 		vmov	s15, r2	@ int
+ 200              		.loc 1 85 8 view .LVU52
+ 201 00ce 07EE103A 		vmov	s14, r3
+ 202 00d2 B4EEE77A 		vcmpe.f32	s14, s15
+ 203 00d6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 6
+
+
+ 204 00da 01DD     		ble	.L22
+ 205              		.loc 1 85 46 is_stmt 1 discriminator 1 view .LVU53
+ 206              		.loc 1 85 58 is_stmt 0 discriminator 1 view .LVU54
+ 207 00dc C4F84120 		str	r2, [r4, #65]	@ unaligned
+ 208              	.L22:
+  86:Core/HAL/lib/controller/pid.c ****     if (pid->output < -pid->config.outputMax) pid->output = -pid->config.outputMax;
+ 209              		.loc 1 86 5 is_stmt 1 view .LVU55
+ 210              		.loc 1 86 12 is_stmt 0 view .LVU56
+ 211 00e0 D4F84130 		ldr	r3, [r4, #65]	@ unaligned
+ 212              		.loc 1 86 23 view .LVU57
+ 213 00e4 F1EE677A 		vneg.f32	s15, s15
+ 214              		.loc 1 86 8 view .LVU58
+ 215 00e8 07EE103A 		vmov	s14, r3
+ 216 00ec B4EEE77A 		vcmpe.f32	s14, s15
+ 217 00f0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 218 00f4 03D5     		bpl	.L4
+ 219              		.loc 1 86 47 is_stmt 1 discriminator 1 view .LVU59
+ 220              		.loc 1 86 59 is_stmt 0 discriminator 1 view .LVU60
+ 221 00f6 17EE903A 		vmov	r3, s15
+ 222 00fa C4F84130 		str	r3, [r4, #65]	@ unaligned
+ 223              	.L4:
+  87:Core/HAL/lib/controller/pid.c **** }
+ 224              		.loc 1 87 1 view .LVU61
+ 225 00fe BDEC028B 		vldm	sp!, {d8}
+ 226              	.LCFI3:
+ 227              		.cfi_remember_state
+ 228              		.cfi_restore 80
+ 229              		.cfi_restore 81
+ 230              		.cfi_def_cfa_offset 16
+ 231 0102 38BD     		pop	{r3, r4, r5, pc}
+ 232              	.LVL5:
+ 233              	.L5:
+ 234              	.LCFI4:
+ 235              		.cfi_restore_state
+  54:Core/HAL/lib/controller/pid.c ****     {
+ 236              		.loc 1 54 10 is_stmt 1 view .LVU62
+  54:Core/HAL/lib/controller/pid.c ****     {
+ 237              		.loc 1 54 13 is_stmt 0 view .LVU63
+ 238 0104 0129     		cmp	r1, #1
+ 239 0106 18D0     		beq	.L39
+  59:Core/HAL/lib/controller/pid.c ****     {
+ 240              		.loc 1 59 10 is_stmt 1 view .LVU64
+  59:Core/HAL/lib/controller/pid.c ****     {
+ 241              		.loc 1 59 13 is_stmt 0 view .LVU65
+ 242 0108 0229     		cmp	r1, #2
+ 243 010a D9D1     		bne	.L10
+  61:Core/HAL/lib/controller/pid.c ****         if (pid->error[0] > pid->config.range_rough)  // bangbang
+ 244              		.loc 1 61 9 is_stmt 1 view .LVU66
+  61:Core/HAL/lib/controller/pid.c ****         if (pid->error[0] > pid->config.range_rough)  // bangbang
+ 245              		.loc 1 61 42 is_stmt 0 view .LVU67
+ 246 010c 07EE903A 		vmov	s15, r3
+ 247 0110 78EE677A 		vsub.f32	s15, s16, s15
+  61:Core/HAL/lib/controller/pid.c ****         if (pid->error[0] > pid->config.range_rough)  // bangbang
+ 248              		.loc 1 61 26 view .LVU68
+ 249 0114 17EE903A 		vmov	r3, s15
+ 250 0118 C0F84930 		str	r3, [r0, #73]	@ unaligned
+  62:Core/HAL/lib/controller/pid.c ****         {
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 7
+
+
+ 251              		.loc 1 62 9 is_stmt 1 view .LVU69
+  62:Core/HAL/lib/controller/pid.c ****         {
+ 252              		.loc 1 62 40 is_stmt 0 view .LVU70
+ 253 011c 0369     		ldr	r3, [r0, #16]	@ unaligned
+ 254 011e 07EE103A 		vmov	s14, r3	@ int
+  62:Core/HAL/lib/controller/pid.c ****         {
+ 255              		.loc 1 62 12 view .LVU71
+ 256 0122 B4EEC78A 		vcmpe.f32	s16, s14
+ 257 0126 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 258 012a 2FDD     		ble	.L35
+  64:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+ 259              		.loc 1 64 13 is_stmt 1 view .LVU72
+  64:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+ 260              		.loc 1 64 38 is_stmt 0 view .LVU73
+ 261 012c C369     		ldr	r3, [r0, #28]	@ unaligned
+  64:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+ 262              		.loc 1 64 25 view .LVU74
+ 263 012e C0F84130 		str	r3, [r0, #65]	@ unaligned
+  65:Core/HAL/lib/controller/pid.c ****         } else if (pid->error[0] < -pid->config.range_rough)  // bangbang
+ 264              		.loc 1 65 13 is_stmt 1 view .LVU75
+  65:Core/HAL/lib/controller/pid.c ****         } else if (pid->error[0] < -pid->config.range_rough)  // bangbang
+ 265              		.loc 1 65 28 is_stmt 0 view .LVU76
+ 266 0132 0023     		movs	r3, #0
+ 267 0134 C0F83530 		str	r3, [r0, #53]	@ unaligned
+ 268 0138 C2E7     		b	.L10
+ 269              	.L39:
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 270              		.loc 1 56 9 is_stmt 1 view .LVU77
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 271              		.loc 1 56 35 is_stmt 0 view .LVU78
+ 272 013a 0168     		ldr	r1, [r0]	@ unaligned
+ 273 013c 07EE901A 		vmov	s15, r1	@ int
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 274              		.loc 1 56 56 view .LVU79
+ 275 0140 07EE103A 		vmov	s14, r3
+ 276 0144 38EE477A 		vsub.f32	s14, s16, s14
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 277              		.loc 1 56 39 view .LVU80
+ 278 0148 27EE877A 		vmul.f32	s14, s15, s14
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 279              		.loc 1 56 86 view .LVU81
+ 280 014c 4168     		ldr	r1, [r0, #4]	@ unaligned
+ 281 014e 06EE901A 		vmov	s13, r1	@ int
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 282              		.loc 1 56 114 view .LVU82
+ 283 0152 07EE903A 		vmov	s15, r3
+ 284 0156 77EEA77A 		vadd.f32	s15, s15, s15
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 285              		.loc 1 56 107 view .LVU83
+ 286 015a 78EE677A 		vsub.f32	s15, s16, s15
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 287              		.loc 1 56 130 view .LVU84
+ 288 015e 06EE102A 		vmov	s12, r2
+ 289 0162 76EE277A 		vadd.f32	s15, s12, s15
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 290              		.loc 1 56 90 view .LVU85
+ 291 0166 66EEA77A 		vmul.f32	s15, s13, s15
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 8
+
+
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 292              		.loc 1 56 73 view .LVU86
+ 293 016a 77EE277A 		vadd.f32	s15, s14, s15
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 294              		.loc 1 56 164 view .LVU87
+ 295 016e 28EE268A 		vmul.f32	s16, s16, s13
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 296              		.loc 1 56 147 view .LVU88
+ 297 0172 77EE887A 		vadd.f32	s15, s15, s16
+  56:Core/HAL/lib/controller/pid.c ****     }
+ 298              		.loc 1 56 21 view .LVU89
+ 299 0176 D0F84130 		ldr	r3, [r0, #65]	@ unaligned
+ 300 017a 08EE103A 		vmov	s16, r3	@ int
+ 301 017e 77EE887A 		vadd.f32	s15, s15, s16
+ 302 0182 17EE903A 		vmov	r3, s15	@ int
+ 303 0186 C0F84130 		str	r3, [r0, #65]	@ unaligned
+ 304 018a 99E7     		b	.L10
+ 305              	.L35:
+  66:Core/HAL/lib/controller/pid.c ****         {
+ 306              		.loc 1 66 16 is_stmt 1 view .LVU90
+  66:Core/HAL/lib/controller/pid.c ****         {
+ 307              		.loc 1 66 36 is_stmt 0 view .LVU91
+ 308 018c B1EE477A 		vneg.f32	s14, s14
+  66:Core/HAL/lib/controller/pid.c ****         {
+ 309              		.loc 1 66 19 view .LVU92
+ 310 0190 B4EEC78A 		vcmpe.f32	s16, s14
+ 311 0194 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 312 0198 08D5     		bpl	.L36
+  68:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+ 313              		.loc 1 68 13 is_stmt 1 view .LVU93
+  68:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+ 314              		.loc 1 68 39 is_stmt 0 view .LVU94
+ 315 019a C369     		ldr	r3, [r0, #28]	@ unaligned
+  68:Core/HAL/lib/controller/pid.c ****             pid->error_sum = 0;
+ 316              		.loc 1 68 25 view .LVU95
+ 317 019c 83F00043 		eor	r3, r3, #-2147483648
+ 318 01a0 C0F84130 		str	r3, [r0, #65]	@ unaligned
+  69:Core/HAL/lib/controller/pid.c ****         } else if (fabsf(pid->error[0]) < pid->config.range_fine)  //细调
+ 319              		.loc 1 69 13 is_stmt 1 view .LVU96
+  69:Core/HAL/lib/controller/pid.c ****         } else if (fabsf(pid->error[0]) < pid->config.range_fine)  //细调
+ 320              		.loc 1 69 28 is_stmt 0 view .LVU97
+ 321 01a4 0023     		movs	r3, #0
+ 322 01a6 C0F83530 		str	r3, [r0, #53]	@ unaligned
+ 323 01aa 89E7     		b	.L10
+ 324              	.L36:
+  70:Core/HAL/lib/controller/pid.c ****         {
+ 325              		.loc 1 70 16 is_stmt 1 view .LVU98
+  70:Core/HAL/lib/controller/pid.c ****         {
+ 326              		.loc 1 70 20 is_stmt 0 view .LVU99
+ 327 01ac B0EEC87A 		vabs.f32	s14, s16
+  70:Core/HAL/lib/controller/pid.c ****         {
+ 328              		.loc 1 70 54 view .LVU100
+ 329 01b0 4369     		ldr	r3, [r0, #20]	@ unaligned
+  70:Core/HAL/lib/controller/pid.c ****         {
+ 330              		.loc 1 70 19 view .LVU101
+ 331 01b2 06EE903A 		vmov	s13, r3
+ 332 01b6 B4EEE67A 		vcmpe.f32	s14, s13
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 9
+
+
+ 333 01ba F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 334 01be 3ED5     		bpl	.L37
+  72:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum > pid->config.error_max) pid->error_sum = pid->config.error_max;
+ 335              		.loc 1 72 13 is_stmt 1 view .LVU102
+  72:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum > pid->config.error_max) pid->error_sum = pid->config.error_max;
+ 336              		.loc 1 72 28 is_stmt 0 view .LVU103
+ 337 01c0 D0F83530 		ldr	r3, [r0, #53]	@ unaligned
+ 338 01c4 06EE903A 		vmov	s13, r3	@ int
+ 339 01c8 78EE266A 		vadd.f32	s13, s16, s13
+ 340 01cc 16EE903A 		vmov	r3, s13
+ 341 01d0 C0F83530 		str	r3, [r0, #53]	@ unaligned
+  73:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum < -pid->config.error_max) pid->error_sum = -pid->config.error_max;
+ 342              		.loc 1 73 13 is_stmt 1 view .LVU104
+  73:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum < -pid->config.error_max) pid->error_sum = -pid->config.error_max;
+ 343              		.loc 1 73 45 is_stmt 0 view .LVU105
+ 344 01d4 8369     		ldr	r3, [r0, #24]	@ unaligned
+ 345 01d6 07EE103A 		vmov	s14, r3	@ int
+  73:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum < -pid->config.error_max) pid->error_sum = -pid->config.error_max;
+ 346              		.loc 1 73 16 view .LVU106
+ 347 01da F4EEC76A 		vcmpe.f32	s13, s14
+ 348 01de F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 349 01e2 01DD     		ble	.L18
+  73:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum < -pid->config.error_max) pid->error_sum = -pid->config.error_max;
+ 350              		.loc 1 73 57 is_stmt 1 discriminator 1 view .LVU107
+  73:Core/HAL/lib/controller/pid.c ****             if (pid->error_sum < -pid->config.error_max) pid->error_sum = -pid->config.error_max;
+ 351              		.loc 1 73 72 is_stmt 0 discriminator 1 view .LVU108
+ 352 01e4 C0F83530 		str	r3, [r0, #53]	@ unaligned
+ 353              	.L18:
+  74:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP_fine * pid->error[0] + pid->config.KI * pid->error_sum + p
+ 354              		.loc 1 74 13 is_stmt 1 view .LVU109
+  74:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP_fine * pid->error[0] + pid->config.KI * pid->error_sum + p
+ 355              		.loc 1 74 20 is_stmt 0 view .LVU110
+ 356 01e8 D4F83530 		ldr	r3, [r4, #53]	@ unaligned
+  74:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP_fine * pid->error[0] + pid->config.KI * pid->error_sum + p
+ 357              		.loc 1 74 34 view .LVU111
+ 358 01ec B1EE477A 		vneg.f32	s14, s14
+  74:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP_fine * pid->error[0] + pid->config.KI * pid->error_sum + p
+ 359              		.loc 1 74 16 view .LVU112
+ 360 01f0 06EE903A 		vmov	s13, r3
+ 361 01f4 F4EEC76A 		vcmpe.f32	s13, s14
+ 362 01f8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 363 01fc 03D5     		bpl	.L20
+  74:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP_fine * pid->error[0] + pid->config.KI * pid->error_sum + p
+ 364              		.loc 1 74 58 is_stmt 1 discriminator 1 view .LVU113
+  74:Core/HAL/lib/controller/pid.c ****             pid->output = pid->config.KP_fine * pid->error[0] + pid->config.KI * pid->error_sum + p
+ 365              		.loc 1 74 73 is_stmt 0 discriminator 1 view .LVU114
+ 366 01fe 17EE103A 		vmov	r3, s14
+ 367 0202 C4F83530 		str	r3, [r4, #53]	@ unaligned
+ 368              	.L20:
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 369              		.loc 1 75 13 is_stmt 1 view .LVU115
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 370              		.loc 1 75 38 is_stmt 0 view .LVU116
+ 371 0206 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 372 0208 07EE103A 		vmov	s14, r3	@ int
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 373              		.loc 1 75 47 view .LVU117
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 10
+
+
+ 374 020c 28EE077A 		vmul.f32	s14, s16, s14
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 375              		.loc 1 75 76 view .LVU118
+ 376 0210 6368     		ldr	r3, [r4, #4]	@ unaligned
+ 377 0212 08EE103A 		vmov	s16, r3	@ int
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 378              		.loc 1 75 85 view .LVU119
+ 379 0216 D4F83530 		ldr	r3, [r4, #53]	@ unaligned
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 380              		.loc 1 75 80 view .LVU120
+ 381 021a 06EE903A 		vmov	s13, r3
+ 382 021e 28EE268A 		vmul.f32	s16, s16, s13
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 383              		.loc 1 75 63 view .LVU121
+ 384 0222 37EE088A 		vadd.f32	s16, s14, s16
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 385              		.loc 1 75 110 view .LVU122
+ 386 0226 A368     		ldr	r3, [r4, #8]	@ unaligned
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 387              		.loc 1 75 114 view .LVU123
+ 388 0228 07EE103A 		vmov	s14, r3
+ 389 022c 67EE877A 		vmul.f32	s15, s15, s14
+  75:Core/HAL/lib/controller/pid.c ****         } else  //粗调
+ 390              		.loc 1 75 25 view .LVU124
+ 391 0230 78EE277A 		vadd.f32	s15, s16, s15
+ 392 0234 17EE903A 		vmov	r3, s15	@ int
+ 393 0238 C4F84130 		str	r3, [r4, #65]	@ unaligned
+ 394 023c 40E7     		b	.L10
+ 395              	.L37:
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 396              		.loc 1 78 13 is_stmt 1 view .LVU125
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 397              		.loc 1 78 38 is_stmt 0 view .LVU126
+ 398 023e 0568     		ldr	r5, [r0]	@ unaligned
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 399              		.loc 1 78 61 view .LVU127
+ 400 0240 B0EE480A 		vmov.f32	s0, s16
+ 401 0244 FFF7FEFF 		bl	fsgn
+ 402              	.LVL6:
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 403              		.loc 1 78 61 view .LVU128
+ 404 0248 07EE100A 		vmov	s14, r0	@ int
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 405              		.loc 1 78 94 view .LVU129
+ 406 024c 236A     		ldr	r3, [r4, #32]	@ unaligned
+ 407 024e 07EE903A 		vmov	s15, r3	@ int
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 408              		.loc 1 78 81 view .LVU130
+ 409 0252 B8EEC77A 		vcvt.f32.s32	s14, s14
+ 410 0256 67EE277A 		vmul.f32	s15, s14, s15
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 411              		.loc 1 78 59 view .LVU131
+ 412 025a 38EE278A 		vadd.f32	s16, s16, s15
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 413              		.loc 1 78 42 view .LVU132
+ 414 025e 07EE905A 		vmov	s15, r5
+ 415 0262 27EE888A 		vmul.f32	s16, s15, s16
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 11
+
+
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 416              		.loc 1 78 122 view .LVU133
+ 417 0266 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 418 0268 07EE903A 		vmov	s15, r3	@ int
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 419              		.loc 1 78 131 view .LVU134
+ 420 026c D4F84930 		ldr	r3, [r4, #73]	@ unaligned
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 421              		.loc 1 78 126 view .LVU135
+ 422 0270 07EE103A 		vmov	s14, r3
+ 423 0274 67EE877A 		vmul.f32	s15, s15, s14
+  78:Core/HAL/lib/controller/pid.c ****             pid->error_sum = fsgn(pid->error[0]) * pid->config.error_preload;
+ 424              		.loc 1 78 25 view .LVU136
+ 425 0278 38EE278A 		vadd.f32	s16, s16, s15
+ 426 027c 18EE103A 		vmov	r3, s16	@ int
+ 427 0280 C4F84130 		str	r3, [r4, #65]	@ unaligned
+  79:Core/HAL/lib/controller/pid.c ****         }
+ 428              		.loc 1 79 13 is_stmt 1 view .LVU137
+  79:Core/HAL/lib/controller/pid.c ****         }
+ 429              		.loc 1 79 30 is_stmt 0 view .LVU138
+ 430 0284 D4F82930 		ldr	r3, [r4, #41]	@ unaligned
+ 431 0288 00EE103A 		vmov	s0, r3	@ int
+ 432 028c FFF7FEFF 		bl	fsgn
+ 433              	.LVL7:
+ 434 0290 07EE900A 		vmov	s15, r0	@ int
+  79:Core/HAL/lib/controller/pid.c ****         }
+ 435              		.loc 1 79 63 view .LVU139
+ 436 0294 636A     		ldr	r3, [r4, #36]	@ unaligned
+  79:Core/HAL/lib/controller/pid.c ****         }
+ 437              		.loc 1 79 50 view .LVU140
+ 438 0296 F8EEE77A 		vcvt.f32.s32	s15, s15
+  79:Core/HAL/lib/controller/pid.c ****         }
+ 439              		.loc 1 79 28 view .LVU141
+ 440 029a 07EE103A 		vmov	s14, r3
+ 441 029e 67EE877A 		vmul.f32	s15, s15, s14
+ 442 02a2 17EE903A 		vmov	r3, s15	@ int
+ 443 02a6 C4F83530 		str	r3, [r4, #53]	@ unaligned
+ 444 02aa 09E7     		b	.L10
+ 445              		.cfi_endproc
+ 446              	.LFE1:
+ 448              		.section	.text.PID_SetConfig_Pos,"ax",%progbits
+ 449              		.align	1
+ 450              		.global	PID_SetConfig_Pos
+ 451              		.syntax unified
+ 452              		.thumb
+ 453              		.thumb_func
+ 455              	PID_SetConfig_Pos:
+ 456              	.LVL8:
+ 457              	.LFB2:
+  88:Core/HAL/lib/controller/pid.c **** 
+  89:Core/HAL/lib/controller/pid.c **** void PID_SetConfig_Pos(struct PID_config_t* obj, float kp, float ki, float kd, float errormax, floa
+ 458              		.loc 1 89 113 is_stmt 1 view -0
+ 459              		.cfi_startproc
+ 460              		@ args = 0, pretend = 0, frame = 0
+ 461              		@ frame_needed = 0, uses_anonymous_args = 0
+ 462              		@ link register save eliminated.
+  90:Core/HAL/lib/controller/pid.c ****     obj->PID_Mode = PID_POSITION;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 12
+
+
+ 463              		.loc 1 90 5 view .LVU143
+ 464              		.loc 1 90 19 is_stmt 0 view .LVU144
+ 465 0000 0023     		movs	r3, #0
+ 466 0002 80F82830 		strb	r3, [r0, #40]
+  91:Core/HAL/lib/controller/pid.c ****     obj->KP = kp;
+ 467              		.loc 1 91 5 is_stmt 1 view .LVU145
+ 468              		.loc 1 91 13 is_stmt 0 view .LVU146
+ 469 0006 10EE103A 		vmov	r3, s0
+ 470 000a 0360     		str	r3, [r0]	@ unaligned
+  92:Core/HAL/lib/controller/pid.c ****     obj->KI = ki;
+ 471              		.loc 1 92 5 is_stmt 1 view .LVU147
+ 472              		.loc 1 92 13 is_stmt 0 view .LVU148
+ 473 000c 10EE903A 		vmov	r3, s1
+ 474 0010 4360     		str	r3, [r0, #4]	@ unaligned
+  93:Core/HAL/lib/controller/pid.c ****     obj->KD = kd;
+ 475              		.loc 1 93 5 is_stmt 1 view .LVU149
+ 476              		.loc 1 93 13 is_stmt 0 view .LVU150
+ 477 0012 11EE103A 		vmov	r3, s2
+ 478 0016 8360     		str	r3, [r0, #8]	@ unaligned
+  94:Core/HAL/lib/controller/pid.c ****     obj->error_max = errormax;
+ 479              		.loc 1 94 5 is_stmt 1 view .LVU151
+ 480              		.loc 1 94 20 is_stmt 0 view .LVU152
+ 481 0018 11EE903A 		vmov	r3, s3
+ 482 001c 8361     		str	r3, [r0, #24]	@ unaligned
+  95:Core/HAL/lib/controller/pid.c ****     obj->outputMax = outputmax;
+ 483              		.loc 1 95 5 is_stmt 1 view .LVU153
+ 484              		.loc 1 95 20 is_stmt 0 view .LVU154
+ 485 001e 12EE103A 		vmov	r3, s4
+ 486 0022 C361     		str	r3, [r0, #28]	@ unaligned
+  96:Core/HAL/lib/controller/pid.c **** }
+ 487              		.loc 1 96 1 view .LVU155
+ 488 0024 7047     		bx	lr
+ 489              		.cfi_endproc
+ 490              	.LFE2:
+ 492              		.section	.text.PID_SetConfig_Comp,"ax",%progbits
+ 493              		.align	1
+ 494              		.global	PID_SetConfig_Comp
+ 495              		.syntax unified
+ 496              		.thumb
+ 497              		.thumb_func
+ 499              	PID_SetConfig_Comp:
+ 500              	.LVL9:
+ 501              	.LFB3:
+  97:Core/HAL/lib/controller/pid.c **** 
+  98:Core/HAL/lib/controller/pid.c **** // PI分离
+  99:Core/HAL/lib/controller/pid.c **** void PID_SetConfig_Comp(struct PID_config_t* obj, float kp_rough, float kp_fine, float ki, float kd
+ 100:Core/HAL/lib/controller/pid.c ****                         float outputmax) {
+ 502              		.loc 1 100 42 is_stmt 1 view -0
+ 503              		.cfi_startproc
+ 504              		@ args = 0, pretend = 0, frame = 0
+ 505              		@ frame_needed = 0, uses_anonymous_args = 0
+ 506              		@ link register save eliminated.
+ 101:Core/HAL/lib/controller/pid.c ****     obj->PID_Mode = PID_COMP_POSITION;
+ 507              		.loc 1 101 5 view .LVU157
+ 508              		.loc 1 101 19 is_stmt 0 view .LVU158
+ 509 0000 0223     		movs	r3, #2
+ 510 0002 80F82830 		strb	r3, [r0, #40]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 13
+
+
+ 102:Core/HAL/lib/controller/pid.c ****     obj->KP = kp_rough;
+ 511              		.loc 1 102 5 is_stmt 1 view .LVU159
+ 512              		.loc 1 102 13 is_stmt 0 view .LVU160
+ 513 0006 10EE103A 		vmov	r3, s0
+ 514 000a 0360     		str	r3, [r0]	@ unaligned
+ 103:Core/HAL/lib/controller/pid.c ****     obj->KP_fine = kp_fine;
+ 515              		.loc 1 103 5 is_stmt 1 view .LVU161
+ 516              		.loc 1 103 18 is_stmt 0 view .LVU162
+ 517 000c 10EE903A 		vmov	r3, s1
+ 518 0010 C360     		str	r3, [r0, #12]	@ unaligned
+ 104:Core/HAL/lib/controller/pid.c ****     obj->KI = ki;
+ 519              		.loc 1 104 5 is_stmt 1 view .LVU163
+ 520              		.loc 1 104 13 is_stmt 0 view .LVU164
+ 521 0012 11EE103A 		vmov	r3, s2
+ 522 0016 4360     		str	r3, [r0, #4]	@ unaligned
+ 105:Core/HAL/lib/controller/pid.c ****     obj->KD = kd;
+ 523              		.loc 1 105 5 is_stmt 1 view .LVU165
+ 524              		.loc 1 105 13 is_stmt 0 view .LVU166
+ 525 0018 11EE903A 		vmov	r3, s3
+ 526 001c 8360     		str	r3, [r0, #8]	@ unaligned
+ 106:Core/HAL/lib/controller/pid.c ****     obj->range_rough = rangerough;
+ 527              		.loc 1 106 5 is_stmt 1 view .LVU167
+ 528              		.loc 1 106 22 is_stmt 0 view .LVU168
+ 529 001e 12EE103A 		vmov	r3, s4
+ 530 0022 0361     		str	r3, [r0, #16]	@ unaligned
+ 107:Core/HAL/lib/controller/pid.c ****     obj->range_fine = rangefine;
+ 531              		.loc 1 107 5 is_stmt 1 view .LVU169
+ 532              		.loc 1 107 21 is_stmt 0 view .LVU170
+ 533 0024 12EE903A 		vmov	r3, s5
+ 534 0028 4361     		str	r3, [r0, #20]	@ unaligned
+ 108:Core/HAL/lib/controller/pid.c ****     obj->compensation = compensation;   //位置环补偿
+ 535              		.loc 1 108 5 is_stmt 1 view .LVU171
+ 536              		.loc 1 108 23 is_stmt 0 view .LVU172
+ 537 002a 13EE103A 		vmov	r3, s6
+ 538 002e 0362     		str	r3, [r0, #32]	@ unaligned
+ 109:Core/HAL/lib/controller/pid.c ****     obj->error_preload = errorpreload;  //位置环积分预载
+ 539              		.loc 1 109 5 is_stmt 1 view .LVU173
+ 540              		.loc 1 109 24 is_stmt 0 view .LVU174
+ 541 0030 13EE903A 		vmov	r3, s7
+ 542 0034 4362     		str	r3, [r0, #36]	@ unaligned
+ 110:Core/HAL/lib/controller/pid.c ****     obj->error_max = errormax;
+ 543              		.loc 1 110 5 is_stmt 1 view .LVU175
+ 544              		.loc 1 110 20 is_stmt 0 view .LVU176
+ 545 0036 14EE103A 		vmov	r3, s8
+ 546 003a 8361     		str	r3, [r0, #24]	@ unaligned
+ 111:Core/HAL/lib/controller/pid.c ****     obj->outputMax = outputmax;
+ 547              		.loc 1 111 5 is_stmt 1 view .LVU177
+ 548              		.loc 1 111 20 is_stmt 0 view .LVU178
+ 549 003c 14EE903A 		vmov	r3, s9
+ 550 0040 C361     		str	r3, [r0, #28]	@ unaligned
+ 112:Core/HAL/lib/controller/pid.c **** }...
+ 551              		.loc 1 112 1 view .LVU179
+ 552 0042 7047     		bx	lr
+ 553              		.cfi_endproc
+ 554              	.LFE3:
+ 556              		.text
+ 557              	.Letext0:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 14
+
+
+ 558              		.file 2 "Core/HAL/lib/controller/pid.h"
+ 559              		.file 3 "Core/HAL/lib/common.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pid.c
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:20     .text.PID_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:26     .text.PID_Init:00000000 PID_Init
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:72     .text.PID_Calc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:78     .text.PID_Calc:00000000 PID_Calc
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:449    .text.PID_SetConfig_Pos:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:455    .text.PID_SetConfig_Pos:00000000 PID_SetConfig_Pos
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:493    .text.PID_SetConfig_Comp:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccGf8pSy.s:499    .text.PID_SetConfig_Comp:00000000 PID_SetConfig_Comp
+
+UNDEFINED SYMBOLS
+fsgn

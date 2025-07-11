@@ -1,0 +1,811 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"MahonyAHRS.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.MahonyAHRS_clear,"ax",%progbits
+  20              		.align	1
+  21              		.global	MahonyAHRS_clear
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MahonyAHRS_clear:
+  27              	.LVL0:
+  28              	.LFB1:
+  29              		.file 1 "Core/HAL/lib/MahonyAHRS.c"
+   1:Core/HAL/lib/MahonyAHRS.c **** #include "MahonyAHRS.h"
+   2:Core/HAL/lib/MahonyAHRS.c **** 
+   3:Core/HAL/lib/MahonyAHRS.c **** #include "common.h"
+   4:Core/HAL/lib/MahonyAHRS.c **** #include "math.h"
+   5:Core/HAL/lib/MahonyAHRS.c **** #include "string.h"
+   6:Core/HAL/lib/MahonyAHRS.c **** 
+   7:Core/HAL/lib/MahonyAHRS.c **** void MahonyAHRS_init(MahonyAHRS *obj, float _twoKp, float _twoKi,
+   8:Core/HAL/lib/MahonyAHRS.c ****                      float _sampleFreq) {
+   9:Core/HAL/lib/MahonyAHRS.c ****     obj->twoKp = _twoKp;
+  10:Core/HAL/lib/MahonyAHRS.c ****     obj->twoKi = _twoKi;
+  11:Core/HAL/lib/MahonyAHRS.c ****     obj->sampleFreq = _sampleFreq;
+  12:Core/HAL/lib/MahonyAHRS.c ****     MahonyAHRS_clear(obj);
+  13:Core/HAL/lib/MahonyAHRS.c **** }
+  14:Core/HAL/lib/MahonyAHRS.c **** void MahonyAHRS_clear(MahonyAHRS *obj) {
+  30              		.loc 1 14 40 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  15:Core/HAL/lib/MahonyAHRS.c ****     obj->q0 = 1.0f;
+  35              		.loc 1 15 5 view .LVU1
+  36              		.loc 1 15 13 is_stmt 0 view .LVU2
+  37 0000 4FF07E53 		mov	r3, #1065353216
+  38 0004 C360     		str	r3, [r0, #12]	@ unaligned
+  16:Core/HAL/lib/MahonyAHRS.c ****     obj->q1 = obj->q2 = obj->q3 = 0.0f;
+  39              		.loc 1 16 5 is_stmt 1 view .LVU3
+  40              		.loc 1 16 33 is_stmt 0 view .LVU4
+  41 0006 0023     		movs	r3, #0
+  42 0008 8361     		str	r3, [r0, #24]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 2
+
+
+  43              		.loc 1 16 23 view .LVU5
+  44 000a 4361     		str	r3, [r0, #20]	@ unaligned
+  45              		.loc 1 16 13 view .LVU6
+  46 000c 0361     		str	r3, [r0, #16]	@ unaligned
+  17:Core/HAL/lib/MahonyAHRS.c ****     obj->integralFBx = obj->integralFBy = obj->integralFBz = 0.0f;
+  47              		.loc 1 17 5 is_stmt 1 view .LVU7
+  48              		.loc 1 17 60 is_stmt 0 view .LVU8
+  49 000e 4362     		str	r3, [r0, #36]	@ unaligned
+  50              		.loc 1 17 41 view .LVU9
+  51 0010 0362     		str	r3, [r0, #32]	@ unaligned
+  52              		.loc 1 17 22 view .LVU10
+  53 0012 C361     		str	r3, [r0, #28]	@ unaligned
+  18:Core/HAL/lib/MahonyAHRS.c ****     memset(obj->euler, 0, sizeof(float) * 3);
+  54              		.loc 1 18 5 is_stmt 1 view .LVU11
+  55 0014 8362     		str	r3, [r0, #40]	@ unaligned
+  56 0016 C362     		str	r3, [r0, #44]	@ unaligned
+  57 0018 0363     		str	r3, [r0, #48]	@ unaligned
+  19:Core/HAL/lib/MahonyAHRS.c **** }
+  58              		.loc 1 19 1 is_stmt 0 view .LVU12
+  59 001a 7047     		bx	lr
+  60              		.cfi_endproc
+  61              	.LFE1:
+  63              		.section	.text.MahonyAHRS_init,"ax",%progbits
+  64              		.align	1
+  65              		.global	MahonyAHRS_init
+  66              		.syntax unified
+  67              		.thumb
+  68              		.thumb_func
+  70              	MahonyAHRS_init:
+  71              	.LVL1:
+  72              	.LFB0:
+   8:Core/HAL/lib/MahonyAHRS.c ****     obj->twoKp = _twoKp;
+  73              		.loc 1 8 41 is_stmt 1 view -0
+  74              		.cfi_startproc
+  75              		@ args = 0, pretend = 0, frame = 0
+  76              		@ frame_needed = 0, uses_anonymous_args = 0
+   8:Core/HAL/lib/MahonyAHRS.c ****     obj->twoKp = _twoKp;
+  77              		.loc 1 8 41 is_stmt 0 view .LVU14
+  78 0000 08B5     		push	{r3, lr}
+  79              	.LCFI0:
+  80              		.cfi_def_cfa_offset 8
+  81              		.cfi_offset 3, -8
+  82              		.cfi_offset 14, -4
+   9:Core/HAL/lib/MahonyAHRS.c ****     obj->twoKi = _twoKi;
+  83              		.loc 1 9 5 is_stmt 1 view .LVU15
+   9:Core/HAL/lib/MahonyAHRS.c ****     obj->twoKi = _twoKi;
+  84              		.loc 1 9 16 is_stmt 0 view .LVU16
+  85 0002 10EE102A 		vmov	r2, s0
+  86 0006 0260     		str	r2, [r0]	@ unaligned
+  10:Core/HAL/lib/MahonyAHRS.c ****     obj->sampleFreq = _sampleFreq;
+  87              		.loc 1 10 5 is_stmt 1 view .LVU17
+  10:Core/HAL/lib/MahonyAHRS.c ****     obj->sampleFreq = _sampleFreq;
+  88              		.loc 1 10 16 is_stmt 0 view .LVU18
+  89 0008 10EE902A 		vmov	r2, s1
+  90 000c 4260     		str	r2, [r0, #4]	@ unaligned
+  11:Core/HAL/lib/MahonyAHRS.c ****     MahonyAHRS_clear(obj);
+  91              		.loc 1 11 5 is_stmt 1 view .LVU19
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 3
+
+
+  11:Core/HAL/lib/MahonyAHRS.c ****     MahonyAHRS_clear(obj);
+  92              		.loc 1 11 21 is_stmt 0 view .LVU20
+  93 000e 11EE102A 		vmov	r2, s2
+  94 0012 8260     		str	r2, [r0, #8]	@ unaligned
+  12:Core/HAL/lib/MahonyAHRS.c **** }
+  95              		.loc 1 12 5 is_stmt 1 view .LVU21
+  96 0014 FFF7FEFF 		bl	MahonyAHRS_clear
+  97              	.LVL2:
+  13:Core/HAL/lib/MahonyAHRS.c **** void MahonyAHRS_clear(MahonyAHRS *obj) {
+  98              		.loc 1 13 1 is_stmt 0 view .LVU22
+  99 0018 08BD     		pop	{r3, pc}
+ 100              		.cfi_endproc
+ 101              	.LFE0:
+ 103              		.global	__aeabi_f2d
+ 104              		.global	__aeabi_d2f
+ 105              		.section	.text.MahonyAHRS_update,"ax",%progbits
+ 106              		.align	1
+ 107              		.global	MahonyAHRS_update
+ 108              		.syntax unified
+ 109              		.thumb
+ 110              		.thumb_func
+ 112              	MahonyAHRS_update:
+ 113              	.LVL3:
+ 114              	.LFB2:
+  20:Core/HAL/lib/MahonyAHRS.c **** void MahonyAHRS_update(MahonyAHRS *obj, float gx, float gy, float gz, float ax,
+  21:Core/HAL/lib/MahonyAHRS.c ****                        float ay, float az) {
+ 115              		.loc 1 21 44 is_stmt 1 view -0
+ 116              		.cfi_startproc
+ 117              		@ args = 0, pretend = 0, frame = 0
+ 118              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119              		.loc 1 21 44 is_stmt 0 view .LVU24
+ 120 0000 10B5     		push	{r4, lr}
+ 121              	.LCFI1:
+ 122              		.cfi_def_cfa_offset 8
+ 123              		.cfi_offset 4, -8
+ 124              		.cfi_offset 14, -4
+ 125 0002 2DED068B 		vpush.64	{d8, d9, d10}
+ 126              	.LCFI2:
+ 127              		.cfi_def_cfa_offset 32
+ 128              		.cfi_offset 80, -32
+ 129              		.cfi_offset 81, -28
+ 130              		.cfi_offset 82, -24
+ 131              		.cfi_offset 83, -20
+ 132              		.cfi_offset 84, -16
+ 133              		.cfi_offset 85, -12
+ 134 0006 0446     		mov	r4, r0
+ 135 0008 F0EE409A 		vmov.f32	s19, s0
+ 136 000c F0EE608A 		vmov.f32	s17, s1
+ 137 0010 B0EE419A 		vmov.f32	s18, s2
+ 138 0014 B0EE618A 		vmov.f32	s16, s3
+ 139 0018 B0EE42AA 		vmov.f32	s20, s4
+ 140 001c F0EE62AA 		vmov.f32	s21, s5
+  22:Core/HAL/lib/MahonyAHRS.c ****     float recipNorm;
+ 141              		.loc 1 22 5 is_stmt 1 view .LVU25
+  23:Core/HAL/lib/MahonyAHRS.c ****     float halfvx, halfvy, halfvz;
+ 142              		.loc 1 23 5 view .LVU26
+  24:Core/HAL/lib/MahonyAHRS.c ****     float halfex, halfey, halfez;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 4
+
+
+ 143              		.loc 1 24 5 view .LVU27
+  25:Core/HAL/lib/MahonyAHRS.c ****     float qa, qb, qc;
+ 144              		.loc 1 25 5 view .LVU28
+  26:Core/HAL/lib/MahonyAHRS.c **** 
+  27:Core/HAL/lib/MahonyAHRS.c ****     // Compute feedback only if accelerometer measurement valid (avoids NaN in
+  28:Core/HAL/lib/MahonyAHRS.c ****     // accelerometer normalisation)
+  29:Core/HAL/lib/MahonyAHRS.c ****     if (!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
+ 145              		.loc 1 29 5 view .LVU29
+ 146              		.loc 1 29 8 is_stmt 0 view .LVU30
+ 147 0020 F5EE401A 		vcmp.f32	s3, #0
+ 148 0024 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 149 0028 0AD1     		bne	.L5
+ 150              		.loc 1 29 24 discriminator 1 view .LVU31
+ 151 002a B5EE402A 		vcmp.f32	s4, #0
+ 152 002e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 153 0032 05D1     		bne	.L5
+ 154              		.loc 1 29 9 discriminator 2 view .LVU32
+ 155 0034 F5EE402A 		vcmp.f32	s5, #0
+ 156 0038 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 157 003c 00F08F80 		beq	.L6
+ 158              	.L5:
+  30:Core/HAL/lib/MahonyAHRS.c ****         // Normalise accelerometer measurement
+  31:Core/HAL/lib/MahonyAHRS.c ****         recipNorm = invSqrt(ax * ax + ay * ay + az * az);
+ 159              		.loc 1 31 9 is_stmt 1 view .LVU33
+ 160              		.loc 1 31 32 is_stmt 0 view .LVU34
+ 161 0040 68EE087A 		vmul.f32	s15, s16, s16
+ 162              		.loc 1 31 42 view .LVU35
+ 163 0044 2AEE0A0A 		vmul.f32	s0, s20, s20
+ 164              	.LVL4:
+ 165              		.loc 1 31 37 view .LVU36
+ 166 0048 77EE807A 		vadd.f32	s15, s15, s0
+ 167              		.loc 1 31 52 view .LVU37
+ 168 004c 2AEEAA0A 		vmul.f32	s0, s21, s21
+ 169              		.loc 1 31 21 view .LVU38
+ 170 0050 37EE800A 		vadd.f32	s0, s15, s0
+ 171 0054 FFF7FEFF 		bl	invSqrt
+ 172              	.LVL5:
+  32:Core/HAL/lib/MahonyAHRS.c ****         ax *= recipNorm;
+ 173              		.loc 1 32 9 is_stmt 1 view .LVU39
+ 174              		.loc 1 32 12 is_stmt 0 view .LVU40
+ 175 0058 28EE008A 		vmul.f32	s16, s16, s0
+ 176              	.LVL6:
+  33:Core/HAL/lib/MahonyAHRS.c ****         ay *= recipNorm;
+ 177              		.loc 1 33 9 is_stmt 1 view .LVU41
+ 178              		.loc 1 33 12 is_stmt 0 view .LVU42
+ 179 005c 2AEE00AA 		vmul.f32	s20, s20, s0
+ 180              	.LVL7:
+  34:Core/HAL/lib/MahonyAHRS.c ****         az *= recipNorm;
+ 181              		.loc 1 34 9 is_stmt 1 view .LVU43
+ 182              		.loc 1 34 12 is_stmt 0 view .LVU44
+ 183 0060 6AEE80AA 		vmul.f32	s21, s21, s0
+ 184              	.LVL8:
+  35:Core/HAL/lib/MahonyAHRS.c **** 
+  36:Core/HAL/lib/MahonyAHRS.c ****         // Estimated direction of gravity and vector perpendicular to magnetic
+  37:Core/HAL/lib/MahonyAHRS.c ****         // flux
+  38:Core/HAL/lib/MahonyAHRS.c ****         halfvx = obj->q1 * obj->q3 - obj->q0 * obj->q2;
+ 185              		.loc 1 38 9 is_stmt 1 view .LVU45
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 5
+
+
+ 186              		.loc 1 38 21 is_stmt 0 view .LVU46
+ 187 0064 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 188 0066 01EE903A 		vmov	s3, r3	@ int
+ 189              		.loc 1 38 31 view .LVU47
+ 190 006a A369     		ldr	r3, [r4, #24]	@ unaligned
+ 191 006c 07EE103A 		vmov	s14, r3	@ int
+ 192              		.loc 1 38 26 view .LVU48
+ 193 0070 21EE872A 		vmul.f32	s4, s3, s14
+ 194              		.loc 1 38 41 view .LVU49
+ 195 0074 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 196 0076 07EE903A 		vmov	s15, r3	@ int
+ 197              		.loc 1 38 51 view .LVU50
+ 198 007a 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 199 007c 06EE903A 		vmov	s13, r3	@ int
+ 200              		.loc 1 38 46 view .LVU51
+ 201 0080 27EEA66A 		vmul.f32	s12, s15, s13
+ 202              		.loc 1 38 16 view .LVU52
+ 203 0084 32EE462A 		vsub.f32	s4, s4, s12
+ 204              	.LVL9:
+  39:Core/HAL/lib/MahonyAHRS.c ****         halfvy = obj->q0 * obj->q1 + obj->q2 * obj->q3;
+ 205              		.loc 1 39 9 is_stmt 1 view .LVU53
+ 206              		.loc 1 39 26 is_stmt 0 view .LVU54
+ 207 0088 61EEA71A 		vmul.f32	s3, s3, s15
+ 208              		.loc 1 39 46 view .LVU55
+ 209 008c 67EE266A 		vmul.f32	s13, s14, s13
+ 210              		.loc 1 39 16 view .LVU56
+ 211 0090 71EEA61A 		vadd.f32	s3, s3, s13
+ 212              	.LVL10:
+  40:Core/HAL/lib/MahonyAHRS.c ****         halfvz = obj->q0 * obj->q0 - 0.5f + obj->q3 * obj->q3;
+ 213              		.loc 1 40 9 is_stmt 1 view .LVU57
+ 214              		.loc 1 40 26 is_stmt 0 view .LVU58
+ 215 0094 67EEA77A 		vmul.f32	s15, s15, s15
+ 216              		.loc 1 40 36 view .LVU59
+ 217 0098 F6EE006A 		vmov.f32	s13, #5.0e-1
+ 218 009c 77EEE67A 		vsub.f32	s15, s15, s13
+ 219              		.loc 1 40 53 view .LVU60
+ 220 00a0 27EE077A 		vmul.f32	s14, s14, s14
+ 221              		.loc 1 40 16 view .LVU61
+ 222 00a4 77EE877A 		vadd.f32	s15, s15, s14
+ 223              	.LVL11:
+  41:Core/HAL/lib/MahonyAHRS.c **** 
+  42:Core/HAL/lib/MahonyAHRS.c ****         // Error is sum of cross product between estimated and measured
+  43:Core/HAL/lib/MahonyAHRS.c ****         // direction of gravity
+  44:Core/HAL/lib/MahonyAHRS.c ****         halfex = (ay * halfvz - az * halfvy);
+ 224              		.loc 1 44 9 is_stmt 1 view .LVU62
+ 225              		.loc 1 44 22 is_stmt 0 view .LVU63
+ 226 00a8 2AEE276A 		vmul.f32	s12, s20, s15
+ 227              		.loc 1 44 36 view .LVU64
+ 228 00ac 2AEEA17A 		vmul.f32	s14, s21, s3
+ 229              		.loc 1 44 16 view .LVU65
+ 230 00b0 36EE476A 		vsub.f32	s12, s12, s14
+ 231              	.LVL12:
+  45:Core/HAL/lib/MahonyAHRS.c ****         halfey = (az * halfvx - ax * halfvz);
+ 232              		.loc 1 45 9 is_stmt 1 view .LVU66
+ 233              		.loc 1 45 22 is_stmt 0 view .LVU67
+ 234 00b4 6AEE82AA 		vmul.f32	s21, s21, s4
+ 235              	.LVL13:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 6
+
+
+ 236              		.loc 1 45 36 view .LVU68
+ 237 00b8 68EE277A 		vmul.f32	s15, s16, s15
+ 238              	.LVL14:
+ 239              		.loc 1 45 16 view .LVU69
+ 240 00bc 7AEEE77A 		vsub.f32	s15, s21, s15
+ 241              	.LVL15:
+  46:Core/HAL/lib/MahonyAHRS.c ****         halfez = (ax * halfvy - ay * halfvx);
+ 242              		.loc 1 46 9 is_stmt 1 view .LVU70
+ 243              		.loc 1 46 22 is_stmt 0 view .LVU71
+ 244 00c0 28EE218A 		vmul.f32	s16, s16, s3
+ 245              	.LVL16:
+ 246              		.loc 1 46 36 view .LVU72
+ 247 00c4 2AEE02AA 		vmul.f32	s20, s20, s4
+ 248              	.LVL17:
+ 249              		.loc 1 46 16 view .LVU73
+ 250 00c8 38EE4A8A 		vsub.f32	s16, s16, s20
+ 251              	.LVL18:
+  47:Core/HAL/lib/MahonyAHRS.c **** 
+  48:Core/HAL/lib/MahonyAHRS.c ****         // Compute and apply integral feedback if enabled
+  49:Core/HAL/lib/MahonyAHRS.c ****         if (obj->twoKi > 0.0f) {
+ 252              		.loc 1 49 9 is_stmt 1 view .LVU74
+ 253              		.loc 1 49 16 is_stmt 0 view .LVU75
+ 254 00cc 6368     		ldr	r3, [r4, #4]	@ unaligned
+ 255 00ce 06EE903A 		vmov	s13, r3	@ int
+ 256              		.loc 1 49 12 view .LVU76
+ 257 00d2 F5EEC06A 		vcmpe.f32	s13, #0
+ 258 00d6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 259 00da 40F34B81 		ble	.L11
+  50:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBx +=
+ 260              		.loc 1 50 13 is_stmt 1 view .LVU77
+  51:Core/HAL/lib/MahonyAHRS.c ****                 obj->twoKi * halfex *
+ 261              		.loc 1 51 28 is_stmt 0 view .LVU78
+ 262 00de 66EE864A 		vmul.f32	s9, s13, s12
+  52:Core/HAL/lib/MahonyAHRS.c ****                 (1.0f / obj->sampleFreq);  // integral error scaled by Ki
+ 263              		.loc 1 52 28 view .LVU79
+ 264 00e2 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 265              		.loc 1 52 23 view .LVU80
+ 266 00e4 F7EE005A 		vmov.f32	s11, #1.0e+0
+ 267 00e8 07EE103A 		vmov	s14, r3
+ 268 00ec 85EE877A 		vdiv.f32	s14, s11, s14
+  51:Core/HAL/lib/MahonyAHRS.c ****                 obj->twoKi * halfex *
+ 269              		.loc 1 51 37 view .LVU81
+ 270 00f0 64EE875A 		vmul.f32	s11, s9, s14
+  50:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBx +=
+ 271              		.loc 1 50 30 view .LVU82
+ 272 00f4 E369     		ldr	r3, [r4, #28]	@ unaligned
+ 273 00f6 04EE903A 		vmov	s9, r3	@ int
+ 274 00fa 75EEA44A 		vadd.f32	s9, s11, s9
+ 275 00fe 14EE903A 		vmov	r3, s9
+ 276 0102 E361     		str	r3, [r4, #28]	@ unaligned
+  53:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBy += obj->twoKi * halfey * (1.0f / obj->sampleFreq);
+ 277              		.loc 1 53 13 is_stmt 1 view .LVU83
+ 278              		.loc 1 53 44 is_stmt 0 view .LVU84
+ 279 0104 66EEA75A 		vmul.f32	s11, s13, s15
+ 280              		.loc 1 53 53 view .LVU85
+ 281 0108 27EE255A 		vmul.f32	s10, s14, s11
+ 282              		.loc 1 53 30 view .LVU86
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 7
+
+
+ 283 010c 236A     		ldr	r3, [r4, #32]	@ unaligned
+ 284 010e 05EE903A 		vmov	s11, r3	@ int
+ 285 0112 75EE255A 		vadd.f32	s11, s10, s11
+ 286 0116 15EE903A 		vmov	r3, s11
+ 287 011a 2362     		str	r3, [r4, #32]	@ unaligned
+  54:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBz += obj->twoKi * halfez * (1.0f / obj->sampleFreq);
+ 288              		.loc 1 54 13 is_stmt 1 view .LVU87
+ 289              		.loc 1 54 44 is_stmt 0 view .LVU88
+ 290 011c 66EE886A 		vmul.f32	s13, s13, s16
+ 291              		.loc 1 54 53 view .LVU89
+ 292 0120 67EE266A 		vmul.f32	s13, s14, s13
+ 293              		.loc 1 54 30 view .LVU90
+ 294 0124 636A     		ldr	r3, [r4, #36]	@ unaligned
+ 295 0126 07EE103A 		vmov	s14, r3	@ int
+ 296 012a 36EE877A 		vadd.f32	s14, s13, s14
+ 297 012e 17EE103A 		vmov	r3, s14
+ 298 0132 6362     		str	r3, [r4, #36]	@ unaligned
+  55:Core/HAL/lib/MahonyAHRS.c ****             gx += obj->integralFBx;  // apply integral feedback
+ 299              		.loc 1 55 13 is_stmt 1 view .LVU91
+ 300              		.loc 1 55 16 is_stmt 0 view .LVU92
+ 301 0134 79EEA49A 		vadd.f32	s19, s19, s9
+ 302              	.LVL19:
+  56:Core/HAL/lib/MahonyAHRS.c ****             gy += obj->integralFBy;
+ 303              		.loc 1 56 13 is_stmt 1 view .LVU93
+ 304              		.loc 1 56 16 is_stmt 0 view .LVU94
+ 305 0138 78EEA58A 		vadd.f32	s17, s17, s11
+ 306              	.LVL20:
+  57:Core/HAL/lib/MahonyAHRS.c ****             gz += obj->integralFBz;
+ 307              		.loc 1 57 13 is_stmt 1 view .LVU95
+ 308              		.loc 1 57 16 is_stmt 0 view .LVU96
+ 309 013c 39EE079A 		vadd.f32	s18, s18, s14
+ 310              	.LVL21:
+ 311              	.L9:
+  58:Core/HAL/lib/MahonyAHRS.c ****         } else {
+  59:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBx = 0.0f;  // prevent integral windup
+  60:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBy = 0.0f;
+  61:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBz = 0.0f;
+  62:Core/HAL/lib/MahonyAHRS.c ****         }
+  63:Core/HAL/lib/MahonyAHRS.c **** 
+  64:Core/HAL/lib/MahonyAHRS.c ****         // Apply proportional feedback
+  65:Core/HAL/lib/MahonyAHRS.c ****         gx += obj->twoKp * halfex;
+ 312              		.loc 1 65 9 is_stmt 1 view .LVU97
+ 313              		.loc 1 65 18 is_stmt 0 view .LVU98
+ 314 0140 2368     		ldr	r3, [r4]	@ unaligned
+ 315 0142 07EE103A 		vmov	s14, r3	@ int
+ 316              		.loc 1 65 26 view .LVU99
+ 317 0146 27EE066A 		vmul.f32	s12, s14, s12
+ 318              	.LVL22:
+ 319              		.loc 1 65 12 view .LVU100
+ 320 014a 79EE869A 		vadd.f32	s19, s19, s12
+ 321              	.LVL23:
+  66:Core/HAL/lib/MahonyAHRS.c ****         gy += obj->twoKp * halfey;
+ 322              		.loc 1 66 9 is_stmt 1 view .LVU101
+ 323              		.loc 1 66 26 is_stmt 0 view .LVU102
+ 324 014e 67EE277A 		vmul.f32	s15, s14, s15
+ 325              	.LVL24:
+ 326              		.loc 1 66 12 view .LVU103
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 8
+
+
+ 327 0152 78EEA78A 		vadd.f32	s17, s17, s15
+ 328              	.LVL25:
+  67:Core/HAL/lib/MahonyAHRS.c ****         gz += obj->twoKp * halfez;
+ 329              		.loc 1 67 9 is_stmt 1 view .LVU104
+ 330              		.loc 1 67 26 is_stmt 0 view .LVU105
+ 331 0156 27EE088A 		vmul.f32	s16, s14, s16
+ 332              	.LVL26:
+ 333              		.loc 1 67 12 view .LVU106
+ 334 015a 39EE089A 		vadd.f32	s18, s18, s16
+ 335              	.LVL27:
+ 336              	.L6:
+  68:Core/HAL/lib/MahonyAHRS.c ****     }
+  69:Core/HAL/lib/MahonyAHRS.c **** 
+  70:Core/HAL/lib/MahonyAHRS.c ****     // Integrate rate of change of quaternion
+  71:Core/HAL/lib/MahonyAHRS.c ****     gx *= (0.5f * (1.0f / obj->sampleFreq));  // pre-multiply common factors
+ 337              		.loc 1 71 5 is_stmt 1 view .LVU107
+ 338              		.loc 1 71 30 is_stmt 0 view .LVU108
+ 339 015e A368     		ldr	r3, [r4, #8]	@ unaligned
+ 340              		.loc 1 71 25 view .LVU109
+ 341 0160 B7EE008A 		vmov.f32	s16, #1.0e+0
+ 342 0164 07EE903A 		vmov	s15, r3
+ 343 0168 C8EE277A 		vdiv.f32	s15, s16, s15
+ 344              		.loc 1 71 17 view .LVU110
+ 345 016c B6EE001A 		vmov.f32	s2, #5.0e-1
+ 346 0170 67EE817A 		vmul.f32	s15, s15, s2
+ 347              		.loc 1 71 8 view .LVU111
+ 348 0174 67EEA96A 		vmul.f32	s13, s15, s19
+ 349              	.LVL28:
+  72:Core/HAL/lib/MahonyAHRS.c ****     gy *= (0.5f * (1.0f / obj->sampleFreq));
+ 350              		.loc 1 72 5 is_stmt 1 view .LVU112
+ 351              		.loc 1 72 8 is_stmt 0 view .LVU113
+ 352 0178 67EEA88A 		vmul.f32	s17, s15, s17
+ 353              	.LVL29:
+  73:Core/HAL/lib/MahonyAHRS.c ****     gz *= (0.5f * (1.0f / obj->sampleFreq));
+ 354              		.loc 1 73 5 is_stmt 1 view .LVU114
+ 355              		.loc 1 73 8 is_stmt 0 view .LVU115
+ 356 017c 27EE891A 		vmul.f32	s2, s15, s18
+ 357              	.LVL30:
+  74:Core/HAL/lib/MahonyAHRS.c ****     qa = obj->q0;
+ 358              		.loc 1 74 5 is_stmt 1 view .LVU116
+ 359              		.loc 1 74 8 is_stmt 0 view .LVU117
+ 360 0180 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 361 0182 05EE103A 		vmov	s10, r3	@ int
+ 362              	.LVL31:
+  75:Core/HAL/lib/MahonyAHRS.c ****     qb = obj->q1;
+ 363              		.loc 1 75 5 is_stmt 1 view .LVU118
+ 364              		.loc 1 75 8 is_stmt 0 view .LVU119
+ 365 0186 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 366 0188 00EE903A 		vmov	s1, r3	@ int
+ 367              	.LVL32:
+  76:Core/HAL/lib/MahonyAHRS.c ****     qc = obj->q2;
+ 368              		.loc 1 76 5 is_stmt 1 view .LVU120
+ 369              		.loc 1 76 8 is_stmt 0 view .LVU121
+ 370 018c 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 371 018e 05EE903A 		vmov	s11, r3	@ int
+ 372              	.LVL33:
+  77:Core/HAL/lib/MahonyAHRS.c ****     obj->q0 += (-qb * gx - qc * gy - obj->q3 * gz);
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 9
+
+
+ 373              		.loc 1 77 5 is_stmt 1 view .LVU122
+ 374              		.loc 1 77 21 is_stmt 0 view .LVU123
+ 375 0192 60EEE67A 		vnmul.f32	s15, s1, s13
+ 376              		.loc 1 77 31 view .LVU124
+ 377 0196 28EEA57A 		vmul.f32	s14, s17, s11
+ 378              		.loc 1 77 26 view .LVU125
+ 379 019a 77EEC77A 		vsub.f32	s15, s15, s14
+ 380              		.loc 1 77 41 view .LVU126
+ 381 019e A369     		ldr	r3, [r4, #24]	@ unaligned
+ 382 01a0 06EE103A 		vmov	s12, r3	@ int
+ 383              		.loc 1 77 46 view .LVU127
+ 384 01a4 26EE017A 		vmul.f32	s14, s12, s2
+ 385              		.loc 1 77 36 view .LVU128
+ 386 01a8 77EEC77A 		vsub.f32	s15, s15, s14
+ 387              		.loc 1 77 13 view .LVU129
+ 388 01ac 77EE857A 		vadd.f32	s15, s15, s10
+ 389 01b0 17EE903A 		vmov	r3, s15
+ 390 01b4 E360     		str	r3, [r4, #12]	@ unaligned
+  78:Core/HAL/lib/MahonyAHRS.c ****     obj->q1 += (qa * gx + qc * gz - obj->q3 * gy);
+ 391              		.loc 1 78 5 is_stmt 1 view .LVU130
+ 392              		.loc 1 78 20 is_stmt 0 view .LVU131
+ 393 01b6 26EE857A 		vmul.f32	s14, s13, s10
+ 394              		.loc 1 78 30 view .LVU132
+ 395 01ba 61EE254A 		vmul.f32	s9, s2, s11
+ 396              		.loc 1 78 25 view .LVU133
+ 397 01be 37EE247A 		vadd.f32	s14, s14, s9
+ 398              		.loc 1 78 45 view .LVU134
+ 399 01c2 66EE284A 		vmul.f32	s9, s12, s17
+ 400              		.loc 1 78 35 view .LVU135
+ 401 01c6 37EE647A 		vsub.f32	s14, s14, s9
+ 402              		.loc 1 78 13 view .LVU136
+ 403 01ca 37EE207A 		vadd.f32	s14, s14, s1
+ 404 01ce 17EE103A 		vmov	r3, s14
+ 405 01d2 2361     		str	r3, [r4, #16]	@ unaligned
+  79:Core/HAL/lib/MahonyAHRS.c ****     obj->q2 += (qa * gy - qb * gz + obj->q3 * gx);
+ 406              		.loc 1 79 5 is_stmt 1 view .LVU137
+ 407              		.loc 1 79 20 is_stmt 0 view .LVU138
+ 408 01d4 28EE850A 		vmul.f32	s0, s17, s10
+ 409              		.loc 1 79 30 view .LVU139
+ 410 01d8 61EE204A 		vmul.f32	s9, s2, s1
+ 411              		.loc 1 79 25 view .LVU140
+ 412 01dc 30EE640A 		vsub.f32	s0, s0, s9
+ 413              		.loc 1 79 45 view .LVU141
+ 414 01e0 66EE264A 		vmul.f32	s9, s12, s13
+ 415              		.loc 1 79 35 view .LVU142
+ 416 01e4 30EE240A 		vadd.f32	s0, s0, s9
+ 417              		.loc 1 79 13 view .LVU143
+ 418 01e8 30EE250A 		vadd.f32	s0, s0, s11
+ 419 01ec 10EE103A 		vmov	r3, s0
+ 420 01f0 6361     		str	r3, [r4, #20]	@ unaligned
+  80:Core/HAL/lib/MahonyAHRS.c ****     obj->q3 += (qa * gz + qb * gy - qc * gx);
+ 421              		.loc 1 80 5 is_stmt 1 view .LVU144
+ 422              		.loc 1 80 20 is_stmt 0 view .LVU145
+ 423 01f2 21EE051A 		vmul.f32	s2, s2, s10
+ 424              	.LVL34:
+ 425              		.loc 1 80 30 view .LVU146
+ 426 01f6 68EEA08A 		vmul.f32	s17, s17, s1
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 10
+
+
+ 427              	.LVL35:
+ 428              		.loc 1 80 25 view .LVU147
+ 429 01fa 31EE281A 		vadd.f32	s2, s2, s17
+ 430              		.loc 1 80 40 view .LVU148
+ 431 01fe 66EEA56A 		vmul.f32	s13, s13, s11
+ 432              	.LVL36:
+ 433              		.loc 1 80 35 view .LVU149
+ 434 0202 31EE661A 		vsub.f32	s2, s2, s13
+ 435              		.loc 1 80 13 view .LVU150
+ 436 0206 36EE011A 		vadd.f32	s2, s12, s2
+ 437 020a 11EE103A 		vmov	r3, s2
+ 438 020e A361     		str	r3, [r4, #24]	@ unaligned
+  81:Core/HAL/lib/MahonyAHRS.c **** 
+  82:Core/HAL/lib/MahonyAHRS.c ****     // Normalise quaternion
+  83:Core/HAL/lib/MahonyAHRS.c ****     recipNorm = invSqrt(obj->q0 * obj->q0 + obj->q1 * obj->q1 +
+ 439              		.loc 1 83 5 is_stmt 1 view .LVU151
+ 440              		.loc 1 83 33 is_stmt 0 view .LVU152
+ 441 0210 67EEA77A 		vmul.f32	s15, s15, s15
+ 442              		.loc 1 83 53 view .LVU153
+ 443 0214 27EE077A 		vmul.f32	s14, s14, s14
+ 444              		.loc 1 83 43 view .LVU154
+ 445 0218 77EE877A 		vadd.f32	s15, s15, s14
+  84:Core/HAL/lib/MahonyAHRS.c ****                         obj->q2 * obj->q2 + obj->q3 * obj->q3);
+ 446              		.loc 1 84 33 view .LVU155
+ 447 021c 20EE000A 		vmul.f32	s0, s0, s0
+  83:Core/HAL/lib/MahonyAHRS.c ****                         obj->q2 * obj->q2 + obj->q3 * obj->q3);
+ 448              		.loc 1 83 63 view .LVU156
+ 449 0220 37EE800A 		vadd.f32	s0, s15, s0
+ 450              		.loc 1 84 53 view .LVU157
+ 451 0224 21EE011A 		vmul.f32	s2, s2, s2
+  83:Core/HAL/lib/MahonyAHRS.c ****                         obj->q2 * obj->q2 + obj->q3 * obj->q3);
+ 452              		.loc 1 83 17 view .LVU158
+ 453 0228 30EE010A 		vadd.f32	s0, s0, s2
+ 454 022c FFF7FEFF 		bl	invSqrt
+ 455              	.LVL37:
+  85:Core/HAL/lib/MahonyAHRS.c ****     obj->q0 *= recipNorm;
+ 456              		.loc 1 85 5 is_stmt 1 view .LVU159
+ 457              		.loc 1 85 13 is_stmt 0 view .LVU160
+ 458 0230 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 459 0232 06EE903A 		vmov	s13, r3	@ int
+ 460 0236 60EE266A 		vmul.f32	s13, s0, s13
+ 461 023a 16EE903A 		vmov	r3, s13
+ 462 023e E360     		str	r3, [r4, #12]	@ unaligned
+  86:Core/HAL/lib/MahonyAHRS.c ****     obj->q1 *= recipNorm;
+ 463              		.loc 1 86 5 is_stmt 1 view .LVU161
+ 464              		.loc 1 86 13 is_stmt 0 view .LVU162
+ 465 0240 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 466 0242 07EE903A 		vmov	s15, r3	@ int
+ 467 0246 60EE277A 		vmul.f32	s15, s0, s15
+ 468 024a 17EE903A 		vmov	r3, s15
+ 469 024e 2361     		str	r3, [r4, #16]	@ unaligned
+  87:Core/HAL/lib/MahonyAHRS.c ****     obj->q2 *= recipNorm;
+ 470              		.loc 1 87 5 is_stmt 1 view .LVU163
+ 471              		.loc 1 87 13 is_stmt 0 view .LVU164
+ 472 0250 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 473 0252 06EE103A 		vmov	s12, r3	@ int
+ 474 0256 20EE066A 		vmul.f32	s12, s0, s12
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 11
+
+
+ 475 025a 16EE103A 		vmov	r3, s12
+ 476 025e 6361     		str	r3, [r4, #20]	@ unaligned
+  88:Core/HAL/lib/MahonyAHRS.c ****     obj->q3 *= recipNorm;
+ 477              		.loc 1 88 5 is_stmt 1 view .LVU165
+ 478              		.loc 1 88 13 is_stmt 0 view .LVU166
+ 479 0260 A369     		ldr	r3, [r4, #24]	@ unaligned
+ 480 0262 07EE103A 		vmov	s14, r3	@ int
+ 481 0266 20EE070A 		vmul.f32	s0, s0, s14
+ 482              	.LVL38:
+ 483              		.loc 1 88 13 view .LVU167
+ 484 026a 10EE103A 		vmov	r3, s0
+ 485 026e A361     		str	r3, [r4, #24]	@ unaligned
+  89:Core/HAL/lib/MahonyAHRS.c **** 
+  90:Core/HAL/lib/MahonyAHRS.c ****     // Euler
+  91:Core/HAL/lib/MahonyAHRS.c ****     obj->euler[0] = atan2(2 * (obj->q0 * obj->q1 + obj->q2 * obj->q3),
+ 486              		.loc 1 91 5 is_stmt 1 view .LVU168
+ 487              		.loc 1 91 40 is_stmt 0 view .LVU169
+ 488 0270 66EEA76A 		vmul.f32	s13, s13, s15
+ 489              		.loc 1 91 60 view .LVU170
+ 490 0274 26EE000A 		vmul.f32	s0, s12, s0
+ 491              		.loc 1 91 50 view .LVU171
+ 492 0278 36EE807A 		vadd.f32	s14, s13, s0
+ 493              		.loc 1 91 29 view .LVU172
+ 494 027c 77EE078A 		vadd.f32	s17, s14, s14
+  92:Core/HAL/lib/MahonyAHRS.c ****                           1 - 2 * (obj->q1 * obj->q1 + obj->q2 * obj->q2));
+ 495              		.loc 1 92 44 view .LVU173
+ 496 0280 67EEA77A 		vmul.f32	s15, s15, s15
+ 497              		.loc 1 92 64 view .LVU174
+ 498 0284 26EE066A 		vmul.f32	s12, s12, s12
+ 499              		.loc 1 92 54 view .LVU175
+ 500 0288 77EE867A 		vadd.f32	s15, s15, s12
+ 501              		.loc 1 92 33 view .LVU176
+ 502 028c 77EEA77A 		vadd.f32	s15, s15, s15
+  91:Core/HAL/lib/MahonyAHRS.c ****                           1 - 2 * (obj->q1 * obj->q1 + obj->q2 * obj->q2));
+ 503              		.loc 1 91 21 view .LVU177
+ 504 0290 78EE677A 		vsub.f32	s15, s16, s15
+ 505 0294 17EE900A 		vmov	r0, s15
+ 506 0298 FFF7FEFF 		bl	__aeabi_f2d
+ 507              	.LVL39:
+ 508 029c 41EC190B 		vmov	d9, r0, r1
+ 509 02a0 18EE900A 		vmov	r0, s17
+ 510 02a4 FFF7FEFF 		bl	__aeabi_f2d
+ 511              	.LVL40:
+ 512 02a8 B0EE491A 		vmov.f32	s2, s18
+ 513 02ac F0EE691A 		vmov.f32	s3, s19
+ 514 02b0 41EC100B 		vmov	d0, r0, r1
+ 515 02b4 FFF7FEFF 		bl	atan2
+ 516              	.LVL41:
+ 517 02b8 51EC100B 		vmov	r0, r1, d0
+ 518 02bc FFF7FEFF 		bl	__aeabi_d2f
+ 519              	.LVL42:
+  91:Core/HAL/lib/MahonyAHRS.c ****                           1 - 2 * (obj->q1 * obj->q1 + obj->q2 * obj->q2));
+ 520              		.loc 1 91 19 view .LVU178
+ 521 02c0 A062     		str	r0, [r4, #40]	@ unaligned
+  93:Core/HAL/lib/MahonyAHRS.c ****     obj->euler[1] = asin(2 * (obj->q0 * obj->q2 - obj->q3 * obj->q1));
+ 522              		.loc 1 93 5 is_stmt 1 view .LVU179
+ 523              		.loc 1 93 34 is_stmt 0 view .LVU180
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 12
+
+
+ 524 02c2 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 525 02c4 07EE903A 		vmov	s15, r3	@ int
+ 526              		.loc 1 93 44 view .LVU181
+ 527 02c8 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 528 02ca 07EE103A 		vmov	s14, r3	@ int
+ 529              		.loc 1 93 39 view .LVU182
+ 530 02ce 27EE877A 		vmul.f32	s14, s15, s14
+ 531              		.loc 1 93 54 view .LVU183
+ 532 02d2 A369     		ldr	r3, [r4, #24]	@ unaligned
+ 533 02d4 07EE903A 		vmov	s15, r3	@ int
+ 534              		.loc 1 93 64 view .LVU184
+ 535 02d8 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 536              		.loc 1 93 59 view .LVU185
+ 537 02da 06EE903A 		vmov	s13, r3
+ 538 02de 67EEA67A 		vmul.f32	s15, s15, s13
+ 539              		.loc 1 93 49 view .LVU186
+ 540 02e2 77EE677A 		vsub.f32	s15, s14, s15
+ 541              		.loc 1 93 21 view .LVU187
+ 542 02e6 77EEA77A 		vadd.f32	s15, s15, s15
+ 543 02ea 17EE900A 		vmov	r0, s15
+ 544 02ee FFF7FEFF 		bl	__aeabi_f2d
+ 545              	.LVL43:
+ 546 02f2 41EC100B 		vmov	d0, r0, r1
+ 547 02f6 FFF7FEFF 		bl	asin
+ 548              	.LVL44:
+ 549 02fa 51EC100B 		vmov	r0, r1, d0
+ 550 02fe FFF7FEFF 		bl	__aeabi_d2f
+ 551              	.LVL45:
+ 552              		.loc 1 93 19 view .LVU188
+ 553 0302 E062     		str	r0, [r4, #44]	@ unaligned
+  94:Core/HAL/lib/MahonyAHRS.c ****     obj->euler[2] = atan2(2 * (obj->q0 * obj->q3 + obj->q1 * obj->q2),
+ 554              		.loc 1 94 5 is_stmt 1 view .LVU189
+ 555              		.loc 1 94 35 is_stmt 0 view .LVU190
+ 556 0304 E368     		ldr	r3, [r4, #12]	@ unaligned
+ 557 0306 07EE103A 		vmov	s14, r3	@ int
+ 558              		.loc 1 94 45 view .LVU191
+ 559 030a A369     		ldr	r3, [r4, #24]	@ unaligned
+ 560 030c 06EE103A 		vmov	s12, r3	@ int
+ 561              		.loc 1 94 40 view .LVU192
+ 562 0310 67EE066A 		vmul.f32	s13, s14, s12
+ 563              		.loc 1 94 55 view .LVU193
+ 564 0314 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 565 0316 07EE103A 		vmov	s14, r3	@ int
+ 566              		.loc 1 94 65 view .LVU194
+ 567 031a 6369     		ldr	r3, [r4, #20]	@ unaligned
+ 568 031c 07EE903A 		vmov	s15, r3	@ int
+ 569              		.loc 1 94 60 view .LVU195
+ 570 0320 27EE277A 		vmul.f32	s14, s14, s15
+ 571              		.loc 1 94 50 view .LVU196
+ 572 0324 36EE877A 		vadd.f32	s14, s13, s14
+ 573              		.loc 1 94 29 view .LVU197
+ 574 0328 77EE078A 		vadd.f32	s17, s14, s14
+  95:Core/HAL/lib/MahonyAHRS.c ****                           1 - 2 * (obj->q2 * obj->q2 + obj->q3 * obj->q3));
+ 575              		.loc 1 95 44 view .LVU198
+ 576 032c 67EEA77A 		vmul.f32	s15, s15, s15
+ 577              		.loc 1 95 64 view .LVU199
+ 578 0330 26EE066A 		vmul.f32	s12, s12, s12
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 13
+
+
+ 579              		.loc 1 95 54 view .LVU200
+ 580 0334 77EE867A 		vadd.f32	s15, s15, s12
+ 581              		.loc 1 95 33 view .LVU201
+ 582 0338 77EEA77A 		vadd.f32	s15, s15, s15
+  94:Core/HAL/lib/MahonyAHRS.c ****     obj->euler[2] = atan2(2 * (obj->q0 * obj->q3 + obj->q1 * obj->q2),
+ 583              		.loc 1 94 21 view .LVU202
+ 584 033c 78EE677A 		vsub.f32	s15, s16, s15
+ 585 0340 17EE900A 		vmov	r0, s15
+ 586 0344 FFF7FEFF 		bl	__aeabi_f2d
+ 587              	.LVL46:
+ 588 0348 41EC190B 		vmov	d9, r0, r1
+ 589 034c 18EE900A 		vmov	r0, s17
+ 590 0350 FFF7FEFF 		bl	__aeabi_f2d
+ 591              	.LVL47:
+ 592 0354 B0EE491A 		vmov.f32	s2, s18
+ 593 0358 F0EE691A 		vmov.f32	s3, s19
+ 594 035c 41EC100B 		vmov	d0, r0, r1
+ 595 0360 FFF7FEFF 		bl	atan2
+ 596              	.LVL48:
+ 597 0364 51EC100B 		vmov	r0, r1, d0
+ 598 0368 FFF7FEFF 		bl	__aeabi_d2f
+ 599              	.LVL49:
+  94:Core/HAL/lib/MahonyAHRS.c ****     obj->euler[2] = atan2(2 * (obj->q0 * obj->q3 + obj->q1 * obj->q2),
+ 600              		.loc 1 94 19 view .LVU203
+ 601 036c 2063     		str	r0, [r4, #48]	@ unaligned
+  96:Core/HAL/lib/MahonyAHRS.c **** }
+ 602              		.loc 1 96 1 view .LVU204
+ 603 036e BDEC068B 		vldm	sp!, {d8-d10}
+ 604              	.LCFI3:
+ 605              		.cfi_remember_state
+ 606              		.cfi_restore 84
+ 607              		.cfi_restore 85
+ 608              		.cfi_restore 82
+ 609              		.cfi_restore 83
+ 610              		.cfi_restore 80
+ 611              		.cfi_restore 81
+ 612              		.cfi_def_cfa_offset 8
+ 613              		.loc 1 96 1 view .LVU205
+ 614 0372 10BD     		pop	{r4, pc}
+ 615              	.LVL50:
+ 616              	.L11:
+ 617              	.LCFI4:
+ 618              		.cfi_restore_state
+  59:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBy = 0.0f;
+ 619              		.loc 1 59 13 is_stmt 1 view .LVU206
+  59:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBy = 0.0f;
+ 620              		.loc 1 59 30 is_stmt 0 view .LVU207
+ 621 0374 0023     		movs	r3, #0
+ 622 0376 E361     		str	r3, [r4, #28]	@ unaligned
+  60:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBz = 0.0f;
+ 623              		.loc 1 60 13 is_stmt 1 view .LVU208
+  60:Core/HAL/lib/MahonyAHRS.c ****             obj->integralFBz = 0.0f;
+ 624              		.loc 1 60 30 is_stmt 0 view .LVU209
+ 625 0378 2362     		str	r3, [r4, #32]	@ unaligned
+  61:Core/HAL/lib/MahonyAHRS.c ****         }
+ 626              		.loc 1 61 13 is_stmt 1 view .LVU210
+  61:Core/HAL/lib/MahonyAHRS.c ****         }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 14
+
+
+ 627              		.loc 1 61 30 is_stmt 0 view .LVU211
+ 628 037a 6362     		str	r3, [r4, #36]	@ unaligned
+ 629 037c E0E6     		b	.L9
+ 630              		.cfi_endproc
+ 631              	.LFE2:
+ 633              		.text
+ 634              	.Letext0:
+ 635              		.file 2 "Core/HAL/lib/MahonyAHRS.h"
+ 636              		.file 3 "Core/HAL/lib/common.h"
+ 637              		.file 4 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\math.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MahonyAHRS.c
+C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s:20     .text.MahonyAHRS_clear:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s:26     .text.MahonyAHRS_clear:00000000 MahonyAHRS_clear
+C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s:64     .text.MahonyAHRS_init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s:70     .text.MahonyAHRS_init:00000000 MahonyAHRS_init
+C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s:106    .text.MahonyAHRS_update:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccMNOCFa.s:112    .text.MahonyAHRS_update:00000000 MahonyAHRS_update
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_d2f
+invSqrt
+atan2
+asin

@@ -14,12 +14,12 @@ typedef struct {
 
 
 typedef struct Mrac_config_t{
-    float k1;
-    float k2;
-    float alpha1;
-    float alpha2;
-    float alpha3;
-    float alpha4;
+    float k1;//40
+    float k2;//100
+    float alpha1;//1
+    float alpha2;//-5400
+    float alpha3;//-4050
+    float alpha4;//600
     float output_max;
     float integrator_ki;
     float integrator_sum_err_max;
@@ -55,6 +55,9 @@ typedef struct mrac_2d_t{
 
 void mrac_Init(mrac_2d* mrac,Mrac_config* config);
 void mrac_2d_calc(mrac_2d *mrac, float ref, float x1_fdb, float x2_fdb, unsigned char enable);
+void mrac_SetConfig(Mrac_config *mrac_config, float k1, float k2, float alpha1, float alpha2,
+                    float alpha3, float alpha4, float output_max,
+                    float integrator_ki, float integrator_sum_err_max);
 #endif
 
 /**

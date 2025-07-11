@@ -1,0 +1,97 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccxutMC2.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bsp.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.BSP_Layer_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	BSP_Layer_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	BSP_Layer_Init:
+  27              	.LFB130:
+  28              		.file 1 "Core/BSP/bsp.c"
+   1:Core/BSP/bsp.c **** #include "bsp.h"
+   2:Core/BSP/bsp.c **** 
+   3:Core/BSP/bsp.c **** void BSP_Layer_Init(){
+  29              		.loc 1 3 22 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+   4:Core/BSP/bsp.c ****     BSP_GPIO_Init();
+  38              		.loc 1 4 5 view .LVU1
+  39 0002 FFF7FEFF 		bl	BSP_GPIO_Init
+  40              	.LVL0:
+   5:Core/BSP/bsp.c ****     BSP_SPI_Init();
+  41              		.loc 1 5 5 view .LVU2
+  42 0006 FFF7FEFF 		bl	BSP_SPI_Init
+  43              	.LVL1:
+   6:Core/BSP/bsp.c ****     BSP_PWM_Init();
+  44              		.loc 1 6 5 view .LVU3
+  45 000a FFF7FEFF 		bl	BSP_PWM_Init
+  46              	.LVL2:
+   7:Core/BSP/bsp.c ****     BSP_CAN_Init();
+  47              		.loc 1 7 5 view .LVU4
+  48 000e FFF7FEFF 		bl	BSP_CAN_Init
+  49              	.LVL3:
+   8:Core/BSP/bsp.c ****     BSP_UART_Init();
+  50              		.loc 1 8 5 view .LVU5
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccxutMC2.s 			page 2
+
+
+  51 0012 FFF7FEFF 		bl	BSP_UART_Init
+  52              	.LVL4:
+   9:Core/BSP/bsp.c ****     BSP_Log_Init();
+  53              		.loc 1 9 5 view .LVU6
+  54 0016 FFF7FEFF 		bl	BSP_Log_Init
+  55              	.LVL5:
+  10:Core/BSP/bsp.c **** }...
+  56              		.loc 1 10 1 is_stmt 0 view .LVU7
+  57 001a 08BD     		pop	{r3, pc}
+  58              		.cfi_endproc
+  59              	.LFE130:
+  61              		.text
+  62              	.Letext0:
+  63              		.file 2 "Core/BSP/interface/bsp_gpio.h"
+  64              		.file 3 "Core/BSP/interface/bsp_spi.h"
+  65              		.file 4 "Core/BSP/interface/bsp_pwm.h"
+  66              		.file 5 "Core/BSP/interface/bsp_can.h"
+  67              		.file 6 "Core/BSP/interface/bsp_uart.h"
+  68              		.file 7 "Core/BSP/lib/bsp_log.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccxutMC2.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp.c
+C:\Users\lenovo\AppData\Local\Temp\ccxutMC2.s:20     .text.BSP_Layer_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccxutMC2.s:26     .text.BSP_Layer_Init:00000000 BSP_Layer_Init
+
+UNDEFINED SYMBOLS
+BSP_GPIO_Init
+BSP_SPI_Init
+BSP_PWM_Init
+BSP_CAN_Init
+BSP_UART_Init
+BSP_Log_Init

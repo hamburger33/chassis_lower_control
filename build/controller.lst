@@ -1,0 +1,2049 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"controller.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_f2d
+  20              		.global	__aeabi_i2d
+  21              		.global	__aeabi_dmul
+  22              		.global	__aeabi_d2f
+  23              		.section	.text.CLASSIC_PID_Calc,"ax",%progbits
+  24              		.align	1
+  25              		.global	CLASSIC_PID_Calc
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  30              	CLASSIC_PID_Calc:
+  31              	.LVL0:
+  32              	.LFB1:
+  33              		.file 1 "Core/HAL/lib/controller/controller.c"
+   1:Core/HAL/lib/controller/controller.c **** #include <controller.h>
+   2:Core/HAL/lib/controller/controller.c **** #include <stdlib.h>
+   3:Core/HAL/lib/controller/controller.c **** #include <string.h>
+   4:Core/HAL/lib/controller/controller.c **** float fal(float e, float a, float delta);
+   5:Core/HAL/lib/controller/controller.c **** void UNIVERSAL_Calc(controller* obj) {
+   6:Core/HAL/lib/controller/controller.c ****     if (obj->calc_type == CLASSIC) {  //经典一阶控制
+   7:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_speed;
+   8:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_speed;
+   9:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+  10:Core/HAL/lib/controller/controller.c ****         obj->output = obj->rank1.output;
+  11:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == CASCADE) {  //串级控制
+  12:Core/HAL/lib/controller/controller.c ****         obj->rank2.fdb = obj->fdb_speed;
+  13:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_position;
+  14:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_position;
+  15:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+  16:Core/HAL/lib/controller/controller.c ****         obj->rank2.ref = obj->rank1.output;
+  17:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank2);
+  18:Core/HAL/lib/controller/controller.c ****         obj->output = obj->rank2.output;
+  19:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == STATE_SPACE) {  //二阶状态空间控制器 应用lqr时应该�
+  20:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.target = obj->ref_position;
+  21:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y1 = obj->fdb_position;
+  22:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y2 = obj->fdb_speed;
+  23:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = 0;
+  24:Core/HAL/lib/controller/controller.c ****         //误差
+  25:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.z1 = obj->state_space_controller.config.c1 * (obj->state_space_
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 2
+
+
+  26:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.z2 = obj->state_space_controller.config.c2 * obj->state_space_c
+  27:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = -obj->state_space_controller.config.K1 * obj->state_sp
+  28:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+  29:Core/HAL/lib/controller/controller.c ****         if (obj->state_space_controller.integrator.error_sum > obj->state_space_controller.integrat
+  30:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = obj->state_space_controller.integrat
+  31:Core/HAL/lib/controller/controller.c ****         }
+  32:Core/HAL/lib/controller/controller.c ****         if (obj->state_space_controller.integrator.error_sum < -obj->state_space_controller.integra
+  33:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = -obj->state_space_controller.integra
+  34:Core/HAL/lib/controller/controller.c ****         }
+  35:Core/HAL/lib/controller/controller.c ****         if (fabs(obj->state_space_controller.z1) <= obj->state_space_controller.integrator.config.r
+  36:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum += obj->state_space_controller.z1 * ob
+  37:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.output -= obj->state_space_controller.integrator.error_sum 
+  38:Core/HAL/lib/controller/controller.c ****         } else {
+  39:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = fsgn(obj->state_space_controller.z1)
+  40:Core/HAL/lib/controller/controller.c ****         }
+  41:Core/HAL/lib/controller/controller.c ****         //单位化输出量转化为输出数据
+  42:Core/HAL/lib/controller/controller.c ****         obj->output = obj->state_space_controller.config.b0 + obj->state_space_controller.config.b1
+  43:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+  44:Core/HAL/lib/controller/controller.c ****         if (obj->output > obj->state_space_controller.config.outputmax) {
+  45:Core/HAL/lib/controller/controller.c ****             obj->output = obj->state_space_controller.config.outputmax;
+  46:Core/HAL/lib/controller/controller.c ****         }
+  47:Core/HAL/lib/controller/controller.c ****         if (obj->output < -obj->state_space_controller.config.outputmax) {
+  48:Core/HAL/lib/controller/controller.c ****             obj->output = -obj->state_space_controller.config.outputmax;
+  49:Core/HAL/lib/controller/controller.c ****         }
+  50:Core/HAL/lib/controller/controller.c ****     }
+  51:Core/HAL/lib/controller/controller.c ****     if (obj->leso.config.SWITCH == MYENABLE) {  //线性扩张状态观测器
+  52:Core/HAL/lib/controller/controller.c ****         obj->leso.u = *(obj->leso.config.p_input);
+  53:Core/HAL/lib/controller/controller.c ****         float z_expand;
+  54:Core/HAL/lib/controller/controller.c ****         z_expand = obj->leso.z_expand;
+  55:Core/HAL/lib/controller/controller.c ****         obj->leso.x1 = obj->fdb_speed;
+  56:Core/HAL/lib/controller/controller.c ****         obj->leso.z_expand = z_expand + obj->leso.config.h * obj->leso.config.l_expand * (obj->leso
+  57:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+  58:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = obj->leso.config.z_expand_max;
+  59:Core/HAL/lib/controller/controller.c ****         } else if (obj->leso.z_expand < -obj->leso.config.z_expand_max) {
+  60:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = -obj->leso.config.z_expand_max;
+  61:Core/HAL/lib/controller/controller.c ****         }
+  62:Core/HAL/lib/controller/controller.c ****         obj->leso.z1 = obj->leso.z1 + obj->leso.config.h * (z_expand + obj->leso.config.l1 * (obj->
+  63:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+  64:Core/HAL/lib/controller/controller.c ****     }
+  65:Core/HAL/lib/controller/controller.c ****     obj->z = obj->leso.z1;
+  66:Core/HAL/lib/controller/controller.c **** }
+  67:Core/HAL/lib/controller/controller.c **** 
+  68:Core/HAL/lib/controller/controller.c **** void CLASSIC_PID_Calc(classic_controller* pid) {
+  34              		.loc 1 68 48 view -0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 0
+  37              		@ frame_needed = 0, uses_anonymous_args = 0
+  38              		.loc 1 68 48 is_stmt 0 view .LVU1
+  39 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  40              	.LCFI0:
+  41              		.cfi_def_cfa_offset 24
+  42              		.cfi_offset 3, -24
+  43              		.cfi_offset 4, -20
+  44              		.cfi_offset 5, -16
+  45              		.cfi_offset 6, -12
+  46              		.cfi_offset 7, -8
+  47              		.cfi_offset 14, -4
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 3
+
+
+  48 0002 2DED028B 		vpush.64	{d8}
+  49              	.LCFI1:
+  50              		.cfi_def_cfa_offset 32
+  51              		.cfi_offset 80, -32
+  52              		.cfi_offset 81, -28
+  53 0006 0446     		mov	r4, r0
+  69:Core/HAL/lib/controller/controller.c ****     float u = 0;
+  54              		.loc 1 69 5 is_stmt 1 view .LVU2
+  55              	.LVL1:
+  70:Core/HAL/lib/controller/controller.c ****     pid->error[2] = pid->error[1];        //上上次误差
+  56              		.loc 1 70 5 view .LVU3
+  57              		.loc 1 70 31 is_stmt 0 view .LVU4
+  58 0008 D0F84B30 		ldr	r3, [r0, #75]	@ unaligned
+  59              		.loc 1 70 19 view .LVU5
+  60 000c C0F84F30 		str	r3, [r0, #79]	@ unaligned
+  71:Core/HAL/lib/controller/controller.c ****     pid->error[1] = pid->error[0];        //上次误差
+  61              		.loc 1 71 5 is_stmt 1 view .LVU6
+  62              		.loc 1 71 31 is_stmt 0 view .LVU7
+  63 0010 D0F84730 		ldr	r3, [r0, #71]	@ unaligned
+  64              		.loc 1 71 19 view .LVU8
+  65 0014 C0F84B30 		str	r3, [r0, #75]	@ unaligned
+  72:Core/HAL/lib/controller/controller.c ****     pid->error[0] = pid->ref - pid->fdb;  //本次误差
+  66              		.loc 1 72 5 is_stmt 1 view .LVU9
+  67              		.loc 1 72 24 is_stmt 0 view .LVU10
+  68 0018 D0F85730 		ldr	r3, [r0, #87]	@ unaligned
+  69 001c 00EE103A 		vmov	s0, r3	@ int
+  70              		.loc 1 72 35 view .LVU11
+  71 0020 D0F85330 		ldr	r3, [r0, #83]	@ unaligned
+  72              		.loc 1 72 30 view .LVU12
+  73 0024 07EE903A 		vmov	s15, r3
+  74 0028 30EE670A 		vsub.f32	s0, s0, s15
+  75              		.loc 1 72 19 view .LVU13
+  76 002c 10EE103A 		vmov	r3, s0
+  77 0030 C0F84730 		str	r3, [r0, #71]	@ unaligned
+  73:Core/HAL/lib/controller/controller.c ****     if (pid->config.NLSEF_SWITCH == MYENABLE) {
+  78              		.loc 1 73 5 is_stmt 1 view .LVU14
+  79              		.loc 1 73 20 is_stmt 0 view .LVU15
+  80 0034 037D     		ldrb	r3, [r0, #20]	@ zero_extendqisi2
+  81              		.loc 1 73 8 view .LVU16
+  82 0036 012B     		cmp	r3, #1
+  83 0038 00F08180 		beq	.L24
+  69:Core/HAL/lib/controller/controller.c ****     pid->error[2] = pid->error[1];        //上上次误差
+  84              		.loc 1 69 11 view .LVU17
+  85 003c 9FED9D8A 		vldr.32	s16, .L25
+  86              	.LVL2:
+  87              	.L2:
+  74:Core/HAL/lib/controller/controller.c ****         if (pid->config.alpha == 0.5) {
+  75:Core/HAL/lib/controller/controller.c ****             u = fsgn(pid->error[0]) * sqrt(fabs(pid->error[0]));
+  76:Core/HAL/lib/controller/controller.c ****         } else {
+  77:Core/HAL/lib/controller/controller.c ****             u = fsgn(pid->error[0]) * fabs(fal(fabs(pid->error[0]), pid->config.alpha, pid->config.
+  78:Core/HAL/lib/controller/controller.c ****         }
+  79:Core/HAL/lib/controller/controller.c ****     }
+  80:Core/HAL/lib/controller/controller.c ****     if (pid->config.PID_Mode == PID_POSITION)  //位置式PID
+  88              		.loc 1 80 5 is_stmt 1 view .LVU18
+  89              		.loc 1 80 20 is_stmt 0 view .LVU19
+  90 0040 94F83930 		ldrb	r3, [r4, #57]	@ zero_extendqisi2
+  91              		.loc 1 80 8 view .LVU20
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 4
+
+
+  92 0044 002B     		cmp	r3, #0
+  93 0046 40F0FE80 		bne	.L4
+  81:Core/HAL/lib/controller/controller.c ****     {
+  82:Core/HAL/lib/controller/controller.c ****         if (fabs(pid->error[0]) <= pid->integrator.config.range) {  //在积分范围
+  94              		.loc 1 82 9 is_stmt 1 view .LVU21
+  95              		.loc 1 82 28 is_stmt 0 view .LVU22
+  96 004a D4F84730 		ldr	r3, [r4, #71]	@ unaligned
+  97 004e 00EE103A 		vmov	s0, r3	@ int
+  98              		.loc 1 82 13 view .LVU23
+  99 0052 F0EEC07A 		vabs.f32	s15, s0
+ 100              		.loc 1 82 58 view .LVU24
+ 101 0056 6368     		ldr	r3, [r4, #4]	@ unaligned
+ 102              		.loc 1 82 12 view .LVU25
+ 103 0058 07EE103A 		vmov	s14, r3
+ 104 005c F4EEC77A 		vcmpe.f32	s15, s14
+ 105 0060 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 106 0064 00F2BC80 		bhi	.L22
+  83:Core/HAL/lib/controller/controller.c ****             pid->integrator.error_sum += pid->error[0];             //积分上限判断
+ 107              		.loc 1 83 13 is_stmt 1 view .LVU26
+ 108              		.loc 1 83 39 is_stmt 0 view .LVU27
+ 109 0068 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 110 006a 07EE103A 		vmov	s14, r3	@ int
+ 111 006e 30EE077A 		vadd.f32	s14, s0, s14
+ 112 0072 17EE103A 		vmov	r3, s14
+ 113 0076 2361     		str	r3, [r4, #16]	@ unaligned
+  84:Core/HAL/lib/controller/controller.c ****             if (pid->integrator.error_sum > pid->integrator.config.error_max) pid->integrator.error
+ 114              		.loc 1 84 13 is_stmt 1 view .LVU28
+ 115              		.loc 1 84 67 is_stmt 0 view .LVU29
+ 116 0078 A368     		ldr	r3, [r4, #8]	@ unaligned
+ 117 007a 07EE903A 		vmov	s15, r3	@ int
+ 118              		.loc 1 84 16 view .LVU30
+ 119 007e B4EEE77A 		vcmpe.f32	s14, s15
+ 120 0082 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 121 0086 00DD     		ble	.L7
+ 122              		.loc 1 84 79 is_stmt 1 discriminator 1 view .LVU31
+ 123              		.loc 1 84 105 is_stmt 0 discriminator 1 view .LVU32
+ 124 0088 2361     		str	r3, [r4, #16]	@ unaligned
+ 125              	.L7:
+  85:Core/HAL/lib/controller/controller.c ****             if (pid->integrator.error_sum < -pid->integrator.config.error_max) pid->integrator.erro
+ 126              		.loc 1 85 13 is_stmt 1 view .LVU33
+ 127              		.loc 1 85 32 is_stmt 0 view .LVU34
+ 128 008a 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 129              		.loc 1 85 45 view .LVU35
+ 130 008c F1EE677A 		vneg.f32	s15, s15
+ 131              		.loc 1 85 16 view .LVU36
+ 132 0090 07EE103A 		vmov	s14, r3
+ 133 0094 B4EEE77A 		vcmpe.f32	s14, s15
+ 134 0098 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 135 009c 02D5     		bpl	.L9
+ 136              		.loc 1 85 80 is_stmt 1 discriminator 1 view .LVU37
+ 137              		.loc 1 85 106 is_stmt 0 discriminator 1 view .LVU38
+ 138 009e 17EE903A 		vmov	r3, s15
+ 139 00a2 2361     		str	r3, [r4, #16]	@ unaligned
+ 140              	.L9:
+  86:Core/HAL/lib/controller/controller.c ****             pid->output = pid->config.KP_NL * u + pid->config.KP * pid->error[0] + pid->integrator.
+ 141              		.loc 1 86 13 is_stmt 1 view .LVU39
+ 142              		.loc 1 86 38 is_stmt 0 view .LVU40
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 5
+
+
+ 143 00a4 D4F81D30 		ldr	r3, [r4, #29]	@ unaligned
+ 144 00a8 07EE103A 		vmov	s14, r3	@ int
+ 145              		.loc 1 86 45 view .LVU41
+ 146 00ac 67EE086A 		vmul.f32	s13, s14, s16
+ 147              		.loc 1 86 62 view .LVU42
+ 148 00b0 D4F82530 		ldr	r3, [r4, #37]	@ unaligned
+ 149 00b4 07EE903A 		vmov	s15, r3	@ int
+ 150              		.loc 1 86 66 view .LVU43
+ 151 00b8 60EE277A 		vmul.f32	s15, s0, s15
+ 152              		.loc 1 86 49 view .LVU44
+ 153 00bc 36EEA77A 		vadd.f32	s14, s13, s15
+ 154              		.loc 1 86 106 view .LVU45
+ 155 00c0 2368     		ldr	r3, [r4]	@ unaligned
+ 156 00c2 07EE903A 		vmov	s15, r3	@ int
+ 157              		.loc 1 86 127 view .LVU46
+ 158 00c6 2369     		ldr	r3, [r4, #16]	@ unaligned
+ 159              		.loc 1 86 110 view .LVU47
+ 160 00c8 06EE903A 		vmov	s13, r3
+ 161 00cc 67EEA67A 		vmul.f32	s15, s15, s13
+ 162              		.loc 1 86 82 view .LVU48
+ 163 00d0 77EE277A 		vadd.f32	s15, s14, s15
+ 164              		.loc 1 86 151 view .LVU49
+ 165 00d4 D4F82130 		ldr	r3, [r4, #33]	@ unaligned
+ 166              		.loc 1 86 184 view .LVU50
+ 167 00d8 D4F84B20 		ldr	r2, [r4, #75]	@ unaligned
+ 168              		.loc 1 86 172 view .LVU51
+ 169 00dc 07EE102A 		vmov	s14, r2
+ 170 00e0 30EE470A 		vsub.f32	s0, s0, s14
+ 171              		.loc 1 86 155 view .LVU52
+ 172 00e4 07EE103A 		vmov	s14, r3
+ 173 00e8 27EE000A 		vmul.f32	s0, s14, s0
+ 174              		.loc 1 86 25 view .LVU53
+ 175 00ec 77EE807A 		vadd.f32	s15, s15, s0
+ 176 00f0 17EE903A 		vmov	r3, s15	@ int
+ 177 00f4 C4F85B30 		str	r3, [r4, #91]	@ unaligned
+ 178              	.LVL3:
+ 179              	.L11:
+  87:Core/HAL/lib/controller/controller.c ****         } else {  //不在积分范围
+  88:Core/HAL/lib/controller/controller.c ****             pid->integrator.error_sum = fsgn(pid->error[0]) * pid->integrator.config.error_preload;
+  89:Core/HAL/lib/controller/controller.c ****             pid->output = pid->config.KP_NL * u + pid->config.KP * pid->error[0] + pid->config.KD *
+  90:Core/HAL/lib/controller/controller.c ****         }
+  91:Core/HAL/lib/controller/controller.c **** 
+  92:Core/HAL/lib/controller/controller.c ****     } else if (pid->config.PID_Mode == PID_DELTA)  //增量式PID
+  93:Core/HAL/lib/controller/controller.c ****     {
+  94:Core/HAL/lib/controller/controller.c ****         pid->output += pid->config.KP * (pid->error[0] - pid->error[1]) + pid->config.KD * (pid->er
+  95:Core/HAL/lib/controller/controller.c ****     }
+  96:Core/HAL/lib/controller/controller.c ****     pid->output_unlimited = pid->output;
+ 180              		.loc 1 96 5 is_stmt 1 view .LVU54
+ 181              		.loc 1 96 32 is_stmt 0 view .LVU55
+ 182 00f8 D4F85B30 		ldr	r3, [r4, #91]	@ unaligned
+ 183              		.loc 1 96 27 view .LVU56
+ 184 00fc C4F85F30 		str	r3, [r4, #95]	@ unaligned
+  97:Core/HAL/lib/controller/controller.c ****     //输出限幅
+  98:Core/HAL/lib/controller/controller.c ****     if (pid->output > pid->config.outputmax) {
+ 185              		.loc 1 98 5 is_stmt 1 view .LVU57
+ 186              		.loc 1 98 34 is_stmt 0 view .LVU58
+ 187 0100 D4F84320 		ldr	r2, [r4, #67]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 6
+
+
+ 188 0104 07EE902A 		vmov	s15, r2	@ int
+ 189              		.loc 1 98 8 view .LVU59
+ 190 0108 07EE103A 		vmov	s14, r3
+ 191 010c B4EEE77A 		vcmpe.f32	s14, s15
+ 192 0110 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 193 0114 01DD     		ble	.L12
+  99:Core/HAL/lib/controller/controller.c ****         pid->output = pid->config.outputmax;
+ 194              		.loc 1 99 9 is_stmt 1 view .LVU60
+ 195              		.loc 1 99 21 is_stmt 0 view .LVU61
+ 196 0116 C4F85B20 		str	r2, [r4, #91]	@ unaligned
+ 197              	.L12:
+ 100:Core/HAL/lib/controller/controller.c ****     }
+ 101:Core/HAL/lib/controller/controller.c ****     if (pid->output < -pid->config.outputmax) {
+ 198              		.loc 1 101 5 is_stmt 1 view .LVU62
+ 199              		.loc 1 101 12 is_stmt 0 view .LVU63
+ 200 011a D4F85B30 		ldr	r3, [r4, #91]	@ unaligned
+ 201              		.loc 1 101 23 view .LVU64
+ 202 011e F1EE677A 		vneg.f32	s15, s15
+ 203              		.loc 1 101 8 view .LVU65
+ 204 0122 07EE103A 		vmov	s14, r3
+ 205 0126 B4EEE77A 		vcmpe.f32	s14, s15
+ 206 012a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 207 012e 03D5     		bpl	.L1
+ 102:Core/HAL/lib/controller/controller.c ****         pid->output = -pid->config.outputmax;
+ 208              		.loc 1 102 9 is_stmt 1 view .LVU66
+ 209              		.loc 1 102 21 is_stmt 0 view .LVU67
+ 210 0130 17EE903A 		vmov	r3, s15
+ 211 0134 C4F85B30 		str	r3, [r4, #91]	@ unaligned
+ 212              	.L1:
+ 103:Core/HAL/lib/controller/controller.c ****     }
+ 104:Core/HAL/lib/controller/controller.c **** }
+ 213              		.loc 1 104 1 view .LVU68
+ 214 0138 BDEC028B 		vldm	sp!, {d8}
+ 215              	.LCFI2:
+ 216              		.cfi_remember_state
+ 217              		.cfi_restore 80
+ 218              		.cfi_restore 81
+ 219              		.cfi_def_cfa_offset 24
+ 220 013c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 221              	.LVL4:
+ 222              	.L24:
+ 223              	.LCFI3:
+ 224              		.cfi_restore_state
+  74:Core/HAL/lib/controller/controller.c ****             u = fsgn(pid->error[0]) * sqrt(fabs(pid->error[0]));
+ 225              		.loc 1 74 9 is_stmt 1 view .LVU69
+  74:Core/HAL/lib/controller/controller.c ****             u = fsgn(pid->error[0]) * sqrt(fabs(pid->error[0]));
+ 226              		.loc 1 74 24 is_stmt 0 view .LVU70
+ 227 013e D0F81530 		ldr	r3, [r0, #21]	@ unaligned
+  74:Core/HAL/lib/controller/controller.c ****             u = fsgn(pid->error[0]) * sqrt(fabs(pid->error[0]));
+ 228              		.loc 1 74 12 view .LVU71
+ 229 0142 F6EE007A 		vmov.f32	s15, #5.0e-1
+ 230 0146 07EE103A 		vmov	s14, r3
+ 231 014a B4EE677A 		vcmp.f32	s14, s15
+ 232 014e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 233 0152 1ED1     		bne	.L3
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 234              		.loc 1 75 13 is_stmt 1 view .LVU72
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 7
+
+
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 235              		.loc 1 75 17 is_stmt 0 view .LVU73
+ 236 0154 FFF7FEFF 		bl	fsgn
+ 237              	.LVL5:
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 238              		.loc 1 75 17 view .LVU74
+ 239 0158 0546     		mov	r5, r0
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 240              		.loc 1 75 59 view .LVU75
+ 241 015a D4F84700 		ldr	r0, [r4, #71]	@ unaligned
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 242              		.loc 1 75 39 view .LVU76
+ 243 015e 07EE900A 		vmov	s15, r0
+ 244 0162 F0EEE77A 		vabs.f32	s15, s15
+ 245 0166 17EE900A 		vmov	r0, s15
+ 246 016a FFF7FEFF 		bl	__aeabi_f2d
+ 247              	.LVL6:
+ 248 016e 41EC100B 		vmov	d0, r0, r1
+ 249 0172 FFF7FEFF 		bl	sqrt
+ 250              	.LVL7:
+ 251 0176 57EC106B 		vmov	r6, r7, d0
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 252              		.loc 1 75 37 view .LVU77
+ 253 017a 2846     		mov	r0, r5
+ 254 017c FFF7FEFF 		bl	__aeabi_i2d
+ 255              	.LVL8:
+ 256 0180 3246     		mov	r2, r6
+ 257 0182 3B46     		mov	r3, r7
+ 258 0184 FFF7FEFF 		bl	__aeabi_dmul
+ 259              	.LVL9:
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 260              		.loc 1 75 15 view .LVU78
+ 261 0188 FFF7FEFF 		bl	__aeabi_d2f
+ 262              	.LVL10:
+ 263 018c 08EE100A 		vmov	s16, r0
+ 264              	.LVL11:
+  75:Core/HAL/lib/controller/controller.c ****         } else {
+ 265              		.loc 1 75 15 view .LVU79
+ 266 0190 56E7     		b	.L2
+ 267              	.LVL12:
+ 268              	.L3:
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 269              		.loc 1 77 13 is_stmt 1 view .LVU80
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 270              		.loc 1 77 17 is_stmt 0 view .LVU81
+ 271 0192 FFF7FEFF 		bl	fsgn
+ 272              	.LVL13:
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 273              		.loc 1 77 17 view .LVU82
+ 274 0196 0546     		mov	r5, r0
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 275              		.loc 1 77 63 view .LVU83
+ 276 0198 D4F84730 		ldr	r3, [r4, #71]	@ unaligned
+ 277 019c 00EE103A 		vmov	s0, r3	@ int
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 278              		.loc 1 77 44 view .LVU84
+ 279 01a0 D4F81930 		ldr	r3, [r4, #25]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 8
+
+
+ 280 01a4 01EE103A 		vmov	s2, r3	@ int
+ 281 01a8 D4F81530 		ldr	r3, [r4, #21]	@ unaligned
+ 282 01ac 00EE903A 		vmov	s1, r3	@ int
+ 283 01b0 B0EEC00A 		vabs.f32	s0, s0
+ 284 01b4 FFF7FEFF 		bl	fal
+ 285              	.LVL14:
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 286              		.loc 1 77 39 view .LVU85
+ 287 01b8 F0EEC07A 		vabs.f32	s15, s0
+ 288 01bc 17EE900A 		vmov	r0, s15
+ 289 01c0 FFF7FEFF 		bl	__aeabi_f2d
+ 290              	.LVL15:
+ 291 01c4 0646     		mov	r6, r0
+ 292 01c6 0F46     		mov	r7, r1
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 293              		.loc 1 77 37 view .LVU86
+ 294 01c8 2846     		mov	r0, r5
+ 295 01ca FFF7FEFF 		bl	__aeabi_i2d
+ 296              	.LVL16:
+ 297 01ce 3246     		mov	r2, r6
+ 298 01d0 3B46     		mov	r3, r7
+ 299 01d2 FFF7FEFF 		bl	__aeabi_dmul
+ 300              	.LVL17:
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 301              		.loc 1 77 15 view .LVU87
+ 302 01d6 FFF7FEFF 		bl	__aeabi_d2f
+ 303              	.LVL18:
+ 304 01da 08EE100A 		vmov	s16, r0
+ 305              	.LVL19:
+  77:Core/HAL/lib/controller/controller.c ****         }
+ 306              		.loc 1 77 15 view .LVU88
+ 307 01de 2FE7     		b	.L2
+ 308              	.LVL20:
+ 309              	.L22:
+  88:Core/HAL/lib/controller/controller.c ****             pid->output = pid->config.KP_NL * u + pid->config.KP * pid->error[0] + pid->config.KD *
+ 310              		.loc 1 88 13 is_stmt 1 view .LVU89
+  88:Core/HAL/lib/controller/controller.c ****             pid->output = pid->config.KP_NL * u + pid->config.KP * pid->error[0] + pid->config.KD *
+ 311              		.loc 1 88 41 is_stmt 0 view .LVU90
+ 312 01e0 FFF7FEFF 		bl	fsgn
+ 313              	.LVL21:
+ 314 01e4 07EE900A 		vmov	s15, r0	@ int
+  88:Core/HAL/lib/controller/controller.c ****             pid->output = pid->config.KP_NL * u + pid->config.KP * pid->error[0] + pid->config.KD *
+ 315              		.loc 1 88 85 view .LVU91
+ 316 01e8 E368     		ldr	r3, [r4, #12]	@ unaligned
+  88:Core/HAL/lib/controller/controller.c ****             pid->output = pid->config.KP_NL * u + pid->config.KP * pid->error[0] + pid->config.KD *
+ 317              		.loc 1 88 61 view .LVU92
+ 318 01ea F8EEE77A 		vcvt.f32.s32	s15, s15
+  88:Core/HAL/lib/controller/controller.c ****             pid->output = pid->config.KP_NL * u + pid->config.KP * pid->error[0] + pid->config.KD *
+ 319              		.loc 1 88 39 view .LVU93
+ 320 01ee 07EE103A 		vmov	s14, r3
+ 321 01f2 67EE877A 		vmul.f32	s15, s15, s14
+ 322 01f6 17EE903A 		vmov	r3, s15	@ int
+ 323 01fa 2361     		str	r3, [r4, #16]	@ unaligned
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 324              		.loc 1 89 13 is_stmt 1 view .LVU94
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 325              		.loc 1 89 38 is_stmt 0 view .LVU95
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 9
+
+
+ 326 01fc D4F81D30 		ldr	r3, [r4, #29]	@ unaligned
+ 327 0200 06EE903A 		vmov	s13, r3	@ int
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 328              		.loc 1 89 45 view .LVU96
+ 329 0204 26EE888A 		vmul.f32	s16, s13, s16
+ 330              	.LVL22:
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 331              		.loc 1 89 62 view .LVU97
+ 332 0208 D4F82530 		ldr	r3, [r4, #37]	@ unaligned
+ 333 020c 06EE903A 		vmov	s13, r3	@ int
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 334              		.loc 1 89 78 view .LVU98
+ 335 0210 D4F84730 		ldr	r3, [r4, #71]	@ unaligned
+ 336 0214 07EE903A 		vmov	s15, r3	@ int
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 337              		.loc 1 89 66 view .LVU99
+ 338 0218 66EEA76A 		vmul.f32	s13, s13, s15
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 339              		.loc 1 89 49 view .LVU100
+ 340 021c 78EE266A 		vadd.f32	s13, s16, s13
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 341              		.loc 1 89 95 view .LVU101
+ 342 0220 D4F82130 		ldr	r3, [r4, #33]	@ unaligned
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 343              		.loc 1 89 128 view .LVU102
+ 344 0224 D4F84B20 		ldr	r2, [r4, #75]	@ unaligned
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 345              		.loc 1 89 116 view .LVU103
+ 346 0228 07EE102A 		vmov	s14, r2
+ 347 022c 77EEC77A 		vsub.f32	s15, s15, s14
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 348              		.loc 1 89 99 view .LVU104
+ 349 0230 07EE103A 		vmov	s14, r3
+ 350 0234 67EE277A 		vmul.f32	s15, s14, s15
+  89:Core/HAL/lib/controller/controller.c ****         }
+ 351              		.loc 1 89 25 view .LVU105
+ 352 0238 76EEA76A 		vadd.f32	s13, s13, s15
+ 353 023c 16EE903A 		vmov	r3, s13	@ int
+ 354 0240 C4F85B30 		str	r3, [r4, #91]	@ unaligned
+ 355 0244 58E7     		b	.L11
+ 356              	.LVL23:
+ 357              	.L4:
+  92:Core/HAL/lib/controller/controller.c ****     {
+ 358              		.loc 1 92 12 is_stmt 1 view .LVU106
+  92:Core/HAL/lib/controller/controller.c ****     {
+ 359              		.loc 1 92 15 is_stmt 0 view .LVU107
+ 360 0246 012B     		cmp	r3, #1
+ 361 0248 7FF456AF 		bne	.L11
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 362              		.loc 1 94 9 is_stmt 1 view .LVU108
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 363              		.loc 1 94 35 is_stmt 0 view .LVU109
+ 364 024c D4F82530 		ldr	r3, [r4, #37]	@ unaligned
+ 365 0250 07EE903A 		vmov	s15, r3	@ int
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 366              		.loc 1 94 52 view .LVU110
+ 367 0254 D4F84730 		ldr	r3, [r4, #71]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 10
+
+
+ 368 0258 05EE903A 		vmov	s11, r3	@ int
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 369              		.loc 1 94 68 view .LVU111
+ 370 025c D4F84B30 		ldr	r3, [r4, #75]	@ unaligned
+ 371 0260 06EE903A 		vmov	s13, r3	@ int
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 372              		.loc 1 94 56 view .LVU112
+ 373 0264 35EEE67A 		vsub.f32	s14, s11, s13
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 374              		.loc 1 94 39 view .LVU113
+ 375 0268 27EE877A 		vmul.f32	s14, s15, s14
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 376              		.loc 1 94 86 view .LVU114
+ 377 026c D4F82130 		ldr	r3, [r4, #33]	@ unaligned
+ 378 0270 07EE903A 		vmov	s15, r3	@ int
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 379              		.loc 1 94 114 view .LVU115
+ 380 0274 76EEA66A 		vadd.f32	s13, s13, s13
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 381              		.loc 1 94 107 view .LVU116
+ 382 0278 35EEE66A 		vsub.f32	s12, s11, s13
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 383              		.loc 1 94 142 view .LVU117
+ 384 027c D4F84F30 		ldr	r3, [r4, #79]	@ unaligned
+ 385 0280 06EE903A 		vmov	s13, r3	@ int
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 386              		.loc 1 94 130 view .LVU118
+ 387 0284 76EE266A 		vadd.f32	s13, s12, s13
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 388              		.loc 1 94 90 view .LVU119
+ 389 0288 67EEA67A 		vmul.f32	s15, s15, s13
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 390              		.loc 1 94 73 view .LVU120
+ 391 028c 77EE277A 		vadd.f32	s15, s14, s15
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 392              		.loc 1 94 171 view .LVU121
+ 393 0290 2368     		ldr	r3, [r4]	@ unaligned
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 394              		.loc 1 94 175 view .LVU122
+ 395 0292 07EE103A 		vmov	s14, r3
+ 396 0296 65EE875A 		vmul.f32	s11, s11, s14
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 397              		.loc 1 94 147 view .LVU123
+ 398 029a 77EEA57A 		vadd.f32	s15, s15, s11
+  94:Core/HAL/lib/controller/controller.c ****     }
+ 399              		.loc 1 94 21 view .LVU124
+ 400 029e D4F85B30 		ldr	r3, [r4, #91]	@ unaligned
+ 401 02a2 07EE103A 		vmov	s14, r3
+ 402 02a6 77EE877A 		vadd.f32	s15, s15, s14
+ 403 02aa 17EE903A 		vmov	r3, s15	@ int
+ 404 02ae C4F85B30 		str	r3, [r4, #91]	@ unaligned
+ 405 02b2 21E7     		b	.L11
+ 406              	.L26:
+ 407              		.align	2
+ 408              	.L25:
+ 409 02b4 00000000 		.word	0
+ 410              		.cfi_endproc
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 11
+
+
+ 411              	.LFE1:
+ 413              		.section	.text.UNIVERSAL_Calc,"ax",%progbits
+ 414              		.align	1
+ 415              		.global	UNIVERSAL_Calc
+ 416              		.syntax unified
+ 417              		.thumb
+ 418              		.thumb_func
+ 420              	UNIVERSAL_Calc:
+ 421              	.LVL24:
+ 422              	.LFB0:
+   5:Core/HAL/lib/controller/controller.c ****     if (obj->calc_type == CLASSIC) {  //经典一阶控制
+ 423              		.loc 1 5 38 is_stmt 1 view -0
+ 424              		.cfi_startproc
+ 425              		@ args = 0, pretend = 0, frame = 0
+ 426              		@ frame_needed = 0, uses_anonymous_args = 0
+   5:Core/HAL/lib/controller/controller.c ****     if (obj->calc_type == CLASSIC) {  //经典一阶控制
+ 427              		.loc 1 5 38 is_stmt 0 view .LVU126
+ 428 0000 10B5     		push	{r4, lr}
+ 429              	.LCFI4:
+ 430              		.cfi_def_cfa_offset 8
+ 431              		.cfi_offset 4, -8
+ 432              		.cfi_offset 14, -4
+ 433 0002 0446     		mov	r4, r0
+   6:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_speed;
+ 434              		.loc 1 6 5 is_stmt 1 view .LVU127
+   6:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_speed;
+ 435              		.loc 1 6 12 is_stmt 0 view .LVU128
+ 436 0004 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+   6:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_speed;
+ 437              		.loc 1 6 8 view .LVU129
+ 438 0006 6BB1     		cbz	r3, .L56
+  11:Core/HAL/lib/controller/controller.c ****         obj->rank2.fdb = obj->fdb_speed;
+ 439              		.loc 1 11 12 is_stmt 1 view .LVU130
+  11:Core/HAL/lib/controller/controller.c ****         obj->rank2.fdb = obj->fdb_speed;
+ 440              		.loc 1 11 15 is_stmt 0 view .LVU131
+ 441 0008 012B     		cmp	r3, #1
+ 442 000a 18D0     		beq	.L57
+  19:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.target = obj->ref_position;
+ 443              		.loc 1 19 12 is_stmt 1 view .LVU132
+  19:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.target = obj->ref_position;
+ 444              		.loc 1 19 15 is_stmt 0 view .LVU133
+ 445 000c 022B     		cmp	r3, #2
+ 446 000e 2FD0     		beq	.L58
+ 447              	.LVL25:
+ 448              	.L29:
+  51:Core/HAL/lib/controller/controller.c ****         obj->leso.u = *(obj->leso.config.p_input);
+ 449              		.loc 1 51 5 is_stmt 1 view .LVU134
+  51:Core/HAL/lib/controller/controller.c ****         obj->leso.u = *(obj->leso.config.p_input);
+ 450              		.loc 1 51 25 is_stmt 0 view .LVU135
+ 451 0010 94F82C31 		ldrb	r3, [r4, #300]	@ zero_extendqisi2
+  51:Core/HAL/lib/controller/controller.c ****         obj->leso.u = *(obj->leso.config.p_input);
+ 452              		.loc 1 51 8 view .LVU136
+ 453 0014 012B     		cmp	r3, #1
+ 454 0016 00F0F880 		beq	.L59
+ 455              	.L41:
+  65:Core/HAL/lib/controller/controller.c **** }
+ 456              		.loc 1 65 5 is_stmt 1 view .LVU137
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 12
+
+
+  65:Core/HAL/lib/controller/controller.c **** }
+ 457              		.loc 1 65 23 is_stmt 0 view .LVU138
+ 458 001a D4F84531 		ldr	r3, [r4, #325]	@ unaligned
+  65:Core/HAL/lib/controller/controller.c **** }
+ 459              		.loc 1 65 12 view .LVU139
+ 460 001e C4F86931 		str	r3, [r4, #361]	@ unaligned
+  66:Core/HAL/lib/controller/controller.c **** 
+ 461              		.loc 1 66 1 view .LVU140
+ 462 0022 10BD     		pop	{r4, pc}
+ 463              	.LVL26:
+ 464              	.L56:
+   7:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_speed;
+ 465              		.loc 1 7 9 is_stmt 1 view .LVU141
+   7:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_speed;
+ 466              		.loc 1 7 29 is_stmt 0 view .LVU142
+ 467 0024 D0F86131 		ldr	r3, [r0, #353]	@ unaligned
+   7:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_speed;
+ 468              		.loc 1 7 24 view .LVU143
+ 469 0028 4365     		str	r3, [r0, #84]	@ unaligned
+   8:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+ 470              		.loc 1 8 9 is_stmt 1 view .LVU144
+   8:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+ 471              		.loc 1 8 29 is_stmt 0 view .LVU145
+ 472 002a D0F85931 		ldr	r3, [r0, #345]	@ unaligned
+   8:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+ 473              		.loc 1 8 24 view .LVU146
+ 474 002e 8365     		str	r3, [r0, #88]	@ unaligned
+   9:Core/HAL/lib/controller/controller.c ****         obj->output = obj->rank1.output;
+ 475              		.loc 1 9 9 is_stmt 1 view .LVU147
+ 476 0030 0130     		adds	r0, r0, #1
+ 477              	.LVL27:
+   9:Core/HAL/lib/controller/controller.c ****         obj->output = obj->rank1.output;
+ 478              		.loc 1 9 9 is_stmt 0 view .LVU148
+ 479 0032 FFF7FEFF 		bl	CLASSIC_PID_Calc
+ 480              	.LVL28:
+  10:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == CASCADE) {  //串级控制
+ 481              		.loc 1 10 9 is_stmt 1 view .LVU149
+  10:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == CASCADE) {  //串级控制
+ 482              		.loc 1 10 33 is_stmt 0 view .LVU150
+ 483 0036 E36D     		ldr	r3, [r4, #92]	@ unaligned
+  10:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == CASCADE) {  //串级控制
+ 484              		.loc 1 10 21 view .LVU151
+ 485 0038 C4F85531 		str	r3, [r4, #341]	@ unaligned
+ 486 003c E8E7     		b	.L29
+ 487              	.LVL29:
+ 488              	.L57:
+  12:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_position;
+ 489              		.loc 1 12 9 is_stmt 1 view .LVU152
+  12:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_position;
+ 490              		.loc 1 12 29 is_stmt 0 view .LVU153
+ 491 003e D0F86131 		ldr	r3, [r0, #353]	@ unaligned
+  12:Core/HAL/lib/controller/controller.c ****         obj->rank1.ref = obj->ref_position;
+ 492              		.loc 1 12 24 view .LVU154
+ 493 0042 C0F8B730 		str	r3, [r0, #183]	@ unaligned
+  13:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_position;
+ 494              		.loc 1 13 9 is_stmt 1 view .LVU155
+  13:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_position;
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 13
+
+
+ 495              		.loc 1 13 29 is_stmt 0 view .LVU156
+ 496 0046 D0F85D31 		ldr	r3, [r0, #349]	@ unaligned
+  13:Core/HAL/lib/controller/controller.c ****         obj->rank1.fdb = obj->fdb_position;
+ 497              		.loc 1 13 24 view .LVU157
+ 498 004a 8365     		str	r3, [r0, #88]	@ unaligned
+  14:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+ 499              		.loc 1 14 9 is_stmt 1 view .LVU158
+  14:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+ 500              		.loc 1 14 29 is_stmt 0 view .LVU159
+ 501 004c D0F86531 		ldr	r3, [r0, #357]	@ unaligned
+  14:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank1);
+ 502              		.loc 1 14 24 view .LVU160
+ 503 0050 4365     		str	r3, [r0, #84]	@ unaligned
+  15:Core/HAL/lib/controller/controller.c ****         obj->rank2.ref = obj->rank1.output;
+ 504              		.loc 1 15 9 is_stmt 1 view .LVU161
+ 505 0052 0130     		adds	r0, r0, #1
+ 506              	.LVL30:
+  15:Core/HAL/lib/controller/controller.c ****         obj->rank2.ref = obj->rank1.output;
+ 507              		.loc 1 15 9 is_stmt 0 view .LVU162
+ 508 0054 FFF7FEFF 		bl	CLASSIC_PID_Calc
+ 509              	.LVL31:
+  16:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank2);
+ 510              		.loc 1 16 9 is_stmt 1 view .LVU163
+  16:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank2);
+ 511              		.loc 1 16 36 is_stmt 0 view .LVU164
+ 512 0058 E36D     		ldr	r3, [r4, #92]	@ unaligned
+  16:Core/HAL/lib/controller/controller.c ****         CLASSIC_PID_Calc(&obj->rank2);
+ 513              		.loc 1 16 24 view .LVU165
+ 514 005a C4F8BB30 		str	r3, [r4, #187]	@ unaligned
+  17:Core/HAL/lib/controller/controller.c ****         obj->output = obj->rank2.output;
+ 515              		.loc 1 17 9 is_stmt 1 view .LVU166
+ 516 005e 04F16400 		add	r0, r4, #100
+ 517 0062 FFF7FEFF 		bl	CLASSIC_PID_Calc
+ 518              	.LVL32:
+  18:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == STATE_SPACE) {  //二阶状态空间控制器 应用lqr时应该�
+ 519              		.loc 1 18 9 view .LVU167
+  18:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == STATE_SPACE) {  //二阶状态空间控制器 应用lqr时应该�
+ 520              		.loc 1 18 33 is_stmt 0 view .LVU168
+ 521 0066 D4F8BF30 		ldr	r3, [r4, #191]	@ unaligned
+  18:Core/HAL/lib/controller/controller.c ****     } else if (obj->calc_type == STATE_SPACE) {  //二阶状态空间控制器 应用lqr时应该�
+ 522              		.loc 1 18 21 view .LVU169
+ 523 006a C4F85531 		str	r3, [r4, #341]	@ unaligned
+ 524 006e CFE7     		b	.L29
+ 525              	.LVL33:
+ 526              	.L58:
+  20:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y1 = obj->fdb_position;
+ 527              		.loc 1 20 9 is_stmt 1 view .LVU170
+  20:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y1 = obj->fdb_position;
+ 528              		.loc 1 20 49 is_stmt 0 view .LVU171
+ 529 0070 D0F85D11 		ldr	r1, [r0, #349]	@ unaligned
+  20:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y1 = obj->fdb_position;
+ 530              		.loc 1 20 44 view .LVU172
+ 531 0074 C0F81011 		str	r1, [r0, #272]	@ unaligned
+  21:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y2 = obj->fdb_speed;
+ 532              		.loc 1 21 9 is_stmt 1 view .LVU173
+  21:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y2 = obj->fdb_speed;
+ 533              		.loc 1 21 45 is_stmt 0 view .LVU174
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 14
+
+
+ 534 0078 D0F86521 		ldr	r2, [r0, #357]	@ unaligned
+  21:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.y2 = obj->fdb_speed;
+ 535              		.loc 1 21 40 view .LVU175
+ 536 007c C0F81421 		str	r2, [r0, #276]	@ unaligned
+  22:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = 0;
+ 537              		.loc 1 22 9 is_stmt 1 view .LVU176
+  22:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = 0;
+ 538              		.loc 1 22 45 is_stmt 0 view .LVU177
+ 539 0080 D0F86131 		ldr	r3, [r0, #353]	@ unaligned
+  22:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = 0;
+ 540              		.loc 1 22 40 view .LVU178
+ 541 0084 C0F81831 		str	r3, [r0, #280]	@ unaligned
+  23:Core/HAL/lib/controller/controller.c ****         //误差
+ 542              		.loc 1 23 9 is_stmt 1 view .LVU179
+  23:Core/HAL/lib/controller/controller.c ****         //误差
+ 543              		.loc 1 23 44 is_stmt 0 view .LVU180
+ 544 0088 0020     		movs	r0, #0
+ 545              	.LVL34:
+  23:Core/HAL/lib/controller/controller.c ****         //误差
+ 546              		.loc 1 23 44 view .LVU181
+ 547 008a C4F82401 		str	r0, [r4, #292]	@ unaligned
+  25:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.z2 = obj->state_space_controller.config.c2 * obj->state_space_c
+ 548              		.loc 1 25 9 is_stmt 1 view .LVU182
+  25:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.z2 = obj->state_space_controller.config.c2 * obj->state_space_c
+ 549              		.loc 1 25 76 is_stmt 0 view .LVU183
+ 550 008e D4F8D000 		ldr	r0, [r4, #208]	@ unaligned
+ 551 0092 00EE100A 		vmov	s0, r0	@ int
+  25:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.z2 = obj->state_space_controller.config.c2 * obj->state_space_c
+ 552              		.loc 1 25 114 view .LVU184
+ 553 0096 07EE902A 		vmov	s15, r2
+ 554 009a 07EE101A 		vmov	s14, r1
+ 555 009e 77EEC77A 		vsub.f32	s15, s15, s14
+  25:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.z2 = obj->state_space_controller.config.c2 * obj->state_space_c
+ 556              		.loc 1 25 80 view .LVU185
+ 557 00a2 20EE270A 		vmul.f32	s0, s0, s15
+  25:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.z2 = obj->state_space_controller.config.c2 * obj->state_space_c
+ 558              		.loc 1 25 40 view .LVU186
+ 559 00a6 10EE102A 		vmov	r2, s0
+ 560 00aa C4F81C21 		str	r2, [r4, #284]	@ unaligned
+  26:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = -obj->state_space_controller.config.K1 * obj->state_sp
+ 561              		.loc 1 26 9 is_stmt 1 view .LVU187
+  26:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = -obj->state_space_controller.config.K1 * obj->state_sp
+ 562              		.loc 1 26 76 is_stmt 0 view .LVU188
+ 563 00ae D4F8D420 		ldr	r2, [r4, #212]	@ unaligned
+ 564 00b2 07EE902A 		vmov	s15, r2	@ int
+  26:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = -obj->state_space_controller.config.K1 * obj->state_sp
+ 565              		.loc 1 26 80 view .LVU189
+ 566 00b6 07EE103A 		vmov	s14, r3
+ 567 00ba 67EE277A 		vmul.f32	s15, s14, s15
+  26:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.output = -obj->state_space_controller.config.K1 * obj->state_sp
+ 568              		.loc 1 26 40 view .LVU190
+ 569 00be 17EE903A 		vmov	r3, s15
+ 570 00c2 C4F82031 		str	r3, [r4, #288]	@ unaligned
+  27:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+ 571              		.loc 1 27 9 is_stmt 1 view .LVU191
+  27:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+ 572              		.loc 1 27 81 is_stmt 0 view .LVU192
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 15
+
+
+ 573 00c6 D4F8C830 		ldr	r3, [r4, #200]	@ unaligned
+ 574 00ca 07EE103A 		vmov	s14, r3	@ int
+  27:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+ 575              		.loc 1 27 85 view .LVU193
+ 576 00ce 27EE407A 		vnmul.f32	s14, s14, s0
+  27:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+ 577              		.loc 1 27 154 view .LVU194
+ 578 00d2 D4F8CC30 		ldr	r3, [r4, #204]	@ unaligned
+  27:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+ 579              		.loc 1 27 158 view .LVU195
+ 580 00d6 06EE903A 		vmov	s13, r3
+ 581 00da 67EEA67A 		vmul.f32	s15, s15, s13
+  27:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+ 582              		.loc 1 27 118 view .LVU196
+ 583 00de 37EE677A 		vsub.f32	s14, s14, s15
+  27:Core/HAL/lib/controller/controller.c ****         //状态量积分补偿
+ 584              		.loc 1 27 44 view .LVU197
+ 585 00e2 17EE103A 		vmov	r3, s14
+ 586 00e6 C4F82431 		str	r3, [r4, #292]	@ unaligned
+  29:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = obj->state_space_controller.integrat
+ 587              		.loc 1 29 9 is_stmt 1 view .LVU198
+  29:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = obj->state_space_controller.integrat
+ 588              		.loc 1 29 51 is_stmt 0 view .LVU199
+ 589 00ea D4F80C31 		ldr	r3, [r4, #268]	@ unaligned
+  29:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = obj->state_space_controller.integrat
+ 590              		.loc 1 29 109 view .LVU200
+ 591 00ee D4F80421 		ldr	r2, [r4, #260]	@ unaligned
+ 592 00f2 07EE902A 		vmov	s15, r2	@ int
+  29:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = obj->state_space_controller.integrat
+ 593              		.loc 1 29 12 view .LVU201
+ 594 00f6 06EE903A 		vmov	s13, r3
+ 595 00fa F4EEE76A 		vcmpe.f32	s13, s15
+ 596 00fe F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 597 0102 01DD     		ble	.L31
+  30:Core/HAL/lib/controller/controller.c ****         }
+ 598              		.loc 1 30 13 is_stmt 1 view .LVU202
+  30:Core/HAL/lib/controller/controller.c ****         }
+ 599              		.loc 1 30 62 is_stmt 0 view .LVU203
+ 600 0104 C4F80C21 		str	r2, [r4, #268]	@ unaligned
+ 601              	.L31:
+  32:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = -obj->state_space_controller.integra
+ 602              		.loc 1 32 9 is_stmt 1 view .LVU204
+  32:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = -obj->state_space_controller.integra
+ 603              		.loc 1 32 51 is_stmt 0 view .LVU205
+ 604 0108 D4F80C31 		ldr	r3, [r4, #268]	@ unaligned
+  32:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = -obj->state_space_controller.integra
+ 605              		.loc 1 32 64 view .LVU206
+ 606 010c F1EE677A 		vneg.f32	s15, s15
+  32:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum = -obj->state_space_controller.integra
+ 607              		.loc 1 32 12 view .LVU207
+ 608 0110 06EE903A 		vmov	s13, r3
+ 609 0114 F4EEE76A 		vcmpe.f32	s13, s15
+ 610 0118 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 611 011c 03D5     		bpl	.L33
+  33:Core/HAL/lib/controller/controller.c ****         }
+ 612              		.loc 1 33 13 is_stmt 1 view .LVU208
+  33:Core/HAL/lib/controller/controller.c ****         }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 16
+
+
+ 613              		.loc 1 33 62 is_stmt 0 view .LVU209
+ 614 011e 17EE903A 		vmov	r3, s15
+ 615 0122 C4F80C31 		str	r3, [r4, #268]	@ unaligned
+ 616              	.L33:
+  35:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum += obj->state_space_controller.z1 * ob
+ 617              		.loc 1 35 9 is_stmt 1 view .LVU210
+  35:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum += obj->state_space_controller.z1 * ob
+ 618              		.loc 1 35 13 is_stmt 0 view .LVU211
+ 619 0126 F0EEC07A 		vabs.f32	s15, s0
+  35:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum += obj->state_space_controller.z1 * ob
+ 620              		.loc 1 35 98 view .LVU212
+ 621 012a D4F80031 		ldr	r3, [r4, #256]	@ unaligned
+  35:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.integrator.error_sum += obj->state_space_controller.z1 * ob
+ 622              		.loc 1 35 12 view .LVU213
+ 623 012e 06EE903A 		vmov	s13, r3
+ 624 0132 F4EEE67A 		vcmpe.f32	s15, s13
+ 625 0136 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 626 013a 55D8     		bhi	.L53
+  36:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.output -= obj->state_space_controller.integrator.error_sum 
+ 627              		.loc 1 36 13 is_stmt 1 view .LVU214
+  36:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.output -= obj->state_space_controller.integrator.error_sum 
+ 628              		.loc 1 36 132 is_stmt 0 view .LVU215
+ 629 013c D4F8F830 		ldr	r3, [r4, #248]	@ unaligned
+ 630 0140 07EE903A 		vmov	s15, r3	@ int
+  36:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.output -= obj->state_space_controller.integrator.error_sum 
+ 631              		.loc 1 36 96 view .LVU216
+ 632 0144 60EE277A 		vmul.f32	s15, s0, s15
+  36:Core/HAL/lib/controller/controller.c ****             obj->state_space_controller.output -= obj->state_space_controller.integrator.error_sum 
+ 633              		.loc 1 36 62 view .LVU217
+ 634 0148 D4F80C31 		ldr	r3, [r4, #268]	@ unaligned
+ 635 014c 00EE103A 		vmov	s0, r3	@ int
+ 636 0150 37EE800A 		vadd.f32	s0, s15, s0
+ 637 0154 10EE103A 		vmov	r3, s0
+ 638 0158 C4F80C31 		str	r3, [r4, #268]	@ unaligned
+  37:Core/HAL/lib/controller/controller.c ****         } else {
+ 639              		.loc 1 37 13 is_stmt 1 view .LVU218
+  37:Core/HAL/lib/controller/controller.c ****         } else {
+ 640              		.loc 1 37 147 is_stmt 0 view .LVU219
+ 641 015c D4F8FC30 		ldr	r3, [r4, #252]	@ unaligned
+  37:Core/HAL/lib/controller/controller.c ****         } else {
+ 642              		.loc 1 37 100 view .LVU220
+ 643 0160 07EE903A 		vmov	s15, r3
+ 644 0164 20EE270A 		vmul.f32	s0, s0, s15
+  37:Core/HAL/lib/controller/controller.c ****         } else {
+ 645              		.loc 1 37 48 view .LVU221
+ 646 0168 37EE400A 		vsub.f32	s0, s14, s0
+ 647 016c 10EE103A 		vmov	r3, s0	@ int
+ 648 0170 C4F82431 		str	r3, [r4, #292]	@ unaligned
+ 649              	.L37:
+  42:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+ 650              		.loc 1 42 9 is_stmt 1 view .LVU222
+  42:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+ 651              		.loc 1 42 57 is_stmt 0 view .LVU223
+ 652 0174 D4F8D830 		ldr	r3, [r4, #216]	@ unaligned
+ 653 0178 07EE903A 		vmov	s15, r3	@ int
+  42:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+ 654              		.loc 1 42 97 view .LVU224
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 17
+
+
+ 655 017c D4F8DC30 		ldr	r3, [r4, #220]	@ unaligned
+ 656 0180 07EE103A 		vmov	s14, r3	@ int
+  42:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+ 657              		.loc 1 42 130 view .LVU225
+ 658 0184 D4F82431 		ldr	r3, [r4, #292]	@ unaligned
+  42:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+ 659              		.loc 1 42 101 view .LVU226
+ 660 0188 06EE903A 		vmov	s13, r3
+ 661 018c 27EE267A 		vmul.f32	s14, s14, s13
+  42:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+ 662              		.loc 1 42 61 view .LVU227
+ 663 0190 37EE877A 		vadd.f32	s14, s15, s14
+  42:Core/HAL/lib/controller/controller.c ****         obj->output += obj->state_space_controller.config.feedback_forward;
+ 664              		.loc 1 42 21 view .LVU228
+ 665 0194 17EE103A 		vmov	r3, s14
+ 666 0198 C4F85531 		str	r3, [r4, #341]	@ unaligned
+  43:Core/HAL/lib/controller/controller.c ****         if (obj->output > obj->state_space_controller.config.outputmax) {
+ 667              		.loc 1 43 9 is_stmt 1 view .LVU229
+  43:Core/HAL/lib/controller/controller.c ****         if (obj->output > obj->state_space_controller.config.outputmax) {
+ 668              		.loc 1 43 58 is_stmt 0 view .LVU230
+ 669 019c D4F8F030 		ldr	r3, [r4, #240]	@ unaligned
+ 670 01a0 07EE903A 		vmov	s15, r3	@ int
+  43:Core/HAL/lib/controller/controller.c ****         if (obj->output > obj->state_space_controller.config.outputmax) {
+ 671              		.loc 1 43 21 view .LVU231
+ 672 01a4 77EE277A 		vadd.f32	s15, s14, s15
+ 673 01a8 17EE903A 		vmov	r3, s15
+ 674 01ac C4F85531 		str	r3, [r4, #341]	@ unaligned
+  44:Core/HAL/lib/controller/controller.c ****             obj->output = obj->state_space_controller.config.outputmax;
+ 675              		.loc 1 44 9 is_stmt 1 view .LVU232
+  44:Core/HAL/lib/controller/controller.c ****             obj->output = obj->state_space_controller.config.outputmax;
+ 676              		.loc 1 44 61 is_stmt 0 view .LVU233
+ 677 01b0 D4F8F430 		ldr	r3, [r4, #244]	@ unaligned
+ 678 01b4 07EE103A 		vmov	s14, r3	@ int
+  44:Core/HAL/lib/controller/controller.c ****             obj->output = obj->state_space_controller.config.outputmax;
+ 679              		.loc 1 44 12 view .LVU234
+ 680 01b8 F4EEC77A 		vcmpe.f32	s15, s14
+ 681 01bc F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 682 01c0 01DD     		ble	.L38
+  45:Core/HAL/lib/controller/controller.c ****         }
+ 683              		.loc 1 45 13 is_stmt 1 view .LVU235
+  45:Core/HAL/lib/controller/controller.c ****         }
+ 684              		.loc 1 45 25 is_stmt 0 view .LVU236
+ 685 01c2 C4F85531 		str	r3, [r4, #341]	@ unaligned
+ 686              	.L38:
+  47:Core/HAL/lib/controller/controller.c ****             obj->output = -obj->state_space_controller.config.outputmax;
+ 687              		.loc 1 47 9 is_stmt 1 view .LVU237
+  47:Core/HAL/lib/controller/controller.c ****             obj->output = -obj->state_space_controller.config.outputmax;
+ 688              		.loc 1 47 16 is_stmt 0 view .LVU238
+ 689 01c6 D4F85531 		ldr	r3, [r4, #341]	@ unaligned
+  47:Core/HAL/lib/controller/controller.c ****             obj->output = -obj->state_space_controller.config.outputmax;
+ 690              		.loc 1 47 27 view .LVU239
+ 691 01ca B1EE477A 		vneg.f32	s14, s14
+  47:Core/HAL/lib/controller/controller.c ****             obj->output = -obj->state_space_controller.config.outputmax;
+ 692              		.loc 1 47 12 view .LVU240
+ 693 01ce 07EE903A 		vmov	s15, r3
+ 694 01d2 F4EEC77A 		vcmpe.f32	s15, s14
+ 695 01d6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 18
+
+
+ 696 01da 7FF519AF 		bpl	.L29
+  48:Core/HAL/lib/controller/controller.c ****         }
+ 697              		.loc 1 48 13 is_stmt 1 view .LVU241
+  48:Core/HAL/lib/controller/controller.c ****         }
+ 698              		.loc 1 48 25 is_stmt 0 view .LVU242
+ 699 01de 17EE103A 		vmov	r3, s14
+ 700 01e2 C4F85531 		str	r3, [r4, #341]	@ unaligned
+ 701 01e6 13E7     		b	.L29
+ 702              	.L53:
+  39:Core/HAL/lib/controller/controller.c ****         }
+ 703              		.loc 1 39 13 is_stmt 1 view .LVU243
+  39:Core/HAL/lib/controller/controller.c ****         }
+ 704              		.loc 1 39 64 is_stmt 0 view .LVU244
+ 705 01e8 FFF7FEFF 		bl	fsgn
+ 706              	.LVL35:
+ 707 01ec 07EE900A 		vmov	s15, r0	@ int
+  39:Core/HAL/lib/controller/controller.c ****         }
+ 708              		.loc 1 39 148 view .LVU245
+ 709 01f0 D4F80831 		ldr	r3, [r4, #264]	@ unaligned
+  39:Core/HAL/lib/controller/controller.c ****         }
+ 710              		.loc 1 39 101 view .LVU246
+ 711 01f4 F8EEE77A 		vcvt.f32.s32	s15, s15
+  39:Core/HAL/lib/controller/controller.c ****         }
+ 712              		.loc 1 39 62 view .LVU247
+ 713 01f8 07EE103A 		vmov	s14, r3
+ 714 01fc 67EE877A 		vmul.f32	s15, s15, s14
+ 715 0200 17EE903A 		vmov	r3, s15	@ int
+ 716 0204 C4F80C31 		str	r3, [r4, #268]	@ unaligned
+ 717 0208 B4E7     		b	.L37
+ 718              	.L59:
+ 719              	.LBB2:
+  52:Core/HAL/lib/controller/controller.c ****         float z_expand;
+ 720              		.loc 1 52 9 is_stmt 1 view .LVU248
+  52:Core/HAL/lib/controller/controller.c ****         float z_expand;
+ 721              		.loc 1 52 41 is_stmt 0 view .LVU249
+ 722 020a D4F84131 		ldr	r3, [r4, #321]	@ unaligned
+  52:Core/HAL/lib/controller/controller.c ****         float z_expand;
+ 723              		.loc 1 52 23 view .LVU250
+ 724 020e B3F90030 		ldrsh	r3, [r3]
+ 725 0212 06EE903A 		vmov	s13, r3	@ int
+  52:Core/HAL/lib/controller/controller.c ****         float z_expand;
+ 726              		.loc 1 52 21 view .LVU251
+ 727 0216 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 728 021a 16EE903A 		vmov	r3, s13
+ 729 021e C4F84D31 		str	r3, [r4, #333]	@ unaligned
+  53:Core/HAL/lib/controller/controller.c ****         z_expand = obj->leso.z_expand;
+ 730              		.loc 1 53 9 is_stmt 1 view .LVU252
+  54:Core/HAL/lib/controller/controller.c ****         obj->leso.x1 = obj->fdb_speed;
+ 731              		.loc 1 54 9 view .LVU253
+  54:Core/HAL/lib/controller/controller.c ****         obj->leso.x1 = obj->fdb_speed;
+ 732              		.loc 1 54 18 is_stmt 0 view .LVU254
+ 733 0222 D4F85131 		ldr	r3, [r4, #337]	@ unaligned
+ 734 0226 04EE903A 		vmov	s9, r3	@ int
+ 735              	.LVL36:
+  55:Core/HAL/lib/controller/controller.c ****         obj->leso.z_expand = z_expand + obj->leso.config.h * obj->leso.config.l_expand * (obj->leso
+ 736              		.loc 1 55 9 is_stmt 1 view .LVU255
+  55:Core/HAL/lib/controller/controller.c ****         obj->leso.z_expand = z_expand + obj->leso.config.h * obj->leso.config.l_expand * (obj->leso
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 19
+
+
+ 737              		.loc 1 55 27 is_stmt 0 view .LVU256
+ 738 022a D4F86131 		ldr	r3, [r4, #353]	@ unaligned
+  55:Core/HAL/lib/controller/controller.c ****         obj->leso.z_expand = z_expand + obj->leso.config.h * obj->leso.config.l_expand * (obj->leso
+ 739              		.loc 1 55 22 view .LVU257
+ 740 022e C4F84931 		str	r3, [r4, #329]	@ unaligned
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 741              		.loc 1 56 9 is_stmt 1 view .LVU258
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 742              		.loc 1 56 57 is_stmt 0 view .LVU259
+ 743 0232 D4F83921 		ldr	r2, [r4, #313]	@ unaligned
+ 744 0236 05EE102A 		vmov	s10, r2	@ int
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 745              		.loc 1 56 78 view .LVU260
+ 746 023a D4F82D21 		ldr	r2, [r4, #301]	@ unaligned
+ 747 023e 07EE102A 		vmov	s14, r2	@ int
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 748              		.loc 1 56 60 view .LVU261
+ 749 0242 25EE077A 		vmul.f32	s14, s10, s14
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 750              		.loc 1 56 115 view .LVU262
+ 751 0246 D4F84521 		ldr	r2, [r4, #325]	@ unaligned
+ 752 024a 05EE902A 		vmov	s11, r2	@ int
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 753              		.loc 1 56 104 view .LVU263
+ 754 024e 07EE903A 		vmov	s15, r3
+ 755 0252 77EEE57A 		vsub.f32	s15, s15, s11
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 756              		.loc 1 56 88 view .LVU264
+ 757 0256 27EE277A 		vmul.f32	s14, s14, s15
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 758              		.loc 1 56 39 view .LVU265
+ 759 025a 37EE247A 		vadd.f32	s14, s14, s9
+  56:Core/HAL/lib/controller/controller.c ****         if (obj->leso.z_expand > obj->leso.config.z_expand_max) {
+ 760              		.loc 1 56 28 view .LVU266
+ 761 025e 17EE103A 		vmov	r3, s14
+ 762 0262 C4F85131 		str	r3, [r4, #337]	@ unaligned
+  57:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = obj->leso.config.z_expand_max;
+ 763              		.loc 1 57 9 is_stmt 1 view .LVU267
+  57:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = obj->leso.config.z_expand_max;
+ 764              		.loc 1 57 50 is_stmt 0 view .LVU268
+ 765 0266 D4F83D31 		ldr	r3, [r4, #317]	@ unaligned
+ 766 026a 06EE103A 		vmov	s12, r3	@ int
+  57:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = obj->leso.config.z_expand_max;
+ 767              		.loc 1 57 12 view .LVU269
+ 768 026e B4EEC67A 		vcmpe.f32	s14, s12
+ 769 0272 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 770 0276 2ADD     		ble	.L54
+  58:Core/HAL/lib/controller/controller.c ****         } else if (obj->leso.z_expand < -obj->leso.config.z_expand_max) {
+ 771              		.loc 1 58 13 is_stmt 1 view .LVU270
+  58:Core/HAL/lib/controller/controller.c ****         } else if (obj->leso.z_expand < -obj->leso.config.z_expand_max) {
+ 772              		.loc 1 58 32 is_stmt 0 view .LVU271
+ 773 0278 C4F85131 		str	r3, [r4, #337]	@ unaligned
+ 774              	.L44:
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 775              		.loc 1 62 9 is_stmt 1 view .LVU272
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 776              		.loc 1 62 88 is_stmt 0 view .LVU273
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 20
+
+
+ 777 027c D4F83131 		ldr	r3, [r4, #305]	@ unaligned
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 778              		.loc 1 62 92 view .LVU274
+ 779 0280 07EE103A 		vmov	s14, r3
+ 780 0284 67EE877A 		vmul.f32	s15, s15, s14
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 781              		.loc 1 62 70 view .LVU275
+ 782 0288 77EEA47A 		vadd.f32	s15, s15, s9
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 783              		.loc 1 62 142 view .LVU276
+ 784 028c D4F83531 		ldr	r3, [r4, #309]	@ unaligned
+ 785 0290 07EE103A 		vmov	s14, r3	@ int
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 786              		.loc 1 62 145 view .LVU277
+ 787 0294 66EE876A 		vmul.f32	s13, s13, s14
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 788              		.loc 1 62 124 view .LVU278
+ 789 0298 77EEA67A 		vadd.f32	s15, s15, s13
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 790              		.loc 1 62 58 view .LVU279
+ 791 029c 65EE277A 		vmul.f32	s15, s10, s15
+  62:Core/HAL/lib/controller/controller.c ****         obj->output -= 1 * (obj->leso.z_expand) / obj->leso.config.b;
+ 792              		.loc 1 62 22 view .LVU280
+ 793 02a0 75EEA75A 		vadd.f32	s11, s11, s15
+ 794 02a4 15EE903A 		vmov	r3, s11	@ int
+ 795 02a8 C4F84531 		str	r3, [r4, #325]	@ unaligned
+  63:Core/HAL/lib/controller/controller.c ****     }
+ 796              		.loc 1 63 9 is_stmt 1 view .LVU281
+  63:Core/HAL/lib/controller/controller.c ****     }
+ 797              		.loc 1 63 26 is_stmt 0 view .LVU282
+ 798 02ac D4F85131 		ldr	r3, [r4, #337]	@ unaligned
+  63:Core/HAL/lib/controller/controller.c ****     }
+ 799              		.loc 1 63 49 view .LVU283
+ 800 02b0 07EE903A 		vmov	s15, r3
+ 801 02b4 C7EE877A 		vdiv.f32	s15, s15, s14
+  63:Core/HAL/lib/controller/controller.c ****     }
+ 802              		.loc 1 63 21 view .LVU284
+ 803 02b8 D4F85531 		ldr	r3, [r4, #341]	@ unaligned
+ 804 02bc 07EE103A 		vmov	s14, r3
+ 805 02c0 77EE677A 		vsub.f32	s15, s14, s15
+ 806 02c4 17EE903A 		vmov	r3, s15
+ 807 02c8 C4F85531 		str	r3, [r4, #341]	@ unaligned
+ 808 02cc A5E6     		b	.L41
+ 809              	.L54:
+  59:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = -obj->leso.config.z_expand_max;
+ 810              		.loc 1 59 16 is_stmt 1 view .LVU285
+  59:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = -obj->leso.config.z_expand_max;
+ 811              		.loc 1 59 41 is_stmt 0 view .LVU286
+ 812 02ce B1EE466A 		vneg.f32	s12, s12
+  59:Core/HAL/lib/controller/controller.c ****             obj->leso.z_expand = -obj->leso.config.z_expand_max;
+ 813              		.loc 1 59 19 view .LVU287
+ 814 02d2 B4EEC67A 		vcmpe.f32	s14, s12
+ 815 02d6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 816 02da CFD5     		bpl	.L44
+  60:Core/HAL/lib/controller/controller.c ****         }
+ 817              		.loc 1 60 13 is_stmt 1 view .LVU288
+  60:Core/HAL/lib/controller/controller.c ****         }
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 21
+
+
+ 818              		.loc 1 60 32 is_stmt 0 view .LVU289
+ 819 02dc 16EE103A 		vmov	r3, s12
+ 820 02e0 C4F85131 		str	r3, [r4, #337]	@ unaligned
+ 821 02e4 CAE7     		b	.L44
+ 822              	.LBE2:
+ 823              		.cfi_endproc
+ 824              	.LFE0:
+ 826              		.section	.text.CLASSIC_PID_Setconfig,"ax",%progbits
+ 827              		.align	1
+ 828              		.global	CLASSIC_PID_Setconfig
+ 829              		.syntax unified
+ 830              		.thumb
+ 831              		.thumb_func
+ 833              	CLASSIC_PID_Setconfig:
+ 834              	.LVL37:
+ 835              	.LFB2:
+ 105:Core/HAL/lib/controller/controller.c **** 
+ 106:Core/HAL/lib/controller/controller.c **** //经典pid配置
+ 107:Core/HAL/lib/controller/controller.c **** void CLASSIC_PID_Setconfig(controller_config* obj, float kp, float kd, float ki, float error_max, f
+ 836              		.loc 1 107 151 is_stmt 1 view -0
+ 837              		.cfi_startproc
+ 838              		@ args = 0, pretend = 0, frame = 0
+ 839              		@ frame_needed = 0, uses_anonymous_args = 0
+ 840              		@ link register save eliminated.
+ 108:Core/HAL/lib/controller/controller.c ****     obj->calc_type = CLASSIC;
+ 841              		.loc 1 108 5 view .LVU291
+ 842              		.loc 1 108 20 is_stmt 0 view .LVU292
+ 843 0000 0023     		movs	r3, #0
+ 844 0002 80F89B30 		strb	r3, [r0, #155]
+ 109:Core/HAL/lib/controller/controller.c ****     obj->leso_config.SWITCH = MYDISABLE;
+ 845              		.loc 1 109 5 is_stmt 1 view .LVU293
+ 846              		.loc 1 109 29 is_stmt 0 view .LVU294
+ 847 0006 80F89C30 		strb	r3, [r0, #156]
+ 110:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.PID_Mode = PID_POSITION;
+ 848              		.loc 1 110 5 is_stmt 1 view .LVU295
+ 849              		.loc 1 110 32 is_stmt 0 view .LVU296
+ 850 000a 80F82530 		strb	r3, [r0, #37]
+ 111:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.D_ahead = MYDISABLE;
+ 851              		.loc 1 111 5 is_stmt 1 view .LVU297
+ 852              		.loc 1 111 31 is_stmt 0 view .LVU298
+ 853 000e 80F82630 		strb	r3, [r0, #38]
+ 112:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max;
+ 854              		.loc 1 112 5 is_stmt 1 view .LVU299
+ 855              		.loc 1 112 51 is_stmt 0 view .LVU300
+ 856 0012 11EE902A 		vmov	r2, s3
+ 857 0016 C0F81D20 		str	r2, [r0, #29]	@ unaligned
+ 113:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.NLSEF_SWITCH = MYDISABLE;
+ 858              		.loc 1 113 5 is_stmt 1 view .LVU301
+ 859              		.loc 1 113 36 is_stmt 0 view .LVU302
+ 860 001a 0370     		strb	r3, [r0]
+ 114:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_preload = error_preload;
+ 861              		.loc 1 114 5 is_stmt 1 view .LVU303
+ 862              		.loc 1 114 55 is_stmt 0 view .LVU304
+ 863 001c 12EE903A 		vmov	r3, s5
+ 864 0020 C0F82130 		str	r3, [r0, #33]	@ unaligned
+ 115:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.KI = ki;
+ 865              		.loc 1 115 5 is_stmt 1 view .LVU305
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 22
+
+
+ 866              		.loc 1 115 44 is_stmt 0 view .LVU306
+ 867 0024 11EE103A 		vmov	r3, s2
+ 868 0028 C0F81530 		str	r3, [r0, #21]	@ unaligned
+ 116:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max;
+ 869              		.loc 1 116 5 is_stmt 1 view .LVU307
+ 117:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.range = irange;
+ 870              		.loc 1 117 5 view .LVU308
+ 871              		.loc 1 117 47 is_stmt 0 view .LVU309
+ 872 002c 13EE103A 		vmov	r3, s6
+ 873 0030 C0F81930 		str	r3, [r0, #25]	@ unaligned
+ 118:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KD = kd;
+ 874              		.loc 1 118 5 is_stmt 1 view .LVU310
+ 875              		.loc 1 118 26 is_stmt 0 view .LVU311
+ 876 0034 10EE903A 		vmov	r3, s1
+ 877 0038 C0F80D30 		str	r3, [r0, #13]	@ unaligned
+ 119:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KP = kp;
+ 878              		.loc 1 119 5 is_stmt 1 view .LVU312
+ 879              		.loc 1 119 26 is_stmt 0 view .LVU313
+ 880 003c 10EE103A 		vmov	r3, s0
+ 881 0040 C0F81130 		str	r3, [r0, #17]	@ unaligned
+ 120:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.outputmax = outputmax;
+ 882              		.loc 1 120 5 is_stmt 1 view .LVU314
+ 883              		.loc 1 120 33 is_stmt 0 view .LVU315
+ 884 0044 12EE103A 		vmov	r3, s4
+ 885 0048 C0F82F30 		str	r3, [r0, #47]	@ unaligned
+ 121:Core/HAL/lib/controller/controller.c **** }
+ 886              		.loc 1 121 1 view .LVU316
+ 887 004c 7047     		bx	lr
+ 888              		.cfi_endproc
+ 889              	.LFE2:
+ 891              		.section	.text.CASCADE_PID_Setconfig,"ax",%progbits
+ 892              		.align	1
+ 893              		.global	CASCADE_PID_Setconfig
+ 894              		.syntax unified
+ 895              		.thumb
+ 896              		.thumb_func
+ 898              	CASCADE_PID_Setconfig:
+ 899              	.LVL38:
+ 900              	.LFB3:
+ 122:Core/HAL/lib/controller/controller.c **** 
+ 123:Core/HAL/lib/controller/controller.c **** //串级pid配置
+ 124:Core/HAL/lib/controller/controller.c **** void CASCADE_PID_Setconfig(controller_config* obj, float kp_pos, float kd_pos, float ki_pos, float 
+ 901              		.loc 1 124 306 is_stmt 1 view -0
+ 902              		.cfi_startproc
+ 903              		@ args = 0, pretend = 0, frame = 0
+ 904              		@ frame_needed = 0, uses_anonymous_args = 0
+ 905              		@ link register save eliminated.
+ 125:Core/HAL/lib/controller/controller.c ****     obj->calc_type = CASCADE;
+ 906              		.loc 1 125 5 view .LVU318
+ 907              		.loc 1 125 20 is_stmt 0 view .LVU319
+ 908 0000 0123     		movs	r3, #1
+ 909 0002 80F89B30 		strb	r3, [r0, #155]
+ 126:Core/HAL/lib/controller/controller.c ****     obj->leso_config.SWITCH = MYDISABLE;
+ 910              		.loc 1 126 5 is_stmt 1 view .LVU320
+ 911              		.loc 1 126 29 is_stmt 0 view .LVU321
+ 912 0006 0023     		movs	r3, #0
+ 913 0008 80F89C30 		strb	r3, [r0, #156]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 23
+
+
+ 127:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.PID_Mode = PID_POSITION;
+ 914              		.loc 1 127 5 is_stmt 1 view .LVU322
+ 915              		.loc 1 127 32 is_stmt 0 view .LVU323
+ 916 000c 80F82530 		strb	r3, [r0, #37]
+ 128:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.D_ahead = MYDISABLE;
+ 917              		.loc 1 128 5 is_stmt 1 view .LVU324
+ 918              		.loc 1 128 31 is_stmt 0 view .LVU325
+ 919 0010 80F82630 		strb	r3, [r0, #38]
+ 129:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max_pos;
+ 920              		.loc 1 129 5 is_stmt 1 view .LVU326
+ 921              		.loc 1 129 51 is_stmt 0 view .LVU327
+ 922 0014 11EE902A 		vmov	r2, s3
+ 923 0018 C0F81D20 		str	r2, [r0, #29]	@ unaligned
+ 130:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.NLSEF_SWITCH = MYDISABLE;
+ 924              		.loc 1 130 5 is_stmt 1 view .LVU328
+ 925              		.loc 1 130 36 is_stmt 0 view .LVU329
+ 926 001c 0370     		strb	r3, [r0]
+ 131:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_preload = error_preload_pos;
+ 927              		.loc 1 131 5 is_stmt 1 view .LVU330
+ 928              		.loc 1 131 55 is_stmt 0 view .LVU331
+ 929 001e 12EE902A 		vmov	r2, s5
+ 930 0022 C0F82120 		str	r2, [r0, #33]	@ unaligned
+ 132:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.KI = ki_pos;
+ 931              		.loc 1 132 5 is_stmt 1 view .LVU332
+ 932              		.loc 1 132 44 is_stmt 0 view .LVU333
+ 933 0026 11EE102A 		vmov	r2, s2
+ 934 002a C0F81520 		str	r2, [r0, #21]	@ unaligned
+ 133:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max_pos;
+ 935              		.loc 1 133 5 is_stmt 1 view .LVU334
+ 134:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.range = irange_pos;
+ 936              		.loc 1 134 5 view .LVU335
+ 937              		.loc 1 134 47 is_stmt 0 view .LVU336
+ 938 002e 13EE102A 		vmov	r2, s6
+ 939 0032 C0F81920 		str	r2, [r0, #25]	@ unaligned
+ 135:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KD = kd_pos;
+ 940              		.loc 1 135 5 is_stmt 1 view .LVU337
+ 941              		.loc 1 135 26 is_stmt 0 view .LVU338
+ 942 0036 10EE902A 		vmov	r2, s1
+ 943 003a C0F80D20 		str	r2, [r0, #13]	@ unaligned
+ 136:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KP = kp_pos;
+ 944              		.loc 1 136 5 is_stmt 1 view .LVU339
+ 945              		.loc 1 136 26 is_stmt 0 view .LVU340
+ 946 003e 10EE102A 		vmov	r2, s0
+ 947 0042 C0F81120 		str	r2, [r0, #17]	@ unaligned
+ 137:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.outputmax = outputmax_pos;
+ 948              		.loc 1 137 5 is_stmt 1 view .LVU341
+ 949              		.loc 1 137 33 is_stmt 0 view .LVU342
+ 950 0046 12EE102A 		vmov	r2, s4
+ 951 004a C0F82F20 		str	r2, [r0, #47]	@ unaligned
+ 138:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.PID_Mode = PID_POSITION;
+ 952              		.loc 1 138 5 is_stmt 1 view .LVU343
+ 953              		.loc 1 138 32 is_stmt 0 view .LVU344
+ 954 004e 80F85830 		strb	r3, [r0, #88]
+ 139:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.D_ahead = MYDISABLE;
+ 955              		.loc 1 139 5 is_stmt 1 view .LVU345
+ 956              		.loc 1 139 31 is_stmt 0 view .LVU346
+ 957 0052 80F85930 		strb	r3, [r0, #89]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 24
+
+
+ 140:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.integrator_config.error_max = error_max_spd;
+ 958              		.loc 1 140 5 is_stmt 1 view .LVU347
+ 959              		.loc 1 140 51 is_stmt 0 view .LVU348
+ 960 0056 15EE102A 		vmov	r2, s10
+ 961 005a 0265     		str	r2, [r0, #80]	@ unaligned
+ 141:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.NLSEF_SWITCH = MYDISABLE;
+ 962              		.loc 1 141 5 is_stmt 1 view .LVU349
+ 963              		.loc 1 141 36 is_stmt 0 view .LVU350
+ 964 005c 80F83330 		strb	r3, [r0, #51]
+ 142:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.integrator_config.error_preload = error_preload_spd;
+ 965              		.loc 1 142 5 is_stmt 1 view .LVU351
+ 966              		.loc 1 142 55 is_stmt 0 view .LVU352
+ 967 0060 16EE103A 		vmov	r3, s12
+ 968 0064 4365     		str	r3, [r0, #84]	@ unaligned
+ 143:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.integrator_config.KI = ki_spd;
+ 969              		.loc 1 143 5 is_stmt 1 view .LVU353
+ 970              		.loc 1 143 44 is_stmt 0 view .LVU354
+ 971 0066 14EE903A 		vmov	r3, s9
+ 972 006a 8364     		str	r3, [r0, #72]	@ unaligned
+ 144:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.integrator_config.error_max = error_max_spd;
+ 973              		.loc 1 144 5 is_stmt 1 view .LVU355
+ 145:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.integrator_config.range = irange_spd;
+ 974              		.loc 1 145 5 view .LVU356
+ 975              		.loc 1 145 47 is_stmt 0 view .LVU357
+ 976 006c 16EE903A 		vmov	r3, s13
+ 977 0070 C364     		str	r3, [r0, #76]	@ unaligned
+ 146:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.KD = kd_spd;
+ 978              		.loc 1 146 5 is_stmt 1 view .LVU358
+ 979              		.loc 1 146 26 is_stmt 0 view .LVU359
+ 980 0072 14EE103A 		vmov	r3, s8
+ 981 0076 0364     		str	r3, [r0, #64]	@ unaligned
+ 147:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.KP = kp_spd;
+ 982              		.loc 1 147 5 is_stmt 1 view .LVU360
+ 983              		.loc 1 147 26 is_stmt 0 view .LVU361
+ 984 0078 13EE903A 		vmov	r3, s7
+ 985 007c 4364     		str	r3, [r0, #68]	@ unaligned
+ 148:Core/HAL/lib/controller/controller.c ****     obj->rank2_config.outputmax = outputmax_spd;
+ 986              		.loc 1 148 5 is_stmt 1 view .LVU362
+ 987              		.loc 1 148 33 is_stmt 0 view .LVU363
+ 988 007e 15EE903A 		vmov	r3, s11
+ 989 0082 C0F86230 		str	r3, [r0, #98]	@ unaligned
+ 149:Core/HAL/lib/controller/controller.c **** }
+ 990              		.loc 1 149 1 view .LVU364
+ 991 0086 7047     		bx	lr
+ 992              		.cfi_endproc
+ 993              	.LFE3:
+ 995              		.section	.text.SMC_Setconfig,"ax",%progbits
+ 996              		.align	1
+ 997              		.global	SMC_Setconfig
+ 998              		.syntax unified
+ 999              		.thumb
+ 1000              		.thumb_func
+ 1002              	SMC_Setconfig:
+ 1003              	.LVL39:
+ 1004              	.LFB4:
+ 150:Core/HAL/lib/controller/controller.c **** 
+ 151:Core/HAL/lib/controller/controller.c **** //一阶滑膜配置
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 25
+
+
+ 152:Core/HAL/lib/controller/controller.c **** void SMC_Setconfig(controller_config* obj, float kp, float kd, float ki, float error_max, float out
+ 1005              		.loc 1 152 156 is_stmt 1 view -0
+ 1006              		.cfi_startproc
+ 1007              		@ args = 0, pretend = 0, frame = 0
+ 1008              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1009              		@ link register save eliminated.
+ 153:Core/HAL/lib/controller/controller.c ****     obj->calc_type = CLASSIC;
+ 1010              		.loc 1 153 5 view .LVU366
+ 1011              		.loc 1 153 20 is_stmt 0 view .LVU367
+ 1012 0000 0023     		movs	r3, #0
+ 1013 0002 80F89B30 		strb	r3, [r0, #155]
+ 154:Core/HAL/lib/controller/controller.c ****     obj->leso_config.SWITCH = MYDISABLE;
+ 1014              		.loc 1 154 5 is_stmt 1 view .LVU368
+ 1015              		.loc 1 154 29 is_stmt 0 view .LVU369
+ 1016 0006 80F89C30 		strb	r3, [r0, #156]
+ 155:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.PID_Mode = PID_POSITION;
+ 1017              		.loc 1 155 5 is_stmt 1 view .LVU370
+ 1018              		.loc 1 155 32 is_stmt 0 view .LVU371
+ 1019 000a 80F82530 		strb	r3, [r0, #37]
+ 156:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.D_ahead = MYDISABLE;
+ 1020              		.loc 1 156 5 is_stmt 1 view .LVU372
+ 1021              		.loc 1 156 31 is_stmt 0 view .LVU373
+ 1022 000e 80F82630 		strb	r3, [r0, #38]
+ 157:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max;
+ 1023              		.loc 1 157 5 is_stmt 1 view .LVU374
+ 1024              		.loc 1 157 51 is_stmt 0 view .LVU375
+ 1025 0012 11EE903A 		vmov	r3, s3
+ 1026 0016 C0F81D30 		str	r3, [r0, #29]	@ unaligned
+ 158:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.NLSEF_SWITCH = MYENABLE;
+ 1027              		.loc 1 158 5 is_stmt 1 view .LVU376
+ 1028              		.loc 1 158 36 is_stmt 0 view .LVU377
+ 1029 001a 0123     		movs	r3, #1
+ 1030 001c 0370     		strb	r3, [r0]
+ 159:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_preload = error_preload;
+ 1031              		.loc 1 159 5 is_stmt 1 view .LVU378
+ 1032              		.loc 1 159 55 is_stmt 0 view .LVU379
+ 1033 001e 12EE903A 		vmov	r3, s5
+ 1034 0022 C0F82130 		str	r3, [r0, #33]	@ unaligned
+ 160:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.KI = ki;
+ 1035              		.loc 1 160 5 is_stmt 1 view .LVU380
+ 1036              		.loc 1 160 44 is_stmt 0 view .LVU381
+ 1037 0026 11EE103A 		vmov	r3, s2
+ 1038 002a C0F81530 		str	r3, [r0, #21]	@ unaligned
+ 161:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max;
+ 1039              		.loc 1 161 5 is_stmt 1 view .LVU382
+ 162:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.range = irange;
+ 1040              		.loc 1 162 5 view .LVU383
+ 1041              		.loc 1 162 47 is_stmt 0 view .LVU384
+ 1042 002e 13EE103A 		vmov	r3, s6
+ 1043 0032 C0F81930 		str	r3, [r0, #25]	@ unaligned
+ 163:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KD = kd;
+ 1044              		.loc 1 163 5 is_stmt 1 view .LVU385
+ 1045              		.loc 1 163 26 is_stmt 0 view .LVU386
+ 1046 0036 10EE903A 		vmov	r3, s1
+ 1047 003a C0F80D30 		str	r3, [r0, #13]	@ unaligned
+ 164:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KP = kp;
+ 1048              		.loc 1 164 5 is_stmt 1 view .LVU387
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 26
+
+
+ 1049              		.loc 1 164 26 is_stmt 0 view .LVU388
+ 1050 003e 10EE103A 		vmov	r3, s0
+ 1051 0042 C0F81130 		str	r3, [r0, #17]	@ unaligned
+ 165:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.outputmax = outputmax;
+ 1052              		.loc 1 165 5 is_stmt 1 view .LVU389
+ 1053              		.loc 1 165 33 is_stmt 0 view .LVU390
+ 1054 0046 12EE103A 		vmov	r3, s4
+ 1055 004a C0F82F30 		str	r3, [r0, #47]	@ unaligned
+ 166:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KP_NL = kp_nl;
+ 1056              		.loc 1 166 5 is_stmt 1 view .LVU391
+ 1057              		.loc 1 166 29 is_stmt 0 view .LVU392
+ 1058 004e 13EE903A 		vmov	r3, s7
+ 1059 0052 C0F80930 		str	r3, [r0, #9]	@ unaligned
+ 167:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.alpha = 0.5;
+ 1060              		.loc 1 167 5 is_stmt 1 view .LVU393
+ 1061              		.loc 1 167 29 is_stmt 0 view .LVU394
+ 1062 0056 4FF07C53 		mov	r3, #1056964608
+ 1063 005a C0F80130 		str	r3, [r0, #1]	@ unaligned
+ 168:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.delta = 0;
+ 1064              		.loc 1 168 5 is_stmt 1 view .LVU395
+ 1065              		.loc 1 168 29 is_stmt 0 view .LVU396
+ 1066 005e 0023     		movs	r3, #0
+ 1067 0060 C0F80530 		str	r3, [r0, #5]	@ unaligned
+ 169:Core/HAL/lib/controller/controller.c **** }
+ 1068              		.loc 1 169 1 view .LVU397
+ 1069 0064 7047     		bx	lr
+ 1070              		.cfi_endproc
+ 1071              	.LFE4:
+ 1073              		.section	.text.LADRC_Setconfig,"ax",%progbits
+ 1074              		.align	1
+ 1075              		.global	LADRC_Setconfig
+ 1076              		.syntax unified
+ 1077              		.thumb
+ 1078              		.thumb_func
+ 1080              	LADRC_Setconfig:
+ 1081              	.LVL40:
+ 1082              	.LFB5:
+ 170:Core/HAL/lib/controller/controller.c **** //一阶ladrc配置
+ 171:Core/HAL/lib/controller/controller.c **** void LADRC_Setconfig(controller_config* obj, float kp, float kd, float ki, float error_max, float o
+ 1083              		.loc 1 171 145 is_stmt 1 view -0
+ 1084              		.cfi_startproc
+ 1085              		@ args = 0, pretend = 0, frame = 0
+ 1086              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1087              		@ link register save eliminated.
+ 172:Core/HAL/lib/controller/controller.c ****     obj->calc_type = CLASSIC;
+ 1088              		.loc 1 172 5 view .LVU399
+ 1089              		.loc 1 172 20 is_stmt 0 view .LVU400
+ 1090 0000 0023     		movs	r3, #0
+ 1091 0002 80F89B30 		strb	r3, [r0, #155]
+ 173:Core/HAL/lib/controller/controller.c ****     obj->leso_config.SWITCH = MYDISABLE;
+ 1092              		.loc 1 173 5 is_stmt 1 view .LVU401
+ 1093              		.loc 1 173 29 is_stmt 0 view .LVU402
+ 1094 0006 80F89C30 		strb	r3, [r0, #156]
+ 174:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.PID_Mode = PID_POSITION;
+ 1095              		.loc 1 174 5 is_stmt 1 view .LVU403
+ 1096              		.loc 1 174 32 is_stmt 0 view .LVU404
+ 1097 000a 80F82530 		strb	r3, [r0, #37]
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 27
+
+
+ 175:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.D_ahead = MYDISABLE;
+ 1098              		.loc 1 175 5 is_stmt 1 view .LVU405
+ 1099              		.loc 1 175 31 is_stmt 0 view .LVU406
+ 1100 000e 80F82630 		strb	r3, [r0, #38]
+ 176:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max;
+ 1101              		.loc 1 176 5 is_stmt 1 view .LVU407
+ 1102              		.loc 1 176 51 is_stmt 0 view .LVU408
+ 1103 0012 11EE902A 		vmov	r2, s3
+ 1104 0016 C0F81D20 		str	r2, [r0, #29]	@ unaligned
+ 177:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.NLSEF_SWITCH = MYDISABLE;
+ 1105              		.loc 1 177 5 is_stmt 1 view .LVU409
+ 1106              		.loc 1 177 36 is_stmt 0 view .LVU410
+ 1107 001a 0370     		strb	r3, [r0]
+ 178:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_preload = error_preload;
+ 1108              		.loc 1 178 5 is_stmt 1 view .LVU411
+ 1109              		.loc 1 178 55 is_stmt 0 view .LVU412
+ 1110 001c 12EE903A 		vmov	r3, s5
+ 1111 0020 C0F82130 		str	r3, [r0, #33]	@ unaligned
+ 179:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.KI = ki;
+ 1112              		.loc 1 179 5 is_stmt 1 view .LVU413
+ 1113              		.loc 1 179 44 is_stmt 0 view .LVU414
+ 1114 0024 11EE103A 		vmov	r3, s2
+ 1115 0028 C0F81530 		str	r3, [r0, #21]	@ unaligned
+ 180:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.error_max = error_max;
+ 1116              		.loc 1 180 5 is_stmt 1 view .LVU415
+ 181:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.integrator_config.range = irange;
+ 1117              		.loc 1 181 5 view .LVU416
+ 1118              		.loc 1 181 47 is_stmt 0 view .LVU417
+ 1119 002c 13EE103A 		vmov	r3, s6
+ 1120 0030 C0F81930 		str	r3, [r0, #25]	@ unaligned
+ 182:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KD = kd;
+ 1121              		.loc 1 182 5 is_stmt 1 view .LVU418
+ 1122              		.loc 1 182 26 is_stmt 0 view .LVU419
+ 1123 0034 10EE903A 		vmov	r3, s1
+ 1124 0038 C0F80D30 		str	r3, [r0, #13]	@ unaligned
+ 183:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.KP = kp;
+ 1125              		.loc 1 183 5 is_stmt 1 view .LVU420
+ 1126              		.loc 1 183 26 is_stmt 0 view .LVU421
+ 1127 003c 10EE103A 		vmov	r3, s0
+ 1128 0040 C0F81130 		str	r3, [r0, #17]	@ unaligned
+ 184:Core/HAL/lib/controller/controller.c ****     obj->rank1_config.outputmax = outputmax;
+ 1129              		.loc 1 184 5 is_stmt 1 view .LVU422
+ 1130              		.loc 1 184 33 is_stmt 0 view .LVU423
+ 1131 0044 12EE103A 		vmov	r3, s4
+ 1132 0048 C0F82F30 		str	r3, [r0, #47]	@ unaligned
+ 185:Core/HAL/lib/controller/controller.c ****     // obj->leso_config.b = b;
+ 186:Core/HAL/lib/controller/controller.c ****     // obj->leso_config.h = h;
+ 187:Core/HAL/lib/controller/controller.c ****     // obj->leso_config.l1 = l;
+ 188:Core/HAL/lib/controller/controller.c ****     // obj->leso_config.c1 = c;
+ 189:Core/HAL/lib/controller/controller.c ****     // obj->leso_config.l_expand = l_expand;
+ 190:Core/HAL/lib/controller/controller.c ****     // obj->leso_config.z_expand_max = z_expand_max;
+ 191:Core/HAL/lib/controller/controller.c **** }
+ 1133              		.loc 1 191 1 view .LVU424
+ 1134 004c 7047     		bx	lr
+ 1135              		.cfi_endproc
+ 1136              	.LFE5:
+ 1138              		.section	.text.LQR_Setconfig,"ax",%progbits
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 28
+
+
+ 1139              		.align	1
+ 1140              		.global	LQR_Setconfig
+ 1141              		.syntax unified
+ 1142              		.thumb
+ 1143              		.thumb_func
+ 1145              	LQR_Setconfig:
+ 1146              	.LVL41:
+ 1147              	.LFB6:
+ 192:Core/HAL/lib/controller/controller.c **** //二阶lqr设置
+ 193:Core/HAL/lib/controller/controller.c **** void LQR_Setconfig(controller_config* obj, float K1, float K2, float b0, float b1, float ki, float 
+ 1148              		.loc 1 193 180 is_stmt 1 view -0
+ 1149              		.cfi_startproc
+ 1150              		@ args = 0, pretend = 0, frame = 0
+ 1151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1152              		@ link register save eliminated.
+ 194:Core/HAL/lib/controller/controller.c ****     obj->calc_type = STATE_SPACE;
+ 1153              		.loc 1 194 5 view .LVU426
+ 1154              		.loc 1 194 20 is_stmt 0 view .LVU427
+ 1155 0000 0223     		movs	r3, #2
+ 1156 0002 80F89B30 		strb	r3, [r0, #155]
+ 195:Core/HAL/lib/controller/controller.c ****     obj->leso_config.SWITCH = MYDISABLE;
+ 1157              		.loc 1 195 5 is_stmt 1 view .LVU428
+ 1158              		.loc 1 195 29 is_stmt 0 view .LVU429
+ 1159 0006 0023     		movs	r3, #0
+ 1160 0008 80F89C30 		strb	r3, [r0, #156]
+ 196:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.h = 0.001;
+ 1161              		.loc 1 196 5 is_stmt 1 view .LVU430
+ 1162              		.loc 1 196 42 is_stmt 0 view .LVU431
+ 1163 000c 154B     		ldr	r3, .L65
+ 1164 000e C0F89730 		str	r3, [r0, #151]	@ unaligned
+ 197:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.outputmax = outputmax;
+ 1165              		.loc 1 197 5 is_stmt 1 view .LVU432
+ 1166              		.loc 1 197 50 is_stmt 0 view .LVU433
+ 1167 0012 13EE103A 		vmov	r3, s6
+ 1168 0016 C0F89330 		str	r3, [r0, #147]	@ unaligned
+ 198:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.integrator_config.KI = ki;
+ 1169              		.loc 1 198 5 is_stmt 1 view .LVU434
+ 1170              		.loc 1 198 61 is_stmt 0 view .LVU435
+ 1171 001a 12EE103A 		vmov	r3, s4
+ 1172 001e C0F87F30 		str	r3, [r0, #127]	@ unaligned
+ 199:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.integrator_config.error_preload = error_preload;
+ 1173              		.loc 1 199 5 is_stmt 1 view .LVU436
+ 1174              		.loc 1 199 72 is_stmt 0 view .LVU437
+ 1175 0022 14EE903A 		vmov	r3, s9
+ 1176 0026 C0F88B30 		str	r3, [r0, #139]	@ unaligned
+ 200:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.integrator_config.range = irange;
+ 1177              		.loc 1 200 5 is_stmt 1 view .LVU438
+ 1178              		.loc 1 200 64 is_stmt 0 view .LVU439
+ 1179 002a 14EE103A 		vmov	r3, s8
+ 1180 002e C0F88330 		str	r3, [r0, #131]	@ unaligned
+ 201:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.b0 = b0;
+ 1181              		.loc 1 201 5 is_stmt 1 view .LVU440
+ 1182              		.loc 1 201 43 is_stmt 0 view .LVU441
+ 1183 0032 11EE103A 		vmov	r3, s2
+ 1184 0036 C0F87730 		str	r3, [r0, #119]	@ unaligned
+ 202:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.b1 = b1;
+ 1185              		.loc 1 202 5 is_stmt 1 view .LVU442
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 29
+
+
+ 1186              		.loc 1 202 43 is_stmt 0 view .LVU443
+ 1187 003a 11EE903A 		vmov	r3, s3
+ 1188 003e C0F87B30 		str	r3, [r0, #123]	@ unaligned
+ 203:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.c1 = k_pos_fdb;
+ 1189              		.loc 1 203 5 is_stmt 1 view .LVU444
+ 1190              		.loc 1 203 43 is_stmt 0 view .LVU445
+ 1191 0042 12EE903A 		vmov	r3, s5
+ 1192 0046 C0F86F30 		str	r3, [r0, #111]	@ unaligned
+ 204:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.c2 = k_spd_fdb;
+ 1193              		.loc 1 204 5 is_stmt 1 view .LVU446
+ 1194              		.loc 1 204 43 is_stmt 0 view .LVU447
+ 1195 004a 13EE903A 		vmov	r3, s7
+ 1196 004e C0F87330 		str	r3, [r0, #115]	@ unaligned
+ 205:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.K1 = K1;
+ 1197              		.loc 1 205 5 is_stmt 1 view .LVU448
+ 1198              		.loc 1 205 43 is_stmt 0 view .LVU449
+ 1199 0052 10EE103A 		vmov	r3, s0
+ 1200 0056 C0F86730 		str	r3, [r0, #103]	@ unaligned
+ 206:Core/HAL/lib/controller/controller.c ****     obj->state_space_controller_config.K2 = K2;
+ 1201              		.loc 1 206 5 is_stmt 1 view .LVU450
+ 1202              		.loc 1 206 43 is_stmt 0 view .LVU451
+ 1203 005a 10EE903A 		vmov	r3, s1
+ 1204 005e C0F86B30 		str	r3, [r0, #107]	@ unaligned
+ 207:Core/HAL/lib/controller/controller.c **** }
+ 1205              		.loc 1 207 1 view .LVU452
+ 1206 0062 7047     		bx	lr
+ 1207              	.L66:
+ 1208              		.align	2
+ 1209              	.L65:
+ 1210 0064 6F12833A 		.word	981668463
+ 1211              		.cfi_endproc
+ 1212              	.LFE6:
+ 1214              		.section	.text.create_controller,"ax",%progbits
+ 1215              		.align	1
+ 1216              		.global	create_controller
+ 1217              		.syntax unified
+ 1218              		.thumb
+ 1219              		.thumb_func
+ 1221              	create_controller:
+ 1222              	.LVL42:
+ 1223              	.LFB7:
+ 208:Core/HAL/lib/controller/controller.c **** 
+ 209:Core/HAL/lib/controller/controller.c **** //因为通用控制器内容较多，需要按情况分配内存
+ 210:Core/HAL/lib/controller/controller.c **** controller* create_controller(controller_config* config) {
+ 1224              		.loc 1 210 58 is_stmt 1 view -0
+ 1225              		.cfi_startproc
+ 1226              		@ args = 0, pretend = 0, frame = 0
+ 1227              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1228              		.loc 1 210 58 is_stmt 0 view .LVU454
+ 1229 0000 70B5     		push	{r4, r5, r6, lr}
+ 1230              	.LCFI5:
+ 1231              		.cfi_def_cfa_offset 16
+ 1232              		.cfi_offset 4, -16
+ 1233              		.cfi_offset 5, -12
+ 1234              		.cfi_offset 6, -8
+ 1235              		.cfi_offset 14, -4
+ 1236 0002 0546     		mov	r5, r0
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 30
+
+
+ 211:Core/HAL/lib/controller/controller.c ****     controller* obj = malloc(sizeof(controller));
+ 1237              		.loc 1 211 5 is_stmt 1 view .LVU455
+ 1238              		.loc 1 211 23 is_stmt 0 view .LVU456
+ 1239 0004 40F26D10 		movw	r0, #365
+ 1240              	.LVL43:
+ 1241              		.loc 1 211 23 view .LVU457
+ 1242 0008 FFF7FEFF 		bl	malloc
+ 1243              	.LVL44:
+ 1244 000c 0446     		mov	r4, r0
+ 1245              	.LVL45:
+ 212:Core/HAL/lib/controller/controller.c ****     memset(obj, 0, sizeof(controller));
+ 1246              		.loc 1 212 5 is_stmt 1 view .LVU458
+ 1247 000e 40F26D12 		movw	r2, #365
+ 1248 0012 0021     		movs	r1, #0
+ 1249 0014 FFF7FEFF 		bl	memset
+ 1250              	.LVL46:
+ 213:Core/HAL/lib/controller/controller.c ****     obj->calc_type = config->calc_type;
+ 1251              		.loc 1 213 5 view .LVU459
+ 1252              		.loc 1 213 28 is_stmt 0 view .LVU460
+ 1253 0018 95F89B30 		ldrb	r3, [r5, #155]	@ zero_extendqisi2
+ 1254              		.loc 1 213 20 view .LVU461
+ 1255 001c 2370     		strb	r3, [r4]
+ 214:Core/HAL/lib/controller/controller.c ****     // obj->config = *config;
+ 215:Core/HAL/lib/controller/controller.c ****     if (config->leso_config.SWITCH == MYENABLE) {
+ 1256              		.loc 1 215 5 is_stmt 1 view .LVU462
+ 1257              		.loc 1 215 28 is_stmt 0 view .LVU463
+ 1258 001e 95F89C30 		ldrb	r3, [r5, #156]	@ zero_extendqisi2
+ 1259              		.loc 1 215 8 view .LVU464
+ 1260 0022 012B     		cmp	r3, #1
+ 1261 0024 2DD0     		beq	.L77
+ 1262              	.L68:
+ 216:Core/HAL/lib/controller/controller.c ****         obj->leso.config = config->leso_config;
+ 217:Core/HAL/lib/controller/controller.c ****     }
+ 218:Core/HAL/lib/controller/controller.c ****     if (config->calc_type == CLASSIC) {
+ 1263              		.loc 1 218 5 is_stmt 1 view .LVU465
+ 1264              		.loc 1 218 15 is_stmt 0 view .LVU466
+ 1265 0026 95F89B30 		ldrb	r3, [r5, #155]	@ zero_extendqisi2
+ 1266              		.loc 1 218 8 view .LVU467
+ 1267 002a 002B     		cmp	r3, #0
+ 1268 002c 46D1     		bne	.L69
+ 219:Core/HAL/lib/controller/controller.c ****         obj->rank1.config = config->rank1_config;
+ 1269              		.loc 1 219 9 is_stmt 1 view .LVU468
+ 1270              		.loc 1 219 27 is_stmt 0 view .LVU469
+ 1271 002e 2B46     		mov	r3, r5
+ 1272 0030 04F11502 		add	r2, r4, #21
+ 1273 0034 3035     		adds	r5, r5, #48
+ 1274              	.LVL47:
+ 1275              	.L70:
+ 1276              		.loc 1 219 27 view .LVU470
+ 1277 0036 1E68     		ldr	r6, [r3]	@ unaligned
+ 1278 0038 D3F804E0 		ldr	lr, [r3, #4]	@ unaligned
+ 1279 003c D3F808C0 		ldr	ip, [r3, #8]	@ unaligned
+ 1280 0040 D968     		ldr	r1, [r3, #12]	@ unaligned
+ 1281 0042 1660     		str	r6, [r2]	@ unaligned
+ 1282 0044 C2F804E0 		str	lr, [r2, #4]	@ unaligned
+ 1283 0048 C2F808C0 		str	ip, [r2, #8]	@ unaligned
+ 1284 004c D160     		str	r1, [r2, #12]	@ unaligned
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 31
+
+
+ 1285 004e 1033     		adds	r3, r3, #16
+ 1286 0050 1032     		adds	r2, r2, #16
+ 1287 0052 AB42     		cmp	r3, r5
+ 1288 0054 EFD1     		bne	.L70
+ 1289 0056 1988     		ldrh	r1, [r3]	@ unaligned
+ 1290 0058 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 1291 005a 1180     		strh	r1, [r2]	@ unaligned
+ 1292 005c 9370     		strb	r3, [r2, #2]
+ 220:Core/HAL/lib/controller/controller.c ****         obj->rank1.integrator.config = obj->rank1.config.integrator_config;
+ 1293              		.loc 1 220 9 is_stmt 1 view .LVU471
+ 1294              		.loc 1 220 38 is_stmt 0 view .LVU472
+ 1295 005e D4F82A00 		ldr	r0, [r4, #42]	@ unaligned
+ 1296 0062 D4F82E10 		ldr	r1, [r4, #46]	@ unaligned
+ 1297 0066 D4F83220 		ldr	r2, [r4, #50]	@ unaligned
+ 1298 006a D4F83630 		ldr	r3, [r4, #54]	@ unaligned
+ 1299 006e C4F80100 		str	r0, [r4, #1]	@ unaligned
+ 1300 0072 C4F80510 		str	r1, [r4, #5]	@ unaligned
+ 1301 0076 C4F80920 		str	r2, [r4, #9]	@ unaligned
+ 1302 007a C4F80D30 		str	r3, [r4, #13]	@ unaligned
+ 1303              	.LVL48:
+ 1304              	.L67:
+ 221:Core/HAL/lib/controller/controller.c ****     } else if (config->calc_type == CASCADE) {
+ 222:Core/HAL/lib/controller/controller.c ****         obj->rank1.config = config->rank1_config;
+ 223:Core/HAL/lib/controller/controller.c ****         obj->rank1.integrator.config = obj->rank1.config.integrator_config;
+ 224:Core/HAL/lib/controller/controller.c ****         obj->rank2.config = config->rank2_config;
+ 225:Core/HAL/lib/controller/controller.c ****         obj->rank2.integrator.config = obj->rank2.config.integrator_config;
+ 226:Core/HAL/lib/controller/controller.c ****     } else if (config->calc_type == STATE_SPACE) {
+ 227:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.config = config->state_space_controller_config;
+ 228:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.integrator.config = obj->state_space_controller.config.integrat
+ 229:Core/HAL/lib/controller/controller.c ****     }
+ 230:Core/HAL/lib/controller/controller.c ****     return obj;
+ 231:Core/HAL/lib/controller/controller.c **** }...
+ 1305              		.loc 1 231 1 view .LVU473
+ 1306 007e 2046     		mov	r0, r4
+ 1307 0080 70BD     		pop	{r4, r5, r6, pc}
+ 1308              	.LVL49:
+ 1309              	.L77:
+ 216:Core/HAL/lib/controller/controller.c ****         obj->leso.config = config->leso_config;
+ 1310              		.loc 1 216 9 is_stmt 1 view .LVU474
+ 216:Core/HAL/lib/controller/controller.c ****         obj->leso.config = config->leso_config;
+ 1311              		.loc 1 216 26 is_stmt 0 view .LVU475
+ 1312 0082 D5F89C20 		ldr	r2, [r5, #156]	@ unaligned
+ 1313 0086 D5F8A030 		ldr	r3, [r5, #160]	@ unaligned
+ 1314 008a D5F8A400 		ldr	r0, [r5, #164]	@ unaligned
+ 1315 008e D5F8A810 		ldr	r1, [r5, #168]	@ unaligned
+ 1316 0092 C4F82C21 		str	r2, [r4, #300]	@ unaligned
+ 1317 0096 C4F83031 		str	r3, [r4, #304]	@ unaligned
+ 1318 009a C4F83401 		str	r0, [r4, #308]	@ unaligned
+ 1319 009e C4F83811 		str	r1, [r4, #312]	@ unaligned
+ 1320 00a2 D5F8AC20 		ldr	r2, [r5, #172]	@ unaligned
+ 1321 00a6 D5F8B030 		ldr	r3, [r5, #176]	@ unaligned
+ 1322 00aa C4F83C21 		str	r2, [r4, #316]	@ unaligned
+ 1323 00ae C4F84031 		str	r3, [r4, #320]	@ unaligned
+ 1324 00b2 95F8B430 		ldrb	r3, [r5, #180]	@ zero_extendqisi2
+ 1325 00b6 84F84431 		strb	r3, [r4, #324]
+ 1326 00ba B4E7     		b	.L68
+ 1327              	.L69:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 32
+
+
+ 221:Core/HAL/lib/controller/controller.c ****     } else if (config->calc_type == CASCADE) {
+ 1328              		.loc 1 221 12 is_stmt 1 view .LVU476
+ 221:Core/HAL/lib/controller/controller.c ****     } else if (config->calc_type == CASCADE) {
+ 1329              		.loc 1 221 15 is_stmt 0 view .LVU477
+ 1330 00bc 012B     		cmp	r3, #1
+ 1331 00be 29D0     		beq	.L78
+ 226:Core/HAL/lib/controller/controller.c ****     } else if (config->calc_type == STATE_SPACE) {
+ 1332              		.loc 1 226 12 is_stmt 1 view .LVU478
+ 226:Core/HAL/lib/controller/controller.c ****     } else if (config->calc_type == STATE_SPACE) {
+ 1333              		.loc 1 226 15 is_stmt 0 view .LVU479
+ 1334 00c0 022B     		cmp	r3, #2
+ 1335 00c2 DCD1     		bne	.L67
+ 227:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.config = config->state_space_controller_config;
+ 1336              		.loc 1 227 9 is_stmt 1 view .LVU480
+ 227:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.config = config->state_space_controller_config;
+ 1337              		.loc 1 227 44 is_stmt 0 view .LVU481
+ 1338 00c4 05F16603 		add	r3, r5, #102
+ 1339 00c8 04F1C702 		add	r2, r4, #199
+ 1340 00cc 9635     		adds	r5, r5, #150
+ 1341              	.LVL50:
+ 1342              	.L75:
+ 227:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.config = config->state_space_controller_config;
+ 1343              		.loc 1 227 44 view .LVU482
+ 1344 00ce D3F800C0 		ldr	ip, [r3]	@ unaligned
+ 1345 00d2 5E68     		ldr	r6, [r3, #4]	@ unaligned
+ 1346 00d4 9868     		ldr	r0, [r3, #8]	@ unaligned
+ 1347 00d6 D968     		ldr	r1, [r3, #12]	@ unaligned
+ 1348 00d8 C2F800C0 		str	ip, [r2]	@ unaligned
+ 1349 00dc 5660     		str	r6, [r2, #4]	@ unaligned
+ 1350 00de 9060     		str	r0, [r2, #8]	@ unaligned
+ 1351 00e0 D160     		str	r1, [r2, #12]	@ unaligned
+ 1352 00e2 1033     		adds	r3, r3, #16
+ 1353 00e4 1032     		adds	r2, r2, #16
+ 1354 00e6 AB42     		cmp	r3, r5
+ 1355 00e8 F1D1     		bne	.L75
+ 1356 00ea 1968     		ldr	r1, [r3]	@ unaligned
+ 1357 00ec 1160     		str	r1, [r2]	@ unaligned
+ 1358 00ee 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 1359 00f0 1371     		strb	r3, [r2, #4]
+ 228:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.integrator.config = obj->state_space_controller.config.integrat
+ 1360              		.loc 1 228 9 is_stmt 1 view .LVU483
+ 228:Core/HAL/lib/controller/controller.c ****         obj->state_space_controller.integrator.config = obj->state_space_controller.config.integrat
+ 1361              		.loc 1 228 55 is_stmt 0 view .LVU484
+ 1362 00f2 D4F8E000 		ldr	r0, [r4, #224]	@ unaligned
+ 1363 00f6 D4F8E410 		ldr	r1, [r4, #228]	@ unaligned
+ 1364 00fa D4F8E820 		ldr	r2, [r4, #232]	@ unaligned
+ 1365 00fe D4F8EC30 		ldr	r3, [r4, #236]	@ unaligned
+ 1366 0102 C4F8FC00 		str	r0, [r4, #252]	@ unaligned
+ 1367 0106 C4F80011 		str	r1, [r4, #256]	@ unaligned
+ 1368 010a C4F80421 		str	r2, [r4, #260]	@ unaligned
+ 1369 010e C4F80831 		str	r3, [r4, #264]	@ unaligned
+ 230:Core/HAL/lib/controller/controller.c ****     return obj;
+ 1370              		.loc 1 230 5 is_stmt 1 view .LVU485
+ 230:Core/HAL/lib/controller/controller.c ****     return obj;
+ 1371              		.loc 1 230 12 is_stmt 0 view .LVU486
+ 1372 0112 B4E7     		b	.L67
+ 1373              	.LVL51:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 33
+
+
+ 1374              	.L78:
+ 222:Core/HAL/lib/controller/controller.c ****         obj->rank1.config = config->rank1_config;
+ 1375              		.loc 1 222 9 is_stmt 1 view .LVU487
+ 222:Core/HAL/lib/controller/controller.c ****         obj->rank1.config = config->rank1_config;
+ 1376              		.loc 1 222 27 is_stmt 0 view .LVU488
+ 1377 0114 2B46     		mov	r3, r5
+ 1378 0116 04F11502 		add	r2, r4, #21
+ 1379 011a 05F1300E 		add	lr, r5, #48
+ 1380              	.L73:
+ 1381 011e D3F800C0 		ldr	ip, [r3]	@ unaligned
+ 1382 0122 5E68     		ldr	r6, [r3, #4]	@ unaligned
+ 1383 0124 9868     		ldr	r0, [r3, #8]	@ unaligned
+ 1384 0126 D968     		ldr	r1, [r3, #12]	@ unaligned
+ 1385 0128 C2F800C0 		str	ip, [r2]	@ unaligned
+ 1386 012c 5660     		str	r6, [r2, #4]	@ unaligned
+ 1387 012e 9060     		str	r0, [r2, #8]	@ unaligned
+ 1388 0130 D160     		str	r1, [r2, #12]	@ unaligned
+ 1389 0132 1033     		adds	r3, r3, #16
+ 1390 0134 1032     		adds	r2, r2, #16
+ 1391 0136 7345     		cmp	r3, lr
+ 1392 0138 F1D1     		bne	.L73
+ 1393 013a 1988     		ldrh	r1, [r3]	@ unaligned
+ 1394 013c 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 1395 013e 1180     		strh	r1, [r2]	@ unaligned
+ 1396 0140 9370     		strb	r3, [r2, #2]
+ 223:Core/HAL/lib/controller/controller.c ****         obj->rank1.integrator.config = obj->rank1.config.integrator_config;
+ 1397              		.loc 1 223 9 is_stmt 1 view .LVU489
+ 223:Core/HAL/lib/controller/controller.c ****         obj->rank1.integrator.config = obj->rank1.config.integrator_config;
+ 1398              		.loc 1 223 38 is_stmt 0 view .LVU490
+ 1399 0142 D4F82A00 		ldr	r0, [r4, #42]	@ unaligned
+ 1400 0146 D4F82E10 		ldr	r1, [r4, #46]	@ unaligned
+ 1401 014a D4F83220 		ldr	r2, [r4, #50]	@ unaligned
+ 1402 014e D4F83630 		ldr	r3, [r4, #54]	@ unaligned
+ 1403 0152 C4F80100 		str	r0, [r4, #1]	@ unaligned
+ 1404 0156 C4F80510 		str	r1, [r4, #5]	@ unaligned
+ 1405 015a C4F80920 		str	r2, [r4, #9]	@ unaligned
+ 1406 015e C4F80D30 		str	r3, [r4, #13]	@ unaligned
+ 224:Core/HAL/lib/controller/controller.c ****         obj->rank2.config = config->rank2_config;
+ 1407              		.loc 1 224 9 is_stmt 1 view .LVU491
+ 224:Core/HAL/lib/controller/controller.c ****         obj->rank2.config = config->rank2_config;
+ 1408              		.loc 1 224 27 is_stmt 0 view .LVU492
+ 1409 0162 05F13303 		add	r3, r5, #51
+ 1410 0166 04F17802 		add	r2, r4, #120
+ 1411 016a 6335     		adds	r5, r5, #99
+ 1412              	.LVL52:
+ 1413              	.L74:
+ 224:Core/HAL/lib/controller/controller.c ****         obj->rank2.config = config->rank2_config;
+ 1414              		.loc 1 224 27 view .LVU493
+ 1415 016c D3F800E0 		ldr	lr, [r3]	@ unaligned
+ 1416 0170 D3F804C0 		ldr	ip, [r3, #4]	@ unaligned
+ 1417 0174 9E68     		ldr	r6, [r3, #8]	@ unaligned
+ 1418 0176 D968     		ldr	r1, [r3, #12]	@ unaligned
+ 1419 0178 C2F800E0 		str	lr, [r2]	@ unaligned
+ 1420 017c C2F804C0 		str	ip, [r2, #4]	@ unaligned
+ 1421 0180 9660     		str	r6, [r2, #8]	@ unaligned
+ 1422 0182 D160     		str	r1, [r2, #12]	@ unaligned
+ 1423 0184 1033     		adds	r3, r3, #16
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 34
+
+
+ 1424 0186 1032     		adds	r2, r2, #16
+ 1425 0188 AB42     		cmp	r3, r5
+ 1426 018a EFD1     		bne	.L74
+ 1427 018c 1988     		ldrh	r1, [r3]	@ unaligned
+ 1428 018e 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 1429 0190 1180     		strh	r1, [r2]	@ unaligned
+ 1430 0192 9370     		strb	r3, [r2, #2]
+ 225:Core/HAL/lib/controller/controller.c ****         obj->rank2.integrator.config = obj->rank2.config.integrator_config;
+ 1431              		.loc 1 225 9 is_stmt 1 view .LVU494
+ 225:Core/HAL/lib/controller/controller.c ****         obj->rank2.integrator.config = obj->rank2.config.integrator_config;
+ 1432              		.loc 1 225 38 is_stmt 0 view .LVU495
+ 1433 0194 D4F88D00 		ldr	r0, [r4, #141]	@ unaligned
+ 1434 0198 D4F89110 		ldr	r1, [r4, #145]	@ unaligned
+ 1435 019c D4F89520 		ldr	r2, [r4, #149]	@ unaligned
+ 1436 01a0 D4F89930 		ldr	r3, [r4, #153]	@ unaligned
+ 1437 01a4 6066     		str	r0, [r4, #100]	@ unaligned
+ 1438 01a6 A166     		str	r1, [r4, #104]	@ unaligned
+ 1439 01a8 E266     		str	r2, [r4, #108]	@ unaligned
+ 1440 01aa 2367     		str	r3, [r4, #112]	@ unaligned
+ 1441 01ac 67E7     		b	.L67
+ 1442              		.cfi_endproc
+ 1443              	.LFE7:
+ 1445              		.text
+ 1446              	.Letext0:
+ 1447              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1448              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1449              		.file 4 "Core/HAL/lib/controller/pid.h"
+ 1450              		.file 5 "Core/HAL/lib/controller/controller.h"
+ 1451              		.file 6 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ 1452              		.file 7 "Core/HAL/lib/common.h"
+ 1453              		.file 8 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\math.h"
+ 1454              		.file 9 "<built-in>"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s 			page 35
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 controller.c
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:24     .text.CLASSIC_PID_Calc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:30     .text.CLASSIC_PID_Calc:00000000 CLASSIC_PID_Calc
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:409    .text.CLASSIC_PID_Calc:000002b4 $d
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:414    .text.UNIVERSAL_Calc:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:420    .text.UNIVERSAL_Calc:00000000 UNIVERSAL_Calc
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:827    .text.CLASSIC_PID_Setconfig:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:833    .text.CLASSIC_PID_Setconfig:00000000 CLASSIC_PID_Setconfig
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:892    .text.CASCADE_PID_Setconfig:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:898    .text.CASCADE_PID_Setconfig:00000000 CASCADE_PID_Setconfig
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:996    .text.SMC_Setconfig:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1002   .text.SMC_Setconfig:00000000 SMC_Setconfig
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1074   .text.LADRC_Setconfig:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1080   .text.LADRC_Setconfig:00000000 LADRC_Setconfig
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1139   .text.LQR_Setconfig:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1145   .text.LQR_Setconfig:00000000 LQR_Setconfig
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1210   .text.LQR_Setconfig:00000064 $d
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1215   .text.create_controller:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccex57D1.s:1221   .text.create_controller:00000000 create_controller
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_i2d
+__aeabi_dmul
+__aeabi_d2f
+fsgn
+sqrt
+fal
+malloc
+memset

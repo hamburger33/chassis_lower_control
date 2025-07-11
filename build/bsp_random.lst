@@ -1,0 +1,188 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bsp_random.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.GetRand_Int,"ax",%progbits
+  20              		.align	1
+  21              		.global	GetRand_Int
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	GetRand_Int:
+  27              	.LFB130:
+  28              		.file 1 "Core/BSP/lib/bsp_random.c"
+   1:Core/BSP/lib/bsp_random.c **** #include "bsp_random.h"
+   2:Core/BSP/lib/bsp_random.c **** 
+   3:Core/BSP/lib/bsp_random.c **** #include "bsp_def.h"
+   4:Core/BSP/lib/bsp_random.c **** #include "rng.h"
+   5:Core/BSP/lib/bsp_random.c **** 
+   6:Core/BSP/lib/bsp_random.c **** uint32_t GetRand_Int() {
+  29              		.loc 1 6 24 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+   7:Core/BSP/lib/bsp_random.c ****     return HAL_RNG_GetRandomNumber(&hrng);
+  38              		.loc 1 7 5 view .LVU1
+  39              		.loc 1 7 12 is_stmt 0 view .LVU2
+  40 0002 0248     		ldr	r0, .L3
+  41 0004 FFF7FEFF 		bl	HAL_RNG_GetRandomNumber
+  42              	.LVL0:
+   8:Core/BSP/lib/bsp_random.c **** }
+  43              		.loc 1 8 1 view .LVU3
+  44 0008 08BD     		pop	{r3, pc}
+  45              	.L4:
+  46 000a 00BF     		.align	2
+  47              	.L3:
+  48 000c 00000000 		.word	hrng
+  49              		.cfi_endproc
+  50              	.LFE130:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s 			page 2
+
+
+  52              		.global	__aeabi_ui2d
+  53              		.global	__aeabi_ddiv
+  54              		.global	__aeabi_d2f
+  55              		.section	.text.GetRand_Float,"ax",%progbits
+  56              		.align	1
+  57              		.global	GetRand_Float
+  58              		.syntax unified
+  59              		.thumb
+  60              		.thumb_func
+  62              	GetRand_Float:
+  63              	.LFB131:
+   9:Core/BSP/lib/bsp_random.c **** 
+  10:Core/BSP/lib/bsp_random.c **** float GetRand_Float() {
+  64              		.loc 1 10 23 is_stmt 1 view -0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68 0000 08B5     		push	{r3, lr}
+  69              	.LCFI1:
+  70              		.cfi_def_cfa_offset 8
+  71              		.cfi_offset 3, -8
+  72              		.cfi_offset 14, -4
+  11:Core/BSP/lib/bsp_random.c ****     return GetRand_Int() / 4294967295.0;
+  73              		.loc 1 11 5 view .LVU5
+  74              		.loc 1 11 12 is_stmt 0 view .LVU6
+  75 0002 FFF7FEFF 		bl	GetRand_Int
+  76              	.LVL1:
+  77              		.loc 1 11 26 view .LVU7
+  78 0006 FFF7FEFF 		bl	__aeabi_ui2d
+  79              	.LVL2:
+  80 000a 05A3     		adr	r3, .L7
+  81 000c D3E90023 		ldrd	r2, [r3]
+  82 0010 FFF7FEFF 		bl	__aeabi_ddiv
+  83              	.LVL3:
+  84 0014 FFF7FEFF 		bl	__aeabi_d2f
+  85              	.LVL4:
+  12:Core/BSP/lib/bsp_random.c **** }
+  86              		.loc 1 12 1 view .LVU8
+  87 0018 00EE100A 		vmov	s0, r0
+  88 001c 08BD     		pop	{r3, pc}
+  89              	.L8:
+  90 001e 00BF     		.align	3
+  91              	.L7:
+  92 0020 0000E0FF 		.word	-2097152
+  93 0024 FFFFEF41 		.word	1106247679
+  94              		.cfi_endproc
+  95              	.LFE131:
+  97              		.section	.text.GetRand_Range,"ax",%progbits
+  98              		.align	1
+  99              		.global	GetRand_Range
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 104              	GetRand_Range:
+ 105              	.LVL5:
+ 106              	.LFB132:
+  13:Core/BSP/lib/bsp_random.c **** 
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s 			page 3
+
+
+  14:Core/BSP/lib/bsp_random.c **** float GetRand_Range(float rand_l, float rand_r) {
+ 107              		.loc 1 14 49 is_stmt 1 view -0
+ 108              		.cfi_startproc
+ 109              		@ args = 0, pretend = 0, frame = 0
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 111              		.loc 1 14 49 is_stmt 0 view .LVU10
+ 112 0000 08B5     		push	{r3, lr}
+ 113              	.LCFI2:
+ 114              		.cfi_def_cfa_offset 8
+ 115              		.cfi_offset 3, -8
+ 116              		.cfi_offset 14, -4
+ 117 0002 2DED028B 		vpush.64	{d8}
+ 118              	.LCFI3:
+ 119              		.cfi_def_cfa_offset 16
+ 120              		.cfi_offset 80, -16
+ 121              		.cfi_offset 81, -12
+ 122 0006 F0EE408A 		vmov.f32	s17, s0
+  15:Core/BSP/lib/bsp_random.c ****     return rand_l + (rand_r - rand_l) * GetRand_Float();
+ 123              		.loc 1 15 5 is_stmt 1 view .LVU11
+ 124              		.loc 1 15 29 is_stmt 0 view .LVU12
+ 125 000a 30EEC08A 		vsub.f32	s16, s1, s0
+ 126              		.loc 1 15 41 view .LVU13
+ 127 000e FFF7FEFF 		bl	GetRand_Float
+ 128              	.LVL6:
+ 129              		.loc 1 15 39 view .LVU14
+ 130 0012 28EE000A 		vmul.f32	s0, s16, s0
+  16:Core/BSP/lib/bsp_random.c **** }...
+ 131              		.loc 1 16 1 view .LVU15
+ 132 0016 30EE280A 		vadd.f32	s0, s0, s17
+ 133 001a BDEC028B 		vldm	sp!, {d8}
+ 134              	.LCFI4:
+ 135              		.cfi_restore 80
+ 136              		.cfi_restore 81
+ 137              		.cfi_def_cfa_offset 8
+ 138 001e 08BD     		pop	{r3, pc}
+ 139              		.cfi_endproc
+ 140              	.LFE132:
+ 142              		.text
+ 143              	.Letext0:
+ 144              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 145              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 146              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 147              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 148              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h"
+ 149              		.file 7 "Core/Inc/rng.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp_random.c
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:20     .text.GetRand_Int:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:26     .text.GetRand_Int:00000000 GetRand_Int
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:48     .text.GetRand_Int:0000000c $d
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:56     .text.GetRand_Float:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:62     .text.GetRand_Float:00000000 GetRand_Float
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:92     .text.GetRand_Float:00000020 $d
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:98     .text.GetRand_Range:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\ccojdOao.s:104    .text.GetRand_Range:00000000 GetRand_Range
+
+UNDEFINED SYMBOLS
+HAL_RNG_GetRandomNumber
+hrng
+__aeabi_ui2d
+__aeabi_ddiv
+__aeabi_d2f

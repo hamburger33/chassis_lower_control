@@ -1,0 +1,372 @@
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"monitor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Monitor_Reset,"ax",%progbits
+  20              		.align	1
+  21              		.global	Monitor_Reset
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Monitor_Reset:
+  27              	.LVL0:
+  28              	.LFB4:
+  29              		.file 1 "Core/HAL/monitor/monitor.c"
+   1:Core/HAL/monitor/monitor.c **** // 外设监控
+   2:Core/HAL/monitor/monitor.c **** #include "monitor.h"
+   3:Core/HAL/monitor/monitor.c **** 
+   4:Core/HAL/monitor/monitor.c **** #include "cvector.h"
+   5:Core/HAL/monitor/monitor.c **** 
+   6:Core/HAL/monitor/monitor.c **** cvector* monitor_lists;
+   7:Core/HAL/monitor/monitor.c **** 
+   8:Core/HAL/monitor/monitor.c **** void Monitor_Init() { monitor_lists = cvector_create(sizeof(monitor_item*)); }
+   9:Core/HAL/monitor/monitor.c **** 
+  10:Core/HAL/monitor/monitor.c **** void Monitor_Reset(monitor_item* item) { item->count = item->reload_count; }
+  30              		.loc 1 10 40 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              		.loc 1 10 42 view .LVU1
+  36              		.loc 1 10 60 is_stmt 0 view .LVU2
+  37 0000 0368     		ldr	r3, [r0]	@ unaligned
+  38              		.loc 1 10 54 view .LVU3
+  39 0002 4360     		str	r3, [r0, #4]	@ unaligned
+  40              		.loc 1 10 76 view .LVU4
+  41 0004 7047     		bx	lr
+  42              		.cfi_endproc
+  43              	.LFE4:
+  45              		.section	.text.Monitor_Init,"ax",%progbits
+  46              		.align	1
+  47              		.global	Monitor_Init
+  48              		.syntax unified
+  49              		.thumb
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s 			page 2
+
+
+  50              		.thumb_func
+  52              	Monitor_Init:
+  53              	.LFB3:
+   8:Core/HAL/monitor/monitor.c **** 
+  54              		.loc 1 8 21 is_stmt 1 view -0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58 0000 08B5     		push	{r3, lr}
+  59              	.LCFI0:
+  60              		.cfi_def_cfa_offset 8
+  61              		.cfi_offset 3, -8
+  62              		.cfi_offset 14, -4
+   8:Core/HAL/monitor/monitor.c **** 
+  63              		.loc 1 8 23 view .LVU6
+   8:Core/HAL/monitor/monitor.c **** 
+  64              		.loc 1 8 39 is_stmt 0 view .LVU7
+  65 0002 0420     		movs	r0, #4
+  66 0004 FFF7FEFF 		bl	cvector_create
+  67              	.LVL1:
+   8:Core/HAL/monitor/monitor.c **** 
+  68              		.loc 1 8 37 view .LVU8
+  69 0008 014B     		ldr	r3, .L4
+  70 000a 1860     		str	r0, [r3]
+   8:Core/HAL/monitor/monitor.c **** 
+  71              		.loc 1 8 78 view .LVU9
+  72 000c 08BD     		pop	{r3, pc}
+  73              	.L5:
+  74 000e 00BF     		.align	2
+  75              	.L4:
+  76 0010 00000000 		.word	.LANCHOR0
+  77              		.cfi_endproc
+  78              	.LFE3:
+  80              		.section	.text.Monitor_Register,"ax",%progbits
+  81              		.align	1
+  82              		.global	Monitor_Register
+  83              		.syntax unified
+  84              		.thumb
+  85              		.thumb_func
+  87              	Monitor_Register:
+  88              	.LVL2:
+  89              	.LFB5:
+  11:Core/HAL/monitor/monitor.c **** // 采用注册的方式
+  12:Core/HAL/monitor/monitor.c **** // 比如电机注册一个monitor，该函数会返回一个对象指针
+  13:Core/HAL/monitor/monitor.c **** // count相当于看门狗计数器值
+  14:Core/HAL/monitor/monitor.c **** monitor_item* Monitor_Register(lost_callback callback, int count,void* callback_data) {
+  90              		.loc 1 14 87 is_stmt 1 view -0
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 8
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94              		.loc 1 14 87 is_stmt 0 view .LVU11
+  95 0000 70B5     		push	{r4, r5, r6, lr}
+  96              	.LCFI1:
+  97              		.cfi_def_cfa_offset 16
+  98              		.cfi_offset 4, -16
+  99              		.cfi_offset 5, -12
+ 100              		.cfi_offset 6, -8
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s 			page 3
+
+
+ 101              		.cfi_offset 14, -4
+ 102 0002 82B0     		sub	sp, sp, #8
+ 103              	.LCFI2:
+ 104              		.cfi_def_cfa_offset 24
+ 105 0004 0646     		mov	r6, r0
+ 106 0006 0C46     		mov	r4, r1
+ 107 0008 1546     		mov	r5, r2
+  15:Core/HAL/monitor/monitor.c ****     monitor_item* item = malloc(sizeof(monitor_item));
+ 108              		.loc 1 15 5 is_stmt 1 view .LVU12
+ 109              		.loc 1 15 26 is_stmt 0 view .LVU13
+ 110 000a 1420     		movs	r0, #20
+ 111              	.LVL3:
+ 112              		.loc 1 15 26 view .LVU14
+ 113 000c FFF7FEFF 		bl	malloc
+ 114              	.LVL4:
+ 115              		.loc 1 15 19 view .LVU15
+ 116 0010 0190     		str	r0, [sp, #4]
+  16:Core/HAL/monitor/monitor.c ****     item->reload_count = count;
+ 117              		.loc 1 16 5 is_stmt 1 view .LVU16
+ 118              		.loc 1 16 24 is_stmt 0 view .LVU17
+ 119 0012 0460     		str	r4, [r0]	@ unaligned
+  17:Core/HAL/monitor/monitor.c ****     item->count = count;
+ 120              		.loc 1 17 5 is_stmt 1 view .LVU18
+ 121              		.loc 1 17 17 is_stmt 0 view .LVU19
+ 122 0014 4460     		str	r4, [r0, #4]	@ unaligned
+  18:Core/HAL/monitor/monitor.c ****     item->callback = callback;
+ 123              		.loc 1 18 5 is_stmt 1 view .LVU20
+ 124              		.loc 1 18 20 is_stmt 0 view .LVU21
+ 125 0016 8660     		str	r6, [r0, #8]	@ unaligned
+  19:Core/HAL/monitor/monitor.c ****     item->reset = Monitor_Reset;
+ 126              		.loc 1 19 5 is_stmt 1 view .LVU22
+ 127              		.loc 1 19 17 is_stmt 0 view .LVU23
+ 128 0018 054B     		ldr	r3, .L8
+ 129 001a C360     		str	r3, [r0, #12]	@ unaligned
+  20:Core/HAL/monitor/monitor.c ****     item->data = callback_data;
+ 130              		.loc 1 20 5 is_stmt 1 view .LVU24
+ 131              		.loc 1 20 16 is_stmt 0 view .LVU25
+ 132 001c 0561     		str	r5, [r0, #16]	@ unaligned
+  21:Core/HAL/monitor/monitor.c ****     cvector_pushback(monitor_lists,&item);
+ 133              		.loc 1 21 5 is_stmt 1 view .LVU26
+ 134 001e 01A9     		add	r1, sp, #4
+ 135 0020 044B     		ldr	r3, .L8+4
+ 136 0022 1868     		ldr	r0, [r3]
+ 137 0024 FFF7FEFF 		bl	cvector_pushback
+ 138              	.LVL5:
+  22:Core/HAL/monitor/monitor.c ****     return item;
+ 139              		.loc 1 22 5 view .LVU27
+  23:Core/HAL/monitor/monitor.c **** }
+ 140              		.loc 1 23 1 is_stmt 0 view .LVU28
+ 141 0028 0198     		ldr	r0, [sp, #4]
+ 142 002a 02B0     		add	sp, sp, #8
+ 143              	.LCFI3:
+ 144              		.cfi_def_cfa_offset 16
+ 145              		@ sp needed
+ 146 002c 70BD     		pop	{r4, r5, r6, pc}
+ 147              	.LVL6:
+ 148              	.L9:
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s 			page 4
+
+
+ 149              		.loc 1 23 1 view .LVU29
+ 150 002e 00BF     		.align	2
+ 151              	.L8:
+ 152 0030 00000000 		.word	Monitor_Reset
+ 153 0034 00000000 		.word	.LANCHOR0
+ 154              		.cfi_endproc
+ 155              	.LFE5:
+ 157              		.section	.text.Monitor_Loop,"ax",%progbits
+ 158              		.align	1
+ 159              		.global	Monitor_Loop
+ 160              		.syntax unified
+ 161              		.thumb
+ 162              		.thumb_func
+ 164              	Monitor_Loop:
+ 165              	.LFB6:
+  24:Core/HAL/monitor/monitor.c **** 
+  25:Core/HAL/monitor/monitor.c **** void Monitor_Loop() {
+ 166              		.loc 1 25 21 is_stmt 1 view -0
+ 167              		.cfi_startproc
+ 168              		@ args = 0, pretend = 0, frame = 0
+ 169              		@ frame_needed = 0, uses_anonymous_args = 0
+ 170 0000 10B5     		push	{r4, lr}
+ 171              	.LCFI4:
+ 172              		.cfi_def_cfa_offset 8
+ 173              		.cfi_offset 4, -8
+ 174              		.cfi_offset 14, -4
+  26:Core/HAL/monitor/monitor.c ****     for (int i = 0; i < monitor_lists->cv_len; i++) {
+ 175              		.loc 1 26 5 view .LVU31
+ 176              	.LBB2:
+ 177              		.loc 1 26 10 view .LVU32
+ 178              	.LVL7:
+ 179              		.loc 1 26 14 is_stmt 0 view .LVU33
+ 180 0002 0024     		movs	r4, #0
+ 181              		.loc 1 26 5 view .LVU34
+ 182 0004 00E0     		b	.L11
+ 183              	.LVL8:
+ 184              	.L12:
+ 185              		.loc 1 26 48 is_stmt 1 discriminator 2 view .LVU35
+ 186              		.loc 1 26 49 is_stmt 0 discriminator 2 view .LVU36
+ 187 0006 0134     		adds	r4, r4, #1
+ 188              	.LVL9:
+ 189              	.L11:
+ 190              		.loc 1 26 21 is_stmt 1 discriminator 1 view .LVU37
+ 191              		.loc 1 26 38 is_stmt 0 discriminator 1 view .LVU38
+ 192 0008 0C4B     		ldr	r3, .L16
+ 193 000a 1868     		ldr	r0, [r3]
+ 194 000c 4368     		ldr	r3, [r0, #4]	@ unaligned
+ 195              		.loc 1 26 5 discriminator 1 view .LVU39
+ 196 000e A342     		cmp	r3, r4
+ 197 0010 13D9     		bls	.L15
+ 198              	.LBB3:
+  27:Core/HAL/monitor/monitor.c ****         // void* val = cvector_val_at(monitor_lists, i);
+  28:Core/HAL/monitor/monitor.c ****         monitor_item* item = *(monitor_item**) cvector_val_at(monitor_lists,i);
+ 199              		.loc 1 28 9 is_stmt 1 view .LVU40
+ 200              		.loc 1 28 48 is_stmt 0 view .LVU41
+ 201 0012 2146     		mov	r1, r4
+ 202 0014 FFF7FEFF 		bl	cvector_val_at
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s 			page 5
+
+
+ 203              	.LVL10:
+ 204              		.loc 1 28 23 view .LVU42
+ 205 0018 0368     		ldr	r3, [r0]
+ 206              	.LVL11:
+  29:Core/HAL/monitor/monitor.c ****         item->count--;
+ 207              		.loc 1 29 9 is_stmt 1 view .LVU43
+ 208              		.loc 1 29 13 is_stmt 0 view .LVU44
+ 209 001a 5A68     		ldr	r2, [r3, #4]	@ unaligned
+ 210              		.loc 1 29 20 view .LVU45
+ 211 001c 013A     		subs	r2, r2, #1
+ 212 001e 5A60     		str	r2, [r3, #4]	@ unaligned
+  30:Core/HAL/monitor/monitor.c ****         if (item->count <= 0) {
+ 213              		.loc 1 30 9 is_stmt 1 view .LVU46
+ 214              		.loc 1 30 12 is_stmt 0 view .LVU47
+ 215 0020 002A     		cmp	r2, #0
+ 216 0022 F0DC     		bgt	.L12
+  31:Core/HAL/monitor/monitor.c ****             item->count = 0;
+ 217              		.loc 1 31 13 is_stmt 1 view .LVU48
+ 218              		.loc 1 31 25 is_stmt 0 view .LVU49
+ 219 0024 0022     		movs	r2, #0
+ 220 0026 1A71     		strb	r2, [r3, #4]
+ 221 0028 5A71     		strb	r2, [r3, #5]
+ 222 002a 9A71     		strb	r2, [r3, #6]
+ 223 002c DA71     		strb	r2, [r3, #7]
+  32:Core/HAL/monitor/monitor.c ****             if(item->callback != NULL){
+ 224              		.loc 1 32 13 is_stmt 1 view .LVU50
+ 225              		.loc 1 32 20 is_stmt 0 view .LVU51
+ 226 002e 9A68     		ldr	r2, [r3, #8]	@ unaligned
+ 227              		.loc 1 32 15 view .LVU52
+ 228 0030 002A     		cmp	r2, #0
+ 229 0032 E8D0     		beq	.L12
+  33:Core/HAL/monitor/monitor.c ****                 item->callback(item->data);
+ 230              		.loc 1 33 17 is_stmt 1 view .LVU53
+ 231 0034 1869     		ldr	r0, [r3, #16]	@ unaligned
+ 232 0036 9047     		blx	r2
+ 233              	.LVL12:
+ 234              		.loc 1 33 17 is_stmt 0 view .LVU54
+ 235 0038 E5E7     		b	.L12
+ 236              	.L15:
+ 237              		.loc 1 33 17 view .LVU55
+ 238              	.LBE3:
+ 239              	.LBE2:
+  34:Core/HAL/monitor/monitor.c ****             }
+  35:Core/HAL/monitor/monitor.c ****         }
+  36:Core/HAL/monitor/monitor.c ****     }
+  37:Core/HAL/monitor/monitor.c **** }
+ 240              		.loc 1 37 1 view .LVU56
+ 241 003a 10BD     		pop	{r4, pc}
+ 242              	.LVL13:
+ 243              	.L17:
+ 244              		.loc 1 37 1 view .LVU57
+ 245              		.align	2
+ 246              	.L16:
+ 247 003c 00000000 		.word	.LANCHOR0
+ 248              		.cfi_endproc
+ 249              	.LFE6:
+ 251              		.section	.text.is_Offline,"ax",%progbits
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s 			page 6
+
+
+ 252              		.align	1
+ 253              		.global	is_Offline
+ 254              		.syntax unified
+ 255              		.thumb
+ 256              		.thumb_func
+ 258              	is_Offline:
+ 259              	.LVL14:
+ 260              	.LFB7:
+  38:Core/HAL/monitor/monitor.c **** 
+  39:Core/HAL/monitor/monitor.c **** uint8_t is_Offline(monitor_item* obj){
+ 261              		.loc 1 39 38 is_stmt 1 view -0
+ 262              		.cfi_startproc
+ 263              		@ args = 0, pretend = 0, frame = 0
+ 264              		@ frame_needed = 0, uses_anonymous_args = 0
+ 265              		@ link register save eliminated.
+  40:Core/HAL/monitor/monitor.c ****     return obj->count <= 0;
+ 266              		.loc 1 40 5 view .LVU59
+ 267              		.loc 1 40 15 is_stmt 0 view .LVU60
+ 268 0000 4068     		ldr	r0, [r0, #4]	@ unaligned
+ 269              	.LVL15:
+  41:Core/HAL/monitor/monitor.c **** }...
+ 270              		.loc 1 41 1 view .LVU61
+ 271 0002 0028     		cmp	r0, #0
+ 272 0004 CCBF     		ite	gt
+ 273 0006 0020     		movgt	r0, #0
+ 274 0008 0120     		movle	r0, #1
+ 275 000a 7047     		bx	lr
+ 276              		.cfi_endproc
+ 277              	.LFE7:
+ 279              		.global	monitor_lists
+ 280              		.section	.bss.monitor_lists,"aw",%nobits
+ 281              		.align	2
+ 282              		.set	.LANCHOR0,. + 0
+ 285              	monitor_lists:
+ 286 0000 00000000 		.space	4
+ 287              		.text
+ 288              	.Letext0:
+ 289              		.file 2 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 290              		.file 3 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 291              		.file 4 "Core/HAL/monitor/monitor.h"
+ 292              		.file 5 "d:\\gcc-arm-none-eabi\\lib\\gcc\\arm-none-eabi\\10.3.1\\include\\stddef.h"
+ 293              		.file 6 "Core/HAL/lib/cvector.h"
+ 294              		.file 7 "d:\\gcc-arm-none-eabi\\arm-none-eabi\\include\\stdlib.h"
+ARM GAS  C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 monitor.c
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:20     .text.Monitor_Reset:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:26     .text.Monitor_Reset:00000000 Monitor_Reset
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:46     .text.Monitor_Init:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:52     .text.Monitor_Init:00000000 Monitor_Init
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:76     .text.Monitor_Init:00000010 $d
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:81     .text.Monitor_Register:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:87     .text.Monitor_Register:00000000 Monitor_Register
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:152    .text.Monitor_Register:00000030 $d
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:158    .text.Monitor_Loop:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:164    .text.Monitor_Loop:00000000 Monitor_Loop
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:247    .text.Monitor_Loop:0000003c $d
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:252    .text.is_Offline:00000000 $t
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:258    .text.is_Offline:00000000 is_Offline
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:285    .bss.monitor_lists:00000000 monitor_lists
+C:\Users\lenovo\AppData\Local\Temp\cc2OMxme.s:281    .bss.monitor_lists:00000000 $d
+
+UNDEFINED SYMBOLS
+cvector_create
+malloc
+cvector_pushback
+cvector_val_at
